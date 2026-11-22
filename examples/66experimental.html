@@ -1,0 +1,606 @@
+<!-- Style: Experimental | 66experimental.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oddform — a digital art archive</title>
+<style>
+  :root{
+    --void:#0E0E10;
+    --void-2:#17171A;
+    --void-3:#212125;
+    --chalk:#EDEAE2;
+    --chalk-dim:#A7A49B;
+    --acid:#D8FF3E;
+    --signal:#FF4B1F;
+    --steel:#7C9BB0;
+
+    --font-sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --t-mega:clamp(3rem,10vw,8.5rem);
+    --t-h1:clamp(1.8rem,3.6vw,2.8rem);
+    --t-h2:clamp(1.3rem,2.2vw,1.75rem);
+    --t-lead:clamp(1.02rem,1.4vw,1.2rem);
+    --t-body:1rem;
+    --t-small:.85rem;
+    --t-micro:.7rem;
+
+    --s-1:.35rem;--s-2:.7rem;--s-3:1.1rem;--s-4:1.7rem;--s-5:2.5rem;
+    --s-6:3.6rem;--s-7:5rem;--s-8:6.5rem;
+    --rail:74px;
+    --shell:min(1320px,100% - 3rem);
+
+    --d-fast:120ms;--d-base:280ms;--d-slow:640ms;--ease:cubic-bezier(.16,1,.3,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  body{
+    margin:0;background:var(--void);color:var(--chalk);
+    font-family:var(--font-sans);font-size:var(--t-body);line-height:1.55;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  h1,h2,h3{margin:0;font-weight:700;line-height:1}
+  p{margin:0}
+  a{color:inherit}
+  ul{margin:0;padding:0;list-style:none}
+  svg{display:block}
+  :focus-visible{outline:3px solid var(--acid);outline-offset:3px}
+  .skip{position:absolute;left:calc(var(--rail) + 1rem);top:-120px;z-index:200;background:var(--acid);color:var(--void);padding:.9rem 1.3rem;font-weight:800;transition:top var(--d-fast)}
+  .skip:focus{top:1rem}
+  .mono{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--chalk-dim)}
+  .shell{width:var(--shell);margin-inline:auto}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 1.4rem;
+    background:transparent;border:1px solid var(--chalk-dim);color:var(--chalk);cursor:pointer;
+    font-family:var(--font-sans);font-size:var(--t-small);font-weight:700;letter-spacing:.06em;
+    text-decoration:none;transition:background var(--d-fast),color var(--d-fast),border-color var(--d-fast)
+  }
+  .btn:hover{background:var(--chalk);color:var(--void);border-color:var(--chalk)}
+  .btn--acid{background:var(--acid);border-color:var(--acid);color:var(--void)}
+  .btn--acid:hover{background:#fff;border-color:#fff}
+  .btn[aria-pressed="true"]{background:var(--acid);border-color:var(--acid);color:var(--void)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+  /* ---------------- left rail: the one unconventional thing ---------------- */
+  .rail{
+    position:fixed;left:0;top:0;bottom:0;width:var(--rail);z-index:90;
+    border-right:1px solid #2b2b30;display:flex;flex-direction:column;align-items:center;
+    justify-content:space-between;padding:1.1rem 0;background:var(--void)
+  }
+  .rail a{text-decoration:none;writing-mode:vertical-rl;padding:.7rem 0;font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.22em;text-transform:uppercase;color:var(--chalk-dim)}
+  .rail a:hover{color:var(--acid)}
+  .rail .rail-logo{writing-mode:vertical-rl;color:var(--chalk);font-weight:800;font-size:.8rem;letter-spacing:.3em}
+  .rail .rail-foot{writing-mode:horizontal-tb;color:#4d4d52;font-size:.65rem;letter-spacing:.1em}
+  main{margin-left:var(--rail)}
+  @media (max-width:860px){
+    .rail{position:static;width:100%;flex-direction:row;justify-content:flex-start;gap:1.2rem;border-right:0;border-bottom:1px solid #2b2b30;padding:.8rem 1.25rem;overflow-x:auto}
+    .rail a{writing-mode:horizontal-tb;padding:.4rem 0;white-space:nowrap}
+    .rail .rail-logo{writing-mode:horizontal-tb}
+    .rail .rail-foot{margin-left:auto}
+    main{margin-left:0}
+    .skip{left:1rem}
+  }
+
+  /* ---------------- hero ---------------- */
+  .hero{padding-block:var(--s-6) var(--s-5);position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:var(--s-5);align-items:end}
+  .hero h1{font-size:var(--t-mega);letter-spacing:-.05em;line-height:.86}
+  .hero h1 .b{color:var(--acid)}
+  .hero h1 .c{color:var(--signal)}
+  .hero-note{max-width:44ch;color:var(--chalk-dim);font-size:var(--t-small);padding-bottom:.6rem}
+  .hero-note strong{color:var(--chalk)}
+  .coords{
+    display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:var(--s-4);padding-top:var(--s-3);
+    border-top:1px solid #2b2b30
+  }
+
+  /* type-on filter: the archive "speaks" on load */
+  .typed{font-family:var(--font-mono);color:var(--chalk-dim);min-height:1.4em;font-size:var(--t-small)}
+
+  /* ---------------- filter bar ---------------- */
+  .filters{
+    position:sticky;top:0;z-index:70;background:rgba(14,14,16,.94);backdrop-filter:blur(10px);
+    border-block:1px solid #2b2b30;padding:.75rem 0;display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center
+  }
+  .filters .btn{min-height:40px;padding:0 .9rem;font-size:var(--t-micro)}
+  .view-toggle{margin-left:auto;display:flex;gap:.35rem}
+  .view-toggle .btn{min-height:40px}
+  .count{margin-left:.5rem;font-family:var(--font-mono);font-size:var(--t-micro);color:var(--chalk-dim)}
+
+  /* ---------------- tile field (grid view) ---------------- */
+  .field{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:var(--s-3);
+    padding-block:var(--s-5) var(--s-7);align-items:start
+  }
+  .tile{
+    display:block;width:100%;text-align:left;padding:0;border:1px solid #2b2b30;background:var(--void-2);
+    cursor:pointer;color:inherit;transition:transform var(--d-base) var(--ease),border-color var(--d-base);
+    transform-origin:center
+  }
+  .tile:hover{transform:scale(1.05) rotate(-.7deg);border-color:var(--acid);z-index:2}
+  .tile[aria-pressed="true"]{border-color:var(--acid);box-shadow:0 0 0 2px var(--acid)}
+  .tile .thumb{aspect-ratio:4/5;display:grid;place-items:center;overflow:hidden;position:relative}
+  .tile .thumb svg{width:100%;height:100%}
+  .tile .cap{padding:.7rem .8rem .8rem;display:grid;gap:.25rem}
+  .tile .cap b{font-size:var(--t-small);font-weight:700;letter-spacing:.01em}
+  .tile .cap span{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.1em;color:var(--chalk-dim);text-transform:uppercase}
+  .tile[data-medium="generative"] .thumb{background:#1a1c14}
+  .tile[data-medium="moving"] .thumb{background:#141a20}
+  .tile[data-medium="sound"] .thumb{background:#1d1614}
+  .tile[data-medium="type"] .thumb{background:#16161a}
+  .tile[data-medium="print"] .thumb{background:#191a17}
+  .field.shuffling .tile{transition:none}
+
+  /* ---------------- pinned detail readout ---------------- */
+  .readout{
+    position:fixed;left:calc(var(--rail) + 1.25rem);bottom:1.25rem;z-index:80;width:min(370px,calc(100vw - 2.5rem));
+    background:var(--acid);color:var(--void);padding:1.1rem 1.2rem;display:none;
+    box-shadow:0 20px 50px rgba(0,0,0,.55)
+  }
+  .readout.show{display:block;animation:rise var(--d-base) var(--ease)}
+  @keyframes rise{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+  .readout h3{font-size:var(--t-h2);letter-spacing:-.02em;margin-bottom:.3rem}
+  .readout dl{display:grid;grid-template-columns:auto 1fr;gap:.2rem .8rem;font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.06em;margin:.6rem 0 .9rem}
+  .readout dt{opacity:.7}
+  .readout dd{margin:0;font-weight:700}
+  .readout .actions{display:flex;gap:.5rem;flex-wrap:wrap}
+  .readout .btn{border-color:var(--void);color:var(--void);min-height:40px;font-size:var(--t-micro)}
+  .readout .btn:hover{background:var(--void);color:var(--acid)}
+  .readout .btn--solid{background:var(--void);color:var(--acid)}
+  .readout .btn--solid:hover{background:#fff;color:var(--void);border-color:#fff}
+  .readout .close{position:absolute;top:.5rem;right:.6rem;background:none;border:0;font-size:1.3rem;line-height:1;cursor:pointer;color:var(--void);padding:.3rem .5rem}
+  @media (max-width:860px){
+    .readout{left:1.25rem;right:1.25rem;bottom:1.25rem;width:auto}
+  }
+
+  /* ---------------- index (table) view: the conventional escape hatch ---------------- */
+  .indexview{display:none;border-top:1px solid #2b2b30;margin-top:var(--s-5)}
+  body[data-view="index"] .field{display:none}
+  body[data-view="index"] .indexview{display:block}
+  .indexview table{width:100%;border-collapse:collapse;font-size:var(--t-small)}
+  .indexview caption{text-align:left;padding:var(--s-3) 0;font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+  .indexview th,.indexview td{text-align:left;padding:.7rem .6rem;border-bottom:1px solid #2b2b30;vertical-align:top}
+  .indexview th{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--chalk-dim);font-weight:400}
+  .indexview td:first-child{width:5.5rem;font-family:var(--font-mono);color:var(--signal)}
+  .indexview tr:hover td{background:var(--void-2)}
+  .indexview a{color:var(--chalk)}
+  .indexview a:hover{color:var(--acid)}
+  @media (max-width:640px){
+    .indexview thead{display:none}
+    .indexview tr{display:grid;grid-template-columns:1fr;gap:.2rem;padding:.7rem 0;border-bottom:1px solid #2b2b30}
+    .indexview td{border:0;padding:.15rem 0}
+  }
+
+  /* ---------------- deposit ---------------- */
+  .deposit{border-top:1px solid #2b2b30;padding-block:var(--s-7);display:grid;grid-template-columns:.8fr 1.2fr;gap:var(--s-6);align-items:start}
+  .deposit h2{font-size:var(--t-h1);letter-spacing:-.03em;margin-bottom:var(--s-3)}
+  .deposit p{color:var(--chalk-dim);font-size:var(--t-small);max-width:44ch}
+  .deposit .rules{margin-top:var(--s-4);display:grid;gap:.5rem;font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.08em;color:var(--chalk-dim)}
+  .deposit .rules b{color:var(--signal)}
+  .field{display:grid;gap:.35rem;margin-bottom:var(--s-3)}
+  .field label{font-size:var(--t-small);font-weight:700}
+  .field .hint{font-size:var(--t-micro);color:var(--chalk-dim)}
+  input,select,textarea{
+    font-family:inherit;font-size:1rem;width:100%;min-height:48px;padding:.7rem .85rem;color:var(--chalk);
+    background:var(--void-2);border:1px solid #3a3a40;border-radius:0
+  }
+  select option{background:var(--void-2)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--acid);outline-offset:2px;border-color:var(--acid)}
+  [aria-invalid="true"]{border-color:var(--signal);border-width:2px}
+  textarea{min-height:110px;resize:vertical}
+  .form-msg{margin-top:var(--s-2);min-height:1.7em;font-family:var(--font-mono);font-size:var(--t-small)}
+  .form-msg[data-state="error"]{color:var(--signal)}
+  .form-msg[data-state="ok"]{color:var(--acid)}
+
+  footer{border-top:1px solid #2b2b30;padding-block:var(--s-5)}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:var(--s-4);align-items:start}
+  footer h4{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--chalk-dim);font-weight:400;margin-bottom:var(--s-2)}
+  footer li{font-size:var(--t-small);margin-bottom:.4rem}
+  footer a{text-decoration:none}
+  footer a:hover{color:var(--acid);text-decoration:underline}
+  .foot-bottom{margin-top:var(--s-5);padding-top:var(--s-3);border-top:1px solid #2b2b30;display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:space-between;font-family:var(--font-mono);font-size:var(--t-micro);color:#56565d}
+  .tickerline{overflow:hidden;border-bottom:1px solid #2b2b30;padding-block:.6rem;margin-bottom:var(--s-5)}
+  .tickerline span{display:inline-block;font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.2em;text-transform:uppercase;color:#56565d;white-space:nowrap;padding-right:2rem}
+
+  @media (max-width:1000px){
+    .hero-grid{grid-template-columns:1fr;align-items:start}
+    .deposit,.foot-grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+    .tile:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<nav class="rail" aria-label="Primary">
+  <a class="rail-logo" href="#top">ODDFORM</a>
+  <a href="#archive">Archive</a>
+  <a href="#deposit">Deposit</a>
+  <a href="#about">About</a>
+  <span class="rail-foot mono">’11–’26</span>
+</nav>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-h">
+    <div class="shell">
+      <div class="hero-grid">
+        <h1 id="hero-h">An archive of things that <span class="b">should not</span> <span class="c">have been kept</span></h1>
+        <p class="hero-note">
+          <strong>1,204 works</strong> deposited between 2011 and now: generative systems, unfinished loops, one-minute films about a spreadsheet, a typeface made entirely of error messages.
+          <br><br>
+          We keep them because somebody made them, and the somebody deserves a URL that outlives a feed.
+        </p>
+      </div>
+      <div class="coords mono">
+        <span>Born 2011, Rotterdam</span>
+        <span>Open deposit, no fee</span>
+        <span>Static HTML by default</span>
+        <span class="typed" id="typed" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="filters shell" role="group" aria-label="Archive controls">
+    <button class="btn" type="button" data-filter="all" aria-pressed="true">All</button>
+    <button class="btn" type="button" data-filter="generative" aria-pressed="false">Generative</button>
+    <button class="btn" type="button" data-filter="moving" aria-pressed="false">Moving image</button>
+    <button class="btn" type="button" data-filter="sound" aria-pressed="false">Sound</button>
+    <button class="btn" type="button" data-filter="type" aria-pressed="false">Type</button>
+    <button class="btn" type="button" data-filter="print" aria-pressed="false">Print</button>
+    <button class="btn" type="button" id="shuffle">Shuffle the field</button>
+    <span class="count" id="count" aria-live="polite"></span>
+    <div class="view-toggle" role="group" aria-label="View">
+      <button class="btn" type="button" id="viewGrid" aria-pressed="true">Field</button>
+      <button class="btn" type="button" id="viewIndex" aria-pressed="false">Index</button>
+    </div>
+  </div>
+
+  <section id="archive" aria-label="Archive works" style="padding-bottom:0">
+    <div class="shell">
+      <div class="field" id="field"></div>
+
+      <div class="indexview" id="indexview">
+        <table>
+          <caption>All 1,204 records · sortable by the archive team, not by you</caption>
+          <thead>
+            <tr><th scope="col">Ref</th><th scope="col">Title</th><th scope="col">Medium</th><th scope="col">Year</th><th scope="col">Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>OF-1204</td><td><a href="#archive">Weather for a Room That Isn’t Here</a></td><td>Generative, web</td><td>2026</td><td>Open access</td></tr>
+            <tr><td>OF-1203</td><td><a href="#archive">Nine Minutes of a Spreadsheet</a></td><td>Moving image</td><td>2026</td><td>Open access</td></tr>
+            <tr><td>OF-1202</td><td><a href="#archive">Error Message Display</a></td><td>Type specimen</td><td>2025</td><td>Open access</td></tr>
+            <tr><td>OF-1201</td><td><a href="#archive">A Room Tone for an Empty Museum</a></td><td>Sound, 14:00</td><td>2025</td><td>Listening room only</td></tr>
+            <tr><td>OF-1200</td><td><a href="#archive">Folded Twelve Times</a></td><td>Print, edition of 40</td><td>2025</td><td>Not for sale</td></tr>
+            <tr><td>OF-1199</td><td><a href="#archive">Cursor Study No. 4</a></td><td>Generative, web</td><td>2024</td><td>Open access</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="shell">
+    <div class="readout" id="readout" role="region" aria-live="polite" aria-label="Selected work">
+      <button class="close" type="button" id="closeReadout" aria-label="Close work details">✕</button>
+      <h3 id="rTitle">—</h3>
+      <p class="mono" style="color:var(--void);opacity:.7" id="rArtist">—</p>
+      <dl>
+        <dt>Ref</dt><dd id="rRef">—</dd>
+        <dt>Medium</dt><dd id="rMedium">—</dd>
+        <dt>Year</dt><dd id="rYear">—</dd>
+        <dt>Access</dt><dd id="rAccess">—</dd>
+      </dl>
+      <div class="actions">
+        <a class="btn btn--solid" href="#deposit" id="rAction">Request viewing</a>
+        <a class="btn" href="#archive" id="rCite">Cite this work</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="shell deposit" id="deposit" aria-labelledby="dep-h">
+    <div>
+      <h2 id="dep-h">Deposit a work</h2>
+      <p>Open call, no fee, no gatekeeping committee. We review every submission within six weeks. If it fits the collection we mint a permanent URL and a reference number; if it doesn’t we tell you why, once, in plain words.</p>
+      <ul class="rules">
+        <li><b>Accepted:</b> digital works 1996 to now, plus anything you can prove you made this year.</li>
+        <li><b>Not accepted:</b> NFT-only works, AI-generated work without a documented human process, or anything sent to us already published elsewhere.</li>
+        <li><b>We keep:</b> the description you write, the date, and your name. Nothing else. No analytics, no third-party embeds without your say-so.</li>
+      </ul>
+    </div>
+    <form id="depositForm" novalidate>
+      <div class="field">
+        <label for="dTitle">Working title</label>
+        <input type="text" id="dTitle" name="title" required aria-describedby="dTitleHint">
+        <p class="hint" id="dTitleHint">You can change this later. Please don’t put a file URL here.</p>
+      </div>
+      <div class="field">
+        <label for="dArtist">Your name or alias</label>
+        <input type="text" id="dArtist" name="artist" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="dMedium">Medium</label>
+        <select id="dMedium" name="medium">
+          <option>Generative / code</option>
+          <option>Moving image</option>
+          <option>Sound</option>
+          <option>Type</option>
+          <option>Print</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="dEmail">Email</label>
+        <input type="email" id="dEmail" name="email" autocomplete="email" required aria-describedby="dEmailHint">
+        <p class="hint" id="dEmailHint">Only used to tell you the decision.</p>
+      </div>
+      <div class="field">
+        <label for="dNote">Anything we should know? (optional)</label>
+        <textarea id="dNote" name="note"></textarea>
+      </div>
+      <button class="btn btn--acid" type="submit">Send it to the archive</button>
+      <p class="form-msg" id="depositMsg" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <footer id="about">
+    <div class="shell">
+      <div class="tickerline" aria-hidden="true">
+        <span>Oddform ✳ Open access by default ✳ Run by six people and a very patient server ✳ No cookies ✳ No tracking ✳ 1,204 records</span>
+        <span>Oddform ✳ Open access by default ✳ Run by six people and a very patient server ✳ No cookies ✳ No tracking ✳ 1,204 records</span>
+      </div>
+      <div class="foot-grid">
+        <div>
+          <h4>Oddform</h4>
+          <p style="font-size:var(--t-small);color:var(--chalk-dim);max-width:40ch">
+            A digital art archive run as a non-profit from a former print shop in Rotterdam.
+            Board funded, donation funded, occasionally sleep-deprived.
+          </p>
+        </div>
+        <div>
+          <h4>Archive</h4>
+          <ul>
+            <li><a href="#archive">All works</a></li>
+            <li><a href="#archive">By medium</a></li>
+            <li><a href="#archive">Index view</a></li>
+            <li><a href="#deposit">Deposit</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Project</h4>
+          <ul>
+            <li><a href="#about">Annual report</a></li>
+            <li><a href="#about">API</a></li>
+            <li><a href="#about">Press kit</a></li>
+            <li><a href="#about">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2011–2026 Oddform Foundation</span>
+        <span>This page has no third-party requests. That is not a stunt — it is the deposit promise.</span>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- the collection ---------- */
+  var works = [
+    { ref:'OF-1204', title:'Weather for a Room That Isn’t Here', artist:'Marta Reijnen', medium:'generative', mediumLabel:'Generative, web', year:2026, access:'Open access', art:'g1' },
+    { ref:'OF-1203', title:'Nine Minutes of a Spreadsheet', artist:'Idris Vann', medium:'moving', mediumLabel:'Moving image, 9:04', year:2026, access:'Open access', art:'g2' },
+    { ref:'OF-1202', title:'Error Message Display', artist:'Rin Okafor', medium:'type', mediumLabel:'Type specimen, variable', year:2025, access:'Open access', art:'g3' },
+    { ref:'OF-1201', title:'A Room Tone for an Empty Museum', artist:'Halbe Vos', medium:'sound', mediumLabel:'Sound, 14:00', year:2025, access:'Listening room only', art:'g4' },
+    { ref:'OF-1200', title:'Folded Twelve Times', artist:'Studio Koppeling', medium:'print', mediumLabel:'Print, edition of 40', year:2025, access:'Not for sale', art:'g5' },
+    { ref:'OF-1199', title:'Cursor Study No. 4', artist:'Marta Reijnen', medium:'generative', mediumLabel:'Generative, web', year:2024, access:'Open access', art:'g6' },
+    { ref:'OF-1198', title:'The Long Way Round the Sound', artist:'Yuki Ferrand', medium:'sound', mediumLabel:'Sound, 31:12', year:2024, access:'Open access', art:'g7' },
+    { ref:'OF-1197', title:'Everything I Deleted in 2019', artist:'Jonas Piedra', medium:'type', mediumLabel:'Type, 340 pages', year:2024, access:'Open access', art:'g8' },
+    { ref:'OF-1196', title:'Twelve Doors, One Hallway', artist:'Nkem Obi', medium:'moving', mediumLabel:'Moving image, 4:30', year:2023, access:'Listening room only', art:'g9' },
+    { ref:'OF-1195', title:'Grid Practice (Unfinished)', artist:'Studio Koppeling', medium:'print', mediumLabel:'Print, zine, 16pp', year:2023, access:'Not for sale', art:'g10' },
+    { ref:'OF-1194', title:'Sleepwalk Protocol', artist:'Halbe Vos', medium:'generative', mediumLabel:'Generative, installation', year:2023, access:'Open access', art:'g11' },
+    { ref:'OF-1193', title:'Two Rooms Facing', artist:'Idris Vann', medium:'moving', mediumLabel:'Moving image, 18:40', year:2022, access:'Open access', art:'g12' }
+  ];
+
+  var art = {
+    g1:'<svg viewBox="0 0 200 250" role="img" aria-label="Abstract generated field of thin diagonal lines"><g stroke="#D8FF3E" stroke-width="1" opacity=".8"><path d="M0 250 250 0M-50 250 200 0M50 250 300 0M100 250 350 0M150 250 400 0"/></g><circle cx="70" cy="90" r="34" fill="none" stroke="#EDEAE2" stroke-width="1"/></svg>',
+    g2:'<svg viewBox="0 0 200 250" role="img" aria-label="Four stacked bars suggesting a video timeline"><g fill="#7C9BB0"><rect x="30" y="150" width="120" height="14"/><rect x="55" y="176" width="95" height="14" opacity=".8"/><rect x="45" y="202" width="140" height="14" opacity=".6"/><rect x="70" y="228" width="70" height="14" opacity=".4"/></g><circle cx="100" cy="90" r="26" fill="none" stroke="#7C9BB0" stroke-width="2"/></svg>',
+    g3:'<svg viewBox="0 0 200 250" role="img" aria-label="Rows of small typographic marks spelling out an error pattern"><g fill="#EDEAE2" font-family="monospace" font-size="11"><text x="20" y="40">404: no glyph</text><text x="20" y="70">ERRSET: overflow</text><text x="20" y="100">KERN: -999</text><text x="20" y="130">no outline found</text><text x="20" y="160">FALLBACK USED</text><text x="20" y="190">FALLBACK USED</text><text x="20" y="220">404: no glyph</text></g></svg>',
+    g4:'<svg viewBox="0 0 200 250" role="img" aria-label="Concentric sound waves radiating from a point"><g fill="none" stroke="#FF4B1F" stroke-width="1.5"><circle cx="100" cy="125" r="16"/><circle cx="100" cy="125" r="38" opacity=".8"/><circle cx="100" cy="125" r="60" opacity=".6"/><circle cx="100" cy="125" r="82" opacity=".4"/><circle cx="100" cy="125" r="104" opacity=".22"/></g></svg>',
+    g5:'<svg viewBox="0 0 200 250" role="img" aria-label="A folded sheet represented by nested rectangles"><g fill="none" stroke="#EDEAE2" stroke-width="1.2"><rect x="35" y="30" width="130" height="190"/><rect x="52" y="47" width="96" height="156"/><rect x="69" y="64" width="62" height="122"/><rect x="86" y="81" width="28" height="88"/></g></svg>',
+    g6:'<svg viewBox="0 0 200 250" role="img" aria-label="A pointer arrow repeated in a grid"><g fill="#D8FF3E"><path d="M60 40 60 130 78 112 90 140 102 134 90 106 112 106Z"/><path d="M130 90 130 180 148 162 160 190 172 184 160 156 182 156Z" opacity=".45"/></g></svg>',
+    g7:'<svg viewBox="0 0 200 250" role="img" aria-label="A sine wave folding over itself"><path d="M20 160c30-90 60 90 90 0s60 90 90 0" fill="none" stroke="#FF4B1F" stroke-width="2.5"/><path d="M20 190c30-90 60 90 90 0s60 90 90 0" fill="none" stroke="#FF4B1F" stroke-width="1" opacity=".5"/></svg>',
+    g8:'<svg viewBox="0 0 200 250" role="img" aria-label="A dense block of tiny text lines with one blank gap"><g fill="#EDEAE2" opacity=".8"><rect x="25" y="40" width="150" height="4"/><rect x="25" y="52" width="150" height="4"/><rect x="25" y="64" width="120" height="4"/><rect x="25" y="76" width="150" height="4"/><rect x="25" y="100" width="150" height="4"/><rect x="25" y="112" width="90" height="4"/><rect x="25" y="136" width="150" height="4"/><rect x="25" y="148" width="140" height="4"/></g></svg>',
+    g9:'<svg viewBox="0 0 200 250" role="img" aria-label="Twelve narrow doorways of decreasing width"><g fill="#7C9BB0"><rect x="30" y="30" width="14" height="190"/><rect x="50" y="46" width="12" height="174"/><rect x="68" y="60" width="10" height="160"/><rect x="84" y="72" width="8" height="148"/><rect x="98" y="82" width="6" height="138"/><rect x="110" y="90" width="4" height="130"/></g></svg>',
+    g10:'<svg viewBox="0 0 200 250" role="img" aria-label="A grid with one square left deliberately empty"><g stroke="#EDEAE2" stroke-width="1" opacity=".7"><path d="M40 40h120v170H40zM80 40v170M120 40v170M40 96h120M40 153h120"/></g><rect x="82" y="98" width="36" height="53" fill="#FF4B1F"/></svg>',
+    g11:'<svg viewBox="0 0 200 250" role="img" aria-label="A drifting constellation of small dots"><g fill="#D8FF3E"><circle cx="60" cy="70" r="3"/><circle cx="95" cy="120" r="2"/><circle cx="140" cy="90" r="4"/><circle cx="120" cy="180" r="2.5"/><circle cx="70" cy="200" r="2"/><circle cx="155" cy="150" r="3"/></g><path d="M60 70 140 90 120 180 70 200 60 70" fill="none" stroke="#D8FF3E" stroke-width=".8" opacity=".6"/></svg>',
+    g12:'<svg viewBox="0 0 200 250" role="img" aria-label="Two offset rectangles facing each other"><rect x="30" y="45" width="60" height="160" fill="none" stroke="#7C9BB0" stroke-width="2"/><rect x="110" y="45" width="60" height="160" fill="none" stroke="#EDEAE2" stroke-width="2" stroke-dasharray="6 5"/></svg>'
+  };
+
+  /* Art is authored in this file as markup, so it is parsed once and imported
+     as a node rather than assigned as an HTML string. */
+  function svgNode(markup) {
+    var parsed = new DOMParser().parseFromString(markup, 'image/svg+xml');
+    return document.importNode(parsed.documentElement, true);
+  }
+
+  var field = document.getElementById('field');
+  var countEl = document.getElementById('count');
+
+  works.forEach(function (w, i) {
+    var tile = document.createElement('button');
+    tile.className = 'tile';
+    tile.type = 'button';
+    tile.dataset.medium = w.medium;
+    tile.dataset.index = String(i);
+    tile.setAttribute('aria-pressed', 'false');
+    tile.setAttribute('aria-label', w.title + ' by ' + w.artist + ', ' + w.mediumLabel + ', ' + w.year);
+
+    var thumb = document.createElement('span');
+    thumb.className = 'thumb';
+    thumb.appendChild(svgNode(art[w.art]));
+
+    var cap = document.createElement('span');
+    cap.className = 'cap';
+    var titleEl = document.createElement('b');
+    titleEl.textContent = w.title;
+    var metaEl = document.createElement('span');
+    metaEl.textContent = w.ref + ' · ' + w.mediumLabel;
+    cap.appendChild(titleEl);
+    cap.appendChild(metaEl);
+
+    tile.appendChild(thumb);
+    tile.appendChild(cap);
+    field.appendChild(tile);
+  });
+
+  var tiles = Array.prototype.slice.call(field.querySelectorAll('.tile'));
+
+  /* ---------- filtering ---------- */
+  var activeFilter = 'all';
+  function applyFilter() {
+    var shown = 0;
+    tiles.forEach(function (t) {
+      var on = activeFilter === 'all' || t.dataset.medium === activeFilter;
+      t.hidden = !on;
+      if (on) shown++;
+    });
+    countEl.textContent = shown + ' of ' + works.length + ' shown';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-filter]'), function (btn) {
+    btn.addEventListener('click', function () {
+      activeFilter = btn.dataset.filter;
+      Array.prototype.forEach.call(document.querySelectorAll('[data-filter]'), function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      applyFilter();
+    });
+  });
+
+  /* ---------- shuffle: the field reorders, motion optional ---------- */
+  document.getElementById('shuffle').addEventListener('click', function () {
+    if (!reduce) {
+      field.classList.add('shuffling');
+      setTimeout(function () { field.classList.remove('shuffling'); }, 40);
+    }
+    var nodes = tiles.filter(function (t) { return !t.hidden; });
+    for (var i = nodes.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = document.createElement('span');
+      field.insertBefore(tmp, nodes[i]);
+      field.insertBefore(nodes[j], tmp);
+      tmp.parentNode.removeChild(tmp);
+    }
+    countEl.textContent = 'Order is arbitrary. The archive does not believe in chronology.';
+  });
+
+  /* ---------- view toggle: the conventional escape hatch ---------- */
+  var gridBtn = document.getElementById('viewGrid');
+  var indexBtn = document.getElementById('viewIndex');
+  function setView(v) {
+    document.body.dataset.view = v;
+    gridBtn.setAttribute('aria-pressed', String(v === 'grid'));
+    indexBtn.setAttribute('aria-pressed', String(v === 'index'));
+  }
+  gridBtn.addEventListener('click', function () { setView('grid'); });
+  indexBtn.addEventListener('click', function () { setView('index'); });
+  setView('grid');
+
+  /* ---------- pinned readout ---------- */
+  var readout = document.getElementById('readout');
+  function closeReadout() {
+    readout.classList.remove('show');
+    tiles.forEach(function (t) { t.setAttribute('aria-pressed', 'false'); });
+  }
+  tiles.forEach(function (t) {
+    t.addEventListener('click', function () {
+      var wasOn = t.getAttribute('aria-pressed') === 'true';
+      tiles.forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+      if (wasOn) { closeReadout(); return; }
+      t.setAttribute('aria-pressed', 'true');
+      var w = works[Number(t.dataset.index)];
+      document.getElementById('rTitle').textContent = w.title;
+      document.getElementById('rArtist').textContent = w.artist;
+      document.getElementById('rRef').textContent = w.ref;
+      document.getElementById('rMedium').textContent = w.mediumLabel;
+      document.getElementById('rYear').textContent = w.year;
+      document.getElementById('rAccess').textContent = w.access;
+      document.getElementById('rAction').textContent = w.access === 'Not for sale' ? 'Ask about the print' : 'Request viewing';
+      document.getElementById('rCite').textContent = 'Cite ' + w.ref;
+      readout.classList.add('show');
+    });
+  });
+  document.getElementById('closeReadout').addEventListener('click', closeReadout);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && readout.classList.contains('show')) {
+      closeReadout();
+      tiles.forEach(function (t) { t.setAttribute('aria-pressed', 'false'); });
+    }
+  });
+
+  /* ---------- the type-on line ---------- */
+  var typed = document.getElementById('typed');
+  var line = 'archive status: open · 1,204 records · 0 removals since 2011';
+  if (reduce) {
+    typed.textContent = line;
+  } else {
+    var n = 0;
+    (function type() {
+      typed.textContent = line.slice(0, n++);
+      if (n <= line.length) setTimeout(type, 55);
+    })();
+  }
+
+  /* ---------- deposit form ---------- */
+  var form = document.getElementById('depositForm');
+  var msg = document.getElementById('depositMsg');
+  var title = document.getElementById('dTitle');
+  var artist = document.getElementById('dArtist');
+  var email = document.getElementById('dEmail');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.dataset.state = '';
+    msg.textContent = '';
+    [title, artist, email].forEach(function (f) { f.removeAttribute('aria-invalid'); });
+
+    if (title.value.trim().length < 2) {
+      title.setAttribute('aria-invalid', 'true');
+      msg.dataset.state = 'error';
+      msg.textContent = 'Working title: at least two characters.';
+      title.focus();
+      return;
+    }
+    if (artist.value.trim().length < 2) {
+      artist.setAttribute('aria-invalid', 'true');
+      msg.dataset.state = 'error';
+      msg.textContent = 'We archive the maker, not just the work. Add a name or an alias.';
+      artist.focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      email.setAttribute('aria-invalid', 'true');
+      msg.dataset.state = 'error';
+      msg.textContent = 'Email does not parse. We only use it to send the decision.';
+      email.focus();
+      return;
+    }
+
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Received. Reference OF-1205 is yours; expect a decision within six weeks.';
+    form.reset();
+    setTimeout(function () { btn.disabled = false; btn.textContent = 'Send it to the archive'; }, 2400);
+  });
+
+  applyFilter();
+})();
+</script>
+</body>
+</html>

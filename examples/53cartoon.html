@@ -1,0 +1,571 @@
+<!-- Style: Cartoon | 53cartoon.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Captain Loop - the coding game for kids 7 to 12</title>
+<style>
+  :root{
+    --ink:#16223a;
+    --paper:#fff8ec;
+    --sky:#6ec6ff;
+    --sky-deep:#2b8fd6;
+    --sun:#ffd23f;
+    --grass:#6ed36b;
+    --berry:#ff5c8a;
+    --grape:#8b6cf0;
+    --panel:#ffffff;
+    --console:#1d2942;
+
+    --font-display:"Chalkboard SE","Comic Sans MS","Segoe Print","Trebuchet MS",system-ui,sans-serif;
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --t-hero:clamp(2.3rem,6.4vw,4.6rem);
+    --t-h2:clamp(1.7rem,4vw,2.8rem);
+    --t-h3:clamp(1.15rem,2vw,1.5rem);
+    --t-body:clamp(1rem,1.05vw,1.08rem);
+    --t-small:.9rem;
+
+    --outline:5px;
+    --r:22px;
+    --pop:7px 7px 0 var(--ink);
+    --pop-sm:4px 4px 0 var(--ink);
+    --s-1:.4rem; --s-2:.8rem; --s-3:1.4rem; --s-4:2.2rem; --s-5:3.4rem; --s-6:5rem;
+    --gutter:clamp(1.1rem,4vw,3rem);
+    --wrap:1200px;
+    --motion:180ms;
+    --ease-pop:cubic-bezier(.3,1.7,.5,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:var(--t-body);line-height:1.6}
+  h1,h2,h3{font-family:var(--font-display);line-height:1.05;margin:0;letter-spacing:-.01em}
+  h1{font-size:var(--t-hero)} h2{font-size:var(--t-h2)} h3{font-size:var(--t-h3)}
+  p{margin:0 0 1em}
+  ul{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  svg{display:block;max-width:100%}
+  :focus-visible{outline:5px solid var(--berry);outline-offset:3px;border-radius:8px}
+  .wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+  .card{background:var(--panel);border:var(--outline) solid var(--ink);border-radius:var(--r);box-shadow:var(--pop)}
+  .skip{position:absolute;left:-999px;background:var(--sun);border:var(--outline) solid var(--ink);border-radius:14px;padding:.7rem 1rem;font-weight:800}
+  .skip:focus{left:.7rem;top:.7rem;z-index:60}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:54px;padding:.85rem 1.6rem;
+    font-family:var(--font-display);font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;
+    background:var(--sun);color:var(--ink);border:var(--outline) solid var(--ink);border-radius:999px;box-shadow:var(--pop);
+    transition:transform var(--motion) var(--ease-pop),box-shadow var(--motion) ease}
+  .btn:hover{transform:translate(-2px,-3px) scale(1.03);box-shadow:10px 11px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px) scale(.98);box-shadow:2px 2px 0 var(--ink)}
+  .btn--sky{background:var(--sky)} .btn--berry{background:var(--berry);color:#fff} .btn--grass{background:var(--grass)}
+  .btn--sm{min-height:46px;padding:.5rem 1.1rem;font-size:var(--t-small);border-width:4px;box-shadow:var(--pop-sm)}
+
+  /* nav */
+  header{background:var(--panel);border-bottom:var(--outline) solid var(--ink);position:sticky;top:0;z-index:30}
+  .nav-in{display:flex;align-items:center;gap:var(--s-3);min-height:74px}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;margin-right:auto;font-family:var(--font-display);
+    font-size:1.4rem;font-weight:700;background:var(--sky);border:4px solid var(--ink);border-radius:999px;padding:.3rem .9rem .3rem .35rem}
+  .brand svg{width:34px;height:34px}
+  .nav-links{display:flex;gap:.2rem;align-items:center}
+  .nav-links a{text-decoration:none;font-weight:800;padding:.8rem .95rem;min-height:44px;display:inline-flex;align-items:center;
+    border-radius:16px;border:4px solid transparent}
+  .nav-links a:hover{border-color:var(--ink);background:var(--sun);transform:translateY(-2px)}
+  .nav-toggle{display:none;font-family:var(--font-display);font-weight:700;background:var(--sun);border:4px solid var(--ink);
+    border-radius:14px;min-height:46px;padding:.4rem .9rem;cursor:pointer}
+
+  /* hero */
+  .hero{padding-block:var(--s-5);position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;top:-120px;right:-120px;width:340px;height:340px;border-radius:50%;background:#ffe9a8}
+  .hero::after{content:"";position:absolute;bottom:-90px;left:-90px;width:240px;height:240px;border-radius:44% 56% 40% 60%;background:#d8f0ff}
+  .hero-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:var(--s-4);align-items:center}
+  .kicker{display:inline-block;background:var(--grape);color:#fff;font-family:var(--font-display);padding:.35rem .9rem;
+    border:4px solid var(--ink);border-radius:999px;margin-bottom:var(--s-2);transform:rotate(-2deg)}
+  .hero h1 em{font-style:normal;color:var(--berry);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill}
+  .lede{font-size:clamp(1.05rem,1.5vw,1.22rem);max-width:42ch}
+  .hero-cta{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-block:var(--s-3)}
+  .stage{position:relative;display:grid;place-items:center;min-height:340px}
+  .stage .captain{width:min(100%,340px);animation:float 4.5s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-14px) rotate(1.5deg)}}
+  .stage.is-cheer .captain{animation:cheer .6s var(--ease-pop)}
+  @keyframes cheer{0%{transform:scale(1)}40%{transform:scale(1.14) rotate(-6deg)}100%{transform:scale(1)}}
+  .speech{position:absolute;left:-10px;top:0;max-width:210px;background:var(--panel);border:var(--outline) solid var(--ink);
+    border-radius:24px;padding:.7rem .9rem;font-family:var(--font-display);font-size:var(--t-small);box-shadow:var(--pop-sm);transform:rotate(3deg)}
+  .speech::after{content:"";position:absolute;right:26px;bottom:-19px;width:0;height:0;border:9px solid transparent;border-top-color:var(--ink);border-bottom:0}
+
+  /* editor */
+  .editor-section{background:var(--sky);border-block:var(--outline) solid var(--ink);padding-block:var(--s-5)}
+  .editor-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:var(--s-3);align-items:start}
+  .editor{background:var(--console);border:var(--outline) solid var(--ink);border-radius:var(--r);overflow:hidden;box-shadow:var(--pop)}
+  .editor-bar{display:flex;align-items:center;gap:.5rem;background:var(--ink);padding:.55rem .9rem;color:#fff;
+    font-family:var(--font-display);font-size:var(--t-small)}
+  .dot{width:14px;height:14px;border-radius:50%;border:3px solid var(--ink)}
+  .dot--r{background:#ff6b6b}.dot--y{background:var(--sun)}.dot--g{background:var(--grass)}
+  .editor-bar .file{margin-left:auto;opacity:.8}
+  .code{margin:0;padding:var(--s-3);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:clamp(.85rem,1.35vw,1.02rem);line-height:1.75;color:#e8eefc;overflow-x:auto}
+  .code .k{color:#ff9ec7}.code .f{color:var(--sun)}.code .s{color:var(--grass)}.code .n{color:#8fd0ff}.code .c{color:#8494b8}
+  .editor-foot{display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap;padding:var(--s-2) var(--s-3);
+    border-top:4px solid #33405e;background:#232f4c}
+  .console-out{background:var(--console);border:var(--outline) solid var(--ink);border-radius:var(--r);box-shadow:var(--pop);
+    padding:var(--s-3);color:#cfe0ff;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.95rem;min-height:150px}
+  .console-out .line{display:block}
+  .console-out .ok{color:var(--grass)}
+  .hint{font-size:var(--t-small);margin-top:.8rem}
+
+  /* cast */
+  .cast{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3)}
+  .crew{background:var(--panel);border:var(--outline) solid var(--ink);border-radius:var(--r);box-shadow:var(--pop-sm);
+    text-align:center;padding:var(--s-2) var(--s-2) var(--s-3);transition:transform var(--motion) var(--ease-pop)}
+  .crew:hover{transform:translateY(-6px) rotate(-1.5deg)}
+  .crew svg{width:min(100%,140px);margin-inline:auto}
+  .crew h3{margin:.5rem 0 .2rem}
+  .crew p{font-size:.95rem;margin:0;color:#4a5570}
+
+  /* map */
+  .map-wrap{background:var(--grass);border-block:var(--outline) solid var(--ink);padding-block:var(--s-5)}
+  .map{background:var(--panel);border:var(--outline) solid var(--ink);border-radius:var(--r);box-shadow:var(--pop);padding:var(--s-3)}
+  .nodes{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s-2)}
+  .node{position:relative;text-align:center;padding:var(--s-2) .5rem;border:4px dashed #b9c4dc;border-radius:18px;background:#f6f9ff}
+  .node .badge{width:52px;height:52px;margin:0 auto .5rem;border-radius:50%;display:grid;place-items:center;
+    font-family:var(--font-display);font-size:1.4rem;border:4px solid var(--ink);background:var(--sun)}
+  .node:nth-child(2) .badge{background:var(--sky)} .node:nth-child(3) .badge{background:var(--berry);color:#fff}
+  .node:nth-child(4) .badge{background:var(--grape);color:#fff} .node:nth-child(5) .badge{background:var(--ink);color:var(--sun)}
+  .node h3{font-size:1.05rem}
+  .node p{font-size:.85rem;margin:.2rem 0 0;color:#4a5570}
+  .node--done{background:#f2ffe6;border-style:solid}
+
+  /* grown ups */
+  .grown{display:grid;grid-template-columns:.9fr 1.1fr;gap:var(--s-4);align-items:start}
+  .table-wrap{background:var(--panel);border:var(--outline) solid var(--ink);border-radius:var(--r);box-shadow:var(--pop);overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:.97rem}
+  caption{text-align:left;font-family:var(--font-display);padding:var(--s-2) var(--s-3);background:var(--sun);font-size:1.05rem}
+  th,td{text-align:left;padding:.8rem var(--s-3);border-bottom:4px solid #e7ecf6}
+  thead th{background:#f2f6ff;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em}
+  tbody tr:last-child td{border-bottom:0}
+  .ticks li{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.8rem}
+  .ticks svg{flex:none;margin-top:2px}
+
+  /* signup */
+  .signup{background:var(--sun);border-block:var(--outline) solid var(--ink);padding-block:var(--s-5)}
+  .signup-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:center}
+  .field{display:block;margin-bottom:var(--s-2)}
+  .field .lab{display:block;font-family:var(--font-display);font-weight:700;margin-bottom:.35rem}
+  .field input,.field select{width:100%;min-height:52px;padding:.75rem .9rem;font:inherit;background:var(--panel);
+    border:4px solid var(--ink);border-radius:16px;color:var(--ink)}
+  .field .err{display:none;font-weight:800;font-size:var(--t-small);color:#b3233f;margin-top:.35rem}
+  .field[data-invalid] .err{display:block}
+  .field[data-invalid] input,.field[data-invalid] select{background:#ffe3e8}
+  .check{display:flex;gap:.7rem;align-items:flex-start;background:var(--panel);border:4px solid var(--ink);border-radius:16px;
+    padding:.8rem 1rem;margin-bottom:var(--s-2)}
+  .check input{width:26px;height:26px;flex:none;margin-top:2px;accent-color:var(--berry)}
+  .status{font-family:var(--font-display);font-weight:700;margin:.8rem 0 0;min-height:1.5em}
+
+  footer{background:var(--ink);color:#e9f0ff;padding-block:var(--s-5) var(--s-3)}
+  .foot{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:var(--s-4)}
+  footer h3{font-size:1.1rem;color:var(--sun);margin-bottom:.6rem}
+  footer li{margin-bottom:.35rem}
+  footer a{text-decoration:none;font-size:.95rem;color:#c3cfe6}
+  footer a:hover{color:var(--sun);text-decoration:underline}
+  .fine{margin-top:var(--s-4);padding-top:var(--s-2);border-top:3px solid #33405e;display:flex;justify-content:space-between;
+    gap:var(--s-2);flex-wrap:wrap;font-size:var(--t-small);color:#a8b6d2}
+
+  section{padding-block:var(--s-5)}
+  .sec-head{max-width:58ch;margin-bottom:var(--s-4)}
+  .sec-head p{margin:.4rem 0 0}
+
+  @media (max-width:980px){
+    .hero-grid,.editor-layout,.grown,.signup-grid{grid-template-columns:1fr}
+    .cast{grid-template-columns:repeat(2,1fr)}
+    .nodes{grid-template-columns:repeat(2,1fr)}
+    .stage{min-height:280px;order:-1}
+    .nav-toggle{display:inline-block}
+    .nav-links{display:none;width:100%;order:3;padding-bottom:var(--s-2);flex-direction:column;align-items:stretch}
+    .nav-links[data-open="true"]{display:flex}
+  }
+  @media (max-width:560px){
+    .cast{grid-template-columns:1fr 1fr}
+    .speech{position:static;max-width:none;margin-bottom:.8rem}
+    .foot{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#try">Skip to the code editor</a>
+
+<header>
+  <nav class="wrap" aria-label="Primary">
+    <div class="nav-in">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="8" y="10" width="24" height="22" rx="6" fill="#fff" stroke="#16223a" stroke-width="4"/><path d="M20 10V4" stroke="#16223a" stroke-width="4" stroke-linecap="round"/><circle cx="20" cy="4" r="3" fill="#ff5c8a" stroke="#16223a" stroke-width="3"/><circle cx="15" cy="20" r="3" fill="#16223a"/><circle cx="25" cy="20" r="3" fill="#16223a"/><path d="M15 27q5 4 10 0" fill="none" stroke="#16223a" stroke-width="3.4" stroke-linecap="round"/></svg>
+        Captain Loop
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="nav-links" id="menu">
+        <a href="#try">Play a level</a>
+        <a href="#crew">The crew</a>
+        <a href="#worlds">Worlds</a>
+        <a href="#grown">For grown-ups</a>
+      </div>
+      <a class="btn btn--grass btn--sm" href="#start">Start free</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker">Ages 7 to 12 &middot; no typing needed to start</span>
+        <h1 id="hero-title">Learn to code by <em>bossing a robot</em> around.</h1>
+        <p class="lede">Captain Loop is a story adventure where every puzzle is a small program. Drag the blocks, press GO, and watch a very square hero try to rescue the moon cats. Sixty levels, four characters, and one extremely dramatic narrator.</p>
+        <div class="hero-cta">
+          <a class="btn btn--sky" href="#try">Play level 1 now</a>
+          <a class="btn" href="#start">Create a crew account</a>
+        </div>
+      </div>
+      <div class="stage" id="stage">
+        <p class="speech">Oi! New captain! Drag a move block onto the program, then press the big GO button. Easy.</p>
+        <svg class="captain" viewBox="0 0 200 220" role="img" aria-label="Captain Loop, a small blue robot with an antenna and a cape">
+          <path d="M40 118c-14 26-16 52-6 78h132c10-26 8-52-6-78z" fill="#ff5c8a" stroke="#16223a" stroke-width="6" stroke-linejoin="round"/>
+          <rect x="46" y="46" width="108" height="88" rx="20" fill="#6ec6ff" stroke="#16223a" stroke-width="6"/>
+          <rect x="62" y="66" width="76" height="42" rx="14" fill="#16223a"/>
+          <circle cx="82" cy="87" r="9" fill="#fff"/><circle cx="118" cy="87" r="9" fill="#fff"/>
+          <circle cx="84" cy="88" r="4" fill="#16223a"/><circle cx="120" cy="88" r="4" fill="#16223a"/>
+          <path d="M100 46V26" stroke="#16223a" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="100" cy="20" r="9" fill="#ffd23f" stroke="#16223a" stroke-width="5"/>
+          <rect x="30" y="86" width="18" height="52" rx="9" fill="#ffd23f" stroke="#16223a" stroke-width="6"/>
+          <rect x="152" y="86" width="18" height="52" rx="9" fill="#ffd23f" stroke="#16223a" stroke-width="6"/>
+          <rect x="66" y="196" width="26" height="18" rx="7" fill="#6ed36b" stroke="#16223a" stroke-width="6"/>
+          <rect x="108" y="196" width="26" height="18" rx="7" fill="#6ed36b" stroke="#16223a" stroke-width="6"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="editor-section" id="try" aria-labelledby="try-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="try-title">Try one, right here</h2>
+        <p>This is the real block editor, shrunk to a toy. Press GO and the console writes back like the game does.</p>
+      </div>
+      <div class="editor-layout">
+        <div class="editor">
+          <div class="editor-bar">
+            <i class="dot dot--r" aria-hidden="true"></i><i class="dot dot--y" aria-hidden="true"></i><i class="dot dot--g" aria-hidden="true"></i>
+            <span class="file">level-01-robot-walk.blocks</span>
+          </div>
+<pre class="code"><code><span class="c">// Level 1: get Loop to the battery</span>
+<span class="k">when</span> <span class="f">GO</span> <span class="k">is</span> <span class="f">pressed</span>:
+    <span class="f">move</span> <span class="f">forward</span> <span class="n">3</span> <span class="k">times</span>
+    <span class="f">turn</span> <span class="f">left</span> <span class="n">90</span> <span class="k">degrees</span>
+    <span class="f">move</span> <span class="f">forward</span> <span class="n">2</span> <span class="k">times</span>
+    <span class="f">say</span> <span class="s">"Battery found!"</span>
+    <span class="k">if</span> <span class="f">moon_cat</span> <span class="f">is</span> <span class="f">nearby</span>:
+        <span class="f">celebrate</span></code></pre>
+          <div class="editor-foot">
+            <button class="btn btn--grass" type="button" id="runBtn">GO</button>
+            <button class="btn btn--sm" type="button" id="resetBtn" style="background:#fff">Reset</button>
+            <p class="hint" style="margin:0 0 0 auto;font-weight:800">Blocks: 5 &middot; Snacks used: 1</p>
+          </div>
+        </div>
+        <div>
+          <div class="console-out" id="console" role="status" aria-live="polite" aria-label="Program output">
+            <span class="line">$ waiting for input &mdash; press GO</span>
+          </div>
+          <p class="hint">Every level is one idea: loops, conditions, then variables. Sixty levels, then you write your own and the game runs it for real.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="crew" aria-labelledby="crew-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="crew-title">Your crew</h2>
+        <p>Four characters, all drawn on the same six colours, all loud about it.</p>
+      </div>
+      <div class="cast">
+        <article class="crew">
+          <svg viewBox="0 0 160 150" role="img" aria-label="Captain Loop, the square-headed robot">
+            <rect x="34" y="30" width="92" height="76" rx="18" fill="#6ec6ff" stroke="#16223a" stroke-width="6"/>
+            <rect x="46" y="48" width="68" height="36" rx="12" fill="#16223a"/>
+            <circle cx="66" cy="66" r="8" fill="#fff"/><circle cx="94" cy="66" r="8" fill="#fff"/>
+            <path d="M80 30V14" stroke="#16223a" stroke-width="6" stroke-linecap="round"/><circle cx="80" cy="10" r="8" fill="#ffd23f" stroke="#16223a" stroke-width="5"/>
+            <rect x="52" y="112" width="22" height="24" rx="8" fill="#6ed36b" stroke="#16223a" stroke-width="6"/>
+            <rect x="86" y="112" width="22" height="24" rx="8" fill="#6ed36b" stroke="#16223a" stroke-width="6"/>
+          </svg>
+          <h3>Captain Loop</h3>
+          <p>Repeats things twice and then once more, loudly.</p>
+        </article>
+        <article class="crew">
+          <svg viewBox="0 0 160 150" role="img" aria-label="Patch, an orange cat in a hoodie">
+            <path d="M44 58 38 22l30 18a52 52 0 0 1 24 0l30-18-6 36a46 46 0 0 1 4 20 46 46 0 0 1-46 40 46 46 0 0 1-46-40 46 46 0 0 1 4-20z" fill="#ff9a5c" stroke="#16223a" stroke-width="6" stroke-linejoin="round"/>
+            <circle cx="64" cy="76" r="6" fill="#16223a"/><circle cx="96" cy="76" r="6" fill="#16223a"/>
+            <path d="M74 90h12l-6 8z" fill="#ff5c8a" stroke="#16223a" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M50 104h60v34a8 8 0 0 1-8 8H58a8 8 0 0 1-8-8z" fill="#8b6cf0" stroke="#16223a" stroke-width="6"/>
+          </svg>
+          <h3>Patch</h3>
+          <p>Knows every shortcut in the game. Will tell you about it.</p>
+        </article>
+        <article class="crew">
+          <svg viewBox="0 0 160 150" role="img" aria-label="Bit, a small yellow bird">
+            <ellipse cx="80" cy="88" rx="44" ry="38" fill="#ffd23f" stroke="#16223a" stroke-width="6"/>
+            <circle cx="68" cy="78" r="6" fill="#16223a"/><circle cx="94" cy="78" r="6" fill="#16223a"/>
+            <path d="M74 92h12l-6 9z" fill="#ff9a5c" stroke="#16223a" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M122 84l18 6-18 8z" fill="#ff9a5c" stroke="#16223a" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M56 66a12 12 0 1 1 0-24 12 12 0 0 1 0 24z" fill="#6ed36b" stroke="#16223a" stroke-width="5"/>
+            <path d="M36 112 12 126M124 112l24 14" stroke="#16223a" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+          <h3>Bit</h3>
+          <p>Carries the variables. Slightly heavier than she looks.</p>
+        </article>
+        <article class="crew">
+          <svg viewBox="0 0 160 150" role="img" aria-label="The Big Middle, a round purple boss with one eye">
+            <circle cx="80" cy="84" r="46" fill="#8b6cf0" stroke="#16223a" stroke-width="6"/>
+            <ellipse cx="80" cy="78" rx="24" ry="20" fill="#fff" stroke="#16223a" stroke-width="5"/>
+            <circle cx="80" cy="80" r="9" fill="#16223a"/>
+            <path d="M58 60l-8-16M102 60l8-16" stroke="#16223a" stroke-width="6" stroke-linecap="round"/>
+            <path d="M62 116h36M66 128h28" stroke="#16223a" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+          <h3>The Big Middle</h3>
+          <p>Final boss of World 4. Only loses to a nested loop.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="map-wrap" id="worlds" aria-labelledby="worlds-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="worlds-title">Four worlds, sixty levels</h2>
+        <p>Progress saves automatically. Nothing is locked behind a purchase, ever.</p>
+      </div>
+      <div class="map">
+        <div class="nodes">
+          <article class="node node--done">
+            <div class="badge" aria-hidden="true">1</div>
+            <h3>Boot Yard</h3>
+            <p>Move, turn, repeat. Levels 1&ndash;14.</p>
+          </article>
+          <article class="node">
+            <div class="badge" aria-hidden="true">2</div>
+            <h3>Splinter Bridge</h3>
+            <p>Conditions and if/else. Levels 15&ndash;30.</p>
+          </article>
+          <article class="node">
+            <div class="badge" aria-hidden="true">3</div>
+            <h3>Variable Vault</h3>
+            <p>Counters, lists, and a grumpy librarian. 31&ndash;46.</p>
+          </article>
+          <article class="node">
+            <div class="badge" aria-hidden="true">4</div>
+            <h3>The Big Middle</h3>
+            <p>Nested loops and your own levels. 47&ndash;60.</p>
+          </article>
+          <article class="node">
+            <div class="badge" aria-hidden="true">&#9733;</div>
+            <h3>Workshop</h3>
+            <p>Build and publish your own levels for friends.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="grown" aria-labelledby="grown-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="grown-title">For the grown-ups</h2>
+        <p>Captain Loop is made by people with children, which mostly means it is built around the same arguments.</p>
+      </div>
+      <div class="grown">
+        <ul class="ticks">
+          <li>
+            <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#6ed36b" stroke="#16223a" stroke-width="3"/><path d="M7 12.5l3.5 3.5L17 9" fill="none" stroke="#16223a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><b>No ads, no in-app purchases, no currency.</b> One price, once. Progress lives on your device.</span>
+          </li>
+          <li>
+            <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#6ed36b" stroke="#16223a" stroke-width="3"/><path d="M7 12.5l3.5 3.5L17 9" fill="none" stroke="#16223a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><b>Weekly limits you set, not us.</b> A session timer in grown-up settings, with a friendly end-of-round message rather than a lockout.</span>
+          </li>
+          <li>
+            <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#6ed36b" stroke="#16223a" stroke-width="3"/><path d="M7 12.5l3.5 3.5L17 9" fill="none" stroke="#16223a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><b>Names are not shown to anyone.</b> There is no chat, no lobby, and no way for one child to message another.</span>
+          </li>
+          <li>
+            <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#6ed36b" stroke="#16223a" stroke-width="3"/><path d="M7 12.5l3.5 3.5L17 9" fill="none" stroke="#16223a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><b>Works with a keyboard.</b> Every block is reachable by Tab, and the whole game can be played without a mouse.</span>
+          </li>
+        </ul>
+
+        <div class="table-wrap">
+          <table>
+            <caption>What a child actually learns, and where</caption>
+            <thead>
+              <tr><th scope="col">Idea</th><th scope="col">First appears</th><th scope="col">Used again in</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Sequencing</td><td>Level 1</td><td>Every level after</td></tr>
+              <tr><td>Loops</td><td>Level 3</td><td>Worlds 2&ndash;4</td></tr>
+              <tr><td>Conditions</td><td>Level 15</td><td>Boss fights, puzzles</td></tr>
+              <tr><td>Variables</td><td>Level 31</td><td>Scoring, the vault</td></tr>
+              <tr><td>Functions</td><td>Level 44</td><td>Workshop levels</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="signup" id="start" aria-labelledby="start-title">
+    <div class="wrap">
+      <div class="signup-grid">
+        <div>
+          <h2 id="start-title">Start at level one</h2>
+          <p>No card, no trial timer, no email required for the first hour. Make a captain name and go.</p>
+        </div>
+        <form id="startForm" novalidate>
+          <label class="field" for="name">
+            <span class="lab">Captain name</span>
+            <input id="name" name="name" type="text" autocomplete="off" placeholder="e.g. Ada, or Loop-Bot-7" required>
+            <span class="err">Give your captain a name of 2 or more characters.</span>
+          </label>
+          <label class="field" for="age">
+            <span class="lab">Age group</span>
+            <select id="age" name="age">
+              <option>7&ndash;8 (blocky start)</option>
+              <option selected>9&ndash;10 (standard)</option>
+              <option>11&ndash;12 (with text blocks)</option>
+              <option>Grown-up driving</option>
+            </select>
+          </label>
+          <div class="check">
+            <input id="consent" type="checkbox">
+            <label for="consent">A grown-up has read this with me and said it was okay.</label>
+          </div>
+          <button class="btn btn--berry" type="submit">Create my captain</button>
+          <p class="status" id="startStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h3>Captain Loop</h3>
+        <p>Made in a converted bakery in Sheffield by four people and one extremely patient cat who is not in the game.</p>
+      </div>
+      <div>
+        <h3>Play</h3>
+        <ul>
+          <li><a href="#try">Try level 1</a></li>
+          <li><a href="#worlds">All four worlds</a></li>
+          <li><a href="#crew">Meet the crew</a></li>
+          <li><a href="#start">Create a captain</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Grown-ups</h3>
+        <ul>
+          <li><a href="#grown">What it teaches</a></li>
+          <li><a href="#grown">Session limits</a></li>
+          <li><a href="#grown">Accessibility</a></li>
+          <li><a href="#start">Support</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>&copy; 2026 Captain Loop. A fictional brand, built for a style demo.</span>
+      <span>No chat, no ads, no purchases. Ever.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Block editor toy
+  var runBtn = document.getElementById('runBtn');
+  var resetBtn = document.getElementById('resetBtn');
+  var out = document.getElementById('console');
+  var stage = document.getElementById('stage');
+
+  function write(lines) {
+    out.textContent = '';
+    lines.forEach(function (t) {
+      var s = document.createElement('span');
+      s.className = 'line' + (t[1] ? ' ok' : '');
+      s.textContent = t[0];
+      out.appendChild(s);
+    });
+  }
+
+  runBtn.addEventListener('click', function () {
+    write([['$ running level-01-robot-walk.blocks', false]]);
+    stage.classList.add('is-cheer');
+    var steps = [
+      ['> move forward, 3 times', false],
+      ['> turn left, 90 degrees', false],
+      ['> move forward, 2 times', false],
+      ['> say "Battery found!"', true],
+      ['> moon_cat is nearby: true', true],
+      ['> celebrate()', true],
+      ['* level 1 complete in 4 turns. Snack: +1', true]
+    ];
+    var i = 0;
+    var timer = setInterval(function () {
+      if (i < steps.length) {
+        write(steps.slice(0, ++i));
+      } else {
+        clearInterval(timer);
+        stage.classList.remove('is-cheer');
+      }
+    }, 260);
+  });
+
+  resetBtn.addEventListener('click', function () {
+    write([['$ waiting for input \u2014 press GO', false]]);
+  });
+
+  // Signup
+  var form = document.getElementById('startForm');
+  var status = document.getElementById('startStatus');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var nameInput = document.getElementById('name');
+    var nameField = nameInput.closest('.field');
+    var consent = document.getElementById('consent');
+    var nameOk = nameInput.value.trim().length >= 2;
+    nameField.removeAttribute('data-invalid');
+    nameInput.setAttribute('aria-invalid', String(!nameOk));
+    if (!nameOk) {
+      nameField.setAttribute('data-invalid', '');
+      status.textContent = 'A captain needs a name of at least two characters.';
+      nameInput.focus();
+      return;
+    }
+    if (!consent.checked) {
+      status.textContent = 'Tick the box with a grown-up first, then we can launch.';
+      consent.focus();
+      return;
+    }
+    status.textContent = 'Captain ' + nameInput.value.trim() + ' is ready. Level 1 is loading.';
+  });
+
+  // Mobile nav
+  var toggle = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.getAttribute('data-open') === 'true';
+    menu.setAttribute('data-open', String(!open));
+    toggle.setAttribute('aria-expanded', String(!open));
+    toggle.textContent = open ? 'Menu' : 'Close';
+  });
+</script>
+</body>
+</html>

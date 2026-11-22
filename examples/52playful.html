@@ -1,0 +1,600 @@
+<!-- Style: Playful | 52playful.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sproutlings - Plan the family stuff together</title>
+<style>
+  :root{
+    /* palette */
+    --paper:#fffaf1;
+    --surface:#ffffff;
+    --ink:#2b2a3c;
+    --ink-soft:#5d5a72;
+    --mint:#7ed9a7;
+    --mint-deep:#2f8f62;
+    --coral:#ff8a6b;
+    --coral-deep:#c0432a;
+    --butter:#ffd466;
+    --lilac:#b6a8ff;
+    --sky:#9ed8f5;
+
+    /* type */
+    --font:ui-rounded,"Segoe UI Variable Display","Hiragino Maru Gothic ProN",Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --t-hero:clamp(2.4rem,5.6vw,4.2rem);
+    --t-h2:clamp(1.75rem,3.6vw,2.7rem);
+    --t-h3:clamp(1.15rem,1.8vw,1.4rem);
+    --t-body:clamp(1rem,1.05vw,1.075rem);
+    --t-small:.9rem;
+
+    /* shape + depth */
+    --r-sm:12px; --r-md:20px; --r-lg:32px; --r-blob:44% 56% 52% 48% / 48% 44% 56% 52%;
+    --shadow-soft:0 10px 0 -2px rgba(43,42,60,.06), 0 18px 40px -22px rgba(43,42,60,.35);
+    --shadow-pop:0 8px 0 rgba(43,42,60,.12);
+
+    /* space */
+    --s-1:.4rem; --s-2:.8rem; --s-3:1.4rem; --s-4:2.1rem; --s-5:3.2rem; --s-6:4.8rem; --s-7:6rem;
+    --gutter:clamp(1.15rem,4vw,3rem);
+    --wrap:1180px;
+
+    --motion-base:200ms;
+    --ease-bounce:cubic-bezier(.34,1.4,.5,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:var(--t-body);line-height:1.6;
+    -webkit-font-smoothing:antialiased}
+  h1,h2,h3{margin:0;line-height:1.1;letter-spacing:-.015em}
+  h1{font-size:var(--t-hero);font-weight:800}
+  h2{font-size:var(--t-h2);font-weight:800}
+  h3{font-size:var(--t-h3);font-weight:750}
+  p{margin:0 0 1em}
+  a{color:inherit}
+  ul{margin:0;padding:0;list-style:none}
+  svg{display:block;max-width:100%}
+  :focus-visible{outline:4px solid var(--coral-deep);outline-offset:3px;border-radius:6px}
+
+  .wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+  .soft{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-soft)}
+  .skip{position:absolute;left:-999px;background:var(--butter);padding:.75rem 1.1rem;border-radius:var(--r-md);font-weight:800}
+  .skip:focus{left:.75rem;top:.75rem;z-index:50}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:.45rem;font-size:var(--t-small);font-weight:800;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--mint-deep);margin-bottom:var(--s-2)}
+
+  /* nav */
+  header{position:relative;z-index:20}
+  .nav-in{display:flex;align-items:center;gap:var(--s-3);min-height:76px}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;margin-right:auto;font-weight:800;font-size:1.35rem}
+  .brand .mark{width:42px;height:42px;border-radius:var(--r-blob);background:var(--mint);display:grid;place-items:center;flex:none;
+    animation:wiggle 6s var(--ease-bounce) infinite}
+  @keyframes wiggle{0%,88%,100%{border-radius:44% 56% 52% 48% / 48% 44% 56% 52%}92%{border-radius:58% 42% 40% 60% / 60% 56% 44% 40%}}
+  .nav-links{display:flex;align-items:center;gap:.2rem}
+  .nav-links a{text-decoration:none;font-weight:700;padding:.8rem .95rem;min-height:44px;display:inline-flex;align-items:center;
+    border-radius:var(--r-md);color:var(--ink-soft)}
+  .nav-links a:hover{background:#fff;color:var(--ink);box-shadow:var(--shadow-pop)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:52px;padding:.85rem 1.5rem;
+    font:inherit;font-weight:800;text-decoration:none;cursor:pointer;border:3px solid var(--ink);
+    border-radius:999px;background:var(--coral);color:var(--ink);box-shadow:var(--shadow-pop);
+    transition:transform var(--motion-base) var(--ease-bounce),box-shadow var(--motion-base) ease}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 11px 0 rgba(43,42,60,.12)}
+  .btn:active{transform:translateY(1px);box-shadow:0 3px 0 rgba(43,42,60,.12)}
+  .btn--mint{background:var(--mint)}
+  .btn--plain{background:#fff}
+  .btn--sm{min-height:44px;padding:.5rem 1.05rem;font-size:var(--t-small);border-width:2px}
+  .nav-toggle{display:none;background:#fff;border:3px solid var(--ink);border-radius:999px;min-height:44px;padding:.5rem 1rem;
+    font:inherit;font-weight:800;cursor:pointer}
+
+  /* hero */
+  .hero{position:relative;padding-block:var(--s-5) var(--s-6);overflow:hidden}
+  .hero::before{content:"";position:absolute;width:420px;height:420px;right:-140px;top:-120px;border-radius:var(--r-blob);background:#fff5cf}
+  .hero::after{content:"";position:absolute;width:260px;height:260px;left:-110px;bottom:-90px;border-radius:var(--r-blob);background:#e6f7ee}
+  .hero-grid{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:var(--s-5);align-items:center}
+  .hero h1 span{display:block;color:var(--coral-deep)}
+  .lede{font-size:clamp(1.05rem,1.5vw,1.22rem);color:var(--ink-soft);max-width:44ch}
+  .hero-cta{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-block:var(--s-3)}
+  .trust{display:flex;gap:var(--s-3);flex-wrap:wrap;align-items:center;font-size:var(--t-small);color:var(--ink-soft);font-weight:700}
+  .trust span{display:inline-flex;align-items:center;gap:.4rem}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--mint);flex:none}
+  .dot--coral{background:var(--coral)} .dot--butter{background:var(--butter)}
+
+  .board{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-soft);padding:var(--s-3);transform:rotate(-1.2deg)}
+  .board-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);margin-bottom:var(--s-3)}
+  .board-top h3{font-size:var(--t-h3)}
+  .board-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem}
+  .day{background:#f4f1ff;border-radius:var(--r-sm);padding:.55rem .4rem;text-align:center;font-size:.8rem;font-weight:800;color:var(--ink-soft)}
+  .day[aria-current="date"]{background:var(--butter);color:var(--ink);box-shadow:var(--shadow-pop)}
+  .task{display:flex;align-items:center;gap:.6rem;padding:.6rem .1rem;border-bottom:2px dashed #e7e2d6;font-size:.95rem}
+  .task:last-child{border-bottom:0}
+  .task input{width:22px;height:22px;accent-color:var(--mint-deep);flex:none}
+  .task .who{margin-left:auto;font-size:.78rem;font-weight:800;color:var(--ink-soft);background:#f4f1ff;border-radius:999px;padding:.15rem .6rem;white-space:nowrap}
+  .task.done span{text-decoration:line-through;color:#a49fb2}
+
+  /* steps on a dotted path */
+  .steps{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-soft);padding:var(--s-4) var(--s-3);position:relative}
+  .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-3);position:relative}
+  .steps-grid::before{content:"";position:absolute;left:12%;right:12%;top:34px;height:4px;
+    background:repeating-linear-gradient(90deg,var(--lilac) 0 10px,transparent 10px 20px)}
+  .step{text-align:center}
+  .step .num{width:68px;height:68px;margin:0 auto var(--s-2);border-radius:50%;display:grid;place-items:center;
+    font-size:1.5rem;font-weight:800;border:3px solid var(--ink);background:#fff;position:relative;box-shadow:var(--shadow-pop)}
+  .step:nth-child(1) .num{background:var(--butter)}
+  .step:nth-child(2) .num{background:var(--mint)}
+  .step:nth-child(3) .num{background:var(--sky)}
+  .step p{color:var(--ink-soft);font-size:.98rem;margin:.3rem 0 0}
+
+  /* features: one wide + two stacked */
+  .feat-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--s-3)}
+  .feat{padding:var(--s-3);border-radius:var(--r-md);background:var(--surface);box-shadow:var(--shadow-soft);display:flex;gap:var(--s-2);align-items:flex-start}
+  .feat .icon{width:56px;height:56px;border-radius:var(--r-md);display:grid;place-items:center;flex:none;border:3px solid var(--ink);background:var(--lilac)}
+  .feat h3{margin-bottom:.25rem}
+  .feat p{color:var(--ink-soft);margin:0;font-size:.97rem}
+  .stack{display:grid;gap:var(--s-3);grid-template-rows:1fr 1fr}
+
+  /* week switcher */
+  .week{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-soft);padding:var(--s-3)}
+  .tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:var(--s-3)}
+  .tab{font:inherit;font-weight:800;border:2px solid var(--ink);background:#fff;border-radius:999px;padding:.55rem 1.1rem;
+    min-height:44px;cursor:pointer;box-shadow:var(--shadow-pop);transition:transform var(--motion-base) var(--ease-bounce)}
+  .tab[aria-selected="true"]{background:var(--ink);color:#fff}
+  .tab:hover{transform:translateY(-2px)}
+  .panel-day[hidden]{display:none}
+  .day-line{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;margin-bottom:var(--s-2)}
+  .day-line h3{font-size:1.3rem}
+  .day-line span{color:var(--ink-soft);font-size:var(--t-small)}
+  .chip-list{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:var(--s-2)}
+  .chip{background:#f4f1ff;color:var(--ink);border-radius:999px;padding:.35rem .85rem;font-size:.85rem;font-weight:750}
+
+  /* pricing */
+  .price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-3);align-items:start}
+  .plan{padding:var(--s-4) var(--s-3);border-radius:var(--r-lg);background:#fff;box-shadow:var(--shadow-soft);border:3px solid transparent}
+  .plan--featured{border-color:var(--ink);background:#f2fbf6;transform:translateY(-10px)}
+  .plan h3{font-size:1.5rem}
+  .plan .amount{font-size:2.6rem;font-weight:800;line-height:1.1;margin:var(--s-2) 0 .2rem}
+  .plan .amount small{font-size:1rem;font-weight:700;color:var(--ink-soft)}
+  .plan ul{margin:var(--s-2) 0 var(--s-3);display:grid;gap:.5rem}
+  .plan li{display:flex;gap:.6rem;align-items:flex-start;font-size:.97rem;color:var(--ink-soft)}
+  .plan li b{color:var(--ink)}
+  .plan .btn{width:100%}
+  .toggle{display:inline-flex;gap:.3rem;background:#f1eefc;border-radius:999px;padding:.3rem;margin-top:var(--s-3)}
+  .toggle button{font:inherit;font-weight:800;border:0;background:transparent;border-radius:999px;padding:.55rem 1.1rem;min-height:44px;cursor:pointer;color:var(--ink-soft)}
+  .toggle button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:var(--shadow-pop)}
+
+  /* faq */
+  .faq-item{border-bottom:2px solid #ece6da}
+  .faq-item h3{margin:0}
+  .faq-item button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);
+    font:inherit;font-weight:800;font-size:1.08rem;text-align:left;background:none;border:0;padding:1.15rem .2rem;
+    min-height:56px;cursor:pointer}
+  .faq-item button .pm{width:30px;height:30px;border-radius:50%;background:var(--butter);display:grid;place-items:center;flex:none;
+    border:2px solid var(--ink);font-size:1.1rem;line-height:1}
+  .faq-item div p{color:var(--ink-soft);padding:0 .2rem 1.2rem;margin:0;max-width:62ch}
+
+  /* waitlist */
+  .wait{background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:var(--s-4);display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:center}
+  .wait h2{color:var(--butter)}
+  .wait p{color:#d9d6e4}
+  .field{display:block;margin-bottom:var(--s-2)}
+  .field span.lab{display:block;font-weight:800;font-size:var(--t-small);margin-bottom:.35rem}
+  .field input{width:100%;min-height:52px;padding:.8rem 1rem;font:inherit;border-radius:999px;border:3px solid #fff;background:#fff;color:var(--ink)}
+  .field .err{display:none;font-size:var(--t-small);font-weight:750;color:#ffb4a1;margin-top:.35rem}
+  .field[data-invalid] .err{display:block}
+  .field[data-invalid] input{border-color:#ffb4a1}
+  .status{margin:.7rem 0 0;font-weight:750;color:var(--mint);min-height:1.4em}
+
+  /* footer */
+  footer{background:#f3efe6;margin-top:var(--s-6);padding-block:var(--s-5) var(--s-3);border-radius:var(--r-lg) var(--r-lg) 0 0}
+  .foot{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:var(--s-4)}
+  footer h3{font-size:1rem;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.6rem}
+  footer li{margin-bottom:.35rem}
+  footer a{text-decoration:none;font-size:.95rem;color:var(--ink-soft)}
+  footer a:hover{color:var(--ink);text-decoration:underline}
+  .fine{margin-top:var(--s-4);padding-top:var(--s-2);border-top:2px solid #e2dbcc;display:flex;justify-content:space-between;
+    gap:var(--s-2);flex-wrap:wrap;font-size:var(--t-small);color:var(--ink-soft)}
+
+  section{padding-block:var(--s-5)}
+  .sec-head{max-width:60ch;margin-bottom:var(--s-4)}
+  .sec-head p{color:var(--ink-soft);margin:.5rem 0 0}
+
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr;gap:var(--s-4)}
+    .feat-grid,.price-grid,.wait,.foot{grid-template-columns:1fr}
+    .plan--featured{transform:none}
+    .steps-grid{grid-template-columns:1fr;gap:var(--s-4)}
+    .steps-grid::before{display:none}
+    .nav-toggle{display:inline-block}
+    .nav-links{display:none;width:100%;order:3;padding-bottom:var(--s-2);flex-direction:column;align-items:stretch}
+    .nav-links[data-open="true"]{display:flex}
+  }
+  @media (max-width:560px){
+    .board{transform:none}
+    .board-grid{grid-template-columns:repeat(5,1fr);gap:.3rem}
+    .day{font-size:.7rem;padding:.4rem .2rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#how">Skip to how it works</a>
+
+<header>
+  <nav class="wrap" aria-label="Primary">
+    <div class="nav-in">
+      <a class="brand" href="#top">
+        <span class="mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21V11" stroke="#2b2a3c" stroke-width="2.6" stroke-linecap="round"/><path d="M12 12C12 7 8 4 3 5c0 5 4 8 9 7z" fill="#fff" stroke="#2b2a3c" stroke-width="2.2" stroke-linejoin="round"/><path d="M12 13c0-4 3-7 8-6 0 4-3 7-8 6z" fill="#2b2a3c" stroke="#2b2a3c" stroke-width="2.2" stroke-linejoin="round"/></svg>
+        </span>
+        Sproutlings
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="nav-links" id="menu">
+        <a href="#how">How it works</a>
+        <a href="#week">A real week</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">Questions</a>
+      </div>
+      <a class="btn btn--mint btn--sm" href="#wait">Join free</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Family planning, minus the group chat</span>
+        <h1 id="hero-title">The family calendar that <span>argues for you.</span></h1>
+        <p class="lede">Sproutlings is a shared planner for the people who actually do the remembering: school runs, swimming lessons, the thing at 6pm on Thursday. Everyone sees the same week. Nobody has to ask.</p>
+        <div class="hero-cta">
+          <a class="btn btn--mint" href="#wait">Start free for 30 days</a>
+          <a class="btn btn--plain" href="#week">See a real week</a>
+        </div>
+        <p class="trust">
+          <span><i class="dot" aria-hidden="true"></i>No card needed</span>
+          <span><i class="dot dot--coral" aria-hidden="true"></i>Invite up to 8 people</span>
+          <span><i class="dot dot--butter" aria-hidden="true"></i>Cancels in two taps</span>
+        </p>
+      </div>
+
+      <div class="board soft" role="group" aria-label="Preview of a shared Sproutlings week">
+        <div class="board-top">
+          <h3>This week &middot; Okonkwo household</h3>
+          <span class="chip" style="background:var(--mint)">4 of 6 done</span>
+        </div>
+        <div class="board-grid" aria-hidden="true">
+          <div class="day">M<br>14</div><div class="day">T<br>15</div><div class="day">W<br>16</div>
+          <div class="day" aria-current="date">T<br>17</div><div class="day">F<br>18</div>
+        </div>
+        <label class="task done"><input type="checkbox" checked><span>Swimming &mdash; Nia, 5:30pm</span><span class="who">Ada</span></label>
+        <label class="task done"><input type="checkbox" checked><span>Return library books</span><span class="who">Sol</span></label>
+        <label class="task"><input type="checkbox"><span>Dentist, 4:15pm</span><span class="who">Ada</span></label>
+        <label class="task"><input type="checkbox"><span>Book the birthday venue</span><span class="who">Sol</span></label>
+        <label class="task"><input type="checkbox"><span>Grill + bins</span><span class="who">Grandma</span></label>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="how-title">Three steps, then it runs itself</h2>
+        <p>Setting up takes about six minutes. Most families stop opening the app within a fortnight, which we count as a success.</p>
+      </div>
+      <div class="steps">
+        <div class="steps-grid">
+          <div class="step">
+            <div class="num" aria-hidden="true">1</div>
+            <h3>Make the household</h3>
+            <p>Everyone joins with a code. Kids get a simplified view with no shopping, no money, no settings.</p>
+          </div>
+          <div class="step">
+            <div class="num" aria-hidden="true">2</div>
+            <h3>Import the chaos</h3>
+            <p>Forward school newsletters, pull in Google or Apple calendars, or just tap in the next fortnight by hand.</p>
+          </div>
+          <div class="step">
+            <div class="num" aria-hidden="true">3</div>
+            <h3>Let it nag</h3>
+            <p>Reminders land 24 hours ahead and again two hours ahead. Pick who gets which, or let Sproutlings decide.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="features-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="features-title">Built for the boring 80% of parenting</h2>
+        <p>No streaks, no badges, no guilt. Just things that get done.</p>
+      </div>
+      <div class="feat-grid">
+        <article class="feat">
+          <span class="icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2b2a3c" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18v14H3z"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          </span>
+          <div>
+            <h3>Import, don't retype</h3>
+            <p>Sproutlings reads the school newsletter PDF and pulls out dates, times and who it involves, then shows you the list before anything lands. Roughly 40 an hour of admin, per child, per term.</p>
+            <div class="chip-list"><span class="chip">School newsletters</span><span class="chip">Google &amp; Apple calendars</span><span class="chip">Email forwards</span></div>
+          </div>
+        </article>
+        <div class="stack">
+          <article class="feat">
+            <span class="icon" style="background:var(--butter)" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2b2a3c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l5 5L20 7"/></svg>
+            </span>
+            <div><h3>Chores that don't become a treaty</h3><p>Weekly reset, one tap to reassign, and a done state everyone can see so it stops being a topic.</p></div>
+          </article>
+          <article class="feat">
+            <span class="icon" style="background:var(--coral)" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2b2a3c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v6c0 5-3.5 7.5-8 8-4.5-.5-8-3-8-8V7z"/><path d="M9 12l2 2 4-4"/></svg>
+            </span>
+            <div><h3>Private for the parts that need it</h3><p>Notes, medication, and medical appointments sit behind a per-item pin. Child accounts never see them.</p></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="week" aria-labelledby="week-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="week-title">A real week, from a real household</h2>
+        <p>Tuesday through Friday in the Okonkwo family. This is the whole view &mdash; the app is not a dashboard.</p>
+      </div>
+      <div class="week">
+        <div class="tabs" role="tablist" aria-label="Days of the week">
+          <button class="tab" type="button" role="tab" id="tab-tue" aria-controls="panel-tue" aria-selected="true">Tuesday</button>
+          <button class="tab" type="button" role="tab" id="tab-wed" aria-controls="panel-wed" aria-selected="false" tabindex="-1">Wednesday</button>
+          <button class="tab" type="button" role="tab" id="tab-thu" aria-controls="panel-thu" aria-selected="false" tabindex="-1">Thursday</button>
+          <button class="tab" type="button" role="tab" id="tab-fri" aria-controls="panel-fri" aria-selected="false" tabindex="-1">Friday</button>
+        </div>
+
+        <div class="panel-day" role="tabpanel" id="panel-tue" aria-labelledby="tab-tue" tabindex="0">
+          <div class="day-line"><h3>Swimming &amp; the shoe shop</h3><span>5 items &middot; 2 people</span></div>
+          <label class="task done"><input type="checkbox" checked><span>Nia &mdash; swimming, 5:30pm, 45min</span><span class="who">Ada</span></label>
+          <label class="task done"><input type="checkbox" checked><span>Return library books (3 overdue)</span><span class="who">Sol</span></label>
+          <label class="task"><input type="checkbox"><span>Buy Sol's school shoes, size 2</span><span class="who">Ada</span></label>
+          <label class="task"><input type="checkbox"><span>Call Grandma about Sunday</span><span class="who">Sol</span></label>
+          <label class="task"><input type="checkbox"><span>Bin night &mdash; recycling only</span><span class="who">Grandma</span></label>
+          <div class="chip-list"><span class="chip">Sends reminders 24h and 2h ahead</span><span class="chip">1 clash flagged</span></div>
+        </div>
+
+        <div class="panel-day" role="tabpanel" id="panel-wed" aria-labelledby="tab-wed" tabindex="0" hidden>
+          <div class="day-line"><h3>Parents' evening &amp; piano</h3><span>4 items &middot; 3 people</span></div>
+          <label class="task"><input type="checkbox"><span>Nia &mdash; parents' evening, 6:00pm</span><span class="who">Ada</span></label>
+          <label class="task"><input type="checkbox"><span>Tobi &mdash; piano, 4:00pm</span><span class="who">Sol</span></label>
+          <label class="task"><input type="checkbox"><span>Ask about homework club sign-up</span><span class="who">Ada</span></label>
+          <label class="task"><input type="checkbox"><span>Order repeat prescription</span><span class="who">Grandma</span></label>
+          <div class="chip-list"><span class="chip">Clash: pickup ends 5:40pm</span><span class="chip">Pinned note for Nia</span></div>
+        </div>
+
+        <div class="panel-day" role="tabpanel" id="panel-thu" aria-labelledby="tab-thu" tabindex="0" hidden>
+          <div class="day-line"><h3>Quote day</h3><span>3 items &middot; 1 person</span></div>
+          <label class="task done"><input type="checkbox" checked><span>Solar quote &mdash; Ridgewest, 10:00am</span><span class="who">Sol</span></label>
+          <label class="task"><input type="checkbox"><span>Collect Tobi from Gran's, 4:00pm</span><span class="who">Grandma</span></label>
+          <label class="task"><input type="checkbox"><span>Confirm quote details in writing</span><span class="who">Sol</span></label>
+          <div class="chip-list"><span class="chip">One person, no handover needed</span></div>
+        </div>
+
+        <div class="panel-day" role="tabpanel" id="panel-fri" aria-labelledby="tab-fri" tabindex="0" hidden>
+          <div class="day-line"><h3>Birthday party prep</h3><span>6 items &middot; 2 people</span></div>
+          <label class="task"><input type="checkbox"><span>Confirm cake order &mdash; pick up 11:00am</span><span class="who">Ada</span></label>
+          <label class="task"><input type="checkbox"><span>Chase RSVPs, 9 of 14 in</span><span class="who">Sol</span></label>
+          <label class="task"><input type="checkbox"><span>Print invitations, two per page</span><span class="who">Ada</span></label>
+          <label class="task"><input type="checkbox"><span>Charge camera battery</span><span class="who">Sol</span></label>
+          <div class="chip-list"><span class="chip">Duplicates merged with Saturday</span><span class="chip">Sol added 2 items</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" aria-labelledby="pricing-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="pricing-title">One price, no tiers of shame</h2>
+        <p>Both plans do everything. The monthly one just costs more per year.</p>
+      </div>
+      <div class="toggle" role="group" aria-label="Billing period">
+        <button type="button" data-period="monthly" aria-pressed="true">Monthly</button>
+        <button type="button" data-period="annual" aria-pressed="false">Annual &mdash; save 20%</button>
+      </div>
+      <div class="price-grid" style="margin-top:var(--s-3)">
+        <article class="plan plan--featured">
+          <h3>Household</h3>
+          <p class="amount">$<span id="amountHousehold">4.50</span><small> / month</small></p>
+          <p style="color:var(--ink-soft)">Billed monthly, cancel any time.</p>
+          <ul>
+            <li><b>Up to 8 people</b> &mdash; grown-ups, kids, whoever picks up.</li>
+            <li>Unlimited calendars and items</li>
+            <li>Newsletter and email import</li>
+            <li>Reminders 24h and 2h ahead</li>
+            <li>Pinned private notes</li>
+          </ul>
+          <a class="btn btn--mint" href="#wait">Start 30-day trial</a>
+        </article>
+        <article class="plan">
+          <h3>Household, annual</h3>
+          <p class="amount">$<span id="amountAnnual">43.20</span><small> / year</small></p>
+          <p style="color:var(--ink-soft)">$3.60 a month, paid once.</p>
+          <ul>
+            <li>Everything in Household, same features</li>
+            <li>Two months free</li>
+            <li>Priority support, replies within a day</li>
+            <li>Export your whole history to CSV any time</li>
+          </ul>
+          <a class="btn btn--plain" href="#wait">Start 30-day trial</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="faq-title">Questions people actually ask</h2></div>
+      <div>
+        <div class="faq-item">
+          <h3><button type="button" aria-expanded="false" aria-controls="a1">Does it work for separated or shared custody?<span class="pm" aria-hidden="true">+</span></button></h3>
+          <div id="a1" hidden><p>Yes, and it is the most common setup. Each household gets its own view; items can be marked "shared" so they appear on both, with each parent seeing only the tasks assigned to them. Reminders respect each household's own quiet hours.</p></div>
+        </div>
+        <div class="faq-item">
+          <h3><button type="button" aria-expanded="false" aria-controls="a2">Can my kid use it without seeing money or notes?<span class="pm" aria-hidden="true">+</span></button></h3>
+          <div id="a2" hidden><p>Child accounts are deliberately thin. They see their own schedule, their own chores, and a yes/no done button. Anything involving appointments, purchases, or private notes is hidden by default and has to be explicitly shared by a grown-up.</p></div>
+        </div>
+        <div class="faq-item">
+          <h3><button type="button" aria-expanded="false" aria-controls="a3">What happens to our data if we leave?<span class="pm" aria-hidden="true">+</span></button></h3>
+          <div id="a3" hidden><p>You export everything as CSV or ICS from the settings screen, at any time, without emailing anyone. If you simply stop paying, the account stays readable for a year and then closes. We do not sell household data, and we do not run ads.</p></div>
+        </div>
+        <div class="faq-item">
+          <h3><button type="button" aria-expanded="false" aria-controls="a4">Is the newsletter import actually good, or just a demo?<span class="pm" aria-hidden="true">+</span></button></h3>
+          <div id="a4" hidden><p>It handles the eleven most common school formats, including the ones written in Comic Sans by a parent at 11pm. You always get a review screen before anything is added, and anything it is unsure about is flagged rather than guessed.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="wait" aria-labelledby="wait-title">
+    <div class="wrap">
+      <div class="wait">
+        <div>
+          <h2 id="wait-title">Try it on this week's mess</h2>
+          <p>Thirty days, everything unlocked, no card. If it has not saved you a message by the end of the month, it has not earned its place.</p>
+        </div>
+        <form id="waitForm" novalidate>
+          <label class="field" for="email">
+            <span class="lab">Email address</span>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <span class="err">We could not use that address. Check for a typo.</span>
+          </label>
+          <label class="field" for="kids">
+            <span class="lab">How many people are in your household?</span>
+            <input id="kids" name="kids" type="number" min="1" max="12" value="4" inputmode="numeric">
+          </label>
+          <button class="btn btn--mint" type="submit">Create our household</button>
+          <p class="status" id="waitStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h3>Sproutlings</h3>
+        <p>Made in Glasgow by six people who had a spreadsheet, four kids, and a group chat that was 400 messages deep.</p>
+      </div>
+      <div>
+        <h3>Product</h3>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#week">A real week</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">Questions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#wait">Get started</a></li>
+          <li><a href="#faq">Privacy</a></li>
+          <li><a href="#faq">Accessibility statement</a></li>
+          <li><a href="#wait">hello@sproutlings.example</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>&copy; 2026 Sproutlings. A fictional brand, built for a style demo.</span>
+      <span>WCAG 2.2 AA target. Works with screen readers and VoiceOver.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  var toggle = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.getAttribute('data-open') === 'true';
+    menu.setAttribute('data-open', String(!open));
+    toggle.setAttribute('aria-expanded', String(!open));
+    toggle.textContent = open ? 'Menu' : 'Close';
+  });
+
+  // Week tabs
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener('click', function () { selectTab(tab); });
+    tab.addEventListener('keydown', function (e) {
+      var next = null;
+      if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+      if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      if (e.key === 'Home') next = tabs[0];
+      if (e.key === 'End') next = tabs[tabs.length - 1];
+      if (next) { e.preventDefault(); next.focus(); selectTab(next); }
+    });
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel = document.getElementById(btn.getAttribute('aria-controls'));
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+      btn.querySelector('.pm').textContent = open ? '+' : '\u2212';
+    });
+  });
+
+  // Billing period
+  var prices = {
+    monthly: { household: '4.50', annual: '43.20' },
+    annual: { household: '3.60', annual: '34.56' }
+  };
+  document.querySelectorAll('.toggle button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.toggle button').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      var p = btn.dataset.period;
+      document.getElementById('amountHousehold').textContent = prices[p].household;
+      document.getElementById('amountAnnual').textContent = prices[p].annual;
+    });
+  });
+
+  // Waitlist form
+  var form = document.getElementById('waitForm');
+  var status = document.getElementById('waitStatus');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('email');
+    var field = email.closest('.field');
+    var ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+    field.removeAttribute('data-invalid');
+    email.setAttribute('aria-invalid', String(!ok));
+    if (!ok) {
+      field.setAttribute('data-invalid', '');
+      status.textContent = 'Check the email address and we will take it from there.';
+      email.focus();
+      return;
+    }
+    status.textContent = 'Household created. We sent a join code to ' + email.value.trim() + '.';
+  });
+</script>
+</body>
+</html>

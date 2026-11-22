@@ -1,0 +1,522 @@
+<!-- Style: Minimalist | 1minimalist.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Halden — Architecture Studio</title>
+<meta name="description" content="Halden is an architecture studio working on civic buildings, houses and public landscape between Oslo and Copenhagen.">
+<style>
+  :root{
+    /* colour */
+    --paper:#fbfaf8;
+    --paper-2:#f4f2ee;
+    --ink:#15151a;
+    --ink-2:#3c3c42;
+    --muted:#74736d;
+    --line:#e0ddd6;
+    --line-strong:#15151a;
+    --accent:#9c4a24;
+    --ok:#2f5d3f;
+    --error:#8c2f1c;
+    /* type */
+    --font-sans:"Helvetica Neue",Helvetica,Arial,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --fs-display:clamp(2.6rem,7.5vw,5.6rem);
+    --fs-h2:clamp(1.5rem,2.6vw,2.1rem);
+    --fs-h3:clamp(1.05rem,1.4vw,1.2rem);
+    --fs-body:clamp(1rem,1.05vw,1.075rem);
+    --fs-small:.8125rem;
+    --fs-micro:.6875rem;
+    --lh-tight:1.04;
+    --lh-body:1.62;
+    --track-display:-.03em;
+    /* spacing */
+    --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;--s-6:2rem;
+    --s-7:3rem;--s-8:4rem;--s-9:6rem;--s-10:8rem;
+    --measure:34rem;
+    --gutter:clamp(1.25rem,4vw,3rem);
+    /* edges */
+    --radius:0;
+    --border:1px solid var(--line);
+    --border-ink:1px solid var(--line-strong);
+    /* motion */
+    --dur-fast:140ms;--dur-base:260ms;
+    --ease:cubic-bezier(.2,.8,.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--lh-body);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,p,figure,blockquote,dl,dd{margin:0}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .wrap{max-width:76rem;margin-inline:auto;padding-inline:var(--gutter)}
+  .measure{max-width:var(--measure)}
+  .mt-4{margin-top:var(--s-4)}
+  .t-ink{color:var(--ink-2)}
+  .t-muted-sm{font-size:var(--fs-small);color:var(--muted)}
+  .eyebrow{
+    font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin:0
+  }
+  .rule{height:1px;background:var(--line);border:0;margin:0}
+
+  /* ---------- header ---------- */
+  .site-head{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:var(--border)}
+  .head-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--s-5);min-height:64px}
+  .wordmark{font-size:1.0625rem;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;font-weight:500}
+  .nav-toggle{
+    display:none;min-height:44px;padding:0 var(--s-4);background:none;
+    border:var(--border-ink);border-radius:var(--radius);font:inherit;font-size:var(--fs-small);
+    letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:inherit
+  }
+  .nav-toggle:hover{background:var(--ink);color:var(--paper)}
+  .site-nav ul{display:flex;align-items:center;gap:var(--s-6)}
+  .site-nav a{
+    text-decoration:none;font-size:var(--fs-small);letter-spacing:.06em;
+    padding-block:.5rem;border-bottom:1px solid transparent;transition:border-color var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)
+  }
+  .site-nav a:hover{border-bottom-color:var(--ink)}
+  .site-nav a[aria-current="page"]{border-bottom-color:var(--ink)}
+  .nav-cta{border-bottom-color:var(--accent)!important;color:var(--accent)}
+
+  /* ---------- hero ---------- */
+  .hero{padding-block:clamp(3.5rem,11vh,8rem) var(--s-8)}
+  .hero-grid{display:grid;gap:clamp(2rem,5vw,4rem) var(--s-7);grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);align-items:end}
+  .hero h1{
+    font-size:var(--fs-display);line-height:var(--lh-tight);letter-spacing:var(--track-display);
+    font-weight:400;margin-top:var(--s-4)
+  }
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .hero-note{display:flex;flex-direction:column;gap:var(--s-4);padding-bottom:.4rem}
+  .hero-note p{color:var(--ink-2)}
+  .link-underline{
+    align-self:flex-start;text-decoration:none;font-size:var(--fs-small);letter-spacing:.06em;
+    border-bottom:1px solid var(--ink);padding-bottom:2px;transition:color var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)
+  }
+  .link-underline:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* ---------- drawing ---------- */
+  .draw{margin-top:clamp(3rem,8vh,5.5rem);border-top:var(--border);padding-top:var(--s-5)}
+  .draw svg{display:block;width:100%;height:auto;color:var(--ink)}
+  .draw figcaption{
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s-3);
+    margin-top:var(--s-4);font-size:var(--fs-small);color:var(--muted)
+  }
+
+  /* ---------- work list ---------- */
+  .section{padding-block:clamp(3.5rem,9vh,6.5rem)}
+  .section-head{display:flex;flex-wrap:wrap;gap:var(--s-3) var(--s-5);align-items:baseline;justify-content:space-between;margin-bottom:var(--s-6)}
+  .section-head h2{font-size:var(--fs-h2);font-weight:400;letter-spacing:-.015em}
+  .work{border-top:var(--border-ink)}
+  .work li{border-bottom:var(--border)}
+  .work a{
+    display:grid;grid-template-columns:3.25rem minmax(0,2.4fr) minmax(0,1.2fr) 5.5rem;
+    gap:var(--s-4);align-items:baseline;padding-block:var(--s-5);text-decoration:none;
+    transition:padding-left var(--dur-base) var(--ease)
+  }
+  .work a:hover{padding-left:var(--s-3)}
+  .work a:hover .work-title{color:var(--accent)}
+  .work-idx,.work-meta{font-size:var(--fs-small);color:var(--muted)}
+  .work-idx{font-variant-numeric:tabular-nums}
+  .work-title{font-size:var(--fs-h3);letter-spacing:-.01em;transition:color var(--dur-fast) var(--ease)}
+  .work-year{font-size:var(--fs-small);text-align:right;font-variant-numeric:tabular-nums}
+  .work-more{margin-top:var(--s-5);display:flex;justify-content:flex-end}
+
+  /* ---------- statement ---------- */
+  .statement{background:var(--paper-2);border-block:var(--border)}
+  .statement-inner{display:grid;grid-template-columns:9rem minmax(0,1fr);gap:var(--s-6);padding-block:clamp(3.5rem,10vh,7rem)}
+  .statement h2{
+    font-size:clamp(1.6rem,3.6vw,2.9rem);line-height:1.24;font-weight:400;letter-spacing:-.02em;max-width:22ch
+  }
+  .statement h2 + p{margin-top:var(--s-5);color:var(--ink-2);max-width:46ch}
+
+  /* ---------- facts ---------- */
+  .facts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--s-6) var(--s-7);margin-top:var(--s-7)}
+  .facts h3{font-size:var(--fs-h3);font-weight:400;letter-spacing:-.01em}
+  .facts dl{margin-top:var(--s-3);border-top:var(--border)}
+  .facts dl > div{display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr);gap:var(--s-4);padding-block:var(--s-4);border-bottom:var(--border)}
+  .facts dt{font-size:var(--fs-small);color:var(--muted)}
+  .facts dd{margin:0;font-size:var(--fs-small);color:var(--ink-2)}
+
+  /* ---------- quote ---------- */
+  .quote{padding-block:clamp(3.5rem,10vh,7rem);border-top:var(--border)}
+  blockquote{margin:0;max-width:44ch}
+  blockquote p{font-size:clamp(1.35rem,2.6vw,2rem);line-height:1.3;letter-spacing:-.02em}
+  blockquote footer{margin-top:var(--s-5);font-size:var(--fs-small);color:var(--muted)}
+
+  /* ---------- form ---------- */
+  .enquiry{background:var(--paper-2);border-top:var(--border);padding-block:clamp(3.5rem,9vh,6.5rem)}
+  .enquiry-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.7fr);gap:var(--s-6) var(--s-7);align-items:start}
+  .field{margin-bottom:var(--s-5)}
+  .field label{display:block;font-size:var(--fs-small);margin-bottom:var(--s-2)}
+  .field .hint{display:block;font-size:var(--fs-small);color:var(--muted);margin-top:var(--s-2)}
+  .field input,.field select,.field textarea{
+    width:100%;min-height:46px;padding:.65rem .75rem;background:var(--paper);color:var(--ink);
+    border:var(--border-ink);border-radius:var(--radius);font:inherit;font-size:var(--fs-small)
+  }
+  .field textarea{min-height:7.5rem;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);outline:2px solid transparent;outline-offset:0;box-shadow:0 0 0 2px var(--accent)}
+  .field[data-invalid="true"] input,.field[data-invalid="true"] select,.field[data-invalid="true"] textarea{border-color:var(--error);border-width:2px}
+  .err{display:block;font-size:var(--fs-small);color:var(--error);margin-top:var(--s-2);min-height:1.1em}
+  .btn{
+    min-height:48px;padding:0 var(--s-6);background:var(--ink);color:var(--paper);
+    border:var(--border-ink);border-radius:var(--radius);font:inherit;font-size:var(--fs-small);
+    letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+    transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)
+  }
+  .btn:hover{background:var(--accent);border-color:var(--accent)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .form-note{margin-top:var(--s-4);font-size:var(--fs-small);color:var(--muted);min-height:1.2em}
+  .form-note[data-state="ok"]{color:var(--ok)}
+  .form-note[data-state="error"]{color:var(--error)}
+
+  /* ---------- footer ---------- */
+  .site-foot{border-top:var(--border);padding-block:var(--s-6) var(--s-7)}
+  .foot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-5)}
+  .foot-grid h3{margin-bottom:var(--s-3)}
+  .foot-grid p,.foot-grid a{font-size:var(--fs-small);color:var(--muted);text-decoration:none}
+  .foot-grid a{display:inline-block;min-height:32px;padding-block:.2rem}
+  .foot-grid a:hover{color:var(--accent)}
+  .colophon{margin-top:var(--s-6);padding-top:var(--s-4);border-top:var(--border);font-size:var(--fs-micro);color:var(--muted);letter-spacing:.04em}
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;align-items:start}
+    .statement-inner{grid-template-columns:1fr}
+    .facts{grid-template-columns:1fr}
+    .enquiry-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:680px){
+    .nav-toggle{display:inline-flex;align-items:center}
+    .site-nav{
+      display:none;position:absolute;left:0;right:0;top:100%;background:var(--paper);
+      border-bottom:var(--border-ink);padding:var(--s-4) var(--gutter) var(--s-5)
+    }
+    .site-nav[data-open="true"]{display:block}
+    .site-nav ul{flex-direction:column;align-items:flex-start;gap:0}
+    .site-nav a{display:block;padding-block:.8rem;width:100%;border-bottom:var(--border)}
+    .site-nav li:last-child a{border-bottom:0}
+    .work a{grid-template-columns:2.5rem minmax(0,1fr);row-gap:.15rem;padding-block:var(--s-4)}
+    .work-meta{grid-column:2}
+    .work-year{grid-column:2;text-align:left}
+    .facts dl > div{grid-template-columns:1fr;gap:.2rem}
+    .foot-grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="wordmark" href="#top">Halden</a>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="siteNav">Menu</button>
+    <nav class="site-nav" id="siteNav" aria-label="Primary">
+      <ul>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#practice">Practice</a></li>
+        <li><a href="#client">Client</a></li>
+        <li><a class="nav-cta" href="#enquiry">Enquire</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Architecture &amp; public landscape — Oslo / Copenhagen</p>
+        <h1 id="hero-title">Buildings that <em>outlast</em> the brief they were drawn for.</h1>
+      </div>
+      <div class="hero-note">
+        <p>Halden is a nine-person studio. We take four projects a year and stay with each of them from first sketch to the day the scaffolding comes down.</p>
+        <a class="link-underline" href="#work">See selected work</a>
+      </div>
+    </div>
+
+    <figure class="draw">
+      <svg viewBox="0 0 1200 300" role="img" aria-label="Line elevation drawing of the Brannøysund Library south facade with dimension lines">
+        <g fill="none" stroke="currentColor" stroke-width="1">
+          <rect x="80" y="40" width="620" height="200"/>
+          <path d="M80 96h620M80 152h620M80 208h620"/>
+          <path d="M180 40v200M280 40v200M380 40v200M480 40v200M580 40v200"/>
+          <rect x="200" y="60" width="60" height="28"/><rect x="300" y="60" width="60" height="28"/>
+          <rect x="400" y="60" width="60" height="28"/><rect x="500" y="60" width="60" height="28"/>
+          <rect x="200" y="116" width="60" height="28"/><rect x="400" y="116" width="60" height="28"/>
+          <rect x="500" y="116" width="60" height="28"/>
+          <rect x="300" y="172" width="60" height="60"/><rect x="400" y="172" width="60" height="60"/>
+          <path d="M80 262h620"/>
+          <path d="M80 254v16M700 254v16"/>
+        </g>
+        <g fill="currentColor" font-family="Helvetica, Arial, sans-serif" font-size="11" letter-spacing="1.5">
+          <text x="80" y="284">0</text>
+          <text x="672" y="284">38.4 M</text>
+          <text x="726" y="146" font-size="11">SOUTH ELEVATION 1:200</text>
+          <text x="726" y="164" font-size="11" opacity=".65">BRANNOYSUND LIBRARY</text>
+        </g>
+        <g fill="none" stroke="currentColor" stroke-width="1" opacity=".5">
+          <path d="M740 40v200M740 40h60M740 96h30M740 152h44M740 208h30M740 240h60"/>
+        </g>
+      </svg>
+      <figcaption>
+        <span>Brannøysund Library — south elevation, competition stage three</span>
+        <span>Drawn in-house, 1:200</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="section wrap" id="work" aria-labelledby="work-title">
+    <div class="section-head">
+      <h2 id="work-title">Selected work</h2>
+      <p class="eyebrow">2016 — 2026 · 4 of 38 built</p>
+    </div>
+    <ul class="work">
+      <li>
+        <a href="#work">
+          <span class="work-idx">01</span>
+          <span class="work-title">Brannøysund Library</span>
+          <span class="work-meta">Civic · library &amp; archive</span>
+          <span class="work-year">2024</span>
+        </a>
+      </li>
+      <li>
+        <a href="#work">
+          <span class="work-idx">02</span>
+          <span class="work-title">Havn House</span>
+          <span class="work-meta">Residential · 240 m²</span>
+          <span class="work-year">2022</span>
+        </a>
+      </li>
+      <li>
+        <a href="#work">
+          <span class="work-idx">03</span>
+          <span class="work-title">Fyr Tower &amp; Signal Hut</span>
+          <span class="work-meta">Infrastructure · lookout</span>
+          <span class="work-year">2021</span>
+        </a>
+      </li>
+      <li>
+        <a href="#work">
+          <span class="work-idx">04</span>
+          <span class="work-title">Nordmarka Footbridge</span>
+          <span class="work-meta">Landscape · 84 m span</span>
+          <span class="work-year">2019</span>
+        </a>
+      </li>
+    </ul>
+    <p class="work-more"><a class="link-underline" href="#enquiry">Request the full project index (PDF, 11 MB)</a></p>
+  </section>
+
+  <section class="statement" aria-labelledby="statement-title">
+    <div class="wrap statement-inner">
+      <p class="eyebrow">Approach</p>
+      <div>
+        <h2 id="statement-title">We design for the fiftieth year of a building, not the first photograph of it.</h2>
+        <p>That means generous floor-to-floor heights, structures a local firm can repair without a specialist, and materials that weather into their own colour. It also means we say no to a lot of work — roughly two thirds of what is offered to us each year.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="practice" aria-labelledby="practice-title">
+    <div class="facts">
+      <div>
+        <h2 id="practice-title">Practice</h2>
+      </div>
+      <div>
+        <h3>How the studio runs</h3>
+        <dl>
+          <div>
+            <dt>Founded</dt>
+            <dd>2011 by Ingrid Halden and Petter Aas, in a former chandlery on Grønland</dd>
+          </div>
+          <div>
+            <dt>People</dt>
+            <dd>9 — six architects, one site manager, one model maker, one practice lead</dd>
+          </div>
+          <div>
+            <dt>Project load</dt>
+            <dd>Four concurrent projects maximum, typically 18–30 months each</dd>
+          </div>
+          <div>
+            <dt>Procurement</dt>
+            <dd>Competitions or direct appointment; we publish our fee proposal in full</dd>
+          </div>
+          <div>
+            <dt>Post-occupancy</dt>
+            <dd>Every completed building is revisited at 1, 3 and 10 years, uninvited and on our own time</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote wrap" id="client" aria-labelledby="quote-title">
+    <h2 class="eyebrow" id="quote-title">On the building</h2>
+    <blockquote>
+      <p>“The architects disappeared the moment the library opened, which is the highest compliment I can pay a public building. My students use the north stair as a lecture room because it is the warmest place in town.”</p>
+      <footer>Marit Søberg, Head Librarian, Brannøysund</footer>
+    </blockquote>
+  </section>
+
+  <section class="enquiry" id="enquiry" aria-labelledby="enquiry-title">
+    <div class="wrap enquiry-grid">
+      <div>
+        <h2 id="enquiry-title">Enquiries</h2>
+        <p class="measure mt-4 t-ink">We read everything that arrives. If the project fits, we reply within ten working days with a fee proposal and a first conversation — no charge, no deck.</p>
+        <p class="measure mt-4 t-muted-sm">Grønland 14, 0159 Oslo &nbsp;·&nbsp; Refshalevej 96, 1432 København</p>
+      </div>
+
+      <form id="enquiryForm" novalidate>
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+          <span class="err" id="e-name" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+          <span class="err" id="e-email" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="f-type">Project type</label>
+          <select id="f-type" name="type" required aria-describedby="e-type">
+            <option value="">Please choose</option>
+            <option>New build — civic</option>
+            <option>New build — residential</option>
+            <option>Refurbishment / adaptive reuse</option>
+            <option>Landscape or public realm</option>
+            <option>Feasibility study only</option>
+          </select>
+          <span class="err" id="e-type" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="f-msg">What are you building?</label>
+          <textarea id="f-msg" name="message" required aria-describedby="hint-msg e-msg"></textarea>
+          <span class="hint" id="hint-msg">Site, programme and rough budget are enough to start. Drawings optional.</span>
+          <span class="err" id="e-msg" role="alert"></span>
+        </div>
+        <button class="btn" type="submit" id="submitBtn">Send enquiry</button>
+        <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h3 class="eyebrow">Oslo</h3>
+        <p>Grønland 14, 0159 Oslo</p>
+        <p>+47 22 09 44 10</p>
+      </div>
+      <div>
+        <h3 class="eyebrow">København</h3>
+        <p>Refshalevej 96, 1432 København</p>
+        <p>+45 32 11 08 55</p>
+      </div>
+      <div>
+        <h3 class="eyebrow">Elsewhere</h3>
+        <a href="#enquiry">Press &amp; speaking</a><br>
+        <a href="#enquiry">Work with us</a><br>
+        <a href="#enquiry">Accessibility statement</a>
+      </div>
+    </div>
+    <p class="colophon">Halden Arkitekter AS · Org. 913 442 087 · A member of Arkitektur Norge. Set in the browser's grotesque; drawn, not photographed.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* --- mobile navigation --- */
+  var toggle = document.getElementById("navToggle");
+  var nav = document.getElementById("siteNav");
+  toggle.addEventListener("click", function(){
+    var open = nav.getAttribute("data-open") === "true";
+    nav.setAttribute("data-open", String(!open));
+    toggle.setAttribute("aria-expanded", String(!open));
+    toggle.textContent = open ? "Menu" : "Close";
+  });
+  nav.addEventListener("click", function(e){
+    if(e.target.tagName === "A" && window.matchMedia("(max-width:680px)").matches){
+      nav.setAttribute("data-open","false");
+      toggle.setAttribute("aria-expanded","false");
+      toggle.textContent = "Menu";
+    }
+  });
+
+  /* --- enquiry validation with live feedback --- */
+  var form = document.getElementById("enquiryForm");
+  var note = document.getElementById("formNote");
+  var btn = document.getElementById("submitBtn");
+
+  function setError(input, errId, message){
+    var field = input.closest(".field");
+    var err = document.getElementById(errId);
+    field.setAttribute("data-invalid", message ? "true" : "false");
+    err.textContent = message || "";
+    input.setAttribute("aria-invalid", message ? "true" : "false");
+  }
+
+  var rules = {
+    "f-name": function(v){ return v.trim().length >= 2 ? "" : "Please tell us your name."; },
+    "f-email": function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "A valid email address, please."; },
+    "f-type": function(v){ return v ? "" : "Choose the closest project type."; },
+    "f-msg": function(v){ return v.trim().length >= 20 ? "" : "Twenty characters or more, so we can reply usefully."; }
+  };
+  var errIds = { "f-name":"e-name", "f-email":"e-email", "f-type":"e-type", "f-msg":"e-msg" };
+
+  Object.keys(rules).forEach(function(id){
+    var input = document.getElementById(id);
+    input.addEventListener("blur", function(){ setError(input, errIds[id], rules[id](input.value)); });
+    input.addEventListener("input", function(){
+      if(input.closest(".field").getAttribute("data-invalid") === "true"){
+        setError(input, errIds[id], rules[id](input.value));
+      }
+    });
+  });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function(id){
+      var input = document.getElementById(id);
+      var msg = rules[id](input.value);
+      setError(input, errIds[id], msg);
+      if(msg && !firstBad) firstBad = input;
+    });
+    if(firstBad){
+      note.setAttribute("data-state","error");
+      note.textContent = "Something above needs fixing before this can send.";
+      firstBad.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+    note.removeAttribute("data-state");
+    note.textContent = "Sending your enquiry…";
+    window.setTimeout(function(){
+      btn.disabled = false;
+      btn.textContent = "Send enquiry";
+      note.setAttribute("data-state","ok");
+      note.textContent = "Thank you — we have your enquiry. You will hear from a person, not a template, within ten working days.";
+      form.reset();
+    }, 900);
+  });
+})();
+</script>
+</body>
+</html>

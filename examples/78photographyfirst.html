@@ -1,0 +1,860 @@
+<!-- Style: Photography First | 78photographyfirst.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ilse Hartvig — travel photography</title>
+<meta name="description" content="Ilse Hartvig is a travel photographer working on weather and distance from Reykjavík. Selected frames, prints and editorial licensing.">
+<style>
+  :root{
+    --black:#0A0A0A;
+    --ink:#16150F;
+    --paper:#FFFFFF;
+    --bone:#EDEBE4;
+    --grey:#B4B2AA;
+    --grey-2:#7A776E;
+    --on-dark:#CFCCC4;
+    --on-dark-dim:#8E8B83;
+    --line:rgba(255,255,255,.18);
+    --line-dark:#DCDAD4;
+    --error:#E0A08C;
+    --ok:#A9D6B9;
+    --sold:#8C3A2C;
+
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --dur:600ms;
+    --dur-fast:220ms;
+
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --t-hero:clamp(2.1rem,1.1rem + 4.2vw,4.8rem);
+    --t-h2:clamp(1.45rem,1.1rem + 1.6vw,2.4rem);
+    --t-h3:clamp(1.05rem,1rem + .4vw,1.25rem);
+    --t-label:.7rem;
+    --t-small:.84rem;
+    --t-micro:.7rem;
+    --s-2:.5rem;--s-3:.8rem;--s-4:1.4rem;--s-5:2.4rem;--s-6:4rem;--s-7:6.5rem;--s-8:10rem;
+    --pad:clamp(1.1rem,4vw,3rem);
+    --bar-h:66px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--black);color:var(--paper);font-family:var(--font);font-size:1rem;line-height:1.55;-webkit-font-size-adjust:100%}
+  body.is-locked{overflow:hidden}
+  img,svg{display:block;max-width:100%}
+  h1,h2,h3,h4,p,ul,figure,blockquote,dl,dd,pre{margin:0}
+  ul{padding:0;list-style:none}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+  .on-light :focus-visible,.prints :focus-visible{outline-color:var(--ink)}
+
+  .micro{font-size:var(--t-micro);letter-spacing:.22em;text-transform:uppercase;color:var(--grey)}
+  .muted{color:var(--grey)}
+  .band{padding-inline:var(--pad)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+  .skip{position:absolute;left:-9999px;background:var(--paper);color:var(--black);padding:.7rem 1.1rem;z-index:99}
+  .skip:focus{left:0}
+
+  /* ---------- minimal chrome ---------- */
+  .bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;gap:var(--s-4);
+    min-height:var(--bar-h);padding:0 var(--pad);border-bottom:1px solid transparent;
+    transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease),min-height var(--dur) var(--ease);
+  }
+  .bar[data-solid="true"]{background:rgba(10,10,10,.94);backdrop-filter:blur(10px);border-bottom-color:var(--line);min-height:56px}
+  .bar .who{font-size:1.02rem;letter-spacing:.06em;white-space:nowrap}
+  .bar nav{margin-left:auto}
+  .bar nav ul{display:flex;gap:clamp(.8rem,2.4vw,2rem)}
+  .bar nav a{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.82);display:inline-flex;align-items:center;min-height:44px;position:relative}
+  .bar nav a::after{content:"";position:absolute;left:0;right:100%;bottom:12px;height:1px;background:var(--paper);transition:right var(--dur-fast) var(--ease)}
+  .bar nav a:hover::after,.bar nav a[aria-current]::after{right:0}
+  .menu-btn{display:none;margin-left:auto;background:none;border:1px solid rgba(255,255,255,.5);min-height:44px;padding:0 1rem;
+    font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+
+  /* ---------- opening frame ---------- */
+  .frame{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+  .frame>svg{position:absolute;inset:0;width:100%;height:100%}
+  .frame-in{position:relative;z-index:2;width:100%;padding:0 var(--pad) clamp(1.6rem,4vw,3.4rem);
+    display:flex;flex-wrap:wrap;gap:var(--s-4) var(--s-6);align-items:flex-end;justify-content:space-between;
+    background:linear-gradient(to top,rgba(6,6,6,.8),rgba(6,6,6,.12) 58%,transparent)}
+  .frame h1{font-size:var(--t-hero);line-height:1.02;letter-spacing:-.035em;font-weight:300;max-width:16ch}
+  .frame h1 strong{font-weight:500}
+  .frame .lede{max-width:34ch;font-size:var(--t-small);color:#D8D5CC}
+  .frame .lede span{display:block;margin-top:8px;color:var(--grey)}
+  .frame .scroll{position:absolute;right:var(--pad);top:50%;transform:translateY(-50%);z-index:3;writing-mode:vertical-rl;
+    font-size:var(--t-micro);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:.8rem;margin:0}
+  .frame .scroll::after{content:"";width:1px;height:56px;background:linear-gradient(rgba(255,255,255,.6),transparent)}
+
+  /* ---------- gallery ---------- */
+  .gallery{padding-block:var(--s-7) var(--s-8)}
+  .gallery-head{display:flex;flex-wrap:wrap;gap:var(--s-3) var(--s-5);align-items:baseline;justify-content:space-between;
+    padding-bottom:var(--s-4);border-bottom:1px solid var(--line);margin-bottom:var(--s-5)}
+  .gallery-head h2{font-size:var(--t-h2);font-weight:300;letter-spacing:-.02em}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-3)}
+  .shot{
+    position:relative;grid-column:span 4;background:#141412;overflow:hidden;padding:0;border:0;cursor:zoom-in;
+    /* progressive rendering: offscreen frames skip layout until they near the viewport */
+    content-visibility:auto;contain-intrinsic-size:auto 620px;
+  }
+  .shot svg{width:100%;height:100%;transition:transform 1.4s var(--ease),filter 1.4s var(--ease);filter:saturate(.92)}
+  .shot:hover svg{transform:scale(1.035);filter:saturate(1.05)}
+  .shot--tall{grid-column:span 4;aspect-ratio:2/3}
+  .shot--sq{grid-column:span 4;aspect-ratio:1/1}
+  .shot--wide{grid-column:span 8;aspect-ratio:16/9}
+  .shot--portrait{grid-column:span 5;aspect-ratio:4/5}
+  .shot--band{grid-column:span 7;aspect-ratio:7/5}
+  .shot--full{grid-column:span 12;aspect-ratio:21/9}
+  .shot figcaption{
+    position:absolute;left:0;right:0;bottom:0;padding:1rem 1.1rem;display:flex;flex-wrap:wrap;gap:.2rem .9rem;
+    align-items:baseline;justify-content:space-between;text-align:left;
+    background:linear-gradient(to top,rgba(6,6,6,.86),rgba(6,6,6,0));
+    opacity:0;transform:translateY(6px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);
+  }
+  .shot:hover figcaption,.shot:focus-visible figcaption{opacity:1;transform:none}
+  .shot figcaption b{font-weight:400;font-size:var(--t-small)}
+  .shot figcaption span{font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:#CFCBC1}
+  .shot .open{position:absolute;top:10px;right:10px;width:44px;height:44px;display:grid;place-items:center;
+    background:rgba(10,10,10,.55);border-radius:50%;opacity:0;transition:opacity var(--dur) var(--ease)}
+  .shot:hover .open,.shot:focus-visible .open{opacity:1}
+  .shot--full figcaption{opacity:1;transform:none}
+
+  /* ---------- field note ---------- */
+  .field-note{border-top:1px solid var(--line);padding-block:var(--s-7)}
+  .field-note-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:var(--s-6);align-items:start}
+  .field-note h2{font-size:var(--t-h2);font-weight:300;letter-spacing:-.02em;margin-top:.7rem}
+  .field-note .facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px var(--s-4);font-size:var(--t-small);margin-top:var(--s-5)}
+  .field-note .facts dt{color:var(--on-dark-dim);white-space:nowrap}
+  .note-body{font-size:clamp(1.05rem,1.5vw,1.28rem);line-height:1.62;color:var(--on-dark);max-width:62ch}
+  .note-body p + p{margin-top:1.1em}
+  .note-pull{font-size:var(--t-h3);font-weight:300;line-height:1.4;color:var(--paper);border-left:1px solid var(--line);
+    padding-left:var(--s-4);margin:var(--s-5) 0;max-width:34ch}
+
+  /* ---------- journeys ---------- */
+  .journeys{border-top:1px solid var(--line);padding-block:var(--s-7)}
+  .journeys h2{font-size:var(--t-h2);font-weight:300;letter-spacing:-.02em;margin-bottom:var(--s-5)}
+  .jlist li{border-top:1px solid var(--line)}
+  .jlist li:last-child{border-bottom:1px solid var(--line)}
+  .jlist a{display:grid;grid-template-columns:6rem minmax(0,1fr) 15rem 7rem;gap:var(--s-4);align-items:center;
+    min-height:64px;padding:1.2rem .2rem;transition:background-color var(--dur-fast) var(--ease)}
+  .jlist a:hover{background:rgba(255,255,255,.04)}
+  .jlist .yr{font-size:var(--t-small);color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
+  .jlist b{font-weight:400;font-size:1.2rem;letter-spacing:-.01em}
+  .jlist .where{font-size:var(--t-small);color:var(--grey)}
+  .jlist .cnt{justify-self:end;font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim)}
+
+  /* ---------- prints: the only light band ---------- */
+  .prints{background:var(--paper);color:var(--ink);padding-block:var(--s-7)}
+  .prints .micro{color:var(--grey-2)}
+  .prints-head{display:flex;flex-wrap:wrap;gap:var(--s-3) var(--s-5);align-items:flex-end;justify-content:space-between;
+    padding-bottom:var(--s-4);border-bottom:1px solid var(--line-dark);margin-bottom:var(--s-5)}
+  .prints-head h2{font-size:var(--t-h2);font-weight:300;letter-spacing:-.02em}
+  .print-layout{display:grid;grid-template-columns:minmax(0,1fr) 20rem;gap:var(--s-6);align-items:start}
+  .print-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-5) var(--s-4)}
+  .print-item{display:flex;flex-direction:column;gap:.7rem}
+  .plate-btn{display:block;width:100%;background:none;border:0;padding:0;cursor:pointer}
+  .plate{background:var(--bone);aspect-ratio:4/5;overflow:hidden;border:1px solid var(--line-dark);display:block}
+  .plate svg{width:100%;height:100%;transition:transform 1.2s var(--ease)}
+  .plate-btn:hover .plate svg{transform:scale(1.03)}
+  .plate-btn[disabled]{cursor:not-allowed}
+  .print-item h3{font-weight:400;font-size:1.08rem;letter-spacing:-.01em}
+  .print-item .meta{display:flex;gap:var(--s-3);justify-content:space-between;font-size:var(--t-small);color:#5A574F}
+  .print-item .price{font-weight:500}
+  .print-item .state{font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--sold)}
+  .plate-btn[data-status="held"] .plate{box-shadow:inset 0 0 0 2px var(--ink)}
+  .plate-btn[data-status="closed"] .plate{opacity:.72}
+
+  .basket{align-self:start;position:sticky;top:calc(var(--bar-h) + var(--s-4));border:1px solid var(--line-dark);padding:var(--s-4)}
+  .basket h3{font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--grey-2);font-weight:600;margin-bottom:var(--s-3)}
+  .basket ul{border-top:1px solid var(--line-dark)}
+  .basket li{display:flex;gap:var(--s-3);justify-content:space-between;padding:.7rem 0;border-bottom:1px solid var(--line-dark);font-size:var(--t-small)}
+  .basket li .none{color:var(--grey-2)}
+  .basket .basket-foot{display:flex;justify-content:space-between;align-items:baseline;padding:var(--s-3) 0;font-size:1rem}
+  .basket .basket-foot b{font-weight:500;font-variant-numeric:tabular-nums}
+  .basket .basket-msg{min-height:2.4em;font-size:var(--t-small);color:var(--sold);padding-top:var(--s-2)}
+  .basket .basket-msg[data-state="ok"]{color:#2F6B4F}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 1.5rem;width:100%;
+    background:transparent;color:var(--ink);border:1px solid var(--ink);font-size:var(--t-small);
+    letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background-color var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);
+  }
+  .btn:hover:not([disabled]){background:var(--ink);color:var(--paper)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+  /* ---------- licensing form ---------- */
+  .licence{background:var(--ink);color:var(--paper);padding-block:var(--s-7)}
+  .licence-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);align-items:start}
+  .licence .lede{color:var(--on-dark);max-width:44ch;margin-top:var(--s-3);font-size:var(--t-small)}
+  .licence h2{font-size:var(--t-h2);font-weight:300;letter-spacing:-.02em;margin-top:.6rem}
+  .form{display:grid;gap:var(--s-3);grid-template-columns:1fr 1fr}
+  .field{display:grid;gap:.35rem}
+  .field.full{grid-column:1/-1}
+  .field label{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;color:#A5A29A}
+  .field input,.field select,.field textarea{
+    min-height:48px;padding:.6rem 0;background:transparent;border:0;border-bottom:1px solid #4A483F;
+    color:var(--paper);font:inherit;font-size:1rem;width:100%;border-radius:0;
+  }
+  .field textarea{min-height:92px;resize:vertical}
+  .field input::placeholder,.field textarea::placeholder{color:#77746C}
+  .field input[aria-invalid="true"],.field select[aria-invalid="true"],.field textarea[aria-invalid="true"]{border-bottom-color:var(--error);border-bottom-width:2px}
+  .field .err{font-size:var(--t-small);color:var(--error)}
+  .field .err:empty{display:none}
+  .field select option{background:var(--ink);color:var(--paper)}
+  .licence .btn{width:auto;background:var(--paper);color:var(--ink);border-color:var(--paper)}
+  .licence .btn:hover:not([disabled]){background:transparent;color:var(--paper)}
+  .form-msg{grid-column:1/-1;font-size:var(--t-small);min-height:1.4em;color:var(--error)}
+  .form-msg[data-state="ok"]{color:var(--ok)}
+
+  /* ---------- lightbox ---------- */
+  .lightbox{position:fixed;inset:0;z-index:80;background:rgba(6,6,6,.97);display:none;align-items:center;justify-content:center;padding:var(--s-4)}
+  .lightbox[data-open="true"]{display:flex}
+  .lightbox-inner{width:min(100%,1100px)}
+  .lightbox-inner svg{width:100%;height:auto;max-height:74svh}
+  .lightbox-bar{display:flex;flex-wrap:wrap;gap:var(--s-2) var(--s-3);align-items:baseline;justify-content:space-between;
+    padding-top:var(--s-3);border-top:1px solid var(--line);margin-top:var(--s-3)}
+  .lightbox-bar b{font-weight:400}
+  .lightbox-bar .count{font-size:var(--t-small);font-variant-numeric:tabular-nums;color:var(--grey)}
+  .lb-hint{font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-dim);text-align:center;margin-top:var(--s-3)}
+  .lb-close{position:absolute;top:14px;right:14px;width:48px;height:48px;border:1px solid var(--line);background:transparent;
+    border-radius:50%;cursor:pointer;font-size:1.1rem;line-height:1}
+  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:64px;border:1px solid var(--line);
+    background:rgba(10,10,10,.5);cursor:pointer;font-size:1.2rem}
+  .lb-prev{left:12px} .lb-next{right:12px}
+
+  /* ---------- footer ---------- */
+  .foot{padding-block:var(--s-6) var(--s-5);border-top:1px solid var(--line)}
+  .foot-top{display:flex;flex-wrap:wrap;gap:var(--s-5);align-items:flex-end;justify-content:space-between;
+    padding-bottom:var(--s-4);border-bottom:1px solid var(--line)}
+  .foot nav ul{display:flex;flex-wrap:wrap;gap:var(--s-4) var(--s-5)}
+  .foot nav a{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;color:var(--grey);display:inline-flex;align-items:center;min-height:44px}
+  .foot nav a:hover{color:var(--paper)}
+  .foot-note{display:flex;flex-wrap:wrap;gap:var(--s-3);justify-content:space-between;padding-top:var(--s-4);
+    font-size:var(--t-micro);color:var(--on-dark-dim);letter-spacing:.06em}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1100px){
+    .print-layout{grid-template-columns:1fr}
+    .basket{position:static}
+  }
+  @media (max-width:1000px){
+    .shot,.shot--tall,.shot--sq{grid-column:span 6;aspect-ratio:1/1}
+    .shot--wide,.shot--band{grid-column:span 12;aspect-ratio:16/9}
+    .shot--portrait{grid-column:span 12;aspect-ratio:4/5}
+    .jlist a{grid-template-columns:5rem minmax(0,1fr) 7rem}
+    .jlist .where{grid-column:2;grid-row:2}
+    .field-note-inner{grid-template-columns:1fr;gap:var(--s-5)}
+  }
+  @media (max-width:820px){
+    .bar nav{display:none}
+    .bar nav[data-open="true"]{display:block;position:fixed;inset:var(--bar-h) 0 auto 0;background:rgba(10,10,10,.98);padding:.4rem var(--pad) 1rem;border-bottom:1px solid var(--line)}
+    .bar nav[data-open="true"] ul{flex-direction:column;gap:0}
+    .bar nav[data-open="true"] a{border-bottom:1px solid var(--line);width:100%}
+    .menu-btn{display:block}
+    .licence-grid{grid-template-columns:1fr;gap:var(--s-5)}
+  }
+  /* no hover on touch: captions and the enlarge affordance are always shown */
+  @media (hover:none),(max-width:560px){
+    .shot figcaption{opacity:1;transform:none;background:linear-gradient(to top,rgba(6,6,6,.9),rgba(6,6,6,.15))}
+    .shot .open{opacity:1}
+    .shot--wide,.shot--band,.shot--full{grid-column:span 12;aspect-ratio:4/3}
+    .shot,.shot--tall,.shot--sq,.shot--portrait{grid-column:span 12;aspect-ratio:4/5}
+    .print-grid{grid-template-columns:1fr}
+    .form{grid-template-columns:1fr}
+    .frame .scroll{display:none}
+    .lb-nav{width:48px;height:56px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    .shot figcaption{opacity:1;transform:none}
+    .shot .open{opacity:1}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#gallery">Skip to the photographs</a>
+
+<header class="bar" id="bar">
+  <a class="who" href="#top">Ilse Hartvig</a>
+  <nav id="nav" aria-label="Sections">
+    <ul>
+      <li><a href="#gallery">Photographs</a></li>
+      <li><a href="#note">Field note</a></li>
+      <li><a href="#journeys">Journeys</a></li>
+      <li><a href="#prints">Prints</a></li>
+      <li><a href="#licence">Licensing</a></li>
+    </ul>
+  </nav>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <section class="frame" aria-labelledby="frameTitle">
+    <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A single traveller standing on a ridge above a glacial valley, small in the frame, at first light.">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2A3B4E"/>
+          <stop offset=".55" stop-color="#7C8A93"/>
+          <stop offset="1" stop-color="#D9CFC0"/>
+        </linearGradient>
+        <linearGradient id="glacier" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#E7E3D9"/>
+          <stop offset="1" stop-color="#B9B6AE"/>
+        </linearGradient>
+      </defs>
+      <rect width="1600" height="1000" fill="url(#sky)"/>
+      <path d="M0 470 180 350l150 84 190-150 210 176 190-120 250 158 200-96 230 130v360H0Z" fill="#6E7C87"/>
+      <path d="M0 560 240 420l190 140 210-150 200 140 210-110 240 140 160-80 150 90v400H0Z" fill="#4E5C66"/>
+      <path d="M0 660c180-40 320 30 500 4s320 44 520 14 380 26 580-6v320H0Z" fill="#39454E"/>
+      <path d="M0 780c240-46 420 20 660-4 220-22 340 30 560 8 130-13 250 12 380 2v214H0Z" fill="#232C33"/>
+      <path d="M300 700c140-24 300-16 470 6 120 16 260 6 420-18 90-14 200-14 300 4l70 60c-180 26-380 34-560 12-200-24-360-16-540 4-140 16-260 4-380-20Z" fill="url(#glacier)" opacity=".92"/>
+      <path d="M180 900c220-30 380 22 600 6 200-14 300 22 500 4 130-12 220 8 320 2v96H180Z" fill="#161C20"/>
+      <g fill="#0E1316">
+        <path d="M1000 872h7v42h-7ZM980 914h47v6h-47Z"/>
+        <circle cx="1003" cy="866" r="8"/>
+        <path d="M1010 870 1032 862l5 4-22 8Z"/>
+      </g>
+    </svg>
+    <p class="scroll" aria-hidden="true">Scroll</p>
+    <div class="frame-in">
+      <h1 id="frameTitle">Travel photography about <strong>weather and distance</strong></h1>
+      <p class="lede">Ten years, sixty-one countries, one rule: wait for the light, then wait longer.
+        <span>Studio and prints in Reykjavík. Commissions four times a year.</span></p>
+    </div>
+  </section>
+
+  <section class="gallery band" id="gallery" aria-labelledby="galleryTitle">
+    <div class="gallery-head">
+      <h2 id="galleryTitle">Selected frames, 2023 — 2026</h2>
+      <p class="micro">Eight frames · each one opens full size with its details</p>
+    </div>
+
+    <div class="grid" id="grid">
+      <button class="shot shot--tall" type="button" aria-haspopup="dialog"
+        data-title="Hvalfjörður, first snow" data-meta="Iceland · March 2025 · 35 mm · f/8 · 1/125">
+        <svg viewBox="0 0 400 600" role="img" aria-label="A narrow fjord between snow-covered cliffs under a pale sky, a single boat moored below.">
+          <rect width="400" height="600" fill="#C9CDD0"/>
+          <path d="M0 60 120 0h80l-40 120 60 90-70 200 40 130H0Z" fill="#E4E2DA"/>
+          <path d="M400 40 300 0h-90l60 130-70 100 50 190-40 180h190Z" fill="#D6D3C9"/>
+          <rect y="440" width="400" height="160" fill="#8FA0A6"/>
+          <g opacity=".5"><path d="M0 500c80-14 160 10 240-2s120 6 160-2" stroke="#C6D0D3" stroke-width="2" fill="none"/></g>
+          <path d="M170 500h70l-10 20h-50Z" fill="#4E5C66"/>
+          <path d="M205 500v-34" stroke="#4E5C66" stroke-width="3"/>
+        </svg>
+        <span class="open" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2H2v4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+        <figcaption><b>Hvalfjörður, first snow</b><span>Iceland · 2025</span></figcaption>
+      </button>
+
+      <button class="shot shot--sq" type="button" aria-haspopup="dialog"
+        data-title="Ferry, crossing two days late" data-meta="Norway · October 2024 · 85 mm · f/5.6 · 1/500">
+        <svg viewBox="0 0 400 400" role="img" aria-label="A ferry's dark hull cutting through flat grey water, horizon line high in the frame.">
+          <rect width="400" height="400" fill="#A8AEB0"/>
+          <rect y="150" width="400" height="250" fill="#7C8689"/>
+          <path d="M60 150h300l-30 62H92Z" fill="#3C464A"/>
+          <rect x="150" y="112" width="120" height="38" fill="#C8CBC7"/>
+          <g fill="#5A6468"><rect x="168" y="122" width="20" height="18"/><rect x="200" y="122" width="20" height="18"/><rect x="232" y="122" width="20" height="18"/></g>
+          <path d="M205 76v34" stroke="#3C464A" stroke-width="4"/>
+          <g opacity=".45" fill="#E2E1DA"><path d="M40 260h320v6H40ZM70 300h260v5H70ZM20 340h360v6H20Z"/></g>
+          <rect y="0" width="400" height="150" fill="#C2C6C7" opacity=".6"/>
+        </svg>
+        <span class="open" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2H2v4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+        <figcaption><b>Ferry, crossing two days late</b><span>Norway · 2024</span></figcaption>
+      </button>
+
+      <button class="shot shot--sq" type="button" aria-haspopup="dialog"
+        data-title="Shepherd's road, Karakoram" data-meta="Pakistan · September 2023 · 50 mm · f/4 · 1/1000">
+        <svg viewBox="0 0 400 400" role="img" aria-label="A pale track curving up through dry ochre hills, no figures, no buildings.">
+          <rect width="400" height="400" fill="#DCCBB0"/>
+          <path d="M0 180c80-40 140 10 220-20s120 10 180-14v254H0Z" fill="#CBB896"/>
+          <path d="M0 260c90-30 150 20 230-6 60-20 110 6 170-8v154H0Z" fill="#B7A382"/>
+          <path d="M120 400c-10-70 30-110 60-140 20-20 60-40 90-70" stroke="#EFE7D6" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <path d="M0 120 60 60l50 30 60-50 70 60 60-40 100 50v40H0Z" fill="#B0A183" opacity=".7"/>
+        </svg>
+        <span class="open" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2H2v4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+        <figcaption><b>Shepherd's road, Karakoram</b><span>Pakistan · 2023</span></figcaption>
+      </button>
+
+      <button class="shot shot--wide" type="button" aria-haspopup="dialog"
+        data-title="Dust over the Pan, late afternoon" data-meta="Namibia · November 2024 · 135 mm · f/8 · 1/640">
+        <svg viewBox="0 0 800 450" role="img" aria-label="A dust storm crossing a pale pan, a single dead tree at the edge of the frame.">
+          <rect width="800" height="450" fill="#E2D6C2"/>
+          <rect y="290" width="800" height="160" fill="#CDBFA6"/>
+          <path d="M0 290c120 8 200-18 320-6s240-24 360-6 120 0 120 0v40H0Z" fill="#D9CBB2"/>
+          <g opacity=".45" fill="#C6B79C"><path d="M400 180c60-30 140-24 200 6s60 60 60 60H420Z"/></g>
+          <path d="M120 290c0-40 8-70 20-90-6 30-4 60 4 90Z" fill="#4A4238"/>
+          <path d="M140 290c-8-26-20-40-38-50 22 2 36 12 44 30 6-16 18-26 36-30-14 12-22 28-24 50Z" fill="#4A4238"/>
+          <rect y="430" width="800" height="20" fill="#B9A98C"/>
+        </svg>
+        <span class="open" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2H2v4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+        <figcaption><b>Dust over the Pan, late afternoon</b><span>Namibia · 2024</span></figcaption>
+      </button>
+
+      <button class="shot shot--portrait" type="button" aria-haspopup="dialog"
+        data-title="Fog, Kii Peninsula" data-meta="Japan · June 2025 · 50 mm · f/2 · 1/200">
+        <svg viewBox="0 0 480 600" role="img" aria-label="Bamboo trunks receding into dense fog, tonal and almost monochrome.">
+          <rect width="480" height="600" fill="#C8CBC6"/>
+          <g fill="#7E8478">
+            <rect x="40" y="0" width="30" height="600"/><rect x="130" y="0" width="24" height="600"/>
+            <rect x="230" y="0" width="32" height="600"/><rect x="330" y="0" width="22" height="600"/>
+            <rect x="410" y="0" width="28" height="600"/>
+          </g>
+          <g fill="#EDE9E0" opacity=".75">
+            <rect x="80" y="0" width="20" height="600"/><rect x="180" y="0" width="26" height="600"/>
+            <rect x="280" y="0" width="18" height="600"/><rect x="370" y="0" width="24" height="600"/>
+          </g>
+          <rect y="440" width="480" height="160" fill="#AFB3AB" opacity=".8"/>
+        </svg>
+        <span class="open" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2H2v4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+        <figcaption><b>Fog, Kii Peninsula</b><span>Japan · 2025</span></figcaption>
+      </button>
+
+      <button class="shot shot--band" type="button" aria-haspopup="dialog"
+        data-title="Ferry wake at 04:40" data-meta="Faroe Islands · February 2024 · 35 mm · f/4 · 1/250">
+        <svg viewBox="0 0 700 500" role="img" aria-label="A white wake spreading out behind a moving vessel in dark water, seen from above.">
+          <rect width="700" height="500" fill="#33393D"/>
+          <path d="M350 500 250 0h200Z" fill="#DDE0DD" opacity=".9"/>
+          <path d="M350 500 300 0h100Z" fill="#F1F2EF"/>
+          <g stroke="#9FA6A6" stroke-width="2" fill="none" opacity=".7">
+            <path d="M250 0 120 500M450 0 580 500M300 0 220 500M400 0 480 500"/>
+          </g>
+          <g fill="#E8EAE6" opacity=".5"><path d="M100 500 0 300h60Z"/><path d="M600 500 700 320h-50Z"/></g>
+          <rect y="0" width="700" height="60" fill="#262B2E"/>
+        </svg>
+        <span class="open" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2H2v4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+        <figcaption><b>Ferry wake at 04:40</b><span>Faroe Islands · 2024</span></figcaption>
+      </button>
+
+      <button class="shot shot--sq" type="button" aria-haspopup="dialog"
+        data-title="Salt flats, Bolivia" data-meta="Bolivia · January 2023 · 35 mm · f/11 · 1/250">
+        <svg viewBox="0 0 400 400" role="img" aria-label="A cracked salt flat stretching to a thin mountain range, the horizon exactly centred.">
+          <rect width="400" height="400" fill="#E6E2D8"/>
+          <rect y="200" width="400" height="200" fill="#F0EDE5"/>
+          <path d="M0 200 40 186l40 8 30-12 40 14 30-10 40 12 40-8 40 12 50-10 40 8v12H0Z" fill="#A8AEB4"/>
+          <g stroke="#C9C4B6" stroke-width="1.4" fill="none">
+            <path d="M0 260c60 10 100-6 160 4s120-8 240 2M0 300c80 8 120-8 200 2s120-6 200 4M0 344c70 10 130-6 210 4s110-8 190 2"/>
+            <path d="M60 240 100 400M180 240l20 160M300 240l-30 160"/>
+          </g>
+        </svg>
+        <span class="open" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2H2v4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+        <figcaption><b>Salt flats, Bolivia</b><span>Bolivia · 2023</span></figcaption>
+      </button>
+
+      <button class="shot shot--full" type="button" aria-haspopup="dialog"
+        data-title="Winter road, Hornstrandir — day nine of waiting" data-meta="Iceland · February 2026 · 50 mm · f/8 · 1/125">
+        <svg viewBox="0 0 1400 600" role="img" aria-label="A single-track road running out of frame into low winter light between snow-banked slopes.">
+          <rect width="1400" height="600" fill="#D8DAD8"/>
+          <path d="M0 240c220-30 400 20 700-4s480 26 700-6v370H0Z" fill="#EFEDE8"/>
+          <path d="M0 380c260-20 420 30 700 6s440 20 700-10v224H0Z" fill="#E2E0DA"/>
+          <path d="M640 600c20-90 60-150 120-190 60-40 80-70 90-110h40c-10 50-40 90-100 130-60 40-90 90-104 170Z" fill="#8E8A82"/>
+          <path d="M0 180c180-40 320 30 520 0s340 20 500-10 300 10 380-6v70H0Z" fill="#C6C9C7" opacity=".8"/>
+          <g fill="#4E5457"><path d="M120 300h4v-70h-4Z"/><path d="M124 236c14-10 26-10 38 0-14 4-26 4-38 0Z"/><path d="M1300 320h4v-60h-4Z"/></g>
+        </svg>
+        <span class="open" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2H2v4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+        <figcaption><b>Winter road, Hornstrandir — day nine of waiting</b><span>Iceland · 2026</span></figcaption>
+      </button>
+    </div>
+  </section>
+
+  <section class="field-note band" id="note" aria-labelledby="noteTitle">
+    <div class="field-note-inner">
+      <div>
+        <p class="micro">Field note · Westfjords, February</p>
+        <h2 id="noteTitle">Nine weeks for two usable days</h2>
+        <dl class="facts">
+          <dt>Location</dt><dd>Hornstrandir, north-west Iceland</dd>
+          <dt>Dates</dt><dd>2 January – 1 March 2026</dd>
+          <dt>Usable light</dt><dd>Two days, four hours total</dd>
+          <dt>Frames kept</dt><dd>Fourteen, from roughly forty thousand exposures</dd>
+          <dt>Equipment</dt><dd>Two bodies, three lenses, no tripod after week three</dd>
+        </dl>
+      </div>
+      <div class="note-body">
+        <p class="note-pull">The weather is not an obstacle to the work. It is the work.</p>
+        <p>People assume the hard part is getting there. It is not. Getting there is a map problem and I enjoy map problems. The hard part is that the thing you came for — a specific quality of light on a specific coastline — happens for perhaps ninety minutes, twice, and you find out about the second one from a phone forecast that is wrong in a way no weather app is willing to be precise about.</p>
+        <p>So you drive to where it will be. Then you drive somewhere better. Then you wait, badly, in a car park, for six days.</p>
+        <p>What came out of it is fourteen frames. Eleven of them are grey. Three of them are the reason I keep doing this, and I still could not tell you at the time which three they were going to be — that is decided later, in a room with too much coffee, by looking at a contact sheet until one of them will not let go of you.</p>
+        <p>That is the whole method, and it does not scale, and I have stopped apologising for it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="journeys band" id="journeys" aria-labelledby="journeysTitle">
+    <h2 id="journeysTitle">Journeys</h2>
+    <ul class="jlist">
+      <li><a href="#gallery"><span class="yr">2026</span><b>Westfjords, in February</b><span class="where">Iceland · nine weeks, two usable days</span><span class="cnt">14 frames</span></a></li>
+      <li><a href="#gallery"><span class="yr">2025</span><b>The Kii coast in the wet season</b><span class="where">Japan · four months</span><span class="cnt">22 frames</span></a></li>
+      <li><a href="#gallery"><span class="yr">2024</span><b>Salt, dust and long roads</b><span class="where">Bolivia, Peru, Chile, Namibia</span><span class="cnt">31 frames</span></a></li>
+      <li><a href="#gallery"><span class="yr">2023</span><b>Karakoram, on foot</b><span class="where">Pakistan · 21 days above 4,000 m</span><span class="cnt">18 frames</span></a></li>
+    </ul>
+  </section>
+
+  <section class="prints" id="prints" aria-labelledby="printsTitle">
+    <div class="band">
+      <div class="prints-head">
+        <h2 id="printsTitle">Prints</h2>
+        <p class="micro">Archival pigment · signed · edition of 40 · 50 × 62 cm · shipped flat from Reykjavík</p>
+      </div>
+
+      <div class="print-layout">
+        <ul class="print-grid">
+          <li class="print-item">
+            <button class="plate-btn" type="button" data-print="Hvalfjörður, first snow" data-price="180" data-edition="7 of 40 remaining"
+                    aria-pressed="false">
+              <span class="plate">
+                <svg viewBox="0 0 400 500" role="img" aria-label="Print preview: Hvalfjörður, first snow.">
+                  <rect width="400" height="500" fill="#E9E7E0"/>
+                  <rect x="34" y="34" width="332" height="410" fill="#C6CACD"/>
+                  <path d="M34 34h130L164 200 96 300l40 144H34Z" fill="#E0DED6"/>
+                  <path d="M366 54 296 34h-70l40 106-52 84 42 166-24 54h134Z" fill="#D2CFC5"/>
+                  <rect x="34" y="320" width="332" height="124" fill="#8A9AA0"/>
+                  <path d="M168 372h58l-8 16h-42Z" fill="#4A565C"/>
+                </svg>
+              </span>
+            </button>
+            <h3>Hvalfjörður, first snow</h3>
+            <p class="meta"><span>35 mm · 2025</span><span class="price">€180</span></p>
+          </li>
+          <li class="print-item">
+            <button class="plate-btn" type="button" data-print="Shepherd's road" data-price="180" data-edition="19 of 40 remaining"
+                    aria-pressed="false">
+              <span class="plate">
+                <svg viewBox="0 0 400 500" role="img" aria-label="Print preview: Shepherd's road, Karakoram.">
+                  <rect width="400" height="500" fill="#E6E0D2"/>
+                  <rect x="34" y="34" width="332" height="410" fill="#DCCBB0"/>
+                  <path d="M34 200c76-38 134 10 210-18s110 8 122-12v274H34Z" fill="#CBB896"/>
+                  <path d="M34 300c84-28 140 18 224-4 58-16 108 4 108-6v154H34Z" fill="#B7A382"/>
+                  <path d="M130 444c-10-62 28-96 56-122 18-18 54-36 82-62" stroke="#EFE7D6" stroke-width="14" fill="none" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+            <h3>Shepherd's road</h3>
+            <p class="meta"><span>50 mm · 2023</span><span class="price">€180</span></p>
+          </li>
+          <li class="print-item">
+            <button class="plate-btn" type="button" data-print="Dust over the Pan" data-edition="Edition closed" data-closed="true" disabled>
+              <span class="plate">
+                <svg viewBox="0 0 400 500" role="img" aria-label="Print preview: Dust over the Pan, late afternoon. Edition closed.">
+                  <rect width="400" height="500" fill="#E6DCC9"/>
+                  <rect x="34" y="34" width="332" height="410" fill="#DCCBB0"/>
+                  <rect x="34" y="250" width="332" height="194" fill="#C8B99F"/>
+                  <g opacity=".5" fill="#BDAE92"><path d="M186 140c56-26 122-20 172 8s42 62 42 62H186Z"/></g>
+                  <path d="M120 250c0-38 8-64 18-84-4 28-2 56 4 84Z" fill="#4A4238"/>
+                  <path d="M136 250c-8-24-18-36-34-46 20 2 32 12 40 28 4-14 16-24 32-28-12 12-20 26-22 46Z" fill="#4A4238"/>
+                </svg>
+              </span>
+            </button>
+            <h3>Dust over the Pan</h3>
+            <p class="meta"><span>135 mm · 2024</span><span class="state">Edition closed</span></p>
+          </li>
+        </ul>
+
+        <aside class="basket" aria-labelledby="basketTitle">
+          <h3 id="basketTitle">Print order</h3>
+          <ul id="basketList">
+            <li class="none">Nothing selected yet.</li>
+          </ul>
+          <p class="basket-foot"><span>Total</span><b id="basketTotal">€0</b></p>
+          <button class="btn" type="button" id="basketSubmit" disabled>Request order</button>
+          <p class="basket-msg" id="basketMsg" role="status" aria-live="polite"></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="licence band" id="licence" aria-labelledby="licenceTitle">
+    <div class="licence-grid">
+      <div>
+        <p class="micro">Commissions</p>
+        <h2 id="licenceTitle">Editorial, print and campaign licensing</h2>
+        <p class="lede">I take on four assignments a year, usually for magazines, record sleeves and outdoor brands. Rates and availability on request; the form reaches me directly and I answer everything myself, usually within a day.</p>
+      </div>
+      <form class="form" id="licenceForm" novalidate>
+        <div class="field">
+          <label for="lName">Name</label>
+          <input id="lName" name="name" type="text" autocomplete="name" required placeholder="Ruth Ellery" aria-describedby="lName-err">
+          <p class="err" id="lName-err" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="lEmail">Email</label>
+          <input id="lEmail" name="email" type="email" autocomplete="email" required placeholder="you@publication.com" aria-describedby="lEmail-err">
+          <p class="err" id="lEmail-err" role="alert"></p>
+        </div>
+        <div class="field full">
+          <label for="lUse">Intended use</label>
+          <select id="lUse" name="use">
+            <option>Editorial — print</option>
+            <option>Editorial — digital</option>
+            <option>Campaign / advertising</option>
+            <option>Book or record cover</option>
+            <option>Exhibition</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="lMsg">Details, dates and budget range</label>
+          <textarea id="lMsg" name="message" required placeholder="Two images for a January issue, printed run 40,000, artwork due 14 November." aria-describedby="lMsg-err"></textarea>
+          <p class="err" id="lMsg-err" role="alert"></p>
+        </div>
+        <div class="full"><button class="btn" type="submit">Send enquiry</button></div>
+        <p class="form-msg" id="licenceMsg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- the lightbox is a sibling of main/footer so they can be hidden from assistive tech while it is modal -->
+<div class="lightbox band" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lbTitle" data-open="false">
+  <button class="lb-close" id="lbClose" type="button" aria-label="Close enlarged view">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="Previous photograph">‹</button>
+  <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="Next photograph">›</button>
+  <div class="lightbox-inner">
+    <div id="lbArt"></div>
+    <div class="lightbox-bar">
+      <b id="lbTitle">Photograph</b>
+      <span class="micro" id="lbMeta"></span>
+      <span class="count" id="lbCount"></span>
+    </div>
+    <p class="lb-hint">Arrow keys to move · Escape to close</p>
+  </div>
+</div>
+
+<footer class="foot band">
+  <div class="foot-top">
+    <p style="font-size:1.05rem">Ilse Hartvig</p>
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="#gallery">Photographs</a></li>
+        <li><a href="#note">Field note</a></li>
+        <li><a href="#journeys">Journeys</a></li>
+        <li><a href="#prints">Prints</a></li>
+        <li><a href="#licence">Licensing</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="foot-note">
+    <span>Studio: Laugavegur 41, 101 Reykjavík</span>
+    <span>Represented in Europe by Atlas &amp; Field · © 2026 Ilse Hartvig</span>
+  </p>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- chrome solidifies after the opening frame ---------- */
+  var bar = $('bar');
+  var hero = document.querySelector('.frame');
+  var mobileQuery = window.matchMedia('(max-width: 820px)');
+  function updateBar() {
+    bar.setAttribute('data-solid', String(window.scrollY > hero.offsetHeight - 120));
+  }
+  window.addEventListener('scroll', updateBar, { passive: true });
+  updateBar();
+
+  /* ---------- menu ---------- */
+  var menuBtn = $('menuBtn');
+  var nav = $('nav');
+  function setMenu(open) {
+    nav.setAttribute('data-open', String(open));
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.textContent = open ? 'Close' : 'Menu';
+  }
+  menuBtn.addEventListener('click', function () { setMenu(nav.getAttribute('data-open') !== 'true'); });
+  nav.addEventListener('click', function (e) { if (e.target.closest('a') && mobileQuery.matches) setMenu(false); });
+  if (!mobileQuery.matches) nav.setAttribute('data-open', 'false');
+
+  /* ---------- lightbox ---------- */
+  var shots = Array.prototype.slice.call(document.querySelectorAll('.shot'));
+  var lightbox = $('lightbox');
+  var lbArt = $('lbArt');
+  var lbTitle = $('lbTitle');
+  var lbMeta = $('lbMeta');
+  var lbCount = $('lbCount');
+  var current = 0;
+  var lastFocus = null;
+  /* everything the modal covers, so screen readers do not wander into it */
+  var background = [document.querySelector('main'), document.querySelector('header.bar'), document.querySelector('footer')];
+
+  function paint() {
+    var shot = shots[current];
+    var source = shot.querySelector('svg');
+    var clone = source.cloneNode(true);
+    clone.setAttribute('role', 'img');
+    clone.setAttribute('aria-label', source.getAttribute('aria-label') || shot.dataset.title);
+    while (lbArt.firstChild) lbArt.removeChild(lbArt.firstChild);
+    lbArt.appendChild(clone);
+    lbTitle.textContent = shot.dataset.title;
+    lbMeta.textContent = shot.dataset.meta;
+    lbCount.textContent = (current + 1) + ' / ' + shots.length;
+  }
+  function openAt(i, opener) {
+    current = (i + shots.length) % shots.length;
+    paint();
+    lastFocus = opener || document.activeElement;
+    lightbox.setAttribute('data-open', 'true');
+    document.body.classList.add('is-locked');
+    background.forEach(function (el) { if (el) el.setAttribute('aria-hidden', 'true'); });
+    $('lbClose').focus();
+  }
+  function close() {
+    lightbox.setAttribute('data-open', 'false');
+    document.body.classList.remove('is-locked');
+    background.forEach(function (el) { if (el) el.removeAttribute('aria-hidden'); });
+    if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+  }
+  shots.forEach(function (shot, i) {
+    shot.addEventListener('click', function () { openAt(i, shot); });
+  });
+  $('lbClose').addEventListener('click', close);
+  $('lbPrev').addEventListener('click', function () { openAt(current - 1); });
+  $('lbNext').addEventListener('click', function () { openAt(current + 1); });
+  document.addEventListener('keydown', function (e) {
+    if (lightbox.getAttribute('data-open') !== 'true') return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key === 'ArrowLeft') { openAt(current - 1); return; }
+    if (e.key === 'ArrowRight') { openAt(current + 1); return; }
+    if (e.key !== 'Tab') return;
+    /* modal: keep Tab inside the lightbox */
+    var focusables = lightbox.querySelectorAll('button, [href]');
+    var first = focusables[0];
+    var last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  /* ---------- print order ---------- */
+  var held = Object.create(null);
+  var btnByName = new Map();
+  var basketList = $('basketList');
+  var basketTotal = $('basketTotal');
+  var basketSubmit = $('basketSubmit');
+  var basketMsg = $('basketMsg');
+
+  function renderBasket() {
+    while (basketList.firstChild) basketList.removeChild(basketList.firstChild);
+    var names = Object.keys(held);
+    var total = 0;
+    if (names.length === 0) {
+      var li = document.createElement('li');
+      li.className = 'none';
+      li.textContent = 'Nothing selected yet.';
+      basketList.appendChild(li);
+    } else {
+      names.forEach(function (name) {
+        var row = document.createElement('li');
+        var label = document.createElement('span');
+        label.textContent = name + ' · ' + held[name];
+        var price = document.createElement('span');
+        price.textContent = '€180';
+        var drop = document.createElement('button');
+        drop.type = 'button';
+        drop.className = 'btn';
+        drop.style.cssText = 'width:auto;min-height:32px;padding:0 .7rem;font-size:.7rem';
+        drop.textContent = 'Remove';
+        drop.setAttribute('aria-label', 'Remove ' + name + ' from the order');
+        drop.addEventListener('click', function () { release(btnByName.get(name)); });
+        row.appendChild(label); row.appendChild(price); row.appendChild(drop);
+        basketList.appendChild(row);
+        total += 180;
+      });
+    }
+    basketTotal.textContent = '€' + total;
+    basketSubmit.disabled = names.length === 0;
+  }
+  function hold(btn) {
+    var name = btn.dataset.print;
+    if (held[name]) { release(btn); return; }
+    held[name] = btn.dataset.edition;
+    btn.dataset.status = 'held';
+    btn.setAttribute('aria-pressed', 'true');
+    basketMsg.removeAttribute('data-state');
+    basketMsg.textContent = name + ' held. Edition: ' + btn.dataset.edition + '.';
+    renderBasket();
+  }
+  function release(btn) {
+    var name = btn.dataset.print;
+    delete held[name];
+    btn.removeAttribute('data-status');
+    btn.setAttribute('aria-pressed', 'false');
+    basketMsg.removeAttribute('data-state');
+    basketMsg.textContent = name + ' removed from the order.';
+    renderBasket();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.plate-btn'), function (btn) {
+    btnByName.set(btn.dataset.print, btn);
+    if (btn.dataset.closed) {
+      btn.dataset.status = 'closed';
+      btn.setAttribute('aria-label', btn.dataset.print + ' — edition closed, not available');
+      return;
+    }
+    btn.addEventListener('click', function () { hold(btn); });
+  });
+  basketSubmit.addEventListener('click', function () {
+    var names = Object.keys(held);
+    if (!names.length) return;
+    this.disabled = true;
+    basketMsg.dataset.state = 'ok';
+    basketMsg.textContent = 'Requested ' + names.length + ' print' + (names.length === 1 ? '' : 's') +
+      '. Nothing is paid yet — I email a shipping quote within two working days.';
+    window.setTimeout(function () {
+      held = Object.create(null);
+      Array.prototype.forEach.call(document.querySelectorAll('.plate-btn'), function (b) {
+        b.removeAttribute('data-status');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      basketMsg.textContent = '';
+      renderBasket();
+    }, 2600);
+  });
+  renderBasket();
+
+  /* ---------- licensing enquiry ---------- */
+  var form = $('licenceForm');
+  var msg = $('licenceMsg');
+  var name = $('lName');
+  var email = $('lEmail');
+  var message = $('lMsg');
+  var errs = { lName: $('lName-err'), lEmail: $('lEmail-err'), lMsg: $('lMsg-err') };
+
+  function setErr(field, text) {
+    errs[field.id].textContent = text || '';
+    if (text) field.setAttribute('aria-invalid', 'true');
+    else field.removeAttribute('aria-invalid');
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.removeAttribute('data-state');
+    if (!name.value.trim()) {
+      setErr(name, 'A name, so I know who to reply to.');
+      msg.textContent = 'Nothing was sent — the form still needs a name.';
+      name.focus();
+      return;
+    }
+    setErr(name, '');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      setErr(email, 'That address will not receive a reply.');
+      msg.textContent = 'Nothing was sent — check the email address.';
+      email.focus();
+      return;
+    }
+    setErr(email, '');
+    if (message.value.trim().length < 20) {
+      setErr(message, 'Include dates and a budget range — it saves a round of emails.');
+      msg.textContent = 'Nothing was sent — the details are too short to price.';
+      message.focus();
+      return;
+    }
+    setErr(message, '');
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Received. I reply to every licensing enquiry myself, usually within a day.';
+    form.querySelector('button').disabled = true;
+  });
+  [name, email, message].forEach(function (el) {
+    el.addEventListener('input', function () {
+      setErr(el, '');
+      if (msg.getAttribute('data-state') !== 'ok') msg.textContent = '';
+    });
+  });
+})();
+</script>
+</body>
+</html>

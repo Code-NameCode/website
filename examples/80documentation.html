@@ -1,0 +1,828 @@
+<!-- Style: Documentation | 80documentation.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quill API — Documentation</title>
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-2:#F6F7F9;
+    --bg-3:#EDEFF3;
+    --surface:#FFFFFF;
+    --ink:#161A1F;
+    --ink-2:#454C55;
+    --ink-3:#727A84;
+    --line:#DFE3E8;
+    --line-2:#C6CCD4;
+    --code-bg:#0F1419;
+    --code-ink:#D6DEE7;
+    --get:#1B7A4B; --get-bg:#E4F3EA;
+    --post:#1F5BA8; --post-bg:#E6EFFA;
+    --patch:#8A5A12; --patch-bg:#F8EEDA;
+    --delete:#A3301F; --delete-bg:#FBE7E3;
+    --link:#1F5BA8;
+    /* type */
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --t-h1: clamp(1.9rem, 1.4rem + 2vw, 2.9rem);
+    --t-h2: clamp(1.3rem, 1.1rem + .9vw, 1.75rem);
+    --t-h3: 1.05rem;
+    --t-body: 1rem;
+    --t-small: .875rem;
+    --t-micro: .76rem;
+    --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1.1rem; --s-5:1.8rem; --s-6:2.8rem; --s-7:4.2rem;
+    --r:6px;
+    --ring:0 0 0 2px #fff, 0 0 0 4px var(--link);
+    --dur:140ms; --ease:cubic-bezier(.2,.75,.2,1);
+    --topbar:60px;
+    --sidebar:270px;
+    --toc:220px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth; scroll-padding-top:calc(var(--topbar) + 16px)}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:var(--t-body);line-height:1.62;-webkit-font-size-adjust:100%}
+  img,svg{display:block;max-width:100%}
+  h1,h2,h3,h4,p,ul,ol,figure,pre,table{margin:0}
+  ul,ol{padding:0;list-style:none}
+  a{color:var(--link);text-underline-offset:2px}
+  a:hover{text-decoration-thickness:2px}
+  .skip{position:absolute;left:-9999px;background:var(--ink);color:#fff;padding:.7rem 1.1rem;z-index:99}
+  .skip:focus{left:0}
+  :focus-visible{outline:none;box-shadow:var(--ring);border-radius:var(--r)}
+
+  .muted{color:var(--ink-2)}
+  .small{font-size:var(--t-small)}
+  .micro{font-size:var(--t-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  .mono{font-family:var(--mono)}
+  .measure{max-width:74ch}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:60;height:var(--topbar);background:rgba(255,255,255,.94);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:var(--s-3);
+    padding-inline:var(--s-4);
+  }
+  .logo{display:flex;align-items:center;gap:.6rem;font-weight:700;letter-spacing:-.02em;font-size:1.05rem;color:var(--ink);text-decoration:none;white-space:nowrap}
+  .logo svg{width:26px;height:26px}
+  .top-search{position:relative;flex:1 1 300px;max-width:420px;margin-left:var(--s-4)}
+  .top-search svg.mag{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+  .top-search input{
+    width:100%;min-height:40px;padding:.5rem .8rem .5rem 2.5rem;border:1px solid var(--line-2);
+    border-radius:var(--r);background:var(--bg-2);font:inherit;font-size:var(--t-small);
+  }
+  .top-search input:focus-visible{background:#fff;border-color:var(--link)}
+  .kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.68rem;color:var(--ink-3);border:1px solid var(--line);border-radius:4px;padding:1px 5px;background:#fff}
+  .top-right{margin-left:auto;display:flex;align-items:center;gap:var(--s-3)}
+  .ver{display:flex;align-items:center;gap:.5rem;font-size:var(--t-small);color:var(--ink-2)}
+  .ver select{min-height:38px;border:1px solid var(--line-2);border-radius:var(--r);padding:.3rem .6rem;font:inherit;font-size:var(--t-small);background:#fff;color:var(--ink)}
+  .top-right a{font-size:var(--t-small);display:inline-flex;align-items:center;min-height:40px;padding:0 .3rem}
+  .top-right .status{display:flex;align-items:center;gap:.4rem;font-size:var(--t-small);color:var(--ink-2)}
+  .status i{width:8px;height:8px;border-radius:50%;background:var(--get);display:block}
+  .menu-btn{display:none;width:40px;height:40px;border:1px solid var(--line-2);border-radius:var(--r);background:#fff;cursor:pointer;place-items:center}
+
+  /* ---------- shell ---------- */
+  .shell{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr) var(--toc);gap:var(--s-6);align-items:start;padding-inline:var(--s-4)}
+  .sidebar{position:sticky;top:var(--topbar);height:calc(100vh - var(--topbar));overflow-y:auto;padding:var(--s-5) var(--s-2) var(--s-6) 0;border-right:1px solid var(--line)}
+  .sidebar h2{font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:var(--s-4) 0 .5rem}
+  .sidebar h2:first-child{margin-top:0}
+  .sidebar a{display:flex;align-items:center;gap:.5rem;padding:.42rem .7rem;border-radius:var(--r);font-size:var(--t-small);color:var(--ink-2);text-decoration:none;min-height:36px}
+  .sidebar a:hover{background:var(--bg-3);color:var(--ink)}
+  .sidebar a[aria-current="true"]{background:var(--bg-3);color:var(--ink);font-weight:600}
+  .sidebar a[aria-current="true"]::before{content:"";width:3px;height:16px;border-radius:2px;background:var(--link);margin-left:-.7rem;margin-right:0}
+  .sidebar .nest{padding-left:1.6rem}
+  .m{font-family:var(--mono);font-size:.66rem;font-weight:700;padding:.05rem .35rem;border-radius:3px;letter-spacing:.04em}
+  .m-get{background:var(--get-bg);color:var(--get)}
+  .m-post{background:var(--post-bg);color:var(--post)}
+  .m-patch{background:var(--patch-bg);color:var(--patch)}
+  .m-delete{background:var(--delete-bg);color:var(--delete)}
+
+  .content{padding:var(--s-5) 0 var(--s-7);min-width:0}
+  .toc{position:sticky;top:var(--topbar);max-height:calc(100vh - var(--topbar));overflow-y:auto;padding:var(--s-5) 0 var(--s-6);border-left:1px solid var(--line);padding-left:var(--s-4)}
+  .toc p{font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:.6rem}
+  .toc ol{list-style:none;padding:0;border-left:2px solid var(--line)}
+  .toc a{display:block;padding:.3rem 0 .3rem .8rem;margin-left:-2px;border-left:2px solid transparent;font-size:var(--t-small);color:var(--ink-3);text-decoration:none}
+  .toc a:hover{color:var(--ink)}
+  .toc a[aria-current="true"]{color:var(--link);border-left-color:var(--link);font-weight:600}
+
+  /* ---------- content primitives ---------- */
+  .content h1{font-size:var(--t-h1);line-height:1.14;letter-spacing:-.025em;font-weight:700;margin-block:var(--s-2) var(--s-3)}
+  .content h2{font-size:var(--t-h2);line-height:1.2;letter-spacing:-.02em;font-weight:700;margin:var(--s-7) 0 var(--s-3);padding-top:var(--s-3);border-top:1px solid var(--line);scroll-margin-top:calc(var(--topbar) + 12px)}
+  .content h3{font-size:var(--t-h3);font-weight:700;margin:var(--s-5) 0 var(--s-2);scroll-margin-top:calc(var(--topbar) + 12px)}
+  .content p{margin-bottom:var(--s-3);max-width:74ch}
+  .content ul.docs{margin:0 0 var(--s-3);padding-left:1.2rem;max-width:74ch}
+  .content ul.docs li{list-style:disc;margin-bottom:.3rem}
+  .content ul.docs li::marker{color:var(--ink-3)}
+  .anchor{
+    margin-left:.4rem;font-weight:400;color:var(--ink-3);text-decoration:none;opacity:0;
+    transition:opacity var(--dur) var(--ease);
+  }
+  h2:hover .anchor,h3:hover .anchor,.anchor:focus-visible{opacity:1}
+
+  .lede{font-size:1.1rem;color:var(--ink-2);max-width:70ch}
+
+  /* cards row */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-3);margin-block:var(--s-4) var(--s-5)}
+  .card{border:1px solid var(--line);border-radius:var(--r);padding:var(--s-4);background:var(--surface);text-decoration:none;color:inherit;display:block;transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+  .card:hover{border-color:var(--line-2);box-shadow:0 6px 18px -12px rgba(22,26,31,.4)}
+  .card b{display:block;font-size:1.02rem;margin-bottom:.25rem}
+  .card p{font-size:var(--t-small);color:var(--ink-2);margin:0}
+  .card .m{display:inline-block;margin-bottom:.6rem}
+
+  /* code */
+  .codeblock{position:relative;background:var(--code-bg);border-radius:var(--r);margin-bottom:var(--s-4);overflow:hidden}
+  .codeblock-bar{display:flex;align-items:center;gap:var(--s-3);padding:.45rem .5rem .45rem .9rem;border-bottom:1px solid rgba(255,255,255,.09)}
+  .codeblock-bar .lang{font-family:var(--mono);font-size:var(--t-micro);color:#8B98A6;letter-spacing:.06em}
+  .codeblock-bar .file{font-family:var(--mono);font-size:var(--t-micro);color:#6E7B89}
+  .copy{
+    margin-left:auto;min-height:30px;padding:.2rem .6rem;background:rgba(255,255,255,.08);color:var(--code-ink);
+    border:1px solid rgba(255,255,255,.14);border-radius:4px;font:inherit;font-size:var(--t-micro);cursor:pointer;
+    display:inline-flex;align-items:center;gap:.4rem;
+  }
+  .copy:hover{background:rgba(255,255,255,.16)}
+  .copy[data-state="ok"]{border-color:#3E7A55;color:#9BD8B4}
+  pre{overflow-x:auto;padding:var(--s-4);font-family:var(--mono);font-size:.84rem;line-height:1.65;color:var(--code-ink);tab-size:2}
+  .t-key{color:#7FC7F0}
+  .t-kw{color:#C99BE8}
+  .t-str{color:#B6E3A0}
+  .t-num{color:#F0B98A}
+  .t-cmt{color:#77848F;font-style:italic}
+  .t-fn{color:#E5C07B}
+  .t-punc{color:#9AA7B4}
+  code:not(pre code){font-family:var(--mono);font-size:.86em;background:var(--bg-3);border-radius:4px;padding:.1rem .35rem;color:#0F4C81}
+
+  /* endpoint */
+  .endpoint{border:1px solid var(--line);border-radius:var(--r);margin-bottom:var(--s-4);overflow:hidden}
+  .endpoint-head{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-3);padding:var(--s-3);background:var(--bg-2);border-bottom:1px solid var(--line)}
+  .endpoint-path{font-family:var(--mono);font-size:.95rem;color:var(--ink)}
+  .endpoint-body{padding:var(--s-4)}
+  .endpoint-body>p:last-child{margin-bottom:0}
+
+  /* tables */
+  .tablewrap{overflow-x:auto;margin-bottom:var(--s-4)}
+  table{width:100%;border-collapse:collapse;font-size:var(--t-small);min-width:520px}
+  caption{text-align:left;font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding-bottom:.5rem;font-weight:600}
+  th,td{padding:.6rem .7rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  thead th{background:var(--bg-2);font-size:var(--t-micro);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);font-weight:700;white-space:nowrap}
+  tbody th{font-weight:600}
+  td code{background:transparent;padding:0}
+
+  /* callouts */
+  .callout{display:flex;gap:.8rem;padding:var(--s-3) var(--s-4);border-radius:var(--r);border-left:3px solid var(--line-2);background:var(--bg-2);margin-bottom:var(--s-4);font-size:var(--t-small)}
+  .callout svg{flex:none;margin-top:3px}
+  .callout b{display:block;margin-bottom:.15rem}
+  .callout--warn{border-left-color:var(--patch);background:#FDF6E7}
+  .callout--info{border-left-color:var(--post);background:#EEF4FC}
+
+  /* auth panel */
+  .auth{border:1px solid var(--line);border-radius:var(--r);padding:var(--s-4);margin-bottom:var(--s-4);background:var(--bg-2)}
+  .auth p{margin-bottom:var(--s-3)}
+
+  /* support form */
+  .support{border:1px solid var(--line);border-radius:var(--r);background:var(--bg-2);padding:var(--s-4);margin-bottom:var(--s-4)}
+  .support h3{margin-top:0}
+  .support form{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);margin-top:var(--s-3);max-width:640px}
+  .support .full{grid-column:1/-1}
+  .support label{font-size:var(--t-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  .support input,.support select,.support textarea{
+    width:100%;margin-top:.3rem;min-height:44px;padding:.55rem .7rem;border:1px solid var(--line-2);
+    border-radius:var(--r);background:#fff;font:inherit;font-size:var(--t-small);color:var(--ink);
+  }
+  .support textarea{min-height:88px;resize:vertical}
+  .support input:focus-visible,.support select:focus-visible,.support textarea:focus-visible{border-color:var(--link)}
+  .support button{
+    justify-self:start;min-height:44px;padding:.5rem 1.1rem;border:1px solid var(--ink);border-radius:var(--r);
+    background:var(--ink);color:#fff;font:inherit;font-size:var(--t-small);font-weight:600;cursor:pointer;
+  }
+  .support button:hover{background:#000}
+  .support .msg{grid-column:1/-1;font-size:var(--t-small);min-height:1.3em;color:var(--delete)}
+  .support .msg[data-state="ok"]{color:var(--get)}
+
+  /* feedback */
+  .feedback{display:flex;flex-wrap:wrap;gap:var(--s-3);align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:var(--s-4);margin-top:var(--s-5)}
+  .feedback p{margin:0;font-size:var(--t-small);color:var(--ink-2)}
+  .fb-actions{display:flex;gap:.5rem}
+  .fb-actions button{
+    min-height:44px;min-width:44px;padding:.4rem .9rem;border:1px solid var(--line-2);border-radius:var(--r);
+    background:#fff;font:inherit;font-size:var(--t-small);cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;
+  }
+  .fb-actions button:hover{border-color:var(--ink)}
+  .fb-actions button[aria-pressed="true"]{background:var(--get-bg);border-color:var(--get);color:var(--get);font-weight:600}
+  .fb-msg{font-size:var(--t-small);color:var(--get);min-height:1.3em}
+
+  /* search results */
+  .results{border:1px solid var(--line);border-radius:var(--r);background:#fff;max-height:360px;overflow-y:auto;display:none}
+  .results[data-open="true"]{display:block}
+  .results a{display:block;padding:.6rem .8rem;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;font-size:var(--t-small)}
+  .results a:last-child{border-bottom:0}
+  .results a:hover,.results a:focus-visible{background:var(--bg-2)}
+  .results .kind{font-family:var(--mono);font-size:.66rem;color:var(--ink-3);display:block}
+  .results .empty{padding:.8rem;color:var(--ink-2)}
+
+  /* prev/next */
+  .pager{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);margin-top:var(--s-5)}
+  .pager a{border:1px solid var(--line);border-radius:var(--r);padding:var(--s-3);text-decoration:none;color:inherit}
+  .pager a:hover{border-color:var(--line-2);background:var(--bg-2)}
+  .pager span{display:block;font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .pager b{font-weight:600}
+  .pager .next{text-align:right}
+
+  /* footer */
+  .foot{border-top:1px solid var(--line);background:var(--bg-2);padding-block:var(--s-4);margin-top:var(--s-6)}
+  .foot-in{display:flex;flex-wrap:wrap;gap:var(--s-3) var(--s-5);align-items:center;justify-content:space-between;font-size:var(--t-small);color:var(--ink-2)}
+  .foot nav{display:flex;flex-wrap:wrap;gap:var(--s-4)}
+
+  @media (max-width:1180px){
+    .shell{grid-template-columns:var(--sidebar) minmax(0,1fr)}
+    .toc{display:none}
+  }
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr}
+    .sidebar{
+      position:fixed;top:var(--topbar);left:0;bottom:0;width:min(88vw,320px);height:auto;z-index:55;
+      background:#fff;border-right:1px solid var(--line);padding:var(--s-4);display:none;box-shadow:0 0 40px rgba(0,0,0,.18);
+    }
+    .sidebar[data-open="true"]{display:block}
+    .menu-btn{display:grid;margin-right:auto;order:-1}
+    .top-search{margin-left:0;flex-basis:150px}
+    .ver,.status{display:none}
+  }
+  @media (max-width:720px){
+    .cards{grid-template-columns:1fr}
+    .pager{grid-template-columns:1fr}
+    .top-search .kbd{display:none}
+  }
+  @media (max-width:480px){
+    .top-right a.hide-sm{display:none}
+    .codeblock pre{font-size:.78rem}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to documentation</a>
+
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="sidebar" aria-label="Open documentation navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M2 4.5h14M2 9h14M2 13.5h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+  <a class="logo" href="#content">
+    <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+      <rect width="28" height="28" rx="6" fill="#161A1F"/>
+      <path d="M9 8h11l-8.5 6H20v6H9" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    Quill
+  </a>
+  <div class="top-search">
+    <svg class="mag" width="16" height="16" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="m12.6 12.6 3.2 3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <label class="sr-only" for="q" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Search documentation</label>
+    <input id="q" type="search" placeholder="Search docs, endpoints, error codes" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="results" aria-autocomplete="list">
+    <span class="kbd" aria-hidden="true">/</span>
+    <div class="results" id="results" role="listbox" aria-label="Search results" data-open="false"></div>
+  </div>
+  <div class="top-right">
+    <label class="sr-only" for="verSel" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">API version</label>
+    <span class="ver">API
+      <select id="verSel">
+        <option selected>v3.4 (stable)</option>
+        <option>v3.5 (beta)</option>
+        <option>v2.9 (legacy)</option>
+      </select>
+    </span>
+    <span class="status"><i></i> All systems normal</span>
+    <a href="#status" class="hide-sm">Status</a>
+    <a href="#dashboard">Dashboard</a>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar" aria-label="Documentation">
+    <h2>Get started</h2>
+    <ul>
+      <li><a href="#quickstart" aria-current="true">Quickstart</a></li>
+      <li><a href="#auth">Authentication</a></li>
+      <li><a href="#errors">Errors &amp; rate limits</a></li>
+    </ul>
+    <h2>Core</h2>
+    <ul>
+      <li><a href="#endpoints"><span class="m m-get">GET</span> Documents</a></li>
+      <li><a href="#create-document"><span class="m m-post">POST</span> Create document</a></li>
+      <li><a href="#update-document"><span class="m m-patch">PATCH</span> Update document</a></li>
+      <li><a href="#delete-document"><span class="m m-delete">DELETE</span> Delete document</a></li>
+    </ul>
+    <h2>Collections</h2>
+    <ul class="nest">
+      <li><a href="#endpoints"><span class="m m-get">GET</span> List collections</a></li>
+      <li><a href="#endpoints"><span class="m m-post">POST</span> Move to collection</a></li>
+    </ul>
+    <h2>Webhooks</h2>
+    <ul>
+      <li><a href="#webhooks">Events &amp; payloads</a></li>
+      <li><a href="#webhooks">Verifying signatures</a></li>
+    </ul>
+    <h2>Reference</h2>
+    <ul>
+      <li><a href="#errors">Error codes</a></li>
+      <li><a href="#limits">Limits &amp; quotas</a></li>
+      <li><a href="#changelog">Changelog</a></li>
+    </ul>
+  </nav>
+
+  <main class="content" id="content">
+    <article>
+      <p class="micro">Quill API · v3.4</p>
+      <h1>Build against Quill</h1>
+      <p class="lede">Quill stores, versions and signs documents. This reference covers every endpoint in v3.4, the webhooks they emit, and the exact shape of every error you can get back.</p>
+
+      <div class="cards">
+        <a class="card" href="#quickstart"><b>Make your first request</b><p>Create a document and read it back in under two minutes.</p></a>
+        <a class="card" href="#auth"><b>Authentication</b><p>API keys, scopes, and rotating them without downtime.</p></a>
+        <a class="card" href="#errors"><b>Error handling</b><p>The nine error codes, and which ones are worth retrying.</p></a>
+      </div>
+
+      <h2 id="quickstart">Quickstart<a class="anchor" href="#quickstart" aria-label="Link to Quickstart">#</a></h2>
+      <p>Every request is a JSON <code>POST</code> or <code>GET</code> against <code>https://api.quill.dev/v3</code>, authenticated with a bearer token. Start by creating a document:</p>
+
+      <div class="codeblock">
+        <div class="codeblock-bar">
+          <span class="lang">BASH</span>
+          <span class="file">create-document.sh</span>
+          <button class="copy" type="button" data-copy="c1">Copy</button>
+        </div>
+        <pre id="c1"><code><span class="t-cmt"># Your key is created in Dashboard → Developers → Keys</span>
+<span class="t-punc">curl</span> https:<span class="t-punc">//</span>api.quill.dev<span class="t-punc">/</span>v3<span class="t-punc">/</span>documents \
+  <span class="t-punc">-</span>X<span class="t-punc">-</span>Quill<span class="t-punc">-</span>Key<span class="t-punc">:</span> <span class="t-str">qk_live_8f2c…</span> \
+  <span class="t-punc">-</span>Content<span class="t-punc">-</span>Type<span class="t-punc">:</span> application<span class="t-punc">/</span>json \
+  <span class="t-punc">-</span>d <span class="t-punc">{</span>
+    <span class="t-str">"title"</span><span class="t-punc">:</span> <span class="t-str">"Lease agreement — 41 Ellery Street"</span><span class="t-punc">,</span>
+    <span class="t-str">"body"</span><span class="t-punc">:</span> <span class="t-str">"b64://aW5pdmlkYWJsZQ=="</span><span class="t-punc">,</span>
+    <span class="t-str">"signers"</span><span class="t-punc">:</span> <span class="t-punc">[</span><span class="t-punc">{</span> <span class="t-str">"name"</span><span class="t-punc">:</span> <span class="t-str">"R. Ellery"</span><span class="t-punc">,</span> <span class="t-str">"email"</span><span class="t-punc">:</span> <span class="t-str">"r.ellery@example.com"</span><span class="t-punc">,</span> <span class="t-str">"order"</span><span class="t-punc">:</span> <span class="t-num">1</span> <span class="t-punc">}</span><span class="t-punc">]</span>
+  <span class="t-punc">}</span></code></pre>
+      </div>
+
+      <p>The response carries a document object and the version number, which starts at <code>1</code> and increments on every successful change:</p>
+
+      <div class="codeblock">
+        <div class="codeblock-bar">
+          <span class="lang">JSON</span>
+          <span class="file">201 Created</span>
+          <button class="copy" type="button" data-copy="c2">Copy</button>
+        </div>
+        <pre id="c2"><code><span class="t-punc">{</span>
+  <span class="t-key">"id"</span><span class="t-punc">:</span> <span class="t-str">"doc_9Kd2mQ7xLp"</span><span class="t-punc">,</span>
+  <span class="t-key">"title"</span><span class="t-punc">:</span> <span class="t-str">"Lease agreement — 41 Ellery Street"</span><span class="t-punc">,</span>
+  <span class="t-key">"version"</span><span class="t-punc">:</span> <span class="t-num">1</span><span class="t-punc">,</span>
+  <span class="t-key">"status"</span><span class="t-punc">:</span> <span class="t-str">"awaiting_signature"</span><span class="t-punc">,</span>
+  <span class="t-key">"signers"</span><span class="t-punc">:</span> <span class="t-punc">[</span>
+    <span class="t-punc">{</span> <span class="t-key">"name"</span><span class="t-punc">:</span> <span class="t-str">"R. Ellery"</span><span class="t-punc">,</span> <span class="t-key">"state"</span><span class="t-punc">:</span> <span class="t-str">"sent"</span><span class="t-punc">,</span> <span class="t-key">"sent_at"</span><span class="t-punc">:</span> <span class="t-str">"2026-11-02T09:14:22Z"</span> <span class="t-punc">}</span>
+  <span class="t-punc">],</span>
+  <span class="t-key">"created_at"</span><span class="t-punc">:</span> <span class="t-str">"2026-11-02T09:14:21Z"</span>
+<span class="t-punc">}</span></code></pre>
+      </div>
+
+      <div class="callout callout--info">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 8v5M9 5.2v.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span><b>Send the key in the header, not the query string.</b> Keys in URLs end up in access logs. <code>X-Quill-Key</code> is the only supported method; the <code>Authorization: Bearer</code> form is reserved for OAuth tokens.</span>
+      </div>
+
+      <h2 id="auth">Authentication<a class="anchor" href="#auth" aria-label="Link to Authentication">#</a></h2>
+      <div class="auth">
+        <p>Quill uses two credential types. Pick one per integration and keep them scoped to the narrowest thing they need.</p>
+        <ul class="docs">
+          <li><strong>API keys</strong> (<code>qk_live_…</code>, <code>qk_test_…</code>) — long-lived, created per environment, with scopes. Use for server-to-server calls.</li>
+          <li><strong>Session tokens</strong> (<code>qs_…</code>) — 15 minutes, issued by <code>POST /v3/sessions</code>. Use for the browser signing widget so keys never leave your server.</li>
+        </ul>
+        <p class="small muted" style="margin:0">Keys can be rotated with a 24-hour overlap: create the new key, deploy it, then revoke the old one. Requests are rejected if two keys share a scope and <code>Idempotency-Key</code> is missing.</p>
+      </div>
+
+      <h3 id="scopes">Scopes</h3>
+      <div class="tablewrap">
+        <table>
+          <caption>Scopes available when creating a key</caption>
+          <thead><tr><th scope="col">Scope</th><th scope="col">Grants</th></tr></thead>
+          <tbody>
+            <tr><td><code>documents:read</code></td><td>List and fetch documents and versions</td></tr>
+            <tr><td><code>documents:write</code></td><td>Create, update, sign and delete documents</td></tr>
+            <tr><td><code>collections:read</code></td><td>List collections and their contents</td></tr>
+            <tr><td><code>webhooks:manage</code></td><td>Create, rotate and delete webhook endpoints</td></tr>
+            <tr><td><code>webhooks:read</code></td><td>Read delivery attempts and replay them</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="endpoints">Endpoints<a class="anchor" href="#endpoints" aria-label="Link to Endpoints">#</a></h2>
+      <p>All paths below are relative to <code>https://api.quill.dev/v3</code>. All bodies are JSON. All timestamps are ISO 8601 in UTC.</p>
+
+      <div class="endpoint" id="get-document">
+        <div class="endpoint-head">
+          <span class="m m-get">GET</span>
+          <span class="endpoint-path">/documents/{document_id}</span>
+          <span class="micro" style="margin-left:auto">documents:read</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Fetch a single document. Pass <code>?include=signatures,audit</code> to expand related objects; each expansion adds roughly 40&nbsp;ms.</p>
+          <div class="tablewrap">
+            <table>
+              <caption>Path parameters</caption>
+              <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+              <tbody>
+                <tr><th scope="row"><code>document_id</code></th><td>string</td><td>Format <code>doc_</code> followed by 12 base62 characters</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="tablewrap">
+            <table>
+              <caption>Query parameters</caption>
+              <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th></tr></thead>
+              <tbody>
+                <tr><th scope="row"><code>include</code></th><td>string</td><td>Comma-separated: <code>signatures</code>, <code>audit</code>, <code>versions</code></td></tr>
+                <tr><th scope="row"><code>version</code></th><td>integer</td><td>Latest</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint" id="create-document">
+        <div class="endpoint-head">
+          <span class="m m-post">POST</span>
+          <span class="endpoint-path">/documents</span>
+          <span class="micro" style="margin-left:auto">documents:write</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Creates a document and, if signers are supplied, sends signature requests immediately. Send an <code>Idempotency-Key</code> header to make retries safe: repeating a request with the same key returns the original document rather than creating a second one.</p>
+          <div class="tablewrap">
+            <table>
+              <caption>Body parameters</caption>
+              <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Notes</th></tr></thead>
+              <tbody>
+                <tr><th scope="row"><code>title</code></th><td>string</td><td>Yes</td><td>1–180 characters</td></tr>
+                <tr><th scope="row"><code>body</code></th><td>string</td><td>Yes</td><td>Raw text, <code>b64://…</code> for binary, or <code>url://…</code> to fetch</td></tr>
+                <tr><th scope="row"><code>signers</code></th><td>array</td><td>No</td><td>Max 20; each needs <code>name</code>, <code>email</code>, <code>order</code></td></tr>
+                <tr><th scope="row"><code>collection_id</code></th><td>string</td><td>No</td><td>Defaults to your unfiled collection</td></tr>
+                <tr><th scope="row"><code>expires_in_days</code></th><td>integer</td><td>No</td><td>1–365, default 30</td></tr>
+                <tr><th scope="row"><code>metadata</code></th><td>object</td><td>No</td><td>Up to 20 keys, 500 characters each</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint" id="update-document">
+        <div class="endpoint-head">
+          <span class="m m-patch">PATCH</span>
+          <span class="endpoint-path">/documents/{document_id}</span>
+          <span class="micro" style="margin-left:auto">documents:write</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Updates only the fields you send and creates a new version. A document that has been fully signed is immutable; attempting an update returns <code>document_locked</code>.</p>
+        </div>
+      </div>
+
+      <div class="endpoint" id="delete-document">
+        <div class="endpoint-head">
+          <span class="m m-delete">DELETE</span>
+          <span class="endpoint-path">/documents/{document_id}</span>
+          <span class="micro" style="margin-left:auto">documents:write</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Soft-deletes for 30 days, then hard-deletes. A restore is possible within the window via <code>POST /documents/{id}/restore</code>. Signed documents are retained for the length of your retention policy regardless.</p>
+        </div>
+      </div>
+
+      <h2 id="errors">Errors and rate limits<a class="anchor" href="#errors" aria-label="Link to Errors and rate limits">#</a></h2>
+      <p>Errors return a non-2xx status, a machine-readable <code>code</code>, and a human <code>message</code> that is safe to log but not to show to end users.</p>
+
+      <div class="codeblock">
+        <div class="codeblock-bar">
+          <span class="lang">JSON</span>
+          <span class="file">422 Unprocessable Entity</span>
+          <button class="copy" type="button" data-copy="c3">Copy</button>
+        </div>
+        <pre id="c3"><code><span class="t-punc">{</span>
+  <span class="t-key">"error"</span><span class="t-punc">:</span> <span class="t-punc">{</span>
+    <span class="t-key">"code"</span><span class="t-punc">:</span> <span class="t-str">"signer_sequence_invalid"</span><span class="t-punc">,</span>
+    <span class="t-key">"message"</span><span class="t-punc">:</span> <span class="t-str">"Signer 2 must have an order greater than or equal to signer 1."</span><span class="t-punc">,</span>
+    <span class="t-key">"param"</span><span class="t-punc">:</span> <span class="t-str">"signers[1].order"</span><span class="t-punc">,</span>
+    <span class="t-key">"request_id"</span><span class="t-punc">:</span> <span class="t-str">"req_4Lp8v2Zq"</span>
+  <span class="t-punc">}</span>
+<span class="t-punc">}</span></code></pre>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <caption>All error codes in v3.4</caption>
+          <thead><tr><th scope="col">HTTP</th><th scope="col">Code</th><th scope="col">Meaning</th><th scope="col">Retry?</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">400</td><td><code>malformed_request</code></td><td>Body is not valid JSON</td><td>No</td></tr>
+            <tr><td class="mono">401</td><td><code>invalid_key</code></td><td>Key missing, revoked or malformed</td><td>No</td></tr>
+            <tr><td class="mono">403</td><td><code>scope_insufficient</code></td><td>Key lacks the scope for this call</td><td>No</td></tr>
+            <tr><td class="mono">404</td><td><code>document_not_found</code></td><td>No document with that id in this environment</td><td>No</td></tr>
+            <tr><td class="mono">409</td><td><code>version_conflict</code></td><td>Someone else wrote since your <code>version</code></td><td>After re-fetch</td></tr>
+            <tr><td class="mono">422</td><td><code>validation_failed</code></td><td>A field failed validation; see <code>param</code></td><td>No</td></tr>
+            <tr><td class="mono">423</td><td><code>document_locked</code></td><td>Signed documents cannot be edited</td><td>No</td></tr>
+            <tr><td class="mono">429</td><td><code>rate_limited</code></td><td>Too many requests for this key</td><td>Yes, honour <code>Retry-After</code></td></tr>
+            <tr><td class="mono">503</td><td><code>upstream_timeout</code></td><td>Signing provider did not respond</td><td>Yes, exponential backoff</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--warn">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M9 2 1.5 16h15L9 2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 7v4M9 13.2v.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span><b>Retry 429 and 503 only.</b> Retrying a 422 will never succeed and will cost you quota. On 429, read the <code>Retry-After</code> header rather than guessing — the value is in seconds and is authoritative.</span>
+      </div>
+
+      <h2 id="webhooks">Webhooks<a class="anchor" href="#webhooks" aria-label="Link to Webhooks">#</a></h2>
+      <p>Quill posts a JSON payload to your endpoint when a document changes state. Deliveries are signed so you can verify the source.</p>
+      <div class="codeblock">
+        <div class="codeblock-bar">
+          <span class="lang">TYPESCRIPT</span>
+          <span class="file">verify.ts</span>
+          <button class="copy" type="button" data-copy="c4">Copy</button>
+        </div>
+        <pre id="c4"><code><span class="t-kw" style="color:#7FC7F0">import</span> { createHmac, timingSafeEqual } <span class="t-kw" style="color:#7FC7F0">from</span> <span class="t-str">"node:crypto"</span><span class="t-punc">;</span>
+
+<span class="t-kw" style="color:#7FC7F0">export function</span> <span class="t-fn">verify</span><span class="t-punc">(</span>raw<span class="t-punc">:</span> Buffer<span class="t-punc">,</span> header<span class="t-punc">:</span> string<span class="t-punc">,</span> secret<span class="t-punc">:</span> string<span class="t-punc">) {</span>
+  <span class="t-kw" style="color:#7FC7F0">const</span> expected = createHmac<span class="t-punc">(</span><span class="t-str">"sha256"</span><span class="t-punc">,</span> secret<span class="t-punc">).</span>update(raw<span class="t-punc">).</span>digest<span class="t-punc">();</span>
+  <span class="t-kw" style="color:#7FC7F0">const</span> provided = Buffer<span class="t-punc">.</span>from<span class="t-punc">(</span>header<span class="t-punc">,</span> <span class="t-str">"hex"</span><span class="t-punc">);</span>
+  <span class="t-kw" style="color:#7FC7F0">return</span> provided<span class="t-punc">.</span>length === expected<span class="t-punc">.</span>length
+    &amp;&amp; timingSafeEqual<span class="t-punc">(</span>provided<span class="t-punc">,</span> expected<span class="t-punc">);</span>
+<span class="t-punc">}</span></code></pre>
+      </div>
+      <ul class="docs">
+        <li>Events: <code>document.created</code>, <code>document.sent</code>, <code>document.signed</code>, <code>document.viewed</code>, <code>document.completed</code>, <code>document.expired</code>.</li>
+        <li>Signature header: <code>Quill-Signature: t=&lt;unix&gt;,v1=&lt;hex&gt;</code>. Reject if the timestamp is more than five minutes old.</li>
+        <li>Return <code>2xx</code> within five seconds. Anything else is retried with exponential backoff for 24 hours.</li>
+      </ul>
+
+      <h2 id="limits">Limits and quotas<a class="anchor" href="#limits" aria-label="Link to Limits and quotas">#</a></h2>
+      <div class="tablewrap">
+        <table>
+          <caption>Default per-key limits on the Growth plan</caption>
+          <thead><tr><th scope="col">Limit</th><th scope="col">Value</th><th scope="col">Burst</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Requests</th><td>300 / minute</td><td>60 / second</td></tr>
+            <tr><th scope="row">Document creation</th><td>1,200 / hour</td><td>—</td></tr>
+            <tr><th scope="row">Signature requests</th><td>2,000 / day</td><td>—</td></tr>
+            <tr><th scope="row">Body size</th><td>20 MB</td><td>—</td></tr>
+            <tr><th scope="row">Webhook endpoints</th><td>10 per project</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="changelog">Changelog<a class="anchor" href="#changelog" aria-label="Link to Changelog">#</a></h2>
+      <ul class="docs">
+        <li><strong>v3.4</strong> — 14 October 2026. Adds <code>documents/{id}/restore</code>, soft-delete window extended to 30 days.</li>
+        <li><strong>v3.3</strong> — 2 September 2026. <code>metadata</code> is now indexed and filterable via <code>GET /documents?metadata[key]=value</code>.</li>
+        <li><strong>v3.2</strong> — 11 June 2026. Signature provider failover; new <code>upstream_timeout</code> error.</li>
+        <li><strong>v3.0</strong> — 4 February 2026. First stable release. v2 is supported until 1 June 2027.</li>
+      </ul>
+
+      <section class="support" aria-labelledby="supportTitle">
+        <h3 id="supportTitle">Still stuck?</h3>
+        <p class="small muted" style="margin:0">Include the <code>request_id</code> from the error response and we can usually answer within one working day. Support reads the v3.4 changelog before it reads the queue.</p>
+        <form id="supportForm" novalidate>
+          <div>
+            <label for="sEmail">Account email</label>
+            <input id="sEmail" name="email" type="email" autocomplete="email" required placeholder="you@company.com">
+          </div>
+          <div>
+            <label for="sVersion">API version</label>
+            <select id="sVersion" name="version">
+              <option>v3.4 (stable)</option>
+              <option>v3.5 (beta)</option>
+              <option>v2.9 (legacy)</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="sRequestId">Request ID <span style="text-transform:none;letter-spacing:0;font-weight:400">(from the error, if you have one)</span></label>
+            <input id="sRequestId" name="requestId" type="text" placeholder="req_4Lp8v2Zq">
+          </div>
+          <div class="full">
+            <label for="sMsg">What happened</label>
+            <textarea id="sMsg" name="message" required placeholder="A PATCH to /documents/doc_9Kd2mQ7xLp returns 409 version_conflict even though we just fetched the document."></textarea>
+          </div>
+          <div class="full"><button type="submit">Send to support</button></div>
+          <p class="msg" id="supportMsg" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <div class="feedback">
+        <p id="fbText">Was this page helpful?</p>
+        <div>
+          <span class="fb-msg" id="fbMsg" role="status" aria-live="polite"></span>
+          <div class="fb-actions">
+            <button type="button" data-fb="yes" aria-pressed="false">
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 8.4 3 3 7-7.4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Yes
+            </button>
+            <button type="button" data-fb="no" aria-pressed="false">
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <nav class="pager" aria-label="Page navigation">
+        <a href="#auth"><span>Previous</span><b>Authentication</b></a>
+        <a class="next" href="#webhooks"><span>Next</span><b>Webhooks</b></a>
+      </nav>
+    </article>
+  </main>
+
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#quickstart">Quickstart</a></li>
+      <li><a href="#auth">Authentication</a></li>
+      <li><a href="#scopes">Scopes</a></li>
+      <li><a href="#endpoints">Endpoints</a></li>
+      <li><a href="#errors">Errors and rate limits</a></li>
+      <li><a href="#webhooks">Webhooks</a></li>
+      <li><a href="#limits">Limits and quotas</a></li>
+      <li><a href="#changelog">Changelog</a></li>
+    </ol>
+  </nav>
+</div>
+
+<footer class="foot">
+  <div class="foot-in" style="padding-inline:var(--s-4)">
+    <span>Quill Documents Inc. · API status and incidents at status.quill.dev</span>
+    <nav aria-label="Footer">
+      <a href="#changelog">Changelog</a>
+      <a href="#limits">Limits</a>
+      <a href="#errors">Errors</a>
+      <a href="#dashboard">Dashboard</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  /* Sidebar (small screens) */
+  var menuBtn = document.getElementById('menuBtn');
+  var sidebar = document.getElementById('sidebar');
+  menuBtn.addEventListener('click', function () {
+    var open = sidebar.getAttribute('data-open') === 'true';
+    sidebar.setAttribute('data-open', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(!open));
+  });
+
+  /* Search: filters an index of page headings and returns matches */
+  var index = [
+    { kind: 'guide', text: 'Quickstart — make your first request', href: '#quickstart' },
+    { kind: 'guide', text: 'Authentication — API keys and session tokens', href: '#auth' },
+    { kind: 'reference', text: 'Scopes — documents:read, documents:write, webhooks:manage', href: '#scopes' },
+    { kind: 'endpoint', text: 'GET /documents/{document_id} — fetch a document', href: '#get-document' },
+    { kind: 'endpoint', text: 'POST /documents — create a document', href: '#create-document' },
+    { kind: 'endpoint', text: 'PATCH /documents/{document_id} — update a document', href: '#update-document' },
+    { kind: 'endpoint', text: 'DELETE /documents/{document_id} — soft-delete a document', href: '#delete-document' },
+    { kind: 'guide', text: 'Errors and rate limits — all nine error codes', href: '#errors' },
+    { kind: 'reference', text: 'rate_limited — 429, honour Retry-After', href: '#errors' },
+    { kind: 'guide', text: 'Webhooks — events, payloads and signature verification', href: '#webhooks' },
+    { kind: 'reference', text: 'Limits and quotas — requests, burst, body size', href: '#limits' },
+    { kind: 'reference', text: 'Changelog — what changed in v3.2 to v3.4', href: '#changelog' }
+  ];
+  var q = document.getElementById('q');
+  var results = document.getElementById('results');
+
+  function runSearch(term) {
+    var t = term.trim().toLowerCase();
+    if (t.length < 2) { results.setAttribute('data-open', 'false'); q.setAttribute('aria-expanded', 'false'); return; }
+    var hits = index.filter(function (row) { return row.text.toLowerCase().indexOf(t) !== -1; }).slice(0, 6);
+    results.replaceChildren();
+    if (!hits.length) {
+      var none = document.createElement('p');
+      none.className = 'empty';
+      none.textContent = 'No results for “' + term.trim() + '”. Try “webhook”, “error” or “POST”.';
+      results.appendChild(none);
+    } else {
+      hits.forEach(function (hit) {
+        var a = document.createElement('a');
+        a.href = hit.href;
+        a.setAttribute('role', 'option');
+        var kind = document.createElement('span');
+        kind.className = 'kind';
+        kind.textContent = hit.kind;
+        var label = document.createElement('span');
+        label.textContent = hit.text;
+        a.appendChild(kind);
+        a.appendChild(label);
+        results.appendChild(a);
+      });
+    }
+    results.setAttribute('data-open', 'true');
+    q.setAttribute('aria-expanded', 'true');
+  }
+
+  q.addEventListener('input', function () { runSearch(q.value); });
+  q.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { q.value = ''; results.setAttribute('data-open', 'false'); q.setAttribute('aria-expanded', 'false'); }
+    if (e.key === 'Enter') {
+      var first = results.querySelector('a');
+      if (first && results.getAttribute('data-open') === 'true') { e.preventDefault(); window.location.hash = first.getAttribute('href'); results.setAttribute('data-open', 'false'); }
+    }
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.top-search')) { results.setAttribute('data-open', 'false'); q.setAttribute('aria-expanded', 'false'); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+  });
+
+  /* Copy buttons: copy the text content of the referenced code block */
+  Array.prototype.forEach.call(document.querySelectorAll('.copy'), function (btn) {
+    btn.addEventListener('click', function () {
+      var block = document.getElementById(btn.dataset.copy);
+      var text = block ? block.textContent : '';
+      var done = function () {
+        btn.dataset.state = 'ok';
+        btn.textContent = 'Copied';
+        window.setTimeout(function () { btn.dataset.state = ''; btn.textContent = 'Copy'; }, 1800);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { btn.textContent = 'Press ⌘C'; });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (err) { btn.textContent = 'Copy failed'; }
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
+  /* On-this-page highlight and sidebar current state */
+  var targets = Array.prototype.slice.call(document.querySelectorAll('.content h2[id], .content h3[id]'));
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var sideLinks = Array.prototype.slice.call(document.querySelectorAll('.sidebar a'));
+
+  function setCurrent(id) {
+    tocLinks.forEach(function (a) {
+      if (a.getAttribute('href') === '#' + id) { a.setAttribute('aria-current', 'true'); } else { a.removeAttribute('aria-current'); }
+    });
+    sideLinks.forEach(function (a) {
+      if (a.getAttribute('href') === '#' + id) { a.setAttribute('aria-current', 'true'); } else { a.removeAttribute('aria-current'); }
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) setCurrent(en.target.id);
+      });
+    }, { rootMargin: '-80px 0px -70% 0px' });
+    targets.forEach(function (t) { spy.observe(t); });
+  }
+
+  /* Support form */
+  var supportForm = document.getElementById('supportForm');
+  var supportMsg = document.getElementById('supportMsg');
+  var sEmail = document.getElementById('sEmail');
+  var sMsg = document.getElementById('sMsg');
+  supportForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(sEmail.value.trim())) {
+      supportMsg.removeAttribute('data-state');
+      supportMsg.textContent = 'We need a valid account email to find your project.';
+      sEmail.focus();
+      return;
+    }
+    if (sMsg.value.trim().length < 10) {
+      supportMsg.removeAttribute('data-state');
+      supportMsg.textContent = 'Please add a sentence or two — that is all we need to start.';
+      sMsg.focus();
+      return;
+    }
+    supportMsg.dataset.state = 'ok';
+    supportMsg.textContent = 'Ticket opened. You will get a reply from a person within one working day.';
+    supportForm.querySelector('button').disabled = true;
+  });
+  [sEmail, sMsg].forEach(function (el) {
+    el.addEventListener('input', function () {
+      if (!supportMsg.dataset.state) { supportMsg.textContent = ''; }
+    });
+  });
+
+  /* Page feedback */
+  var fbMsg = document.getElementById('fbMsg');
+  Array.prototype.forEach.call(document.querySelectorAll('.fb-actions button'), function (btn) {
+    btn.addEventListener('click', function () {
+      Array.prototype.forEach.call(btn.parentNode.children, function (b) { b.setAttribute('aria-pressed', 'false'); });
+      btn.setAttribute('aria-pressed', 'true');
+      fbMsg.textContent = btn.dataset.fb === 'yes'
+        ? 'Thanks — noted as helpful.'
+        : 'Thanks. Open an issue at github.com/quill/docs and we will fix it.';
+    });
+  });
+</script>
+</body>
+</html>

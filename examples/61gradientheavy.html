@@ -1,0 +1,704 @@
+<!-- Style: Gradient Heavy | 61gradientheavy.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solstice — a digital festival of light, sound and code</title>
+<style>
+  :root{
+    /* ---- colour ---- */
+    --ink:#16060F;
+    --ink-2:#250B1C;
+    --ink-3:#3A1230;
+    --cream:#FFF6EE;
+    --cream-dim:#F0DCD2;
+    --text-on-grad:#2A0410;
+    --muted:#D9B7C6;
+    /* ---- gradient tokens (the core visual language) ---- */
+    --grad-sunset:linear-gradient(115deg,#FF2D6F 0%,#FF6A2B 46%,#FFC24A 100%);
+    --grad-ember:linear-gradient(205deg,#FF8A1E 0%,#E0115F 100%);
+    --grad-plum:linear-gradient(165deg,#2B0A2E 0%,#5C0F3C 58%,#A3124B 100%);
+    --grad-rim:linear-gradient(90deg,#FF2D6F 0%,#FFC24A 40%,#00D3A7 100%);
+    --grad-cool:linear-gradient(140deg,#00D3A7 0%,#0B7A6B 100%);
+    --grad-heat:linear-gradient(140deg,#FF3B1F 0%,#FF9A1F 100%);
+    /* ---- type ---- */
+    --font-display:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --font-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --t-hero:clamp(3.4rem,12vw,9.5rem);
+    --t-h1:clamp(2.4rem,5.6vw,4.6rem);
+    --t-h2:clamp(1.9rem,3.6vw,3rem);
+    --t-h3:clamp(1.25rem,2vw,1.6rem);
+    --t-lead:clamp(1.05rem,1.5vw,1.3rem);
+    --t-body:1rem;
+    --t-small:.875rem;
+    --t-micro:.75rem;
+    /* ---- space ---- */
+    --s-1:.5rem;--s-2:.75rem;--s-3:1rem;--s-4:1.5rem;--s-5:2rem;
+    --s-6:3rem;--s-7:4rem;--s-8:6rem;--s-9:8rem;
+    --shell:min(1280px,100% - 2.5rem);
+    /* ---- edges ---- */
+    --r-sm:10px;--r-md:18px;--r-lg:28px;--r-pill:999px;
+    --sh-1:0 14px 40px rgba(11,2,8,.32);
+    --sh-2:0 26px 70px rgba(11,2,8,.45);
+    /* ---- motion ---- */
+    --d-fast:140ms;--d-base:260ms;--d-slow:600ms;
+    --ease-out:cubic-bezier(.16,1,.3,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--ink);color:var(--cream);
+    font-family:var(--font-body);font-size:var(--t-body);line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:800;line-height:1.02;letter-spacing:-.03em;margin:0}
+  p{margin:0}
+  a{color:inherit}
+  img,svg{display:block;max-width:100%}
+  ul{margin:0;padding:0;list-style:none}
+  :focus-visible{outline:3px solid #FFC24A;outline-offset:3px;border-radius:4px}
+  .shell{width:var(--shell);margin-inline:auto}
+  .skip{position:absolute;left:var(--s-3);top:-100px;z-index:99;background:var(--cream);color:var(--ink);padding:.8rem 1.2rem;border-radius:var(--r-sm);font-weight:700;transition:top var(--d-base)}
+  .skip:focus{top:var(--s-3)}
+  .eyebrow{
+    font-size:var(--t-micro);letter-spacing:.22em;text-transform:uppercase;
+    font-weight:700;color:var(--muted);margin-bottom:var(--s-3)
+  }
+  .lead{font-size:var(--t-lead);color:var(--cream-dim);max-width:56ch}
+  .grad-text{
+    background:var(--grad-sunset);-webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  /* ================= header ================= */
+  .site-head{position:sticky;top:0;z-index:60;background:rgba(22,6,15,.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,198,74,.22)}
+  .head-in{display:flex;align-items:center;gap:var(--s-5);min-height:76px}
+  .brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;font-family:var(--font-display);font-weight:800;letter-spacing:-.02em;font-size:1.25rem}
+  .brand-mark{width:34px;height:34px;border-radius:50%;background:var(--grad-sunset);background-size:220% 220%;animation:spin-grad 14s linear infinite;flex:none}
+  @keyframes spin-grad{to{background-position:100% 50%}}
+  .nav{margin-left:auto}
+  .nav ul{display:flex;gap:var(--s-4);align-items:center}
+  .nav a{
+    text-decoration:none;font-size:var(--t-small);font-weight:600;color:var(--cream-dim);
+    padding:.5rem 0;display:inline-block;border-bottom:2px solid transparent
+  }
+  .nav a:hover{color:var(--cream);border-bottom-color:var(--grad-rim);background-size:200% 100%}
+  .nav-cta{
+    background:var(--grad-sunset);background-size:180% 180%;color:var(--text-on-grad);
+    border:0;border-radius:var(--r-pill);padding:.85rem 1.6rem;font-weight:800;font-size:var(--t-small);
+    text-decoration:none;display:inline-flex;align-items:center;min-height:44px;cursor:pointer;
+    transition:background-position var(--d-slow) var(--ease-out),transform var(--d-fast)
+  }
+  .nav-cta:hover{background-position:100% 0;transform:translateY(-2px)}
+  .nav-toggle{display:none;margin-left:auto;background:transparent;border:1px solid rgba(255,246,238,.3);color:var(--cream);border-radius:var(--r-sm);min-height:44px;padding:0 1rem;font-weight:700;cursor:pointer}
+
+  /* ================= hero ================= */
+  .hero{position:relative;background:var(--grad-plum);background-size:180% 180%;animation:drift 26s ease-in-out infinite alternate;overflow:hidden}
+  .hero::after{
+    content:"";position:absolute;inset:auto 0 0 0;height:38%;
+    background:linear-gradient(to top,var(--ink) 4%,transparent 100%);pointer-events:none
+  }
+  @keyframes drift{to{background-position:100% 100%}}
+  .hero-in{
+    position:relative;z-index:2;display:grid;grid-template-columns:1.25fr .75fr;gap:var(--s-6);
+    padding-block:var(--s-8) var(--s-9);align-items:end
+  }
+  .hero h1{font-size:var(--t-hero);letter-spacing:-.05em;line-height:.86;margin-bottom:var(--s-4)}
+  .hero h1 span{display:block}
+  .hero-sub{font-size:var(--t-lead);color:var(--cream-dim);max-width:44ch;margin-bottom:var(--s-5)}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:var(--s-3)}
+  .btn{
+    border:0;border-radius:var(--r-pill);min-height:52px;padding:0 1.9rem;font-family:var(--font-body);
+    font-weight:800;font-size:1rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    transition:transform var(--d-fast) var(--ease-out),background-position var(--d-base),box-shadow var(--d-base)
+  }
+  .btn-primary{background:var(--grad-sunset);background-size:200% 200%;color:var(--text-on-grad)}
+  .btn-primary:hover{background-position:100% 0;transform:translateY(-2px);box-shadow:var(--sh-1)}
+  .btn-ghost{background:rgba(255,246,238,.08);color:var(--cream);box-shadow:inset 0 0 0 1px rgba(255,246,238,.42)}
+  .btn-ghost:hover{background:rgba(255,246,238,.16)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+  /* hero right: countdown panel on a solid surface so text contrast is protected */
+  .countdown{
+    background:rgba(12,3,9,.72);border:1px solid rgba(255,198,74,.3);border-radius:var(--r-lg);
+    padding:var(--s-5);backdrop-filter:blur(6px)
+  }
+  .countdown dl{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3);margin:var(--s-3) 0 0}
+  .countdown div{text-align:center}
+  .countdown dt{font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .countdown dd{margin:.2rem 0 0;font-family:var(--font-display);font-size:clamp(1.6rem,3.4vw,2.6rem);font-weight:800;background:var(--grad-sunset);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .countdown .date{font-size:var(--t-small);color:var(--cream-dim);margin-top:var(--s-3)}
+
+  /* ================= signal marquee ================= */
+  .signal{border-block:1px solid rgba(255,198,74,.24);padding-block:var(--s-3);overflow:hidden;background:var(--ink-2)}
+  .signal-track{display:flex;gap:var(--s-5);width:max-content;animation:slide 34s linear infinite}
+  .signal span{font-family:var(--font-display);font-size:1.05rem;font-weight:700;letter-spacing:.02em;white-space:nowrap;color:var(--cream-dim)}
+  .signal span:nth-child(3n+1){background:var(--grad-sunset);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .signal span::after{content:" ✦";color:#FF2D6F}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* ================= generic section ================= */
+  section{padding-block:var(--s-8)}
+  .sec-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-6)}
+  .sec-head h2{font-size:var(--t-h2);max-width:20ch}
+  .sec-head p{color:var(--muted);max-width:38ch}
+
+  /* ================= line-up: asymmetric gradient tiles ================= */
+  .lineup{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-3)}
+  .act{
+    grid-column:span 4;min-height:260px;border:0;cursor:pointer;text-align:left;
+    border-radius:var(--r-lg);padding:var(--s-4);display:flex;flex-direction:column;justify-content:space-between;
+    color:var(--text-on-grad);background-size:200% 200%;transition:background-position var(--d-slow) var(--ease-out),transform var(--d-base)
+  }
+  .act:hover,.act:focus-visible{background-position:100% 100%;transform:translateY(-6px)}
+  .act.g1{grid-column:span 7;min-height:320px;background-image:var(--grad-sunset)}
+  .act.g2{grid-column:span 5;background-image:var(--grad-ember)}
+  .act.g3{grid-column:span 5;background-image:var(--grad-cool);color:#02231F}
+  .act.g4{grid-column:span 4;background-image:var(--grad-heat)}
+  .act.g5{grid-column:span 3;background-image:linear-gradient(150deg,#FFE29A,#FF9A1F)}
+  .act-time{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;font-weight:800;opacity:.78}
+  .act-name{font-family:var(--font-display);font-size:var(--t-h2);font-weight:800;letter-spacing:-.03em;line-height:.95}
+  .act.g1 .act-name{font-size:var(--t-h1)}
+  .act-meta{font-size:var(--t-small);font-weight:600;opacity:.85}
+  .act-live{display:inline-block;width:8px;height:8px;border-radius:50%;background:currentColor;margin-right:.4rem}
+
+  /* ================= stages strip ================= */
+  .stages{background:var(--ink-2);border-block:1px solid rgba(255,198,74,.18)}
+  .strip{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4)}
+  .stage{background:var(--ink-3);border-radius:var(--r-md);overflow:hidden;border:1px solid rgba(255,246,238,.1)}
+  .stage-top{height:150px;position:relative}
+  .stage:nth-child(1) .stage-top{background-image:var(--grad-sunset)}
+  .stage:nth-child(2) .stage-top{background-image:var(--grad-cool)}
+  .stage:nth-child(3) .stage-top{background-image:var(--grad-ember)}
+  .stage-top svg{position:absolute;inset:0;margin:auto;width:120px;height:120px}
+  .stage-body{padding:var(--s-4)}
+  .stage-body h3{font-size:var(--t-h3);margin-bottom:var(--s-2)}
+  .stage-body p{color:var(--cream-dim);font-size:var(--t-small)}
+
+  /* ================= schedule tabs ================= */
+  .tablist{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-bottom:var(--s-5)}
+  .tab{
+    background:transparent;color:var(--cream-dim);border:1px solid rgba(255,246,238,.26);border-radius:var(--r-pill);
+    padding:.7rem 1.4rem;min-height:44px;font-weight:700;font-family:var(--font-body);font-size:var(--t-small);cursor:pointer;
+    transition:background var(--d-base),color var(--d-base)
+  }
+  .tab[aria-selected="true"]{background:var(--grad-sunset);background-size:180% 180%;color:var(--text-on-grad);border-color:transparent}
+  .tab:hover{border-color:#FFC24A;color:var(--cream)}
+  .tabpanel[hidden]{display:none}
+  .setlist{border-top:1px solid rgba(255,246,238,.18)}
+  .set{display:grid;grid-template-columns:90px 1fr auto;gap:var(--s-4);align-items:baseline;padding:var(--s-4) 0;border-bottom:1px solid rgba(255,246,238,.18)}
+  .set time{font-family:var(--font-display);font-weight:800;color:#FFC24A}
+  .set h3{font-size:var(--t-h3);letter-spacing:-.01em}
+  .set p{color:var(--muted);font-size:var(--t-small)}
+  .set-tag{font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;white-space:nowrap}
+
+  /* ================= numbers band ================= */
+  .numbers{background:var(--grad-sunset);color:var(--text-on-grad);border-radius:var(--r-lg);padding:var(--s-6) var(--s-5);display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-5)}
+  .numbers dt{font-size:var(--t-small);font-weight:700;opacity:.8}
+  .numbers dd{margin:.3rem 0 0;font-family:var(--font-display);font-weight:800;font-size:clamp(2rem,4.4vw,3.4rem);letter-spacing:-.04em;line-height:1}
+
+  /* ================= tickets ================= */
+  .tickets{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4);align-items:start}
+  .ticket{background:var(--ink-2);border:1px solid rgba(255,246,238,.16);border-radius:var(--r-lg);padding:var(--s-5);display:flex;flex-direction:column;gap:var(--s-3)}
+  .ticket.featured{background:var(--grad-plum);border-color:#FFC24A;box-shadow:var(--sh-2);position:relative}
+  .ticket.featured::before{
+    content:"Most booked";position:absolute;top:0;right:var(--s-5);transform:translateY(-50%);
+    background:var(--grad-sunset);color:var(--text-on-grad);padding:.4rem .9rem;border-radius:var(--r-pill);font-size:var(--t-micro);font-weight:800;letter-spacing:.1em;text-transform:uppercase
+  }
+  .ticket h3{font-size:var(--t-h2)}
+  .price{font-family:var(--font-display);font-size:2.4rem;font-weight:800;letter-spacing:-.04em;background:var(--grad-sunset);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ticket ul{display:grid;gap:.6rem;font-size:var(--t-small);color:var(--cream-dim)}
+  .ticket li::before{content:"→";color:#FF6A2B;margin-right:.5rem;font-weight:700}
+  .ticket .btn{margin-top:auto;width:100%}
+
+  /* ================= form ================= */
+  .signup{background:var(--ink-2);border-radius:var(--r-lg);padding:var(--s-6);display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);align-items:center;border:1px solid rgba(255,198,74,.2)}
+  .field{display:grid;gap:.4rem;margin-bottom:var(--s-4)}
+  .field label{font-size:var(--t-small);font-weight:700;letter-spacing:.02em}
+  .field .hint{font-size:var(--t-micro);color:var(--muted)}
+  input,select{
+    font-family:inherit;font-size:1rem;color:var(--cream);background:rgba(255,246,238,.06);
+    border:1px solid rgba(255,246,238,.28);border-radius:var(--r-sm);padding:.85rem 1rem;min-height:48px;width:100%
+  }
+  select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#FFC24A 50%),linear-gradient(135deg,#FFC24A 50%,transparent 50%);background-position:calc(100% - 20px) 21px,calc(100% - 14px) 21px;background-size:6px 6px;background-repeat:no-repeat}
+  input::placeholder{color:#A98BA0}
+  input:hover,select:hover{border-color:#FFC24A}
+  input:focus,select:focus{outline:3px solid #FFC24A;outline-offset:2px;background:rgba(255,246,238,.1)}
+  [aria-invalid="true"]{border-color:#FF8FA8;border-width:2px}
+  .form-msg{font-size:var(--t-small);min-height:1.5em;color:#FFC24A;font-weight:600}
+  .form-msg[data-state="ok"]{color:#7DF0C6}
+
+  /* ================= footer ================= */
+  footer{background:var(--ink-2);border-top:1px solid rgba(255,198,74,.24);padding-block:var(--s-7) var(--s-5);margin-top:var(--s-6)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:var(--s-5)}
+  footer h4{font-size:var(--t-small);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:var(--s-3)}
+  footer li{margin-bottom:.55rem}
+  footer a{text-decoration:none;color:var(--cream-dim);font-size:var(--t-small)}
+  footer a:hover{color:#FFC24A;text-decoration:underline}
+  .foot-bottom{margin-top:var(--s-6);padding-top:var(--s-4);border-top:1px solid rgba(255,246,238,.14);display:flex;flex-wrap:wrap;gap:var(--s-3);justify-content:space-between;font-size:var(--t-micro);color:var(--muted)}
+
+  /* ================= responsive ================= */
+  @media (max-width:1000px){
+    .hero-in{grid-template-columns:1fr;align-items:start}
+    .numbers,.tickets,.strip,.foot-grid{grid-template-columns:repeat(2,1fr)}
+    .signup{grid-template-columns:1fr}
+    .act.g1,.act.g2{grid-column:span 6}
+    .act.g3,.act.g4{grid-column:span 6}
+    .act.g5{grid-column:span 12;min-height:180px}
+  }
+  @media (max-width:760px){
+    .nav-toggle{display:block}
+    .nav{
+      display:none;position:absolute;left:0;right:0;top:100%;background:var(--ink-2);
+      border-bottom:1px solid rgba(255,198,74,.24);padding:var(--s-4)
+    }
+    .nav.open{display:block}
+    .nav ul{flex-direction:column;align-items:stretch;gap:0}
+    .nav li{border-bottom:1px solid rgba(255,246,238,.12)}
+    .nav a{padding:1rem 0;min-height:44px;display:flex;align-items:center}
+    .nav-cta{margin-top:var(--s-3);justify-content:center}
+    .numbers,.tickets,.strip,.foot-grid{grid-template-columns:1fr}
+    .lineup{grid-template-columns:1fr}
+    .act,.act.g1,.act.g2,.act.g3,.act.g4,.act.g5{grid-column:1/-1;min-height:210px}
+    .set{grid-template-columns:1fr;gap:.4rem}
+    .numbers{padding:var(--s-5) var(--s-4);gap:var(--s-4)}
+    section{padding-block:var(--s-7)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+    .signal-track{animation:none}
+    .hero{animation:none}
+  }
+  @media (forced-colors:active){
+    .act,.btn-primary,.nav-cta,.numbers{forced-color-adjust:none;border:1px solid CanvasText}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="site-head">
+  <div class="head-in shell">
+    <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span>Solstice</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">Menu</button>
+    <nav class="nav" id="primaryNav" aria-label="Primary">
+      <ul>
+        <li><a href="#lineup">Line-up</a></li>
+        <li><a href="#stages">Stages</a></li>
+        <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#tickets">Tickets</a></li>
+        <li><a class="nav-cta" href="#tickets">Get passes</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="hero-in shell">
+      <div>
+        <p class="eyebrow">19–21 June 2026 · Broadcast from everywhere</p>
+        <h1><span class="grad-text">Sol</span><span class="grad-text">stice</span></h1>
+        <p class="hero-sub">Three nights of live sound, generative visuals and code, streamed as one continuous signal. Sixty artists, four time zones, zero daylight.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#tickets">Buy a pass — from €39</a>
+          <a class="btn btn-ghost" href="#schedule">See the schedule</a>
+        </div>
+      </div>
+      <div class="countdown">
+        <p class="eyebrow" style="margin:0">Doors open in</p>
+        <dl id="countdown">
+          <div><dt>Days</dt><dd data-cd="d">—</dd></div>
+          <div><dt>Hrs</dt><dd data-cd="h">—</dd></div>
+          <div><dt>Min</dt><dd data-cd="m">—</dd></div>
+          <div><dt>Sec</dt><dd data-cd="s">—</dd></div>
+        </dl>
+        <p class="date">Live from Reykjavík, Lisbon, Nairobi and Osaka. All times UTC+1.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="signal" aria-hidden="true">
+    <div class="signal-track">
+      <span>Ama Løken</span><span>Oddform</span><span>Kelela</span><span>STROBE</span><span>Yaeji</span><span>Nala Sinephro</span><span>Fusible</span><span>Rin Ito</span>
+      <span>Ama Løken</span><span>Oddform</span><span>Kelela</span><span>STROBE</span><span>Yaeji</span><span>Nala Sinephro</span><span>Fusible</span><span>Rin Ito</span>
+    </div>
+  </div>
+
+  <section id="lineup" aria-labelledby="lineup-h">
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Headline signal</p>
+          <h2 id="lineup-h">Eight acts carrying the transmission</h2>
+        </div>
+        <p>Full 60-artist line-up drops 1 May. Hold your place and you'll get first notification.</p>
+      </div>
+      <div class="lineup">
+        <article class="act g1">
+          <span class="act-time"><span class="act-live" aria-hidden="true"></span>Fri 19 · 23:00</span>
+          <h3 class="act-name">Ama Løken</h3>
+          <p class="act-meta">Hemisphere Stage · 90 min live AV</p>
+        </article>
+        <article class="act g2">
+          <span class="act-time">Sat 20 · 02:30</span>
+          <h3 class="act-name">STROBE</h3>
+          <p class="act-meta">Kiln Room · hardware live</p>
+        </article>
+        <article class="act g3">
+          <span class="act-time">Sat 20 · 21:00</span>
+          <h3 class="act-name">Fusible</h3>
+          <p class="act-meta">Signal Hall · AV set</p>
+        </article>
+        <article class="act g4">
+          <span class="act-time">Sun 21 · 20:00</span>
+          <h3 class="act-name">Yaeji</h3>
+          <p class="act-meta">Hemisphere Stage · headline</p>
+        </article>
+        <article class="act g5">
+          <span class="act-time">Sun 21 · 22:15</span>
+          <h3 class="act-name">Rin Ito</h3>
+          <p class="act-meta">Kiln Room</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="stages" id="stages" aria-labelledby="stages-h">
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Four rooms, one feed</p>
+          <h2 id="stages-h">The stages</h2>
+        </div>
+        <p>Every room is mixed in 5.1 and re-broadcast uncropped, so your view is never the promoter’s view.</p>
+      </div>
+      <div class="strip">
+        <article class="stage">
+          <div class="stage-top">
+            <svg viewBox="0 0 100 100" role="img" aria-label="Concentric arcs representing the Hemisphere Stage">
+              <g fill="none" stroke="#2A0410" stroke-width="3" opacity=".8">
+                <circle cx="50" cy="50" r="10"/><circle cx="50" cy="50" r="22"/><circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="44"/>
+              </g>
+            </svg>
+          </div>
+          <div class="stage-body">
+            <h3>Hemisphere</h3>
+            <p>360° projection, 12,000-seat equivalent. The main narrative of each night lives here.</p>
+          </div>
+        </article>
+        <article class="stage">
+          <div class="stage-top">
+            <svg viewBox="0 0 100 100" role="img" aria-label="Grid of squares representing the Signal Hall">
+              <g fill="#02231F" opacity=".75">
+                <rect x="14" y="14" width="18" height="18"/><rect x="38" y="14" width="18" height="18"/><rect x="62" y="14" width="18" height="18"/>
+                <rect x="14" y="38" width="18" height="18"/><rect x="62" y="38" width="18" height="18"/>
+                <rect x="14" y="62" width="18" height="18"/><rect x="38" y="62" width="18" height="18"/><rect x="62" y="62" width="18" height="18"/>
+              </g>
+            </svg>
+          </div>
+          <div class="stage-body">
+            <h3>Signal Hall</h3>
+            <p>Generative visuals rendered live from the audio feed. Nothing is pre-rendered.</p>
+          </div>
+        </article>
+        <article class="stage">
+          <div class="stage-top">
+            <svg viewBox="0 0 100 100" role="img" aria-label="Nested triangles representing the Kiln Room">
+              <g fill="none" stroke="#2A0410" stroke-width="3" opacity=".8">
+                <path d="M50 12 88 84H12Z"/><path d="M50 34 72 72H28Z"/><path d="M50 52 60 62H40Z"/>
+              </g>
+            </svg>
+          </div>
+          <div class="stage-body">
+            <h3>Kiln</h3>
+            <p>120 capacity, no cameras, no recording. The most argued-about room of the weekend.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="schedule" aria-labelledby="schedule-h">
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Broadcast timetable</p>
+          <h2 id="schedule-h">Pick a night</h2>
+        </div>
+      </div>
+      <div class="tablist" role="tablist" aria-label="Festival nights">
+        <button class="tab" role="tab" id="tab-fri" aria-controls="panel-fri" aria-selected="true">Friday 19</button>
+        <button class="tab" role="tab" id="tab-sat" aria-controls="panel-sat" aria-selected="false" tabindex="-1">Saturday 20</button>
+        <button class="tab" role="tab" id="tab-sun" aria-controls="panel-sun" aria-selected="false" tabindex="-1">Sunday 21</button>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="panel-fri" aria-labelledby="tab-fri" tabindex="0">
+        <ul class="setlist">
+          <li class="set"><time datetime="2026-06-19T19:00">19:00</time><div><h3>Opening Signal</h3><p>Kalmar Ensemble — 40 min chamber-electronic</p></div><span class="set-tag">Hemisphere</span></li>
+          <li class="set"><time datetime="2026-06-19T20:30">20:30</time><div><h3>Nala Sinephro</h3><p>Solo, one take, lights low</p></div><span class="set-tag">Hemisphere</span></li>
+          <li class="set"><time datetime="2026-06-19T23:00">23:00</time><div><h3>Ama Løken</h3><p>Live AV, 90 minutes, closing the night</p></div><span class="set-tag">Hemisphere</span></li>
+        </ul>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="panel-sat" aria-labelledby="tab-sat" tabindex="0" hidden>
+        <ul class="setlist">
+          <li class="set"><time datetime="2026-06-20T18:00">18:00</time><div><h3>Oddform</h3><p>Archive projection with live re-render</p></div><span class="set-tag">Signal Hall</span></li>
+          <li class="set"><time datetime="2026-06-20T21:00">21:00</time><div><h3>Fusible</h3><p>AV set, no camera cuts</p></div><span class="set-tag">Signal Hall</span></li>
+          <li class="set"><time datetime="2026-06-20T02:30">02:30</time><div><h3>STROBE</h3><p>Hardware live until sunrise</p></div><span class="set-tag">Kiln</span></li>
+        </ul>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="panel-sun" aria-labelledby="tab-sun" tabindex="0" hidden>
+        <ul class="setlist">
+          <li class="set"><time datetime="2026-06-21T17:00">17:00</time><div><h3>Rin Ito</h3><p>Generative score, released as a 12-hour stream</p></div><span class="set-tag">Signal Hall</span></li>
+          <li class="set"><time datetime="2026-06-21T20:00">20:00</time><div><h3>Yaeji</h3><p>Headline with full live band</p></div><span class="set-tag">Hemisphere</span></li>
+          <li class="set"><time datetime="2026-06-21T22:15">22:15</time><div><h3>Closing Transmission</h3><p>All stages run down to silence together</p></div><span class="set-tag">All rooms</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="numbers-h">
+    <div class="shell">
+      <h2 id="numbers-h" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Solstice by the numbers</h2>
+      <dl class="numbers">
+        <div><dt>Artists across three nights</dt><dd>60</dd></div>
+        <div><dt>Countries on the roster</dt><dd>24</dd></div>
+        <div><dt>Hours of continuous broadcast</dt><dd>51</dd></div>
+        <div><dt>People watching in 2025</dt><dd>310k</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="tickets" aria-labelledby="tickets-h">
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Access</p>
+          <h2 id="tickets-h">Three ways in</h2>
+        </div>
+        <p>Every pass includes the replay archive for twelve months. Concessions are automatic, no form required.</p>
+      </div>
+      <div class="tickets">
+        <article class="ticket">
+          <h3>Signal</h3>
+          <p class="price">€39</p>
+          <p>All three nights, standard stream quality.</p>
+          <ul>
+            <li>1080p broadcast</li>
+            <li>12-month replay archive</li>
+            <li>Community chat access</li>
+          </ul>
+          <a class="btn btn-ghost" href="#signup">Choose Signal</a>
+        </article>
+        <article class="ticket featured">
+          <h3>Hemisphere</h3>
+          <p class="price">€79</p>
+          <p>Full resolution plus the multi-room director’s cut.</p>
+          <ul>
+            <li>4K HDR broadcast</li>
+            <li>Choose your camera angle</li>
+            <li>Director’s commentary feed</li>
+            <li>Poster and setlist downloads</li>
+          </ul>
+          <a class="btn btn-primary" href="#signup">Choose Hemisphere</a>
+        </article>
+        <article class="ticket">
+          <h3>Kiln</h3>
+          <p class="price">€149</p>
+          <p>Small-room access, capped at 900 people.</p>
+          <ul>
+            <li>Everything in Hemisphere</li>
+            <li>Kiln Room, all three nights</li>
+            <li>Artists’ Q&amp;A at 14:00 Saturday</li>
+          </ul>
+          <a class="btn btn-ghost" href="#signup">Choose Kiln</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="signup" aria-labelledby="signup-h">
+    <div class="shell">
+      <div class="signup">
+        <div>
+          <p class="eyebrow">Line-up drop</p>
+          <h2 id="signup-h" style="font-size:var(--t-h2);margin-bottom:var(--s-3)">Get the line-up before anyone else</h2>
+          <p class="lead">One email on 1 May with the full 60 artists, stage times and the Kiln room ballot. Nothing else, ever.</p>
+        </div>
+        <form id="signupForm" novalidate>
+          <div class="field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" autocomplete="name" placeholder="Sam Ferreira">
+          </div>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" autocomplete="email" required aria-describedby="email-hint" placeholder="you@example.com">
+            <p class="hint" id="email-hint">We send exactly one email. Unsubscribe link included.</p>
+          </div>
+          <div class="field">
+            <label for="pass">Pass you’re interested in</label>
+            <select id="pass" name="pass">
+              <option>Signal — €39</option>
+              <option selected>Hemisphere — €79</option>
+              <option>Kiln — €149</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit">Notify me</button>
+          <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top" style="margin-bottom:var(--s-3)"><span class="brand-mark" aria-hidden="true"></span>Solstice</a>
+        <p style="color:var(--cream-dim);font-size:var(--t-small);max-width:34ch">A digital festival run by the Signal Foundation. Non-profit, no sponsors, no data resale.</p>
+      </div>
+      <div>
+        <h4>Festival</h4>
+        <ul>
+          <li><a href="#lineup">Line-up</a></li>
+          <li><a href="#stages">Stages</a></li>
+          <li><a href="#schedule">Schedule</a></li>
+          <li><a href="#tickets">Tickets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Access</h4>
+        <ul>
+          <li><a href="#signup">Concessions</a></li>
+          <li><a href="#signup">Captioning</a></li>
+          <li><a href="#signup">Audio description</a></li>
+          <li><a href="#signup">Refund policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Signal Foundation</h4>
+        <ul>
+          <li><a href="#signup">About</a></li>
+          <li><a href="#signup">Press kit</a></li>
+          <li><a href="#signup">Volunteer</a></li>
+          <li><a href="#signup">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Signal Foundation. Reykjavík · Lisbon · Nairobi · Osaka.</span>
+      <span>Reduced-motion and high-contrast friendly by default.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- mobile nav ---- */
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('primaryNav');
+  toggle.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Close' : 'Menu';
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A' && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.textContent = 'Menu';
+    }
+  });
+
+  /* ---- countdown ---- */
+  var target = new Date('2026-06-19T19:00:00Z').getTime();
+  var cells = {
+    d: document.querySelector('[data-cd="d"]'),
+    h: document.querySelector('[data-cd="h"]'),
+    m: document.querySelector('[data-cd="m"]'),
+    s: document.querySelector('[data-cd="s"]')
+  };
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+  function tick() {
+    var left = target - Date.now();
+    if (left < 0) left = 0;
+    var sec = Math.floor(left / 1000);
+    cells.d.textContent = Math.floor(sec / 86400);
+    cells.h.textContent = pad(Math.floor(sec / 3600) % 24);
+    cells.m.textContent = pad(Math.floor(sec / 60) % 60);
+    cells.s.textContent = pad(sec % 60);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ---- schedule tabs ---- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    tab.focus();
+  }
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener('click', function () { selectTab(tab); });
+    tab.addEventListener('keydown', function (e) {
+      var next = null;
+      if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+      if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      if (e.key === 'Home') next = tabs[0];
+      if (e.key === 'End') next = tabs[tabs.length - 1];
+      if (next) { e.preventDefault(); selectTab(next); }
+    });
+  });
+
+  /* ---- signup validation ---- */
+  var form = document.getElementById('signupForm');
+  var msg = document.getElementById('formMsg');
+  var email = document.getElementById('email');
+  var name = document.getElementById('name');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var ok = true;
+    [name, email].forEach(function (f) { f.removeAttribute('aria-invalid'); });
+
+    if (!name.value.trim()) {
+      name.setAttribute('aria-invalid', 'true');
+      msg.dataset.state = 'error';
+      msg.textContent = 'Please add a name so we know who to credit.';
+      ok = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      email.setAttribute('aria-invalid', 'true');
+      msg.dataset.state = 'error';
+      msg.textContent = 'That email address doesn’t look right — check for a typo.';
+      ok = false;
+    }
+    if (!ok) return;
+
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    msg.dataset.state = 'ok';
+    msg.textContent = 'You’re on the list. The line-up lands in your inbox on 1 May.';
+    form.reset();
+    setTimeout(function () {
+      btn.disabled = false;
+      btn.textContent = 'Notify me';
+    }, 2400);
+  });
+
+  if (reduce) {
+    document.querySelectorAll('.brand-mark').forEach(function (m) { m.style.animation = 'none'; });
+  }
+})();
+</script>
+</body>
+</html>

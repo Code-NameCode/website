@@ -1,0 +1,506 @@
+<!-- Style: Anti Design | 67antidesign.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RIOT DEPT — Nothing Hides. AW26 campaign.</title>
+<style>
+  :root{
+    --black:#0A0A0A;
+    --white:#FFFFFF;
+    --acid:#E8FF00;
+    --magenta:#FF00A8;
+    --cyan:#00E5FF;
+    --orange:#FF5A00;
+    --red:#FF0000;
+    --grey:#B9B9B9;
+
+    --font-grot:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --font-ser:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+    --t-mega:clamp(3.4rem,14vw,13rem);
+    --t-h1:clamp(2rem,6.5vw,5.5rem);
+    --t-h2:clamp(1.5rem,3.6vw,3rem);
+    --t-lead:clamp(1rem,1.5vw,1.2rem);
+    --t-body:1.02rem;
+    --t-small:.85rem;
+    --t-micro:.7rem;
+
+    --s-1:.35rem;--s-2:.75rem;--s-3:1.1rem;--s-4:1.6rem;--s-5:2.4rem;
+    --s-6:3.4rem;--s-7:4.8rem;--s-8:6rem;
+    --shell:min(1340px,100% - 2.5rem);
+
+    --d-fast:110ms;--d-base:220ms;--ease:cubic-bezier(.2,.9,.2,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  body{
+    margin:0;background:var(--white);color:var(--black);
+    font-family:var(--font-grot);font-size:var(--t-body);line-height:1.45;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  h1,h2,h3{margin:0;font-weight:900;line-height:.86;letter-spacing:-.03em}
+  p{margin:0}
+  a{color:inherit}
+  ul{margin:0;padding:0;list-style:none}
+  svg{display:block}
+  :focus-visible{outline:4px solid var(--cyan);outline-offset:2px}
+  .shell{width:var(--shell);margin-inline:auto}
+  .skip{position:absolute;left:1rem;top:-120px;z-index:300;background:var(--acid);color:var(--black);padding:1rem 1.4rem;font-weight:900;border:3px solid var(--black);transition:top var(--d-fast)}
+  .skip:focus{top:1rem}
+  .tag{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 1.8rem;
+    font-family:var(--font-grot);font-size:1.05rem;font-weight:900;text-transform:uppercase;letter-spacing:.02em;
+    text-decoration:none;cursor:pointer;border:3px solid var(--black);background:var(--white);color:var(--black);
+    box-shadow:6px 6px 0 var(--black);transition:box-shadow var(--d-fast),transform var(--d-fast),background var(--d-fast)
+  }
+  .btn:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--black);background:var(--acid)}
+  .btn--fill{background:var(--black);color:var(--white)}
+  .btn--fill:hover{background:var(--magenta);color:var(--black)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed;transform:none;box-shadow:6px 6px 0 var(--grey)}
+
+  /* ---------------- deliberately wrong nav, still usable ---------------- */
+  .nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:4px solid var(--black)}
+  .nav-in{display:flex;align-items:center;gap:var(--s-4);padding-block:.6rem}
+  .logo{font-size:1.5rem;font-weight:900;letter-spacing:-.04em;text-decoration:none;transform:rotate(-1.5deg);display:inline-block}
+  .nav ul{display:flex;align-items:baseline;gap:var(--s-3);margin-left:auto;flex-wrap:wrap}
+  .nav a{
+    text-decoration:none;padding:.5rem .2rem;min-height:44px;display:inline-flex;align-items:center;
+    border-bottom:3px solid transparent;font-weight:800
+  }
+  .nav a:nth-child(1){font-size:1rem;transform:rotate(.6deg)}
+  .nav a:nth-child(2){font-size:1.35rem;text-transform:uppercase;border-bottom-color:var(--magenta)}
+  .nav a:nth-child(3){font-size:.9rem;font-family:var(--font-serif);font-style:italic;font-weight:400}
+  .nav a:nth-child(4){font-size:1.1rem;background:var(--acid);padding-inline:.7rem;border:2px solid var(--black)}
+  .nav a:hover{background:var(--cyan)}
+  .nav-toggle{
+    display:none;margin-left:auto;min-height:44px;padding:0 1.1rem;border:3px solid var(--black);
+    background:var(--orange);font-family:var(--font-grot);font-weight:900;text-transform:uppercase;cursor:pointer
+  }
+  .nav-toggle:hover{background:var(--acid)}
+
+  /* ---------------- hero: deliberate collision ---------------- */
+  .hero{position:relative;padding-block:var(--s-5) var(--s-6);border-bottom:4px solid var(--black);overflow:hidden}
+  .hero h1{font-size:var(--t-mega);text-transform:uppercase}
+  .hero h1 .a{display:block}
+  .hero h1 .b{display:block;margin-left:8vw;color:var(--white);-webkit-text-stroke:3px var(--black);transform:skewX(-8deg)}
+  .hero h1 .c{display:block;color:var(--magenta);text-shadow:7px 7px 0 var(--black)}
+  .tape{
+    position:absolute;background:var(--acid);border:2px solid var(--black);padding:.3rem .8rem;
+    font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.2em;text-transform:uppercase;
+    box-shadow:3px 3px 0 rgba(0,0,0,.35)
+  }
+  .t1{top:1.5rem;right:6vw;transform:rotate(7deg)}
+  .t2{bottom:8rem;left:2vw;transform:rotate(-9deg);background:var(--cyan)}
+  .t3{top:44%;right:2vw;transform:rotate(-4deg);background:var(--orange)}
+  .hero-body{display:grid;grid-template-columns:1fr 320px;gap:var(--s-4);align-items:end;margin-top:var(--s-5)}
+  .hero-body p{font-size:var(--t-lead);max-width:46ch;font-weight:600}
+  .slash{font-size:1.5em;font-weight:400}
+  .hero-cta{display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-4)}
+  .mover{
+    border:3px solid var(--black);background:var(--black);color:var(--white);padding:1.2rem;transform:rotate(1.5deg)
+  }
+  .mover b{display:block;font-size:1.6rem;letter-spacing:-.02em;line-height:1}
+  .mover span{display:block;font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.14em;margin-top:.6rem;color:var(--acid)}
+
+  .riot{background:var(--acid);border-bottom:4px solid var(--black);overflow:hidden;padding-block:.7rem}
+  .riot-track{display:flex;gap:var(--s-4);width:max-content;animation:riot 22s linear infinite}
+  .riot span{font-size:1.4rem;font-weight:900;text-transform:uppercase;white-space:nowrap;display:inline-flex;align-items:center}
+  .riot s{text-decoration-thickness:4px}
+  @keyframes riot{to{transform:translateX(-50%)}}
+
+  /* ---------------- statement: wrong on purpose ---------------- */
+  .statement{padding-block:var(--s-7);display:grid;grid-template-columns:1fr 1fr;gap:var(--s-5);align-items:center}
+  .statement blockquote{
+    margin:0;font-family:var(--font-ser);font-size:clamp(1.5rem,3.6vw,2.8rem);line-height:1.15;
+    transform:rotate(-2.4deg);border-left:12px solid var(--magenta);padding-left:var(--s-4)
+  }
+  .statement .side-note{transform:rotate(1.8deg);font-size:.9rem;max-width:34ch;margin-left:auto;font-weight:600}
+  .statement .side-note b{background:var(--cyan);padding:0 .3em}
+
+  /* ---------------- looks: four different compositions ---------------- */
+  .looks{padding-bottom:var(--s-7)}
+  .looks-head{display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap;border-bottom:4px solid var(--black);padding-bottom:var(--s-2);margin-bottom:var(--s-5)}
+  .look{position:relative;margin-bottom:var(--s-6)}
+  .look-no{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.2em}
+  .look h3{font-size:var(--t-h2);text-transform:uppercase;margin-block:.4rem .8rem}
+  .frame{border:3px solid var(--black);overflow:hidden;background:#F2F2F2}
+  .frame svg{width:100%;height:auto}
+  .cap{font-size:var(--t-small);font-weight:600;max-width:52ch;margin-top:.7rem}
+
+  /* look 01: full bleed */
+  .look--01 .frame{background:var(--magenta)}
+  /* look 02: split with overlapping text */
+  .look--02{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:center}
+  .look--02 .over{font-size:clamp(1.6rem,4.4vw,3.4rem);font-weight:900;text-transform:uppercase;transform:rotate(-3deg);color:var(--white);text-shadow:5px 5px 0 var(--black);z-index:2}
+  .look--02 .frame{background:var(--cyan)}
+  /* look 03: tiny repeated */
+  .look--03 .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  .look--03 .strip div{border:2px solid var(--black);aspect-ratio:1;display:grid;place-items:center;font-size:.7rem;font-weight:900;text-align:center;padding:.2rem;overflow:hidden}
+  /* look 04: text only, deliberately unfashionable */
+  .look--04{border:3px dashed var(--black);padding:var(--s-4);max-width:640px}
+  .look--04 dl{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.4rem;font-size:var(--t-small);font-weight:600}
+  .look--04 dt{font-family:var(--font-mono);letter-spacing:.1em}
+
+  /* ---------------- wear it wrong ---------------- */
+  .wrong{background:var(--black);color:var(--white);padding-block:var(--s-7)}
+  .wrong h2{font-size:var(--t-h1);text-transform:uppercase;margin-bottom:var(--s-4)}
+  .wrong h2 i{color:var(--acid);font-style:normal}
+  .swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:4px}
+  .swatches div{aspect-ratio:1;display:grid;place-items:end start;padding:.5rem;font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.1em;border:2px solid #fff}
+  .wrong-note{margin-top:var(--s-4);max-width:52ch;color:var(--grey);font-size:var(--t-small)}
+
+  /* ---------------- order form ---------------- */
+  .order{padding-block:var(--s-7);display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--s-5);align-items:start}
+  .order h2{font-size:var(--t-h1);text-transform:uppercase;margin-bottom:var(--s-3)}
+  .order p{font-size:var(--t-lead);font-weight:600;max-width:38ch}
+  .price-tag{display:inline-block;background:var(--acid);border:3px solid var(--black);padding:.5rem 1rem;font-weight:900;transform:rotate(-2deg);margin-top:var(--s-3);box-shadow:4px 4px 0 var(--black)}
+  .field{margin-bottom:var(--s-4)}
+  .field label{display:block;font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.4rem;font-weight:700}
+  .field .hint{font-size:var(--t-small);color:#444;margin-top:.35rem}
+  input,select{
+    font-family:var(--font-grot);font-size:1.05rem;width:100%;min-height:52px;padding:.7rem .9rem;
+    border:3px solid var(--black);background:var(--white);color:var(--black);border-radius:0;
+    box-shadow:4px 4px 0 rgba(0,0,0,.18)
+  }
+  input:focus,select:focus{outline:4px solid var(--cyan);outline-offset:2px;box-shadow:none}
+  [aria-invalid="true"]{border-color:var(--red);background:#FFF2F2}
+  .sizes{display:flex;flex-wrap:wrap;gap:.5rem}
+  .sizes label{display:inline-flex;align-items:center;justify-content:center;min-width:58px;min-height:52px;border:3px solid var(--black);font-weight:900;cursor:pointer}
+  .sizes input{position:absolute;opacity:0;width:0;height:0}
+  .sizes input:checked+span{background:var(--black);color:var(--white)}
+  .sizes label:focus-within{outline:4px solid var(--cyan);outline-offset:2px}
+  .sizes label span{padding:.4rem .9rem}
+  .form-msg{margin-top:var(--s-3);min-height:1.8em;font-weight:900;font-size:var(--t-small)}
+  .form-msg[data-state="error"]{color:var(--red)}
+  .form-msg[data-state="ok"]{color:#0B6E4F}
+
+  /* ---------------- footer: still messy, still legible ---------------- */
+  footer{background:var(--white);border-top:4px solid var(--black);padding-block:var(--s-5)}
+  .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:var(--s-4);align-items:start}
+  footer h4{font-family:var(--font-mono);font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;margin-bottom:var(--s-2);font-weight:700}
+  .foot-grid li{margin-bottom:.45rem;font-size:var(--t-small)}
+  .foot-grid a{text-decoration:none;border-bottom:2px solid var(--black)}
+  .foot-grid a:hover{background:var(--acid)}
+  .foot-grid .col-2 h4{transform:rotate(2deg);text-decoration:underline}
+  .foot-grid .col-3 h4{font-size:1rem;font-family:var(--font-ser);font-style:italic;letter-spacing:0;text-transform:none}
+  .foot-bottom{margin-top:var(--s-5);padding-top:var(--s-3);border-top:2px solid var(--black);display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:space-between;font-family:var(--font-mono);font-size:var(--t-micro)}
+
+  @media (max-width:960px){
+    .hero-body,.statement,.look--02,.order,.foot-grid{grid-template-columns:1fr}
+    .tape{position:static;display:inline-block;transform:rotate(-2deg);margin-bottom:.6rem}
+    .statement .side-note{margin-left:0}
+    .look--03 .strip{grid-template-columns:repeat(4,1fr)}
+  }
+  @media (max-width:720px){
+    .nav-toggle{display:block}
+    .nav ul{
+      display:none;position:fixed;inset:0;padding:5rem 1.5rem 2rem;flex-direction:column;align-items:flex-start;
+      gap:0;background:var(--acid);z-index:99
+    }
+    .nav ul.open{display:flex}
+    .nav ul a{width:100%;font-size:1.6rem !important;border-bottom:4px solid var(--black);padding-block:.7rem}
+    .nav ul a:nth-child(3){font-size:1.6rem !important}
+    .look--03 .strip{grid-template-columns:repeat(3,1fr)}
+    .hero h1 .b{margin-left:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+    .riot-track{animation:none}
+    .hero h1 .b{transform:none}
+    .statement blockquote,.mover,.tape{transform:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="nav">
+  <div class="nav-in shell">
+    <a class="logo" href="#top">RIOT DEPT</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">Open</button>
+    <nav aria-label="Primary">
+      <ul id="primaryNav">
+        <li><a href="#looks">Looks</a></li>
+        <li><a href="#statement">Statement</a></li>
+        <li><a href="#wrong">Palette</a></li>
+        <li><a href="#order">Order</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-h">
+    <p class="tape t1 tag">AW26 · drop 04</p>
+    <div class="shell">
+      <h1 id="hero-h">
+        <span class="a">Nothing</span>
+        <span class="b">Hides</span>
+        <span class="c">Riot</span>
+      </h1>
+      <p class="tape t3 tag">Photographed in a car park</p>
+      <div class="hero-body">
+        <div>
+          <p>Forty-two garments made to be worn <span class="slash">incorrectly</span>. Seams are exposed. Labels are printed on the outside. Nothing is ironed, and we will know.</p>
+          <div class="hero-cta">
+            <a class="btn btn--fill" href="#order">Buy the look</a>
+            <a class="btn" href="#looks">See all four</a>
+          </div>
+        </div>
+        <div class="mover">
+          <b>£<span id="price" style="color:var(--magenta)">148</span></b>
+          <span>Nothing included. Ships in a bin bag.</span>
+        </div>
+      </div>
+      <p class="tape t2 tag">Sizes XS–XXL, mostly one size fits nobody</p>
+    </div>
+  </section>
+
+  <div class="riot" aria-hidden="true">
+    <div class="riot-track">
+      <span>Nothing hides <s>nothing hides</s> wear it wrong <s>wear it wrong</s> nothing hides <s>nothing hides</s></span>
+      <span>Nothing hides <s>nothing hides</s> wear it wrong <s>wear it wrong</s> nothing hides <s>nothing hides</s></span>
+    </div>
+  </div>
+
+  <section class="shell statement" id="statement" aria-labelledby="st-h">
+    <h2 id="st-h" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Campaign statement</h2>
+    <blockquote>“Clothes were not invented to be protected from the world. They were invented so you could go outside and get it wet.”</blockquote>
+    <p class="side-note">Campaign art direction was outsourced to <b>a printer in Sheffield</b> who was told “make it worse”. He made it worse. The client approved it in nine minutes.</p>
+  </section>
+
+  <section class="shell looks" id="looks" aria-labelledby="looks-h">
+    <div class="looks-head">
+      <h2 id="looks-h" style="font-size:var(--t-h1)">Four looks</h2>
+      <p class="tag" style="margin-left:auto">Styled on staff, unpaid, one pair of socks between four people</p>
+    </div>
+
+    <article class="look look--01">
+      <p class="look-no">LOOK 01</p>
+      <h3>The Car Park Jacket</h3>
+      <div class="frame">
+        <svg viewBox="0 0 1000 320" role="img" aria-label="Flat graphic of a cropped jacket in magenta with taped seams and exposed labels">
+          <rect width="1000" height="320" fill="#FF00A8"/>
+          <path d="M300 60h400l70 60-40 50-30-20v130H300V150l-30 20-40-50z" fill="#0A0A0A"/>
+          <path d="M450 60v220M550 60v220" stroke="#E8FF00" stroke-width="5" stroke-dasharray="12 8"/>
+          <rect x="380" y="130" width="70" height="50" fill="#00E5FF"/>
+          <rect x="550" y="130" width="70" height="50" fill="#00E5FF"/>
+          <text x="30" y="290" font-family="Helvetica,Arial,sans-serif" font-size="26" font-weight="bold" fill="#0A0A0A">RIOT DEPT 100% EXPOSED SEAM</text>
+        </svg>
+      </div>
+      <p class="cap">Bonded cotton, taped seams, four functioning pockets. Short enough to wear over a shirt. Longer than the shirt.</p>
+    </article>
+
+    <article class="look look--02">
+      <div>
+        <div class="frame">
+          <svg viewBox="0 0 600 520" role="img" aria-label="Flat graphic of wide-leg trousers in cyan with a torn knee">
+            <rect width="600" height="520" fill="#00E5FF"/>
+            <path d="M210 60h180l20 180-10 240h-80l-20-200-20 200h-80l-10-240z" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="4"/>
+            <path d="M300 200l-30 60 40 30-20 60 30 40" fill="none" stroke="#FF5A00" stroke-width="6" stroke-linecap="round"/>
+            <rect x="210" y="60" width="180" height="42" fill="#0A0A0A"/>
+          </svg>
+        </div>
+        <p class="cap">The Wide Leg, in “Torn On Purpose”. The tear is structural. It will not be repaired.</p>
+      </div>
+      <div>
+        <p class="over">02 &nbsp;the wide leg that nobody asked for</p>
+        <p class="cap" style="font-size:var(--t-small);font-weight:700">Two colours: the cyan, or the same cyan. We tried a third and the sample room staged a walkout.</p>
+      </div>
+    </article>
+
+    <article class="look look--03">
+      <p class="look-no">LOOK 03</p>
+      <h3>Sixty-two identical tees</h3>
+      <div class="strip">
+        <div>RIO<br>DEPT</div><div>RIO<br>DEPT</div><div>RIO<br>DEPT</div><div>RIO<br>DEPT</div><div>RIO<br>DEPT</div><div>RIO<br>DEPT</div>
+        <div>RIO<br>DEPT</div><div>RIO<br>DEPT</div><div>RIO<br>DEPT</div><div>RIO<br>DEPT</div><div>RIO<br>DEPT</div><div>RIO<br>DEPT</div>
+      </div>
+      <p class="cap">We printed one design sixty-two times on purpose. Staff were issued a different one each so that no group photo would ever be complete.</p>
+    </article>
+
+    <article class="look look--04">
+      <p class="look-no">LOOK 04</p>
+      <h3 style="font-size:1.6rem">The Documentation</h3>
+      <dl>
+        <dt>ITEM</dt><dd>Riot Dept Technical Field Notes, 48pp, uncoated</dd>
+        <dt>WHY</dt><dd>Because the clothes are confusing and this explains them, badly</dd>
+        <dt>PRICE</dt><dd>Free with any order, or £4 alone</dd>
+        <dt>COLOUR</dt><dd>Off-white paper, black ink, one acid page</dd>
+        <dt>PRINTED IN</dt><dd>Sheffield, by the man who made it worse</dd>
+        <dt>REFUNDS</dt><dd>No. But we will send you a different size, twice, free</dd>
+      </dl>
+    </article>
+  </section>
+
+  <section class="wrong" id="wrong" aria-labelledby="wrong-h">
+    <div class="shell">
+      <h2 id="wrong-h">Wear it <i>wrong</i></h2>
+      <p class="tag" style="color:var(--acid);margin-bottom:var(--s-3)">The entire palette. There is no fifth colour.</p>
+      <div class="swatches">
+        <div style="background:#0A0A0A">BLACK 000</div>
+        <div style="background:#E8FF00;color:#0A0A0A">ACID E8FF00</div>
+        <div style="background:#FF00A8">MAGENTA FF00A8</div>
+        <div style="background:#00E5FF;color:#0A0A0A">CYAN 00E5FF</div>
+        <div style="background:#FF5A00">ORANGE FF5A00</div>
+        <div style="background:#FFFFFF;color:#0A0A0A">WHITE FFFFFF</div>
+      </div>
+      <p class="wrong-note">Order the same garment in two colours and we will ask which one you meant. If you say “both”, we will send both, and say nothing about it.</p>
+    </div>
+  </section>
+
+  <section class="shell order" id="order" aria-labelledby="order-h">
+    <div>
+      <h2 id="order-h">Order it<br>on purpose</h2>
+      <p>Tell us what you are doing and we will pick the wrong thing for you. Refunds are not available, but wrong sizes are free forever, so the risk is ours.</p>
+      <p class="price-tag">£148 — jacket, trousers, one tee</p>
+    </div>
+
+    <form id="orderForm" novalidate>
+      <div class="field">
+        <label for="oName">Name for the label (it goes on the outside)</label>
+        <input type="text" id="oName" name="name" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="oEmail">Email</label>
+        <input type="email" id="oEmail" name="email" autocomplete="email" required aria-describedby="oHint">
+        <p class="hint" id="oHint">One confirmation. One dispatch note. No countdowns, no “last chance”.</p>
+      </div>
+      <fieldset class="field" style="border:0;padding:0;margin:0 0 var(--s-4)">
+        <legend class="tag" style="font-weight:700;margin-bottom:.5rem">Size</legend>
+        <div class="sizes">
+          <label><input type="radio" name="size" value="XS"><span>XS</span></label>
+          <label><input type="radio" name="size" value="S"><span>S</span></label>
+          <label><input type="radio" name="size" value="M" checked><span>M</span></label>
+          <label><input type="radio" name="size" value="L"><span>L</span></label>
+          <label><input type="radio" name="size" value="XL"><span>XL</span></label>
+          <label><input type="radio" name="size" value="XXL"><span>XXL</span></label>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="oColour">Colour, or the argument</label>
+        <select id="oColour" name="colour">
+          <option>Acid</option>
+          <option selected>Magenta</option>
+          <option>Cyan</option>
+          <option>Black</option>
+          <option>Send me one of each and I’ll decide later</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="oNote">What are you wearing it to? (optional)</label>
+        <input type="text" id="oNote" name="note" placeholder="my sister’s wedding, unfortunately">
+      </div>
+      <button class="btn btn--fill" type="submit">Order the wrong thing</button>
+      <p class="form-msg" id="orderMsg" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="foot-grid">
+      <div class="col-1">
+        <h4>Riot Dept</h4>
+        <p style="font-size:var(--t-small);max-width:36ch;font-weight:600">Unit 4, Lower Rutland Yard, Manchester. Two people, one industrial sewing machine, a dog called Statutory.</p>
+      </div>
+      <div class="col-2">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#order">Sizing, honestly</a></li>
+          <li><a href="#order">Shipping &amp; returns</a></li>
+          <li><a href="#order">Repairs</a></li>
+          <li><a href="#order">Wholesale</a></li>
+        </ul>
+      </div>
+      <div class="col-3">
+        <h4>Elsewhere</h4>
+        <ul>
+          <li><a href="#looks">Instagram (we post one thing)</a></li>
+          <li><a href="#wrong">Stockists</a></li>
+          <li><a href="#top">Press</a></li>
+          <li><a href="#top">Jobs</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 RIOT DEPT LTD</span>
+      <span>Designed badly on purpose. Usable anyway.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var toggle = document.getElementById('navToggle');
+  var list = document.getElementById('primaryNav');
+  toggle.addEventListener('click', function () {
+    var open = list.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Close' : 'Open';
+  });
+  list.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      list.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.textContent = 'Open';
+    }
+  });
+
+  /* The "wrong price" is deliberately unstable; the visible number matches the
+     number the form submits, so the page never lies about itself. */
+  var price = document.getElementById('price');
+  var options = [148, 148, 152, 148, 155];
+  var i = 0;
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setInterval(function () {
+      i = (i + 1) % options.length;
+      price.textContent = options[i];
+    }, 4200);
+  }
+
+  var form = document.getElementById('orderForm');
+  var msg = document.getElementById('orderMsg');
+  var name = document.getElementById('oName');
+  var email = document.getElementById('oEmail');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.dataset.state = '';
+    msg.textContent = '';
+    name.removeAttribute('aria-invalid');
+    email.removeAttribute('aria-invalid');
+
+    if (name.value.trim().length < 2) {
+      name.setAttribute('aria-invalid', 'true');
+      msg.dataset.state = 'error';
+      msg.textContent = 'STOP. The label needs a name and yours is empty.';
+      name.focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      email.setAttribute('aria-invalid', 'true');
+      msg.dataset.state = 'error';
+      msg.textContent = 'That email bounces. We have tried. Twice.';
+      email.focus();
+      return;
+    }
+
+    var size = form.querySelector('input[name="size"]:checked').value;
+    var colour = document.getElementById('oColour').value;
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Shouting…';
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Order placed: size ' + size + ', ' + colour + ', £' + price.textContent + '. Confirmation sent. Sorry about the print.';
+    setTimeout(function () { btn.disabled = false; btn.textContent = 'Order the wrong thing'; }, 2600);
+  });
+})();
+</script>
+</body>
+</html>

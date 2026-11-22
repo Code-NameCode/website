@@ -1,0 +1,621 @@
+<!-- Style: Brutalism | 5brutalism.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAW PRESS — Risograph zine, hand pulled, badly proofread on purpose</title>
+<meta name="description" content="RAW PRESS is a two-colour risograph zine about printing, publishing and the people who refuse to use a computer to lay it out. New issue every six weeks, printed by hand.">
+<style>
+  :root{
+    /* colour */
+    --paper:#e8e6df;
+    --paper-2:#dcd9d1;
+    --ink:#08080a;
+    --ink-2:#3a3a3c;
+    --grey:#5f5f5a;
+    --hot:#ff3b00;
+    --hot-deep:#BF2A00;
+    --ok:#0d5c2e;
+    --error:#8a0f00;
+    /* type */
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Courier New",monospace;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --fs-mega:clamp(2.9rem,10.5vw,8.5rem);
+    --fs-big:clamp(1.9rem,5vw,3.4rem);
+    --fs-h:clamp(1.25rem,2.4vw,1.9rem);
+    --fs-body:clamp(.95rem,1.05vw,1.02rem);
+    --fs-sm:.82rem;
+    --fs-xs:.7rem;
+    --lh:1.45;
+    --lh-flat:.9;
+    /* space — 8px module, deliberately unglamorous */
+    --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:3rem;--s8:4rem;--s9:6rem;
+    --pad:clamp(1rem,3vw,2rem);
+    --bw:3px;
+    /* edges */
+    --r:0;
+    /* motion */
+    --dur:0ms;          /* brutalism: state changes are instantaneous */
+    --ease:steps(1,end);
+    --tick:26s linear infinite;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--mono);font-size:var(--fs-body);line-height:var(--lh);
+    background-image:
+      repeating-linear-gradient(0deg,transparent 0 23px,rgba(8,8,10,.07) 23px 24px),
+      repeating-linear-gradient(90deg,transparent 0 23px,rgba(8,8,10,.07) 23px 24px);
+    -webkit-font-smoothing:antialiased
+  }
+  h1,h2,h3,p,figure,blockquote,dl,dd{margin:0}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  :focus-visible{outline:4px solid var(--hot);outline-offset:0}
+  .wrap{max-width:80rem;margin-inline:auto;padding-inline:var(--pad)}
+  .tag{font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .mt4{margin-top:var(--s4)}
+  .mt6{margin-top:var(--s6)}
+  .tag-note{font-size:var(--fs-sm)}
+  .err-pull{display:block;margin-top:calc(-1 * var(--s4));margin-bottom:var(--s5)}
+
+  /* ---------- header ---------- */
+  .bar{background:var(--ink);color:var(--paper);border-bottom:var(--bw) solid var(--ink)}
+  .bar-in{display:flex;align-items:stretch;justify-content:space-between;min-height:56px}
+  .bar a{color:var(--paper);text-decoration:none}
+  .wordmark{
+    display:flex;align-items:center;padding:.5rem 1rem var(--s5);
+    font-family:var(--sans);font-size:1.25rem;font-weight:800;letter-spacing:-.03em;text-transform:uppercase;
+    border-right:var(--bw) solid var(--paper)
+  }
+  .wordmark em{font-style:normal;color:var(--hot)}
+  .bar nav ul{display:flex;align-items:stretch}
+  .bar nav a{
+    display:flex;align-items:center;padding:0 1rem;min-height:56px;
+    border-left:var(--bw) solid var(--paper);font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.06em
+  }
+  .bar nav a:hover,.bar nav a:focus-visible{background:var(--hot);color:var(--ink)}
+  .bar nav a[aria-current="page"]{background:var(--paper);color:var(--ink)}
+  .burger{
+    display:none;min-height:44px;padding:0 1rem;background:var(--paper);color:var(--ink);
+    border:var(--bw) solid var(--ink);font:inherit;font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;cursor:pointer
+  }
+  .ticker{overflow:hidden;border-bottom:var(--bw) solid var(--ink);background:var(--hot);color:var(--ink)}
+  .ticker-track{display:flex;gap:2rem;width:max-content;padding:.4rem 0;animation:tick var(--tick) linear infinite}
+  .ticker span{font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+  @keyframes tick{to{transform:translateX(-50%)}}
+
+  /* ---------- hero ---------- */
+  .hero{padding-block:clamp(2rem,5vw,4rem) 0}
+  .hero h1{
+    font-family:var(--sans);font-size:var(--fs-mega);line-height:var(--lh-flat);
+    font-weight:800;letter-spacing:-.045em;text-transform:uppercase;margin-block:var(--s4)
+  }
+  .hero h1 mark{background:var(--hot);color:var(--ink);padding:0 .1em}
+  .hero-cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:0;margin-top:var(--s6)}
+  .hero-cols > div{padding:var(--s5) 0}
+  .hero-cols > div:first-child{border-right:var(--bw) solid var(--ink);padding-right:var(--s5)}
+  .hero-cols > div:last-child{padding-left:var(--s5)}
+  .hero p.blurb{font-size:var(--fs-body);max-width:56ch}
+  .facts{margin-top:var(--s5);display:grid;gap:.2rem;font-size:var(--fs-sm)}
+  .facts b{font-weight:700}
+  .cover{margin-top:var(--s7);border:var(--bw) solid var(--ink);background:var(--ink);color:var(--paper);padding:var(--pad)}
+  .cover svg{display:block;width:100%;height:auto}
+  .cover figcaption{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s2) var(--s4);margin-top:var(--s4);color:var(--paper);font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase}
+
+  /* ---------- issue table ---------- */
+  .section{padding-block:clamp(2.5rem,6vw,4.5rem)}
+  .section-head{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);align-items:baseline;justify-content:space-between;border-bottom:var(--bw) solid var(--ink);padding-bottom:var(--s3);margin-bottom:var(--s5)}
+  .section-head h2{font-family:var(--sans);font-size:var(--fs-big);line-height:1;letter-spacing:-.035em;font-weight:800;text-transform:uppercase}
+  table{width:100%;border-collapse:collapse}
+  caption{text-align:left;font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase;padding-bottom:var(--s3);color:var(--ink-2)}
+  th,td{border-bottom:var(--bw) solid var(--ink);padding:.7rem .6rem;text-align:left;font-size:var(--fs-sm);vertical-align:top}
+  thead th{border-bottom-width:var(--bw);background:var(--ink);color:var(--paper);text-transform:uppercase;letter-spacing:.1em;font-size:var(--fs-xs)}
+  tbody tr:nth-child(even){background:var(--paper-2)}
+  td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .out{color:var(--error);font-weight:700}
+  .ok{color:var(--ok);font-weight:700}
+  .table-scroll{overflow-x:auto}
+
+  /* ---------- manifesto ---------- */
+  .black{background:var(--ink);color:var(--paper)}
+  .black .section-head{border-bottom-color:var(--paper)}
+  .black h2,.black h3{color:var(--paper)}
+  .black .tag{color:var(--hot)}
+  .creed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 var(--s6)}
+  .creed li{
+    border-top:var(--bw) solid var(--paper);padding-block:var(--s5);
+    display:grid;grid-template-columns:3rem minmax(0,1fr);gap:var(--s3);font-size:var(--fs-body)
+  }
+  .creed .n{color:var(--hot);font-weight:700}
+  .creed b{display:block;font-family:var(--sans);font-size:var(--fs-h);letter-spacing:-.02em;line-height:1.1;margin-bottom:var(--s2);text-transform:uppercase}
+
+  /* ---------- quotes ---------- */
+  .shout{border:var(--bw) solid var(--ink);padding:var(--s6);margin-bottom:var(--s5);position:relative}
+  .shout:last-child{margin-bottom:0}
+  .shout::before{
+    content:attr(data-mark);position:absolute;top:-18px;left:var(--s5);
+    background:var(--hot);color:var(--ink);border:var(--bw) solid var(--ink);
+    padding:.1rem .4rem;font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em
+  }
+  .shout blockquote{font-family:var(--sans);font-size:clamp(1.15rem,2.2vw,1.7rem);line-height:1.12;letter-spacing:-.025em;font-weight:700}
+  .shout figcaption{margin-top:var(--s4);font-size:var(--fs-sm)}
+  .shout--dark{background:var(--ink);color:var(--paper)}
+  .shout--dark figcaption{color:var(--paper-2)}
+
+  /* ---------- how to submit ---------- */
+  .submit-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:var(--s7)}
+  .steps{counter-reset:step}
+  .steps li{counter-increment:step;border-top:var(--bw) solid var(--ink);padding-block:var(--s4);display:grid;grid-template-columns:2.5rem minmax(0,1fr);gap:var(--s3);font-size:var(--fs-sm)}
+  .steps li::before{content:counter(step) ".";font-weight:700;color:var(--hot-deep)}
+  .field{margin-bottom:var(--s4)}
+  .field label{display:block;font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--s2)}
+  .field input,.field select,.field textarea{
+    width:100%;min-height:48px;padding:.6rem .65rem;background:var(--paper);color:var(--ink);
+    border:var(--bw) solid var(--ink);border-radius:0;font:inherit;font-size:var(--fs-sm);
+    appearance:none
+  }
+  .field textarea{min-height:8rem;resize:vertical}
+  .field select{background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 15px) 22px,calc(100% - 10px) 22px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:4px solid var(--hot);outline-offset:0;background:#fff}
+  .field[data-invalid="true"] input,.field[data-invalid="true"] select,.field[data-invalid="true"] textarea{border-color:var(--error);background:#ffece7}
+  .err{display:block;font-size:var(--fs-sm);font-weight:700;color:var(--error);margin-top:var(--s2);min-height:1.1em}
+  .radios{display:grid;gap:0;margin-bottom:var(--s5)}
+  .radios legend{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:0;margin-bottom:var(--s2)}
+  .radio{display:grid;grid-template-columns:22px minmax(0,1fr);gap:var(--s3);align-items:start;padding:.6rem 0;border-bottom:var(--bw) solid var(--ink);font-size:var(--fs-sm);cursor:pointer}
+  .radio input{width:20px;height:20px;margin:0;accent-color:var(--hot)}
+  .radio--box{border-bottom:var(--bw) solid var(--ink);margin-bottom:var(--s5)}
+  .btn{
+    min-height:52px;padding:0 var(--s6);background:var(--ink);color:var(--paper);
+    border:var(--bw) solid var(--ink);border-radius:0;font:inherit;font-size:var(--fs-sm);font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;cursor:pointer
+  }
+  .btn:hover{background:var(--hot);color:var(--ink)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .status{margin-top:var(--s4);font-size:var(--fs-sm);min-height:1.3em}
+  .status[data-state="ok"]{color:var(--ok);font-weight:700}
+  .status[data-state="error"]{color:var(--error);font-weight:700}
+
+  /* ---------- stockists ---------- */
+  .stockists{columns:3 14rem;column-gap:var(--s6)}
+  .stockists li{break-inside:avoid;border-bottom:var(--bw) solid var(--ink);padding-block:.55rem;font-size:var(--fs-sm);display:flex;justify-content:space-between;gap:var(--s3)}
+
+  /* ---------- footer ---------- */
+  .foot{background:var(--ink);color:var(--paper);border-top:var(--bw) solid var(--ink);padding-block:var(--s6)}
+  .foot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s5)}
+  .foot h3{font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--hot);margin-bottom:var(--s3)}
+  .foot p,.foot a{font-size:var(--fs-sm);color:var(--paper-2)}
+  .foot a{display:inline-block;min-height:32px;padding-block:.1rem}
+  .foot a:hover{color:var(--hot)}
+  .colophon{margin-top:var(--s6);border-top:var(--bw) solid var(--paper);padding-top:var(--s4);font-size:var(--fs-xs);letter-spacing:.08em;display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3)}
+  .cursor{display:inline-block;width:.7em;height:1.05em;background:var(--hot);vertical-align:-.18em;animation:blink 1.05s steps(1,end) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  @media (max-width:900px){
+    .hero-cols{grid-template-columns:1fr}
+    .hero-cols > div:first-child{border-right:0;border-bottom:var(--bw) solid var(--ink);padding-right:0;padding-bottom:var(--s5)}
+    .hero-cols > div:last-child{padding-left:0}
+    .creed{grid-template-columns:1fr}
+    .submit-grid{grid-template-columns:1fr;gap:var(--s6)}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:720px){
+    .burger{display:inline-flex;align-items:center;margin:.5rem}
+    .bar-in{position:relative;flex-wrap:wrap}
+    .bar nav{width:100%}
+    .bar nav ul{display:none;flex-direction:column;width:100%}
+    .bar nav ul[data-open="true"]{display:flex}
+    .bar nav a{border-left:0;border-top:var(--bw) solid var(--paper);width:100%;padding-block:.9rem}
+    .wordmark{border-right:0}
+    .foot-grid{grid-template-columns:1fr}
+    th,td{padding:.55rem .35rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    .ticker-track{animation:none}
+    .cursor{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="wordmark" href="#top">RAW<em>//</em>PRESS</a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav aria-label="Main">
+      <ul id="nav">
+        <li><a href="#hero" aria-current="page">This issue</a></li>
+        <li><a href="#backlog">Backlog</a></li>
+        <li><a href="#creed">What we believe</a></li>
+        <li><a href="#submit">Submit</a></li>
+        <li><a href="#stockists">Stockists</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack">
+    <span>Issue 31 out now · 48 pages · fluoro orange on newsprint</span>
+    <span>Issue 31 out now · 48 pages · fluoro orange on newsprint</span>
+    <span>Issue 31 out now · 48 pages · fluoro orange on newsprint</span>
+    <span>Issue 31 out now · 48 pages · fluoro orange on newsprint</span>
+  </div>
+</div>
+
+<main id="top">
+
+  <section class="hero wrap" id="hero" aria-labelledby="hero-title">
+    <p class="tag">Issue 31 · Winter 2026 · Printed by hand in a shed in Rochdale</p>
+    <h1 id="hero-title">We print on a <mark>machine</mark> that was old when the Queen was on the throne.</h1>
+
+    <div class="hero-cols">
+      <div>
+        <p class="blurb">RAW PRESS is a 48-page zine about printing, publishing, ink and the small arguments that happen in copy meetings. Two colours. One pass. No digital layout — the type is set by hand on a composing stick and locked into a chase, which takes most people six hours and us four.</p>
+        <p class="blurb mt4">We do not run a website shop, we do not do pre-orders, and we do not reprint. When a run of 400 is gone it is gone, and the people who got one will have to argue about it on the internet like everybody else.</p>
+      </div>
+      <div>
+        <p class="tag">Colophon</p>
+        <div class="facts">
+          <p><b>Format</b> 148 × 210 mm, saddle stitched</p>
+          <p><b>Extent</b> 48 pages, 6 contributions</p>
+          <p><b>Inks</b> Fluorescent orange (PANTONE 802) + black</p>
+          <p><b>Paper</b> 80gsm recycled newsprint, uncoated</p>
+          <p><b>Print run</b> 400, numbered by hand</p>
+          <p><b>Price</b> £7 / €8, from stockists only</p>
+          <p><b>Frequency</b> Every six weeks, when we can</p>
+        </div>
+      </div>
+    </div>
+
+    <figure class="cover">
+      <svg viewBox="0 0 900 420" role="img" aria-label="Risograph cover artwork: halftone portrait block over a grid of type with registration marks">
+        <rect width="900" height="420" fill="#08080a"/>
+        <g fill="#ff3b00">
+          <rect x="40" y="40" width="380" height="180"/>
+          <rect x="440" y="40" width="420" height="24"/>
+          <rect x="440" y="76" width="330" height="24"/>
+          <rect x="440" y="112" width="390" height="24"/>
+          <rect x="440" y="148" width="280" height="24"/>
+          <rect x="40" y="252" width="820" height="18"/>
+          <rect x="40" y="282" width="600" height="18"/>
+        </g>
+        <g fill="#e8e6df">
+          <circle cx="120" cy="300" r="42"/><circle cx="180" cy="300" r="42"/>
+          <circle cx="240" cy="300" r="42"/><circle cx="300" cy="300" r="42"/>
+          <rect x="40" y="352" width="820" height="4"/>
+          <rect x="40" y="368" width="560" height="4"/>
+        </g>
+        <g stroke="#e8e6df" stroke-width="2" fill="none">
+          <path d="M12 12h26M12 12v26M888 12h-26M888 12v26M12 408h26M12 408v-26M888 408h-26M888 408v-26"/>
+        </g>
+        <g fill="#e8e6df" font-family="Courier New, monospace" font-size="13" letter-spacing="2">
+          <text x="440" y="196">SET IN HAND</text>
+          <text x="440" y="216">NO TRAPSETTER</text>
+          <text x="40" y="396" font-size="11">RAW PRESS / ISSUE 31 / 400 COPIES / SHED 9, ROCHDALE</text>
+        </g>
+      </svg>
+      <figcaption>
+        <span>Cover, Issue 31 — screen from the 2400 dpi drum scanner</span>
+        <span>Registration marks not cropped. We leave them in.</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="section wrap" id="backlog" aria-labelledby="backlog-title">
+    <div class="section-head">
+      <h2 id="backlog-title">The backlog</h2>
+      <p class="tag">Everything we have printed, including the failures</p>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <caption>Complete print record. Prices include UK VAT where applicable. SOLD OUT means sold out, not “low stock”.</caption>
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Title</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Run</th>
+            <th scope="col">Inks</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">31</th><td>THE MACHINE IS OLDER THAN YOU</td><td>Riso servicing, third-generation drums</td><td class="n">400</td><td>Orange + black</td><td class="n">In shops</td></tr>
+          <tr><th scope="row">30</th><td>FOUR HOURS IN THE CHASE</td><td>Composing sticks, why they are faster</td><td class="n">400</td><td>Blue + black</td><td class="n">In shops</td></tr>
+          <tr><th scope="row">29</th><td>NEWSPRINT DISAGREES</td><td>Dot gain, screening, the 20% nobody plans for</td><td class="n">450</td><td>Orange + black</td><td class="n">In shops</td></tr>
+          <tr><th scope="row">28</th><td>PROOFREADING IS A TYRANNY</td><td>Our own corrections policy, badly</td><td class="n">400</td><td>Green + black</td><td class="out">Sold out</td></tr>
+          <tr><th scope="row">27</th><td>TWENTY-TWO WEIGHTS</td><td>Why we do not use one paper stock</td><td class="n">400</td><td>Orange + black</td><td class="out">Sold out</td></tr>
+          <tr><th scope="row">26</th><td>THE COLOUR THAT ISN'T THERE</td><td>Metamerism, and printing a grey that holds</td><td class="n">380</td><td>Blue + black</td><td class="out">Sold out</td></tr>
+          <tr><th scope="row">25</th><td>TRIM MARKS FOR BEGINNERS</td><td>Register, creep, and the crop mark ritual</td><td class="n">400</td><td>Orange + black</td><td class="out">Sold out</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tag tag-note mt4">Older issues (1–24) are not reprinted. Photocopy them. That is the whole policy.</p>
+  </section>
+
+  <section class="section black" id="creed" aria-labelledby="creed-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="creed-title">What we believe</h2>
+        <p class="tag">Six positions, printed on the inside cover since Issue 1</p>
+      </div>
+      <ol class="creed">
+        <li>
+          <span class="n">01</span>
+          <p><b>A run is a decision</b>4,000 copies is not success, it is 3,600 in a landfill. We print what we think we can sell and lose money doing it.</p>
+        </li>
+        <li>
+          <span class="n">02</span>
+          <p><b>The reader is not a metric</b>No newsletter, no “community”, no engagement. You either want the thing or you do not.</p>
+        </li>
+        <li>
+          <span class="n">03</span>
+          <p><b>Two colours is a discipline</b>Every extra ink is a decision you have to defend. We have never printed more than two and we never will.</p>
+        </li>
+        <li>
+          <span class="n">04</span>
+          <p><b>Corrections are printed</b>In the next issue, not quietly fixed. If we got it wrong, you get to read about it.</p>
+        </li>
+        <li>
+          <span class="n">05</span>
+          <p><b>Slow is not a virtue</b>Six weeks is as long as we can justify. Six months is a lie we tell ourselves about craft.</p>
+        </li>
+        <li>
+          <span class="n">06</span>
+          <p><b>Paper is the message</b>We do not laminate, we do not foil, we do not put a spine on it. Newsprint, because newsprint.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="voices-title">
+    <div class="section-head">
+      <h2 id="voices-title">What people said</h2>
+      <p class="tag">Unedited, we did not choose them, they are all in the archive</p>
+    </div>
+
+    <figure class="shout" data-mark="ISSUE 29">
+      <blockquote>“The only printing zine where I have learned something and been annoyed in the same paragraph.”</blockquote>
+      <figcaption>— S. Okonkwo, letter printed in full, Issue 30 p.44</figcaption>
+    </figure>
+    <figure class="shout shout--dark" data-mark="ISSUE 27">
+      <blockquote>“I bought eleven copies and gave them to my studio. Two of the type samples in there are better than anything in our supplier's swatch book.”</blockquote>
+      <figcaption>— Head of Brand, Amsterdam, email, February 2026</figcaption>
+    </figure>
+    <figure class="shout" data-mark="ISSUE 22">
+      <blockquote>“Angry, useful, and printed on paper I could actually recycle in my council's bin, which is more than most design annuals manage.”</blockquote>
+      <figcaption>— M. Trelawney, five-star but complaining, Goodreads</figcaption>
+    </figure>
+  </section>
+
+  <section class="section wrap" id="submit" aria-labelledby="submit-title">
+    <div class="section-head">
+      <h2 id="submit-title">Submit to us</h2>
+      <p class="tag">We answer everything. We print about one thing in five.</p>
+    </div>
+
+    <div class="submit-grid">
+      <div>
+        <p>Write to us properly. We are not looking for pitches that could be anything; we are looking for arguments about printing that only you could make.</p>
+        <ol class="steps mt6">
+          <li>Read three back issues first. They are in every decent second-hand bookshop and we will not apologise for the price.</li>
+          <li>Write 1,200 to 3,000 words. If it needs to be 8,000 it is a book and we are not a publisher.</li>
+          <li>Send a plain-text file or a clean Markdown export. Not a PDF. Never a PDF.</li>
+          <li>Include one thing you got wrong in public and how you found out. This raises your chances considerably.</li>
+          <li>We reply within three weeks either way. “No” comes with a reason. “Yes” comes with a page and a date.</li>
+        </ol>
+      </div>
+
+      <form id="submitForm" novalidate>
+        <div class="field">
+          <label for="s-name">Your name (as it should appear)</label>
+          <input id="s-name" name="name" type="text" autocomplete="name" required aria-describedby="s-name-err">
+          <span class="err" id="s-name-err"></span>
+        </div>
+        <div class="field">
+          <label for="s-email">Email</label>
+          <input id="s-email" name="email" type="email" autocomplete="email" required aria-describedby="s-email-err">
+          <span class="err" id="s-email-err"></span>
+        </div>
+        <div class="field">
+          <label for="s-wordcount">Approximate word count</label>
+          <input id="s-wordcount" name="words" type="number" min="1200" max="3000" step="100" required aria-describedby="s-wordcount-err">
+          <span class="err" id="s-wordcount-err"></span>
+        </div>
+        <div class="field">
+          <label for="s-pitch">Your argument, in five lines</label>
+          <textarea id="s-pitch" name="pitch" required aria-describedby="s-pitch-err"></textarea>
+          <span class="err" id="s-pitch-err"></span>
+        </div>
+        <fieldset class="radios">
+          <legend>Format of the finished piece</legend>
+          <label class="radio" for="s-f1">
+            <input id="s-f1" name="format" type="radio" value="words" checked>
+            <span>Words only, 1,200–3,000. Most of what we print.</span>
+          </label>
+          <label class="radio" for="s-f2">
+            <input id="s-f2" name="format" type="radio" value="words-images">
+            <span>Words with up to four images. You supply the crops.</span>
+          </label>
+          <label class="radio" for="s-f3">
+            <input id="s-f3" name="format" type="radio" value="visual">
+            <span>Visual essay, one or two pages, halftone ready.</span>
+          </label>
+        </fieldset>
+        <label class="radio radio--box" for="s-agree">
+          <input id="s-agree" name="agree" type="checkbox" required aria-describedby="s-agree-err">
+          <span>I have read three back issues and I am not asking you to pay me.</span>
+        </label>
+        <span class="err err-pull" id="s-agree-err"></span>
+        <button class="btn" type="submit" id="submitBtn">Send it</button>
+        <p class="status" id="submitStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section wrap" id="stockists" aria-labelledby="stockists-title">
+    <div class="section-head">
+      <h2 id="stockists-title">Where it is sold</h2>
+      <p class="tag">21 shops · no online sales · no wholesale minimums</p>
+    </div>
+    <ul class="stockists">
+      <li><span>Rochdale Arts Workshop</span><span>UK</span></li>
+      <li><span>Dark Mould Paper Co.</span><span>Glasgow</span></li>
+      <li><span>Attica Books, 83 rue</span><span>Paris</span></li>
+      <li><span>La Buena Suerte</span><span>Madrid</span></li>
+      <li><span>Buchhandlung Walther König</span><span>Köln</span></li>
+      <li><span>Printed Matter</span><span>New York</span></li>
+      <li><span>Dog Eared Books</span><span>San Francisco</span></li>
+      <li><span>Tsutaya Books, Daikanyama</span><span>Tokyo</span></li>
+      <li><span>Národní tiskárna supply desk</span><span>Praha</span></li>
+      <li><span>Kartinka</span><span>Warszawa</span></li>
+      <li><span>Konbini Annex</span><span>Osaka</span></li>
+      <li><span>Rag & Bone, Fitzroy</span><span>Melbourne</span></li>
+      <li><span>Midnight Special</span><span>Brooklyn</span></li>
+      <li><span>Livraria Cultura</span><span>São Paulo</span></li>
+      <li><span>The Paper Chainsaw</span><span>Toronto</span></li>
+      <li><span>Press Gallery, Jutka</span><span>Bangkok</span></li>
+      <li><span>Stacks, Khartoum Rd</span><span>Wellington</span></li>
+      <li><span>Papeterie Clichy</span><span>Bruxelles</span></li>
+      <li><span>Zine och Skrift</span><span>Göteborg</span></li>
+      <li><span>Tomo Press, Dianchi</span><span>Kunming</span></li>
+      <li><span>Shed 9 (on the door)</span><span>Rochdale</span></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h3>What we are</h3>
+        <p>A two-person zine publisher. Shed 9, Unit 4, Rochdale, England. We answer letters. We do not answer email within the hour.</p>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <p>
+          <a href="mailto:letters@rawpress.example">letters@rawpress.example</a><br>
+          <a href="mailto:stockists@rawpress.example">stockists@rawpress.example</a><br>
+          PO Box 118, Rochdale OL12 8QF
+        </p>
+      </div>
+      <div>
+        <h3>Small print</h3>
+        <p>
+          <a href="#top">Corrections policy</a><br>
+          <a href="#top">Submission guidelines</a><br>
+          <a href="#top">Accessibility statement</a><br>
+          <a href="#top">Data &amp; privacy</a>
+        </p>
+      </div>
+    </div>
+    <p class="colophon">
+      <span>© 2026 RAW PRESS. Printed in England on 100% post-consumer waste. Registered in England 11840271.</span>
+      <span aria-hidden="true">ISSUE 31 / SET IN HAND / 400 COPIES<span class="cursor"></span></span>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* --- menu --- */
+  var burger = document.getElementById("burger");
+  var nav = document.getElementById("nav");
+  burger.addEventListener("click", function(){
+    var open = nav.getAttribute("data-open") === "true";
+    nav.setAttribute("data-open", String(!open));
+    burger.setAttribute("aria-expanded", String(!open));
+  });
+  nav.addEventListener("click", function(e){
+    if(e.target.tagName === "A" && window.matchMedia("(max-width:720px)").matches){
+      nav.setAttribute("data-open","false");
+      burger.setAttribute("aria-expanded","false");
+    }
+  });
+
+  /* --- duplicate ticker content so the loop is seamless --- */
+  var track = document.getElementById("tickerTrack");
+  var original = track.children.length;
+  for(var i = 0; i < original; i++){
+    var clone = track.children[i].cloneNode(true);
+    clone.setAttribute("aria-hidden","true");
+    track.appendChild(clone);
+  }
+
+  /* --- submission validation --- */
+  var form = document.getElementById("submitForm");
+  var status = document.getElementById("submitStatus");
+  var btn = document.getElementById("submitBtn");
+
+  var rules = {
+    "s-name": function(v){ return v.trim().length >= 2 ? "" : "A name, please."; },
+    "s-email": function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "Valid email or we cannot answer."; },
+    "s-wordcount": function(v){
+      if(!/^[0-9]+$/.test(v)) return "A number, roughly.";
+      if(+v < 1200 || +v > 3000) return "Between 1,200 and 3,000 words. This is not negotiable.";
+      return "";
+    },
+    "s-pitch": function(v){ return v.trim().length >= 25 ? "" : "Five lines is about 300 characters. Give us more."; }
+  };
+
+  function check(id){
+    var input = document.getElementById(id);
+    var msg = rules[id](input.value);
+    input.closest(".field").setAttribute("data-invalid", msg ? "true" : "false");
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+    document.getElementById(id + "-err").textContent = msg;
+    return !msg;
+  }
+  Object.keys(rules).forEach(function(id){
+    var input = document.getElementById(id);
+    input.addEventListener("blur", function(){ check(id); });
+    input.addEventListener("input", function(){
+      if(input.closest(".field").getAttribute("data-invalid") === "true") check(id);
+    });
+  });
+
+  var agree = document.getElementById("s-agree");
+  function checkAgree(){
+    var err = document.getElementById("s-agree-err");
+    agree.setAttribute("aria-invalid", agree.checked ? "false" : "true");
+    err.textContent = agree.checked ? "" : "Tick it or do not send it.";
+    return agree.checked;
+  }
+  agree.addEventListener("change", checkAgree);
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function(id){
+      if(!check(id) && !firstBad) firstBad = document.getElementById(id);
+    });
+    if(!checkAgree() && !firstBad) firstBad = agree;
+    if(firstBad){
+      status.setAttribute("data-state","error");
+      status.textContent = "Not sent. See the red lines.";
+      firstBad.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "Sending …";
+    status.removeAttribute("data-state");
+    status.textContent = "Transmitting …";
+    window.setTimeout(function(){
+      btn.disabled = false;
+      btn.textContent = "Send it";
+      status.setAttribute("data-state","ok");
+      status.textContent = "Received. Ref RP-31-" + String(Math.floor(Math.random()*900+100)) + ". Expect an answer within three weeks, from a person, not a tool.";
+      form.reset();
+    }, 800);
+  });
+})();
+</script>
+</body>
+</html>

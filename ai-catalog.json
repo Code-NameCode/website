@@ -1,0 +1,211 @@
+{
+  "$schema": "https://goodstuffdesigns.co.za/ai-catalog.schema",
+  "catalog": {
+    "name": "Goodstuff Designs AI Catalog",
+    "version": "1.0",
+    "lastChecked": "2026-08-30",
+    "purpose": "Machine-readable catalogue of Goodstuff Designs for AI agents, assistants and browsing models. Read-only: no pricing here constitutes an order or quote; confirm terms before purchase.",
+    "canonicalSite": "https://goodstuffdesigns.co.za"
+  },
+  "business": {
+    "name": "Goodstuff Designs (Pty) Ltd",
+    "type": "Technology studio",
+    "location": "Heidelberg, Gauteng, South Africa",
+    "areaServed": ["South Africa", "International - remote"],
+    "email": "admin@goodstuffdesigns.co.za",
+    "telephone": "+27 79 937 4801",
+    "whatsapp": "+27 79 937 4801",
+    "businessHours": {
+      "timezone": "SAST (GMT+2)",
+      "monday": "08:00-17:00",
+      "tuesday": "08:00-17:00",
+      "wednesday": "08:00-17:00",
+      "thursday": "08:00-17:00",
+      "friday": "08:00-17:00",
+      "saturday": "08:00-13:00",
+      "sunday": "closed"
+    },
+    "responseTimes": {
+      "criticalManagedSupport": "Target response within 4 hours during business hours",
+      "generalEnquiries": "Within 2 business days"
+    }
+  },
+  "services": [
+    {
+      "id": "managed-it-support",
+      "name": "Managed IT support",
+      "url": "https://goodstuffdesigns.co.za/services#it-support",
+      "summary": "Responsive support for devices, users, email, networks, backups, access, and supplier coordination."
+    },
+    {
+      "id": "it-and-networks",
+      "name": "IT and network services",
+      "url": "https://goodstuffdesigns.co.za/it-and-networks",
+      "summary": "Network administration (routers, switches, WiFi, VLANs, firewalls), IT support, cybersecurity, network monitoring, AI for IT operations, IT infrastructure and managed business IT services."
+    },
+    {
+      "id": "business-networks-fibre",
+      "name": "Business networks and fibre",
+      "url": "https://goodstuffdesigns.co.za/it-and-networks#network-administration",
+      "summary": "Vox ISP connectivity from coverage check to installed line: home FTTH, business FTTB, fixed LTE-A/5G, fixed wireless, rural satellite and uncapped VoIP.",
+      "pricing": {
+        "currency": "ZAR",
+        "note": "Home Fibre advertised from R349 per month; final pricing depends on coverage, network operator, speed, equipment and contract terms."
+      }
+    },
+    {
+      "id": "cybersecurity",
+      "name": "Cybersecurity",
+      "url": "https://goodstuffdesigns.co.za/it-and-networks#cybersecurity",
+      "summary": "Vulnerability assessments, security audits, endpoint protection and incident response."
+    },
+    {
+      "id": "kaspersky-protection",
+      "name": "Kaspersky antivirus setup and support",
+      "url": "https://goodstuffdesigns.co.za/services#security",
+      "summary": "Kaspersky licence selection, endpoint onboarding, policy setup, updates, alert review and support.",
+      "pricing": {
+        "currency": "ZAR",
+        "term": "1 year per device",
+        "standard": { "1": 278, "3": 318, "5": 370, "10": 462 },
+        "plus": { "1": 399, "3": 438, "5": 479, "10": 699 },
+        "premium": { "1": 438, "3": 478, "5": 509, "10": 769, "20": 999 }
+      }
+    },
+    {
+      "id": "websites-and-hosting",
+      "name": "Web design, development and managed hosting",
+      "url": "https://goodstuffdesigns.co.za/websites-and-hosting",
+      "summary": "Business websites, e-commerce, custom web apps and managed Linux hosting - built, hosted and supported by one team. Every build includes Google Analytics 4 and Google Search Console setup.",
+      "pricing": {
+        "currency": "ZAR",
+        "businessWebsiteFrom": 5000,
+        "ecommerceFrom": 8500,
+        "customWebApps": "quoted",
+        "hostingPlans": [
+          { "name": "Novice", "pricePerMonth": 100, "storage": "10GB" },
+          { "name": "Business", "pricePerMonth": 200, "storage": "150GB" },
+          { "name": "Pro", "pricePerMonth": 600, "storage": "Unlimited" }
+        ]
+      }
+    },
+    {
+      "id": "ai-workflows-integrations",
+      "name": "AI workflows, integrations and consulting",
+      "url": "https://goodstuffdesigns.co.za/ai",
+      "summary": "Human-controlled AI workflows, business integrations across communication, CRM and operations systems, AI-assisted support and AI-powered marketing. Every system is explainable, permissioned and audited; pricing is quoted per workflow."
+    },
+    {
+      "id": "digital-marketing",
+      "name": "Digital marketing",
+      "url": "https://goodstuffdesigns.co.za/digital-marketing",
+      "summary": "Measurement and tracking (GA4, Search Console, Tag Manager, conversion tracking), social media marketing, Google Ads management, and reporting with cost-per-lead and ROI analysis."
+    }
+  ],
+  "products": [
+    {
+      "id": "goodstuff-studio",
+      "name": "Goodstuff-Studio",
+      "url": "https://goodstuffdesigns.co.za/studio",
+      "productUrl": "https://studio.goodstuffdesigns.co.za/",
+      "platform": "Windows",
+      "summary": "Desktop AI workspace with agents, projects, skills, scheduled tasks, notes and a built-in browser."
+    }
+  ],
+  "pages": [
+    { "url": "https://goodstuffdesigns.co.za/", "title": "Home", "purpose": "Company introduction and full service range, with FAQ." },
+    { "url": "https://goodstuffdesigns.co.za/services", "title": "Services", "purpose": "Overview of all services and how an engagement runs." },
+    { "url": "https://goodstuffdesigns.co.za/it-and-networks", "title": "IT and Networks", "purpose": "Networks, fibre, cybersecurity, infrastructure and managed IT." },
+    { "url": "https://goodstuffdesigns.co.za/websites-and-hosting", "title": "Websites and Hosting", "purpose": "Web design, development, custom apps and managed hosting." },
+    { "url": "https://goodstuffdesigns.co.za/ai", "title": "AI", "purpose": "AI workflows, integrations, AI-assisted support and AI marketing." },
+    { "url": "https://goodstuffdesigns.co.za/digital-marketing", "title": "Digital Marketing", "purpose": "Tracking, social media, Google Ads and reporting." },
+    { "url": "https://goodstuffdesigns.co.za/portfolio", "title": "Portfolio", "purpose": "Selected websites, applications, dashboards and business tools." },
+    { "url": "https://goodstuffdesigns.co.za/design-styles", "title": "Design Styles", "purpose": "Eighty named visual styles shown as live examples." },
+    { "url": "https://goodstuffdesigns.co.za/studio", "title": "Goodstuff-Studio", "purpose": "Desktop AI workspace product page." },
+    { "url": "https://goodstuffdesigns.co.za/contact", "title": "Contact", "purpose": "Contact details, business hours and enquiry form." },
+    { "url": "https://goodstuffdesigns.co.za/privacy", "title": "Privacy Policy", "purpose": "How personal information is processed." },
+    { "url": "https://goodstuffdesigns.co.za/cookie-policy", "title": "Cookies Policy", "purpose": "Essential and optional analytics storage and visitor controls." },
+    { "url": "https://goodstuffdesigns.co.za/404", "title": "Not Found", "purpose": "Error page with navigation back to the site." }
+  ],
+  "contactActions": [
+    {
+      "id": "submit_contact_enquiry",
+      "type": "webmcp-declarative",
+      "description": "Submit a real enquiry via the visible contact form on /contact.",
+      "url": "https://goodstuffdesigns.co.za/contact",
+      "requiredFields": ["name", "email", "topic", "message"],
+      "optionalFields": ["phone", "company"]
+    },
+    {
+      "id": "start_contact_enquiry",
+      "type": "webmcp-imperative",
+      "description": "Navigate to the contact page. Never sends a message on its own.",
+      "url": "https://goodstuffdesigns.co.za/contact"
+    },
+    {
+      "id": "email",
+      "type": "email",
+      "value": "admin@goodstuffdesigns.co.za"
+    },
+    {
+      "id": "phone",
+      "type": "telephone",
+      "value": "+27 79 937 4801"
+    }
+  ],
+  "webmcpTools": [
+    "search_services",
+    "list_site_pages",
+    "get_service_pricing",
+    "list_integrations",
+    "start_contact_enquiry",
+    "submit_contact_enquiry (declarative, on /contact)"
+  ],
+  "machineReadableResources": [
+    { "name": "Service catalogue (JSON)", "url": "https://goodstuffdesigns.co.za/service-catalog.json" },
+    { "name": "AI catalog (JSON, this file)", "url": "https://goodstuffdesigns.co.za/ai-catalog.json" },
+    { "name": "XML sitemap", "url": "https://goodstuffdesigns.co.za/sitemap.xml" },
+    { "name": "Markdown sitemap", "url": "https://goodstuffdesigns.co.za/sitemap.md" },
+    { "name": "llms.txt", "url": "https://goodstuffdesigns.co.za/llms.txt" },
+    { "name": "robots.txt", "url": "https://goodstuffdesigns.co.za/robots.txt" }
+  ],
+  "redirects": [
+    { "from": "/web-development", "to": "/websites-and-hosting", "type": "permanent" },
+    { "from": "/hosting", "to": "/websites-and-hosting", "type": "permanent" }
+  ],
+  "faqs": [
+    {
+      "q": "What services does Goodstuff Designs provide?",
+      "a": "Managed IT support, business networks and fibre connectivity, cybersecurity (Kaspersky, backups, incident response), website design/development and managed Linux hosting, AI workflows and integrations, and digital marketing."
+    },
+    {
+      "q": "Do they work with international clients?",
+      "a": "Yes; services are provided internationally through remote delivery, with the studio based in Heidelberg, Gauteng, South Africa."
+    },
+    {
+      "q": "What does hosting cost?",
+      "a": "Managed Linux hosting from R100/month (Novice), R200/month (Business) and R600/month (Pro), as checked on 2026-08-30; confirm current pricing before purchase."
+    },
+    {
+      "q": "What is Goodstuff-Studio?",
+      "a": "A desktop AI workspace for Windows developed by Goodstuff Designs, with agents, projects, skills, scheduled tasks and a built-in browser; see https://studio.goodstuffdesigns.co.za/."
+    },
+    {
+      "q": "How can an agent submit an enquiry on a user's behalf?",
+      "a": "Use the declarative WebMCP tool submit_contact_enquiry (the visible contact form on /contact), which requires name, email, topic and message. start_contact_enquiry only opens the contact page and never sends a message."
+    }
+  ],
+  "markdownMirrors": [
+    "https://goodstuffdesigns.co.za/index.md",
+    "https://goodstuffdesigns.co.za/services.md",
+    "https://goodstuffdesigns.co.za/it-and-networks.md",
+    "https://goodstuffdesigns.co.za/digital-marketing.md",
+    "https://goodstuffdesigns.co.za/websites-and-hosting.md",
+    "https://goodstuffdesigns.co.za/ai.md",
+    "https://goodstuffdesigns.co.za/portfolio.md",
+    "https://goodstuffdesigns.co.za/contact.md",
+    "https://goodstuffdesigns.co.za/privacy.md",
+    "https://goodstuffdesigns.co.za/cookie-policy.md",
+    "https://goodstuffdesigns.co.za/design-styles.md"
+  ]
+}

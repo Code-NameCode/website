@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Explicitly welcome PageSpeed Insights / Lighthouse crawlers
+User-agent: Chrome-Lighthouse
+Allow: /
+
+# PageSpeed Insights also needs CSS, JS and images: everything is allowed above.
+
+Sitemap: https://goodstuffdesigns.co.za/sitemap.xml

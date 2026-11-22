@@ -1,0 +1,608 @@
+<!-- Style: High Contrast | 63highcontrast.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contrast Journal — a publication about designing for everyone</title>
+<style>
+  :root{
+    --black:#000000;
+    --white:#FFFFFF;
+    --paper:#FFFFFF;
+    --grey-1:#E6E6E6;
+    --grey-2:#767676;      /* 4.54:1 on white — the smallest we allow for body text */
+    --yellow:#FFD400;
+    --link:#0B3FD6;         /* 7.4:1 on white */
+    --link-hov:#06268A;
+    --green:#046A38;
+    --red:#B00020;
+    --border-w:3px;
+
+    --font:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --t-mast:clamp(3rem,13vw,10rem);
+    --t-h1:clamp(2.2rem,6vw,4.4rem);
+    --t-h2:clamp(1.7rem,3.8vw,2.8rem);
+    --t-h3:clamp(1.2rem,2vw,1.55rem);
+    --t-lead:clamp(1.1rem,1.7vw,1.35rem);
+    --t-small:1rem;
+    --t-micro:.875rem;
+
+    --s-1:.4rem;--s-2:.75rem;--s-3:1.1rem;--s-4:1.6rem;--s-5:2.2rem;
+    --s-6:3rem;--s-7:4.2rem;--s-8:5.5rem;
+    --shell:min(1240px,100% - 2rem);
+
+    --d-fast:100ms;--d-base:150ms;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--white);color:var(--black);
+    font-family:var(--font);font-size:1.0625rem;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{margin:0;line-height:1.05;letter-spacing:-.02em;font-weight:800}
+  p{margin:0}
+  a{color:var(--link);text-underline-offset:.22em;text-decoration-thickness:.09em}
+  a:hover{color:var(--link-hov);text-decoration-thickness:.16em}
+  ul{margin:0;padding:0;list-style:none}
+  svg{display:block}
+
+  /* reading-comfort settings, driven by the toolbar */
+  body[data-largetext="on"]{font-size:1.2rem}
+  body[data-largetext="on"] p{max-width:62ch}
+  body[data-underline="on"] main a{text-decoration:underline}
+  body[data-contrast="on"]{--grey-2:#000000;--grey-1:#000000;--link:#0000CC;--link-hov:#000066;--yellow:#FFFF00}
+  body[data-contrast="on"] .tint-yellow{background:var(--yellow);color:var(--black)}
+  body[data-contrast="on"] .rule{background:var(--black)}
+
+  :focus-visible{outline:4px solid var(--yellow);outline-offset:0;box-shadow:0 0 0 8px var(--black)}
+  .skip{position:absolute;left:var(--s-2);top:-120px;z-index:99;background:var(--yellow);color:var(--black);padding:1rem 1.4rem;font-weight:800;border:var(--border-w) solid var(--black);transition:top var(--d-fast)}
+  .skip:focus{top:var(--s-2)}
+  .shell{width:var(--shell);margin-inline:auto}
+  .rule{height:6px;background:var(--black);width:100%}
+  .kicker{font-size:var(--t-micro);font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--grey-2)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .tint-yellow{background:var(--yellow);color:var(--black)}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 1.5rem;
+    font-family:inherit;font-size:1.0625rem;font-weight:800;border:var(--border-w) solid var(--black);
+    border-radius:0;cursor:pointer;text-decoration:none;background:var(--white);color:var(--black);
+    transition:background var(--d-fast),color var(--d-fast)
+  }
+  .btn-primary{background:var(--black);color:var(--white)}
+  .btn:hover{background:var(--grey-1);color:var(--black)}
+  .btn-primary:hover{background:var(--yellow)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed}
+
+  /* ---------- masthead ---------- */
+  .topbar{background:var(--black);color:var(--white)}
+  .topbar-in{display:flex;align-items:center;gap:var(--s-4);min-height:56px;flex-wrap:wrap}
+  .topbar a{color:var(--white)}
+  .topbar .issue{font-weight:800;letter-spacing:.04em}
+  .settings{display:flex;gap:var(--s-2);margin-left:auto;flex-wrap:wrap}
+  .settings button{
+    min-height:44px;padding:0 .9rem;background:transparent;color:var(--white);
+    border:2px solid var(--white);font-family:inherit;font-weight:800;font-size:var(--t-micro);cursor:pointer
+  }
+  .settings button[aria-pressed="true"]{background:var(--yellow);color:var(--black);border-color:var(--yellow)}
+  .settings button:hover{background:var(--white);color:var(--black)}
+
+  .mast{border-bottom:8px solid var(--black)}
+  .mast-in{display:flex;align-items:center;gap:var(--s-4);min-height:76px;flex-wrap:wrap;padding-block:var(--s-2)}
+  .logo{font-weight:900;font-size:1.5rem;letter-spacing:-.03em;text-decoration:none;color:var(--black);display:flex;align-items:center;gap:.6rem}
+  .logo svg{flex:none}
+  .nav{margin-left:auto}
+  .nav ul{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap}
+  .nav a{
+    display:inline-flex;align-items:center;min-height:44px;padding:0 .2rem;font-weight:800;
+    text-decoration:none;color:var(--black);border-bottom:4px solid transparent
+  }
+  .nav a:hover,.nav a[aria-current]{border-bottom-color:var(--black)}
+  .nav-toggle{display:none;min-height:44px;padding:0 1rem;border:var(--border-w) solid var(--black);background:var(--white);font-family:inherit;font-weight:800;cursor:pointer}
+
+  /* ---------- hero ---------- */
+  .hero{display:grid;grid-template-columns:1.6fr 1fr;border-bottom:8px solid var(--black)}
+  .hero-main{padding-block:var(--s-6)}
+  .hero h1{font-size:var(--t-mast);line-height:.85;letter-spacing:-.05em;margin:var(--s-3) 0}
+  .hero h1 .second{display:block}
+  .hero-sub{font-size:var(--t-lead);max-width:44ch;margin-bottom:var(--s-4)}
+  .hero-aside{background:var(--black);color:var(--white);padding:var(--s-5) var(--s-4);display:flex;flex-direction:column;gap:var(--s-3)}
+  .hero-aside .kicker{color:var(--yellow)}
+  .hero-aside strong{display:block;font-size:var(--t-h3);line-height:1.2;margin-bottom:var(--s-2)}
+  .hero-aside p{color:var(--grey-1)}
+  .hero-aside .btn{margin-top:auto;background:var(--yellow);color:var(--black);border-color:var(--yellow)}
+  .hero-aside .btn:hover{background:var(--white);border-color:var(--white)}
+
+  /* ---------- lede / index ---------- */
+  .index{padding-block:var(--s-7)}
+  .index-head{display:flex;align-items:end;justify-content:space-between;gap:var(--s-3);flex-wrap:wrap;margin-bottom:var(--s-5)}
+  .index-head h2{font-size:var(--t-h1)}
+  .issue-list{border-top:var(--border-w) solid var(--black)}
+  .issue{display:grid;grid-template-columns:110px 1fr 200px;gap:var(--s-4);align-items:start;padding:var(--s-4) 0;border-bottom:var(--border-w) solid var(--black)}
+  .issue-no{font-weight:900;font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:.9;letter-spacing:-.04em}
+  .issue h3{font-size:var(--t-h2);margin-bottom:var(--s-2)}
+  .issue p{color:var(--grey-2);max-width:60ch}
+  .issue-meta{font-size:var(--t-micro);font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--grey-2);text-align:right}
+  .issue a.stretch{text-decoration:none;color:inherit;display:block}
+  .issue a.stretch:hover h3{background:var(--yellow)}
+
+  /* ---------- checker ---------- */
+  .checker{background:var(--black);color:var(--white);padding-block:var(--s-7)}
+  .checker h2{font-size:var(--t-h1);color:var(--white)}
+  .checker .kicker{color:var(--yellow)}
+  .checker-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:var(--s-6);align-items:start}
+  .swatch-pair{display:flex;border:var(--border-w) solid var(--white)}
+  .swatch-pair div{flex:1;height:150px;display:grid;place-items:end start;padding:var(--s-2);font-weight:800}
+  .field{display:grid;gap:.4rem;margin-bottom:var(--s-3)}
+  .field label{font-weight:800;font-size:var(--t-small)}
+  input[type=text],select{
+    font-family:inherit;font-size:1.0625rem;min-height:48px;padding:.6rem .8rem;width:100%;
+    border:var(--border-w) solid var(--white);background:var(--black);color:var(--white);border-radius:0
+  }
+  .checker input[type=color]{width:100%;height:48px;padding:0;border:var(--border-w) solid var(--white);background:var(--black);cursor:pointer}
+  .ratio{
+    display:grid;grid-template-columns:auto 1fr;gap:var(--s-4);align-items:center;
+    border:var(--border-w) solid var(--white);padding:var(--s-3);margin-top:var(--s-3)
+  }
+  .ratio strong{font-size:clamp(2.4rem,6vw,3.6rem);line-height:1;letter-spacing:-.04em}
+  .verdicts{list-style:none;margin:var(--s-3) 0 0;padding:0;font-weight:800}
+  .verdicts li{padding:.35rem 0;border-top:1px solid var(--grey-2)}
+  .pass{color:#7DF2A8}
+  .fail{color:#FF9AAE}
+
+  /* ---------- two column feature ---------- */
+  .feature{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--s-6);align-items:start}
+  .feature h2{font-size:var(--t-h1);margin-bottom:var(--s-3)}
+  .feature p+p{margin-top:var(--s-3)}
+  .pull{border-left:12px solid var(--yellow);padding-left:var(--s-4);font-size:var(--t-h2);font-weight:800;line-height:1.2;margin-block:var(--s-5)}
+  .pull cite{display:block;font-style:normal;font-size:var(--t-small);font-weight:700;color:var(--grey-2);margin-top:var(--s-2)}
+  .checklist{counter-reset:c;margin-top:var(--s-4);border-top:var(--border-w) solid var(--black)}
+  .checklist li{counter-increment:c;border-bottom:var(--border-w) solid var(--black);padding:var(--s-3) 0 var(--s-3) 3rem;position:relative;font-size:var(--t-small)}
+  .checklist li::before{
+    content:counter(c,decimal-leading-zero);position:absolute;left:0;top:calc(var(--s-3) + .1rem);
+    font-weight:900;font-size:var(--t-h3)
+  }
+  .checklist strong{display:block;font-size:var(--t-h3);margin-bottom:.2rem}
+
+  /* ---------- subscribe ---------- */
+  .subscribe{border-block:8px solid var(--black);padding-block:var(--s-7)}
+  .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);align-items:center}
+  .sub-grid .field label{color:var(--black)}
+  .sub-grid input,.sub-grid select{border-color:var(--black);color:var(--black);background:var(--white)}
+  .form-msg{margin-top:var(--s-2);min-height:1.6em;font-weight:800;font-size:var(--t-small)}
+  .form-msg[data-state="error"]{color:var(--red)}
+  .form-msg[data-state="ok"]{color:var(--green)}
+
+  footer{background:var(--black);color:var(--white);padding-block:var(--s-6) var(--s-4)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:var(--s-4)}
+  footer h4{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;color:var(--yellow);margin-bottom:var(--s-2)}
+  footer li{margin-bottom:.5rem;font-size:var(--t-small)}
+  footer a{color:var(--white)}
+  .foot-bottom{margin-top:var(--s-5);padding-top:var(--s-3);border-top:2px solid var(--grey-2);display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:space-between;font-size:var(--t-micro);color:var(--grey-1)}
+
+  @media (max-width:960px){
+    .hero,.checker-grid,.feature,.sub-grid,.foot-grid{grid-template-columns:1fr}
+    .hero-aside{padding:var(--s-4)}
+    .issue{grid-template-columns:80px 1fr}
+    .issue-meta{grid-column:2;text-align:left}
+  }
+  @media (max-width:720px){
+    .nav-toggle{display:block;margin-left:auto}
+    .nav{display:none;width:100%}
+    .nav.open{display:block;margin-top:var(--s-2)}
+    .nav ul{flex-direction:column;align-items:stretch;gap:0;border-top:var(--border-w) solid var(--black)}
+    .nav li{border-bottom:2px solid var(--black)}
+    .nav a{width:100%;border-bottom:0;padding-block:.6rem}
+    .mast-in{padding-bottom:var(--s-3)}
+    .topbar-in{min-height:auto;padding-block:.6rem}
+    .settings{margin-left:0;width:100%}
+  }
+
+  /* forced colours: keep structure, let the OS palette win */
+  @media (forced-colors:active){
+    .issue,.issue-list,.checklist li{border-color:CanvasText}
+    .btn,.settings button{border-color:ButtonText}
+    .settings button[aria-pressed="true"]{background:Highlight;color:HighlightText}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<div class="topbar">
+  <div class="topbar-in shell">
+    <span class="issue">Issue 42 · Summer 2026 · Free to read, forever</span>
+    <div class="settings" role="group" aria-label="Reading settings">
+      <button type="button" id="btnLarge" aria-pressed="false">Larger text</button>
+      <button type="button" id="btnUnderline" aria-pressed="false">Underline links</button>
+      <button type="button" id="btnContrast" aria-pressed="false">Maximum contrast</button>
+    </div>
+  </div>
+</div>
+
+<header class="mast">
+  <div class="mast-in shell">
+    <a class="logo" href="#top">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+        <rect x="1" y="1" width="32" height="32" fill="#000"/>
+        <path d="M17 6 29 28H5z" fill="#FFD400"/>
+      </svg>
+      Contrast Journal
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">Sections</button>
+    <nav class="nav" id="primaryNav" aria-label="Primary">
+      <ul>
+        <li><a href="#issues">Current issue</a></li>
+        <li><a href="#checker">Contrast checker</a></li>
+        <li><a href="#standard">The standard</a></li>
+        <li><a href="#subscribe">Subscribe</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-h">
+    <div class="hero-main shell">
+      <p class="kicker">Designing for everyone · Issue 42</p>
+      <h1 id="hero-h">Contrast<span class="second">Journal</span></h1>
+      <p class="hero-sub">A free, ad-free publication about building interfaces that work for all 1.3 billion of us who experience vision differently — written by the people doing the work.</p>
+      <a class="btn btn-primary" href="#issues">Read issue 42</a>
+    </div>
+    <aside class="hero-aside shell" aria-labelledby="pitch-h">
+      <p class="kicker">Reader-supported</p>
+      <strong id="pitch-h">If contrast ever saved your session, we’d like a subscription.</strong>
+      <p>No paywall on the archive, ever. Contributions fund the alt-text editor we give away to small teams.</p>
+      <a class="btn" href="#subscribe">Support the journal</a>
+    </aside>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <section class="index" id="issues" aria-labelledby="issues-h">
+    <div class="shell">
+      <div class="index-head">
+        <div>
+          <p class="kicker">Inside issue 42</p>
+          <h2 id="issues-h">Eleven pieces, zero stock photography</h2>
+        </div>
+        <a class="btn" href="#subscribe">Get it as a plain-HTML email</a>
+      </div>
+
+      <div class="issue-list">
+        <article class="issue">
+          <p class="issue-no" aria-hidden="true">01</p>
+          <div>
+            <h3><a class="stretch" href="#standard">The 4.5:1 floor is not a target, it is a minimum</a></h3>
+            <p>Most teams treat a passing contrast check as the finish line. We spent a month with eight screen-reader users to find out what passing actually costs them — and it is not small.</p>
+          </div>
+          <p class="issue-meta">Essay · 14 min<br>Kai Nwosu</p>
+        </article>
+
+        <article class="issue">
+          <p class="issue-no" aria-hidden="true">02</p>
+          <div>
+            <h3><a class="stretch" href="#checker">Your checker is lying to you in three specific ways</a></h3>
+            <p>Anti-aliased text, disabled states set to 40% opacity, and focus rings that vanish against the element they surround. A teardown of the most-used contrast tools on the web.</p>
+          </div>
+          <p class="issue-meta">Tooling · 9 min<br>Robin Alvarez</p>
+        </article>
+
+        <article class="issue">
+          <p class="issue-no" aria-hidden="true">03</p>
+          <div>
+            <h3><a class="stretch" href="#standard">Dark mode is not an inverted light mode</a></h3>
+            <p>Pure white on pure black causes halation for many readers and vibration for everyone. A survey of 900 settings, and the two ratios we now enforce on both palettes.</p>
+          </div>
+          <p class="issue-meta">Research · 11 min<br>Dr. Fen Mbeki</p>
+        </article>
+
+        <article class="issue">
+          <p class="issue-no" aria-hidden="true">04</p>
+          <div>
+            <h3><a class="stretch" href="#subscribe">Alt text is a design deliverable, not a chore</a></h3>
+            <p>What happens when the person writing your alt text is also the person testing your type scale. Five workflows that produced better descriptions than any we tried ourselves.</p>
+          </div>
+          <p class="issue-meta">Practice · 7 min<br>Contrast staff</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="checker" id="checker" aria-labelledby="checker-h">
+    <div class="shell">
+      <p class="kicker">Try it, don’t take our word for it</p>
+      <h2 id="checker-h" style="margin:var(--s-2) 0 var(--s-5)">Contrast checker</h2>
+      <div class="checker-grid">
+        <div>
+          <div class="swatch-pair" aria-hidden="true">
+            <div id="swatchA" style="background:#FFD400;color:#000">Sample A text</div>
+            <div id="swatchB" style="background:#0B3FD6;color:#FFFFFF">Sample B text</div>
+          </div>
+          <div class="ratio" aria-live="polite" id="ratioOut">
+            <strong id="ratioValue">—</strong>
+            <div>
+              <p id="ratioText" style="font-weight:800">Change a colour to see the ratio.</p>
+              <ul class="verdicts">
+                <li>Body text, 18px or under: <span id="vBody" class="fail">needs 4.5:1</span></li>
+                <li>Large text, 24px or over: <span id="vLarge" class="fail">needs 3:1</span></li>
+                <li>Interface and icons: <span id="vUi" class="fail">needs 3:1</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <form class="checker-form" id="checkerForm" novalidate>
+          <div class="field">
+            <label for="fg">Foreground colour</label>
+            <input type="color" id="fg" value="#FFD400">
+          </div>
+          <div class="field">
+            <label for="bg">Background colour</label>
+            <input type="color" id="bg" value="#0B3FD6">
+          </div>
+          <div class="field">
+            <label for="fgHex">Foreground hex value</label>
+            <input type="text" id="fgHex" value="#FFD400" maxlength="7" spellcheck="false" aria-describedby="hexHint">
+          </div>
+          <div class="field">
+            <label for="bgHex">Background hex value</label>
+            <input type="text" id="bgHex" value="#0B3FD6" maxlength="7" spellcheck="false" aria-describedby="hexHint">
+          </div>
+          <p class="sr-only" id="hexHint">Enter a hex colour such as #1A1A1A. It must start with a hash and have three or six digits.</p>
+          <p class="form-msg" id="hexMsg" role="status" aria-live="polite" style="color:#FF9AAE"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="standard" aria-labelledby="std-h" class="index">
+    <div class="shell">
+      <div class="feature">
+        <div>
+          <p class="kicker">What we hold ourselves to</p>
+          <h2 id="std-h" style="margin:var(--s-2) 0 var(--s-3)">The publication standard</h2>
+          <p>Every piece in Contrast Journal is checked against this list before it publishes. If a piece breaks one of these rules, we publish it anyway and print the failure in a visible box at the top. That is the whole editorial policy.</p>
+          <p>There is no dark pattern here, no newsletter pop-up before the third scroll, no “reject all” next to “reject non-essential” with the same weight. When we use a reading preference toggle, it survives a page reload.</p>
+          <blockquote class="pull">
+            “An accessible site is not a special edition of your site. It is the site.”
+            <cite>— from our founding editorial, issue 1, 2019</cite>
+          </blockquote>
+        </div>
+        <div>
+          <ol class="checklist">
+            <li><strong>4.5:1 minimum, always</strong>Body copy and its placeholders, with no exceptions granted for “brand”.</li>
+            <li><strong>Focus you can see at 1 metre</strong>A 3px solid ring with a 2px offset, never removed in CSS.</li>
+            <li><strong>44px touch targets</strong>Measured including padding, not just the label.</li>
+            <li><strong>Real labels on every input</strong>Placeholder is not a label. Neither is an icon.</li>
+            <li><strong>Motion that stops</strong>prefers-reduced-motion removes every animation, including ours.</li>
+            <li><strong>One page, no pop-ups</strong>Nothing interrupts the reading column, ever.</li>
+            <li><strong>Tested by a person, not a linter</strong>Automated checks are the floor. They are not the room.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <section class="subscribe" id="subscribe" aria-labelledby="sub-h">
+    <div class="shell">
+      <div class="sub-grid">
+        <div>
+          <p class="kicker">Twice a month, plain text, no tracking pixels</p>
+          <h2 id="sub-h" style="font-size:var(--t-h1);margin:var(--s-2) 0 var(--s-3)">Subscribe to Contrast Journal</h2>
+          <p style="max-width:52ch;color:var(--grey-2)">We send two issues a month. The email is HTML with a plain-text alternative that reads correctly in any client, and we log nothing about who opens it.</p>
+        </div>
+        <form id="subForm" novalidate>
+          <div class="field">
+            <label for="subName">Name</label>
+            <input type="text" id="subName" name="name" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="subEmail">Email address</label>
+            <input type="email" id="subEmail" name="email" autocomplete="email" required aria-describedby="subHint">
+            <p class="hint" id="subHint" style="font-size:var(--t-micro);color:var(--grey-2)">Required. One click to unsubscribe, honoured the same day.</p>
+          </div>
+          <div class="field">
+            <label for="subFormat">Preferred format</label>
+            <select id="subFormat" name="format">
+              <option>Plain text only</option>
+              <option selected>HTML with plain-text alternative</option>
+              <option>Braille-ready RTF</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit">Subscribe</button>
+          <p class="form-msg" id="subMsg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <h4>Contrast Journal</h4>
+        <p style="font-size:var(--t-small);color:var(--grey-1);max-width:34ch">Reader-funded since 2019. Registered non-profit, no advertising on any property, ever.</p>
+      </div>
+      <div>
+        <h4>Issues</h4>
+        <ul>
+          <li><a href="#issues">Issue 42</a></li>
+          <li><a href="#issues">Issue 41</a></li>
+          <li><a href="#issues">Full archive</a></li>
+          <li><a href="#issues">Corrections log</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="#checker">Contrast checker</a></li>
+          <li><a href="#standard">The standard</a></li>
+          <li><a href="#standard">Alt-text starter kit</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="#subscribe">Contribute</a></li>
+          <li><a href="#subscribe">Masthead</a></li>
+          <li><a href="#subscribe">Accessibility statement</a></li>
+          <li><a href="#subscribe">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Contrast Journal · This page meets WCAG 2.2 AA at every combination of the settings above.</span>
+      <span>Text may be reused with attribution and a link back.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ---------- reading settings ---------- */
+  var prefs = { largetext: 'off', underline: 'off', contrast: 'off' };
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('cj-prefs') || '{}') || {}; } catch (e) { saved = {}; }
+  for (var k in prefs) { if (saved[k]) prefs[k] = saved[k]; }
+
+  function paint() {
+    document.body.dataset.largetext = prefs.largetext;
+    document.body.dataset.underline = prefs.underline;
+    document.body.dataset.contrast = prefs.contrast;
+    document.getElementById('btnLarge').setAttribute('aria-pressed', String(prefs.largetext === 'on'));
+    document.getElementById('btnUnderline').setAttribute('aria-pressed', String(prefs.underline === 'on'));
+    document.getElementById('btnContrast').setAttribute('aria-pressed', String(prefs.contrast === 'on'));
+    try { localStorage.setItem('cj-prefs', JSON.stringify(prefs)); } catch (e) {}
+  }
+  function wire(id, key) {
+    document.getElementById(id).addEventListener('click', function () {
+      prefs[key] = prefs[key] === 'on' ? 'off' : 'on';
+      paint();
+    });
+  }
+  wire('btnLarge', 'largetext');
+  wire('btnUnderline', 'underline');
+  wire('btnContrast', 'contrast');
+  paint();
+
+  /* ---------- nav ---------- */
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('primaryNav');
+  toggle.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Close' : 'Sections';
+  });
+
+  /* ---------- contrast checker ---------- */
+  function channel(c) {
+    c /= 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  }
+  function luminance(hex) {
+    var n = parseInt(hex.slice(1), 16);
+    var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+  }
+  function ratio(a, b) {
+    var l1 = luminance(a), l2 = luminance(b);
+    if (l1 < l2) { var t = l1; l1 = l2; l2 = t; }
+    return (l1 + 0.05) / (l2 + 0.05);
+  }
+  function blackOrWhite(hex) {
+    return ratio(hex, '#000000') >= ratio(hex, '#FFFFFF') ? '#000000' : '#FFFFFF';
+  }
+  function mark(id, r, need) {
+    var el = document.getElementById(id);
+    var ok = r >= need;
+    el.className = ok ? 'pass' : 'fail';
+    el.textContent = ok ? 'passes at ' + r.toFixed(2) + ':1' : 'fails — needs ' + need + ':1';
+  }
+
+  var fg = document.getElementById('fg'), bg = document.getElementById('bg');
+  var fgHex = document.getElementById('fgHex'), bgHex = document.getElementById('bgHex');
+  var hexMsg = document.getElementById('hexMsg');
+  var ratioText = document.getElementById('ratioText');
+  var swA = document.getElementById('swatchA'), swB = document.getElementById('swatchB');
+
+  function validHex(v) { return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v.trim()); }
+
+  function render() {
+    var r = ratio(fg.value, bg.value);
+    document.getElementById('ratioValue').textContent = r.toFixed(2) + ':1';
+    ratioText.textContent = r >= 7 ? 'AAA at every text size.' : r >= 4.5 ? 'AA for body text and AAA for large text.' : r >= 3 ? 'AA for large text and interface only.' : 'Below every WCAG threshold.';
+    mark('vBody', r, 4.5);
+    mark('vLarge', r, 3);
+    mark('vUi', r, 3);
+    swA.style.background = fg.value;
+    swA.style.color = blackOrWhite(fg.value);
+    swB.style.background = bg.value;
+    swB.style.color = blackOrWhite(bg.value);
+  }
+
+  function fromColorPicker() { fgHex.value = fg.value; bgHex.value = bg.value; render(); }
+  fg.addEventListener('input', fromColorPicker);
+  bg.addEventListener('input', fromColorPicker);
+
+  function fromHex(which) {
+    var input = which === 'fg' ? fgHex : bgHex;
+    var picker = which === 'fg' ? fg : bg;
+    if (!validHex(input.value)) {
+      hexMsg.textContent = 'That is not a hex colour. Use #1A1A1A or #AAA — hash first, three or six digits.';
+      input.setAttribute('aria-invalid', 'true');
+      return false;
+    }
+    input.removeAttribute('aria-invalid');
+    hexMsg.textContent = '';
+    var v = input.value.trim();
+    if (v.length === 4) v = '#' + v[1] + v[1] + v[2] + v[2] + v[3] + v[3];
+    picker.value = v.toLowerCase();
+    input.value = v.toLowerCase();
+    render();
+    return true;
+  }
+  fgHex.addEventListener('change', function () { fromHex('fg'); });
+  bgHex.addEventListener('change', function () { fromHex('bg'); });
+  document.getElementById('checkerForm').addEventListener('submit', function (e) { e.preventDefault(); fromHex('fg'); fromHex('bg'); });
+  render();
+
+  /* ---------- subscribe ---------- */
+  var form = document.getElementById('subForm');
+  var msg = document.getElementById('subMsg');
+  var name = document.getElementById('subName');
+  var email = document.getElementById('subEmail');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.dataset.state = '';
+    msg.textContent = '';
+    email.removeAttribute('aria-invalid');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      email.setAttribute('aria-invalid', 'true');
+      email.focus();
+      msg.dataset.state = 'error';
+      msg.textContent = 'Error: enter an email address in the form name@example.com.';
+      return;
+    }
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Subscribing…';
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Confirmed. Check your inbox for a plain-text message with the unsubscribe link.';
+    form.reset();
+    setTimeout(function () { btn.disabled = false; btn.textContent = 'Subscribe'; }, 2000);
+  });
+})();
+</script>
+</body>
+</html>

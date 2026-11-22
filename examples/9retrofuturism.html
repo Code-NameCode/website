@@ -1,0 +1,922 @@
+<!-- Style: Retro Futurism | 9retrofuturism.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Astrochrome — home audio, valves and solid state, since 1962</title>
+<meta name="description" content="Astrochrome builds amplifiers, tuners and loudspeakers in small numbers. Valve and solid-state, restored in Sheffield since 1962, rebuilt and warrantied since 2019.">
+<style>
+  :root{
+    /* colour — cream panel, space navy, chrome, signal orange */
+    --cream:#F1E7D4;
+    --cream-2:#E4D8C1;
+    --paper:#FBF6EC;
+    --space:#152740;
+    --space-2:#0D1A2D;
+    --space-3:#22395C;
+    --chrome-1:#FBFDFF;
+    --chrome-2:#C7D2DC;
+    --chrome-3:#8C9AAB;
+    --ink:#0B1421;
+    --ink-2:#33465C;
+    --muted:#56657A;
+    --teal:#17615E;
+    --orange:#DD6B32;
+    --orange-lit:#F2894E;   /* the same signal orange, lifted for text on the dark panels */
+    --brass:#C9A227;
+    --line:#CBBEA6;
+    --ok:#2C7A54;
+    --error:#B23A1E;
+    /* type */
+    --geo:"Futura","Century Gothic","Avenir Next","Trebuchet MS",system-ui,sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+    --fs-display:clamp(2.4rem,6vw,4.8rem);
+    --fs-h2:clamp(1.7rem,3.2vw,2.7rem);
+    --fs-h3:clamp(1.1rem,1.6vw,1.35rem);
+    --fs-body:clamp(1rem,1.08vw,1.06rem);
+    --fs-sm:.89rem;
+    --fs-xs:.72rem;
+    --lh:1.58;
+    --ls-wide:.16em;
+    /* space */
+    --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:3rem;--s8:4.5rem;--s9:6.5rem;
+    --pad:clamp(1.1rem,3.5vw,2.5rem);
+    --sec:clamp(3.5rem,8vw,6.5rem);
+    --page:78rem;
+    /* edges */
+    --r-sm:6px;
+    --r:12px;
+    --bevel:inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(0,0,0,.25);
+    --chrome:linear-gradient(180deg,var(--chrome-1) 0%,var(--chrome-2) 42%,var(--chrome-3) 50%,var(--chrome-1) 58%,var(--chrome-2) 100%);
+    --sh-panel:0 2px 0 rgba(0,0,0,.28), 0 14px 30px rgba(11,20,33,.18);
+    /* motion */
+    --dur:280ms;
+    --ease:cubic-bezier(.4,.1,.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--cream);color:var(--ink);
+    font-family:var(--geo);font-size:var(--fs-body);line-height:var(--lh);
+    -webkit-font-smoothing:antialiased
+  }
+  body[data-panel="dark"]{
+    --cream:#0F1B2C;--cream-2:#16273E;--paper:#132237;--line:#2C4262;
+    --ink:#EDE6D8;--ink-2:#C3CEDC;--muted:#94A6BA;--space:#0A1420;
+  }
+  h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+  .page{max-width:var(--page);margin-inline:auto;padding-inline:var(--pad)}
+  .mono{font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:var(--ls-wide);text-transform:uppercase}
+  .sec-title{font-size:var(--fs-h2);line-height:1.06;letter-spacing:-.01em;font-weight:700}
+  .lede{font-size:clamp(1.03rem,1.3vw,1.15rem);color:var(--ink-2)}
+  .measure{max-width:48ch}
+  .mt4{margin-top:var(--s4)}
+  .mt6{margin-top:var(--s6)}
+  .t-signal{color:var(--cream)}
+  .t-orange{color:var(--orange)}
+  .t-signal-orange{color:var(--orange-lit)}
+  .t-chrome{color:var(--chrome-3)}
+  .figcap-block{display:block;margin-top:var(--s3)}
+  .hint-block{display:block;margin-top:var(--s2)}
+  .sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,22rem);gap:var(--s5);align-items:end;margin-bottom:var(--s7)}
+  .sec-head .mono{color:var(--orange)}
+  .sec-head .lede{font-size:var(--fs-sm)}
+
+  /* ---------- instrument bar ---------- */
+  .bar{background:var(--space);color:var(--cream);border-bottom:3px solid var(--chrome-3);position:sticky;top:0;z-index:50}
+  .bar-in{display:flex;align-items:center;gap:var(--s5);justify-content:space-between;min-height:70px;padding-block:var(--s3)}
+  .brand{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+  .brand-lamp{width:14px;height:14px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 3px rgba(221,107,50,.28),0 0 12px rgba(221,107,50,.8);flex:none}
+  .brand-name{font-size:1.2rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;line-height:1}
+  .brand-sub{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;color:var(--chrome-2);margin-top:.25rem}
+  .nav ul{display:flex;align-items:center;gap:clamp(.6rem,1.8vw,1.6rem)}
+  .nav a{
+    text-decoration:none;font-size:var(--fs-sm);padding-block:.5rem;border-bottom:2px solid transparent;
+    transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease)
+  }
+  .nav a:hover{color:var(--orange);border-bottom-color:var(--orange)}
+  .nav a[aria-current="page"]{color:var(--chrome-1);border-bottom-color:var(--chrome-1)}
+  .bar-actions{display:flex;align-items:center;gap:var(--s3)}
+  .switch{
+    display:inline-flex;align-items:center;gap:.55rem;min-height:44px;padding:.3rem .7rem .3rem .5rem;
+    background:rgba(255,255,255,.06);border:1px solid var(--chrome-3);border-radius:var(--r-sm);
+    color:var(--chrome-1);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer
+  }
+  .switch .track{width:34px;height:18px;border-radius:99px;background:rgba(255,255,255,.18);position:relative;display:block;flex:none;transition:background var(--dur) var(--ease)}
+  .switch .knob{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--chrome-1);transition:transform var(--dur) var(--ease)}
+  .switch[aria-pressed="true"] .track{background:rgba(221,107,50,.6)}
+  .switch[aria-pressed="true"] .knob{transform:translateX(16px);background:var(--orange)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 var(--s5);
+    font:inherit;font-size:var(--fs-sm);font-weight:700;letter-spacing:.06em;text-decoration:none;cursor:pointer;
+    border:2px solid var(--chrome-3);border-radius:var(--r-sm);background:linear-gradient(180deg,var(--chrome-1),var(--chrome-2) 55%,var(--chrome-3));
+    color:var(--ink);box-shadow:var(--sh-panel);
+    transition:transform var(--dur) var(--ease),filter var(--dur) var(--ease)
+  }
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.04)}
+  .btn:active{transform:translateY(0)}
+  .btn--orange{background:var(--orange);border-color:var(--orange);color:#fff}
+  .btn--dark{background:var(--space);border-color:var(--space);color:var(--cream)}
+  .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+  .burger{display:none;min-height:44px;padding:0 var(--s4);background:transparent;color:var(--chrome-1);border:1px solid var(--chrome-3);border-radius:var(--r-sm);font:inherit;font-size:var(--fs-sm);cursor:pointer}
+
+  /* ---------- hero console ---------- */
+  .hero{background:var(--space);color:var(--cream);padding-block:clamp(2.5rem,5vw,4rem) var(--s7);position:relative;overflow:hidden}
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.5) 50%,transparent 51%),
+      radial-gradient(1px 1px at 78% 14%,rgba(255,255,255,.35) 50%,transparent 51%),
+      radial-gradient(1px 1px at 44% 62%,rgba(255,255,255,.28) 50%,transparent 51%),
+      radial-gradient(1px 1px at 88% 48%,rgba(255,255,255,.4) 50%,transparent 51%),
+      radial-gradient(1px 1px at 26% 78%,rgba(255,255,255,.3) 50%,transparent 51%),
+      linear-gradient(180deg,rgba(255,255,255,.05),transparent 60%);
+    pointer-events:none
+  }
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(2rem,4vw,3.5rem);align-items:center;position:relative}
+  .hero h1{
+    font-size:var(--fs-display);line-height:1.02;letter-spacing:.02em;font-weight:700;margin-block:var(--s4) var(--s5)
+  }
+  .chrome-text{
+    background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-fill-color:transparent;padding-right:.06em
+  }
+  .hero .lede{color:var(--chrome-2)}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s6)}
+  .hero-specs{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s5);margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid rgba(255,255,255,.2)}
+  .hero-specs div span{display:block;color:var(--chrome-3)}
+  .hero-specs div b{font-family:var(--mono);font-size:1.1rem;color:var(--chrome-1);letter-spacing:.04em}
+
+  /* console */
+  .console{background:linear-gradient(180deg,#22344C,#152740 60%,#0F1E31);border:2px solid var(--chrome-3);border-radius:var(--r);box-shadow:var(--sh-panel),var(--bevel);padding:var(--s4);position:relative}
+  .console-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);border-bottom:1px solid rgba(255,255,255,.16);padding-bottom:var(--s3);margin-bottom:var(--s4)}
+  .console-top .mono{color:var(--chrome-2)}
+  .amps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s5)}
+  .amp{text-align:center}
+  .amp-valves{display:flex;justify-content:center;gap:var(--s3);margin-bottom:var(--s3)}
+  .valve{
+    width:26px;height:52px;border-radius:13px 13px 5px 5px;position:relative;
+    background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.06));
+    border:1px solid rgba(255,255,255,.4)
+  }
+  .valve::after{
+    content:"";position:absolute;left:5px;right:5px;top:7px;height:3px;border-radius:2px;background:var(--orange);
+    box-shadow:0 0 8px rgba(221,107,50,.9)
+  }
+  .dial-row{display:flex;justify-content:center;gap:var(--s4);align-items:center}
+  .dial{width:56px;height:56px;border-radius:50%;position:relative;background:var(--chrome);border:2px solid #5c6b7c;box-shadow:0 3px 6px rgba(0,0,0,.45),var(--bevel)}
+  .dial::after{content:"";position:absolute;left:50%;top:5px;width:3px;height:14px;background:var(--space);border-radius:2px;transform-origin:50% 23px;transform:translateX(-50%) rotate(var(--angle,0deg))}
+  .dial:focus-visible{outline:3px solid var(--orange);outline-offset:4px}
+  .dial--lbl{width:auto;height:auto;background:none;border:0;box-shadow:none;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;color:var(--chrome-3)}
+  .dial--lbl::after{display:none}
+  .vu{
+    margin-top:var(--s4);height:34px;border:1px solid rgba(255,255,255,.28);border-radius:var(--r-sm);
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 2px,transparent 2px 9px);
+    position:relative;overflow:hidden
+  }
+  .vu-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--teal),var(--brass) 70%,var(--orange));transition:width var(--dur) var(--ease)}
+  .console-foot{display:flex;justify-content:space-between;gap:var(--s3);margin-top:var(--s3);font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;color:var(--chrome-3)}
+
+  /* ---------- marquee ---------- */
+  .marquee{background:var(--brass);color:var(--ink);border-bottom:2px solid var(--space);overflow:hidden;padding-block:.6rem}
+  .marquee-track{display:flex;gap:2.5rem;width:max-content;animation:slide 30s linear infinite}
+  .marquee span{font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* ---------- the line ---------- */
+  .line{padding-block:var(--sec)}
+  .model{
+    display:grid;grid-template-columns:4rem minmax(0,1.2fr) minmax(0,1fr);gap:var(--s5);
+    align-items:center;padding-block:var(--s5);border-top:1px solid var(--line)
+  }
+  .model:last-of-type{border-bottom:1px solid var(--line)}
+  .model-no{font-family:var(--mono);font-size:2rem;line-height:1;color:var(--orange);letter-spacing:.04em}
+  .model h3{font-size:var(--fs-h3);letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-bottom:var(--s2)}
+  .model p{font-size:var(--fs-sm);color:var(--ink-2)}
+  .plate{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-sm);padding:var(--s3);box-shadow:var(--bevel)}
+  .plate svg{display:block;width:100%;height:auto}
+  .model-specs{display:grid;gap:.35rem;font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.06em;color:var(--ink-2)}
+  .model-specs div{display:flex;justify-content:space-between;gap:var(--s3);border-bottom:1px dotted var(--line);padding-bottom:.3rem}
+  .model-specs div:last-child{border-bottom:0}
+  .model-specs b{color:var(--ink);font-weight:700}
+  .price-tag{font-family:var(--mono);font-size:1.1rem;color:var(--teal);letter-spacing:.04em}
+
+  /* ---------- signal path ---------- */
+  .signal{background:var(--space);color:var(--cream);padding-block:var(--sec)}
+  .signal .mono{color:var(--orange-lit)}
+  .signal .lede{color:var(--chrome-2)}
+  .signal-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem);align-items:center;margin-top:var(--s6)}
+  .signal-figure{border:2px solid var(--chrome-3);border-radius:var(--r);padding:var(--s4);background:#0F1E31}
+  .signal-figure svg{display:block;width:100%;height:auto}
+  .signal-notes{display:grid;gap:var(--s4);counter-reset:note}
+  .signal-notes li{counter-increment:note;display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:var(--s3)}
+  .signal-notes li::before{content:counter(note,decimal-leading-zero);font-family:var(--mono);color:var(--orange-lit);font-size:var(--fs-sm)}
+  .signal-notes b{display:block;letter-spacing:.06em;text-transform:uppercase;font-size:var(--fs-sm);margin-bottom:.2rem}
+  .signal-notes p{font-size:var(--fs-sm);color:var(--chrome-2)}
+
+  /* ---------- spec table ---------- */
+  .specs{padding-block:var(--sec)}
+  .table-wrap{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--paper)}
+  .table-scroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;min-width:36rem}
+  caption{padding:var(--s4);text-align:left;font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line)}
+  th,td{padding:var(--s3) var(--s4);text-align:left;font-size:var(--fs-sm);border-bottom:1px solid var(--line)}
+  thead th{background:var(--space);color:var(--cream);font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.12em;text-transform:uppercase}
+  tbody tr:last-child td{border-bottom:0}
+  td.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .note{margin-top:var(--s4);font-size:var(--fs-sm);color:var(--muted);max-width:70ch}
+
+  /* ---------- service ---------- */
+  .service{background:var(--cream-2);border-block:1px solid var(--line);padding-block:var(--sec)}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s5)}
+  .svc{border:1px solid var(--line);border-radius:var(--r);background:var(--paper);padding:var(--s5);box-shadow:var(--bevel)}
+  .svc h3{font-size:1.1rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:var(--s3)}
+  .svc p{font-size:var(--fs-sm);color:var(--ink-2)}
+  .svc .mono{color:var(--teal);display:block;margin-bottom:var(--s3)}
+
+  /* ---------- booking form ---------- */
+  .booking{padding-block:var(--sec)}
+  .booking-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(2rem,4vw,3.5rem);align-items:start}
+  .room-list{display:grid;gap:var(--s3);margin-top:var(--s5)}
+  .room-list li{display:flex;justify-content:space-between;gap:var(--s3);font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.06em;border-bottom:1px dotted var(--line);padding-bottom:.4rem}
+  .form-panel{
+    background:var(--space);color:var(--cream);border:2px solid var(--chrome-3);border-radius:var(--r);
+    padding:clamp(1.25rem,3vw,2rem);box-shadow:var(--sh-panel)
+  }
+  .form-panel .mono{color:var(--orange-lit);display:block;margin-bottom:var(--s4)}
+  .field{margin-bottom:var(--s4)}
+  .field label{display:block;font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--chrome-2);margin-bottom:var(--s2)}
+  .field input,.field select,.field textarea{
+    width:100%;min-height:50px;padding:.6rem .8rem;background:rgba(255,255,255,.06);color:var(--chrome-1);
+    border:1px solid var(--chrome-3);border-radius:var(--r-sm);font:inherit;font-size:var(--fs-sm);
+    transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)
+  }
+  .field textarea{min-height:6.5rem;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--orange);background:rgba(255,255,255,.12);box-shadow:0 0 0 3px rgba(221,107,50,.28)}
+  .field[data-invalid="true"] input,.field[data-invalid="true"] select,.field[data-invalid="true"] textarea{border-color:#ff8b6b;border-width:2px}
+  .field .err{display:block;font-family:var(--mono);font-size:var(--fs-xs);color:#ffab90;margin-top:var(--s2);min-height:1.1em}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+  .form-panel .btn{width:100%}
+  .form-status{margin-top:var(--s3);font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.08em;color:var(--chrome-2);min-height:1.3em}
+  .form-status[data-state="ok"]{color:#8fe0b4}
+  .form-status[data-state="error"]{color:#ffab90}
+
+  /* ---------- footer ---------- */
+  .foot{background:var(--space-2);color:var(--chrome-2);padding-block:var(--s7) var(--s5);border-top:3px solid var(--chrome-3)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr repeat(3,minmax(0,1fr));gap:var(--s5)}
+  .foot h3{font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-lit);margin-bottom:var(--s3)}
+  .foot p,.foot a{font-size:var(--fs-sm);color:var(--chrome-2)}
+  .foot a{display:inline-flex;align-items:center;min-height:34px;gap:.4rem}
+  .foot a::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--chrome-3)}
+  .foot a:hover{color:var(--chrome-1)}
+  .foot a:hover::before{background:var(--orange)}
+  .foot-base{margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid rgba(255,255,255,.16);display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:.1em;color:var(--chrome-3)}
+
+  @media (max-width:1000px){
+    .hero-grid,.signal-grid,.booking-grid{grid-template-columns:1fr}
+    .svc-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .sec-head{grid-template-columns:1fr}
+  }
+  @media (max-width:720px){
+    .burger{display:inline-flex;align-items:center}
+    .bar-in{position:relative;flex-wrap:wrap;gap:var(--s3)}
+    .nav{width:100%}
+    .nav ul{display:none;flex-direction:column;align-items:flex-start;gap:0}
+    .nav ul[data-open="true"]{display:flex}
+    .nav a{width:100%;padding-block:.85rem;border-bottom:1px solid rgba(255,255,255,.14)}
+    .bar-actions .btn{display:none}
+    .model{grid-template-columns:1fr;gap:var(--s3)}
+    .model-no{font-size:1.2rem}
+    .two{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    .marquee-track{animation:none}
+    .btn:hover{transform:none!important}
+  }
+</style>
+</head>
+<body data-panel="cream">
+
+<header class="bar">
+  <div class="page bar-in">
+    <a class="brand" href="#top">
+      <span class="brand-lamp" aria-hidden="true"></span>
+      <span class="brand-name">Astrochrome<span class="brand-sub">Sheffield · est. 1962</span></span>
+    </a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" aria-label="Primary">
+      <ul id="nav">
+        <li><a href="#line" aria-current="page">The line</a></li>
+        <li><a href="#signal">Signal path</a></li>
+        <li><a href="#specs">Specification</a></li>
+        <li><a href="#service">Service</a></li>
+        <li><a href="#booking">Listening room</a></li>
+      </ul>
+    </nav>
+    <div class="bar-actions">
+      <button class="switch" id="panelSwitch" type="button" aria-pressed="false" aria-label="Switch panel lighting">
+        <span class="track" aria-hidden="true"><span class="knob"></span></span>
+        <span>Night panel</span>
+      </button>
+      <a class="btn btn--orange" href="#booking">Book a room</a>
+    </div>
+  </div>
+</header>
+
+<div class="marquee" aria-label="Astrochrome notices">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>Est. 1962 · Sheffield</span>
+    <span>Rebuilt and warrantied since 2019</span>
+    <span>Every unit bench-tested for 100 hours</span>
+    <span>Est. 1962 · Sheffield</span>
+    <span>Rebuilt and warrantied since 2019</span>
+    <span>Every unit bench-tested for 100 hours</span>
+  </div>
+</div>
+
+<main id="top">
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="page hero-grid">
+      <div>
+        <p class="mono t-signal-orange">Model 8 · integrated amplifier · 20 W per channel</p>
+        <h1 id="hero-title"><span class="chrome-text">Sound from</span> a warmer decade</h1>
+        <p class="lede measure">Astrochrome has been building amplifiers in Sheffield since 1962 — first for the NHS, then for a mail-order catalogue, and now for about four hundred people who would rather own one good box than a system.</p>
+        <div class="hero-actions">
+          <a class="btn btn--orange" href="#line">See the range</a>
+          <a class="btn" href="#booking">Listen before you buy</a>
+        </div>
+        <div class="hero-specs">
+          <div><span class="mono">Output</span><b>20 W / 20 W</b></div>
+          <div><span class="mono">Valves</span><b>2 × EL34</b></div>
+          <div><span class="mono">Units built</span><b>4 per month</b></div>
+          <div><span class="mono">Warranty</span><b>10 years</b></div>
+        </div>
+      </div>
+
+      <div class="console" role="group" aria-label="Model 8 amplifier front panel, with tone controls">
+        <div class="console-top">
+          <span class="mono">Astrochrome · Model 8</span>
+          <span class="mono t-signal-orange">■ standby</span>
+        </div>
+        <div class="amps">
+          <div class="amp">
+            <div class="amp-valves" aria-hidden="true"><span class="valve"></span><span class="valve"></span></div>
+            <div class="dial-row">
+              <button class="dial" type="button" id="dialBass" aria-label="Bass tone control, currently 42"></button>
+              <span class="dial dial--lbl" aria-hidden="true">TONE</span>
+            </div>
+          </div>
+          <div class="amp">
+            <div class="amp-valves" aria-hidden="true"><span class="valve"></span><span class="valve"></span></div>
+            <div class="dial-row">
+              <button class="dial" type="button" id="dialTreble" aria-label="Treble tone control, currently 62"></button>
+              <span class="dial dial--lbl" aria-hidden="true">TONE</span>
+            </div>
+          </div>
+        </div>
+        <div class="vu" aria-hidden="true"><span class="vu-fill" id="vuFill" style="width:44%"></span></div>
+        <div class="console-foot">
+          <span id="dialReadout">BASS 42 · TREBLE 62</span>
+          <span>EL34 · 20 W · 4–16 Ω</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="line page" id="line" aria-labelledby="line-title">
+    <div class="sec-head">
+      <div>
+        <p class="mono">The line · four models</p>
+        <h2 class="sec-title mt4" id="line-title">Small numbers, long production runs, no model ever discontinued</h2>
+      </div>
+      <p class="lede">Every Astrochrome is assembled by one person, who signs the underside of the chassis. Parts are kept in bonded stock for fifteen years after a model ends.</p>
+    </div>
+
+    <article class="model">
+      <p class="model-no" aria-hidden="true">01</p>
+      <div>
+        <h3>Model 4 — integrated</h3>
+        <p>The smallest we make. 12 watts, one input, a volume control that does one job properly. Most owners run it with a pair of bookshelves and a record player, and never touch it again.</p>
+      </div>
+      <div>
+        <div class="plate">
+          <svg viewBox="0 0 320 110" role="img" aria-label="Front panel drawing of the Model 4 amplifier">
+            <rect x="2" y="2" width="316" height="106" rx="6" fill="#FBF6EC" stroke="#CBBEA6"/>
+            <rect x="2" y="2" width="316" height="22" rx="6" fill="#152740"/>
+            <rect x="240" y="42" width="58" height="46" rx="4" fill="#22344C" stroke="#7E8C9B"/>
+            <circle cx="269" cy="65" r="14" fill="url(#chromeA)" stroke="#5c6b7c"/>
+            <path d="M269 65v-9" stroke="#152740" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="40" cy="65" r="8" fill="#DD6B32"/>
+            <rect x="70" y="58" width="120" height="14" rx="3" fill="#E4D8C1" stroke="#CBBEA6"/>
+            <text x="14" y="16" font-family="monospace" font-size="8" fill="#F1E7D4" letter-spacing="2">ASTROCHROME 4</text>
+            <defs><linearGradient id="chromeA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBFDFF"/><stop offset="1" stop-color="#7E8C9B"/></linearGradient></defs>
+          </svg>
+        </div>
+        <dl class="model-specs mt4">
+          <div><span>Output</span><b>12 W</b></div>
+          <div><span>Inputs</span><b>2</b></div>
+          <div><span>Weight</span><b>6.4 kg</b></div>
+          <div><span>Price</span><b class="price-tag">£1,240</b></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="model">
+      <p class="model-no" aria-hidden="true">02</p>
+      <div>
+        <h3>Model 8 — valve integrated</h3>
+        <p>Two EL34s per channel, a transformer wound for us in Yorkshire, and a chassis that weighs 19 kg because it should. This is the one the workshop argues about, in the way you argue about a good thing.</p>
+      </div>
+      <div>
+        <div class="plate">
+          <svg viewBox="0 0 320 110" role="img" aria-label="Front panel drawing of the Model 8 valve amplifier with a meter and two dials">
+            <rect x="2" y="2" width="316" height="106" rx="6" fill="#FBF6EC" stroke="#CBBEA6"/>
+            <rect x="2" y="2" width="316" height="22" rx="6" fill="#152740"/>
+            <rect x="36" y="40" width="86" height="48" rx="4" fill="#22344C" stroke="#7E8C9B"/>
+            <path d="M46 74 L66 56 L80 68 L96 46 L112 70" stroke="#C9A227" stroke-width="2" fill="none"/>
+            <circle cx="170" cy="64" r="15" fill="url(#chromeB)" stroke="#5c6b7c"/>
+            <circle cx="216" cy="64" r="15" fill="url(#chromeB)" stroke="#5c6b7c"/>
+            <path d="M170 64v-10M216 64l8 7" stroke="#152740" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="266" cy="64" r="6" fill="#DD6B32"/>
+            <text x="14" y="16" font-family="monospace" font-size="8" fill="#F1E7D4" letter-spacing="2">ASTROCHROME 8</text>
+            <defs><linearGradient id="chromeB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBFDFF"/><stop offset="1" stop-color="#7E8C9B"/></linearGradient></defs>
+          </svg>
+        </div>
+        <dl class="model-specs mt4">
+          <div><span>Output</span><b>20 W</b></div>
+          <div><span>Valves</span><b>4 × EL34</b></div>
+          <div><span>Weight</span><b>19 kg</b></div>
+          <div><span>Price</span><b class="price-tag">£2,890</b></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="model">
+      <p class="model-no" aria-hidden="true">03</p>
+      <div>
+        <h3>Model 12 — preamplifier</h3>
+        <p>Separate control unit with six inputs, a proper phono stage for both moving-coil and moving-magnet, and a phono stage you can actually adjust without a screwdriver and a bad mood.</p>
+      </div>
+      <div>
+        <div class="plate">
+          <svg viewBox="0 0 320 110" role="img" aria-label="Front panel drawing of the Model 12 preamplifier with a row of switches">
+            <rect x="2" y="2" width="316" height="106" rx="6" fill="#FBF6EC" stroke="#CBBEA6"/>
+            <rect x="2" y="2" width="316" height="22" rx="6" fill="#152740"/>
+            <g fill="#E4D8C1" stroke="#CBBEA6">
+              <rect x="30" y="46" width="18" height="34" rx="3"/><rect x="58" y="46" width="18" height="34" rx="3"/>
+              <rect x="86" y="46" width="18" height="34" rx="3"/><rect x="114" y="46" width="18" height="34" rx="3"/>
+              <rect x="142" y="46" width="18" height="34" rx="3"/><rect x="170" y="46" width="18" height="34" rx="3"/>
+            </g>
+            <circle cx="232" cy="63" r="17" fill="url(#chromeC)" stroke="#5c6b7c"/>
+            <path d="M232 63v-11" stroke="#152740" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="278" cy="63" r="7" fill="#1D6F6B"/>
+            <text x="14" y="16" font-family="monospace" font-size="8" fill="#F1E7D4" letter-spacing="2">ASTROCHROME 12</text>
+            <defs><linearGradient id="chromeC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBFDFF"/><stop offset="1" stop-color="#7E8C9B"/></linearGradient></defs>
+          </svg>
+        </div>
+        <dl class="model-specs mt4">
+          <div><span>Inputs</span><b>6 + phono</b></div>
+          <div><span>Outputs</span><b>2 pairs</b></div>
+          <div><span>Weight</span><b>4.8 kg</b></div>
+          <div><span>Price</span><b class="price-tag">£1,680</b></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="model">
+      <p class="model-no" aria-hidden="true">04</p>
+      <div>
+        <h3>Monitor 3 — loudspeaker</h3>
+        <p>A two-way monitor in a cabinet we still cut on the original 1964 saw, with a paper cone that has not changed specification since the first run because it did not need to.</p>
+      </div>
+      <div>
+        <div class="plate">
+          <svg viewBox="0 0 320 110" role="img" aria-label="Front drawing of the Monitor 3 loudspeaker cabinet with two drivers">
+            <rect x="2" y="2" width="316" height="106" rx="6" fill="#FBF6EC" stroke="#CBBEA6"/>
+            <rect x="112" y="18" width="96" height="78" rx="5" fill="#6B4A2F" stroke="#4A3423"/>
+            <circle cx="160" cy="42" r="12" fill="#F1E7D4" stroke="#4A3423"/>
+            <circle cx="160" cy="74" r="22" fill="#E4D8C1" stroke="#4A3423"/>
+            <circle cx="160" cy="74" r="6" fill="#DD6B32"/>
+            <rect x="30" y="46" width="52" height="12" rx="6" fill="#C9A227" stroke="#7E8C9B"/>
+            <rect x="238" y="46" width="52" height="12" rx="6" fill="#C9A227" stroke="#7E8C9B"/>
+            <text x="14" y="16" font-family="monospace" font-size="8" fill="#F1E7D4" letter-spacing="2">MONITOR 3</text>
+          </svg>
+        </div>
+        <dl class="model-specs mt4">
+          <div><span>Drivers</span><b>2-way 165 mm</b></div>
+          <div><span>Impedance</span><b>6 Ω</b></div>
+          <div><span>Weight</span><b>7.2 kg ea.</b></div>
+          <div><span>Price</span><b class="price-tag">£780 / pair</b></div>
+        </dl>
+      </div>
+    </article>
+  </section>
+
+  <section class="signal" id="signal" aria-labelledby="signal-title">
+    <div class="page">
+      <div class="sec-head">
+        <div>
+          <p class="mono">Signal path · Model 8</p>
+          <h2 class="sec-title mt4 t-signal" id="signal-title">From moving magnet to cone, in seven steps we can name</h2>
+        </div>
+        <p class="lede">We publish the whole path because people ask, and because a brand that will not tell you what is between the cartridge and the cone has usually done something interesting there.</p>
+      </div>
+
+      <div class="signal-grid">
+        <figure class="signal-figure">
+          <svg viewBox="0 0 640 320" role="img" aria-label="Signal path diagram: cartridge, phono stage, volume control, tone stage, output transformer, output valves, speaker, with numbered callouts">
+            <g stroke="#7E8C9B" stroke-width="1" fill="none">
+              <rect x="24" y="60" width="90" height="56" rx="4"/>
+              <rect x="150" y="60" width="90" height="56" rx="4"/>
+              <rect x="276" y="60" width="90" height="56" rx="4"/>
+              <rect x="402" y="60" width="90" height="56" rx="4"/>
+              <rect x="526" y="60" width="90" height="56" rx="4"/>
+              <path d="M114 88h36M240 88h36M366 88h36M492 88h34"/>
+              <path d="M571 116v92M571 208H120v-92"/>
+            </g>
+            <g fill="#152740" stroke="#C9A227" stroke-width="1.2">
+              <circle cx="69" cy="88" r="7"/><circle cx="195" cy="88" r="7"/><circle cx="321" cy="88" r="7"/>
+              <circle cx="447" cy="88" r="7"/><circle cx="571" cy="88" r="7"/>
+            </g>
+            <g font-family="monospace" font-size="10" fill="#F1E7D4" letter-spacing="1">
+              <text x="40" y="48">1 CARTRIDGE</text>
+              <text x="160" y="48">2 PHONO</text>
+              <text x="284" y="48">3 VOLUME</text>
+              <text x="408" y="48">4 TONE</text>
+              <text x="524" y="48">5 OUTPUT</text>
+              <text x="30" y="240">6 EL34 x2 PER CHANNEL</text>
+              <text x="248" y="240">7 OUTPUT TRANSFORMER</text>
+              <text x="500" y="240">8 MONITOR 3</text>
+            </g>
+            <g fill="#DD6B32" font-family="monospace" font-size="9" letter-spacing="1">
+              <text x="69" y="140">±0.2 dB</text>
+              <text x="195" y="140">22 dB</text>
+              <text x="321" y="140">-40…+6 dB</text>
+              <text x="447" y="140">±6 dB</text>
+              <text x="571" y="140">20 W</text>
+            </g>
+            <path d="M0 20h640" stroke="#22395C" stroke-width="2"/>
+            <path d="M0 300h640" stroke="#22395C" stroke-width="2"/>
+          </svg>
+          <figcaption class="mono figcap-block t-chrome">Fig. 3 — Model 8 signal path, right channel. Left channel is mirrored.</figcaption>
+        </figure>
+
+        <ol class="signal-notes">
+          <li><p><b>Cartridge</b>Moving-magnet and moving-coil, both adjusted from the front panel with a supplied hex key. No proprietary cable, no adapter.</p></li>
+          <li><p><b>Phono stage</b>Passive-lifted RIAA with a gain switch at 36 or 42 dB, measured rather than calculated.</p></li>
+          <li><p><b>Volume</b>A 24-step attenuator with a motorised option for the Model 12, so you can adjust it from the sofa without a remote that costs more than the preamp.</p></li>
+          <li><p><b>Tone</b>Passive Baxandall, switched out of circuit entirely at the centre detent. Nothing is added when you want nothing.</p></li>
+          <li><p><b>Output</b>EL34 pairs into a transformer wound by Glyn Mawer in Rotherham, 6 Ω and 4 Ω secondaries, 19 Hz to 42 kHz.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="specs page" id="specs" aria-labelledby="specs-title">
+    <div class="sec-head">
+      <div>
+        <p class="mono">Specification</p>
+        <h2 class="sec-title mt4" id="specs-title">Measured, not claimed</h2>
+      </div>
+      <p class="lede">Every figure below comes from a bench measurement on a production unit, averaged over five. The report is available to anyone who asks, including the failures.</p>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <caption>Model 8 · right channel into 8 Ω · measured at 1 kHz unless stated</caption>
+          <thead>
+            <tr>
+              <th scope="col">Parameter</th>
+              <th scope="col">Model 4</th>
+              <th scope="col">Model 8</th>
+              <th scope="col">Model 12</th>
+              <th scope="col">Unit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Rated output</th><td class="num">12</td><td class="num">20</td><td class="num">—</td><td>W</td></tr>
+            <tr><th scope="row">Harmonic distortion at 1 W</th><td class="num">0.09</td><td class="num">0.06</td><td class="num">0.04</td><td>%</td></tr>
+            <tr><th scope="row">Harmonic distortion at full power</th><td class="num">0.8</td><td class="num">0.4</td><td class="num">—</td><td>%</td></tr>
+            <tr><th scope="row">Signal to noise, weighted</th><td class="num">86</td><td class="num">92</td><td class="num">98</td><td>dB</td></tr>
+            <tr><th scope="row">Frequency response ±1 dB</th><td class="num">24 – 34k</td><td class="num">19 – 42k</td><td class="num">16 – 55k</td><td>Hz</td></tr>
+            <tr><th scope="row">Output impedance</th><td class="num">0.11</td><td class="num">0.08</td><td class="num">0.02</td><td>Ω</td></tr>
+            <tr><th scope="row">Damping factor at 1 kHz</th><td class="num">52</td><td class="num">74</td><td class="num">38</td><td>—</td></tr>
+            <tr><th scope="row">Power consumption, idle</th><td class="num">14</td><td class="num">38</td><td class="num">9</td><td>W</td></tr>
+            <tr><th scope="row">Bench test before despatch</th><td class="num">100</td><td class="num">100</td><td class="num">100</td><td>hours</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="note">A dash means the parameter does not apply to that model, not that we did not measure it. Figures are for 240 V mains; at 230 V the 20 W model delivers 19 W, which is the number printed on the label for the wrong way round.</p>
+  </section>
+
+  <section class="service" id="service" aria-labelledby="service-title">
+    <div class="page">
+      <div class="sec-head">
+        <div>
+          <p class="mono">Service</p>
+          <h2 class="sec-title mt4" id="service-title">We fix what we made, and a lot we did not</h2>
+        </div>
+      </div>
+      <div class="svc-grid">
+        <article class="svc">
+          <span class="mono">01 · Restoration</span>
+          <h3>Valve amplifiers from 1958 to 1985</h3>
+          <p>Full strip, re-bias, new electrolytics, transformer insulation test, new valves if the originals are beyond specification. Bench report included, photographs included, no charge for the assessment.</p>
+        </article>
+        <article class="svc">
+          <span class="mono">02 · Repair</span>
+          <h3>Any brand, any age, in or out of warranty</h3>
+          <p>We have no reason to talk you into a new one. If the repair costs more than half the replacement value, we will tell you that and stop there.</p>
+        </article>
+        <article class="svc">
+          <span class="mono">03 · Parts</span>
+          <h3>Bonds stocked for fifteen years</h3>
+          <p>Knobs, valves, feet, transformers, walnut cheeks and the correct 0.22 µF capacitor that nobody else has kept. Sold individually to anyone, not only to owners.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="booking page" id="booking" aria-labelledby="booking-title">
+    <div class="booking-grid">
+      <div>
+        <p class="mono">The listening room</p>
+        <h2 class="sec-title mt4" id="booking-title">Sixty minutes, four models, no sales pressure</h2>
+        <p class="lede mt4 measure">The room is small and the volume is kept civil. Bring a record you know well, or borrow one of ours from the shelf by the door — there are about four hundred.</p>
+        <ul class="room-list">
+          <li><span>Room A — valve, small monitors</span><span>Mon – Sat, 10–6</span></li>
+          <li><span>Room B — full range, big monitors</span><span>Wed – Sat, by arrangement</span></li>
+          <li><span>Warranty loan unit</span><span>Posted, UK only, £45 return</span></li>
+          <li><span>Deposit</span><span>None, genuinely</span></li>
+        </ul>
+      </div>
+
+      <form class="form-panel" id="bookingForm" novalidate>
+        <span class="mono">Channel 1 — booking</span>
+        <div class="two">
+          <div class="field">
+            <label for="b-name">Name</label>
+            <input id="b-name" name="name" type="text" autocomplete="name" required aria-describedby="b-name-err">
+            <span class="err" id="b-name-err"></span>
+          </div>
+          <div class="field">
+            <label for="b-email">Email</label>
+            <input id="b-email" name="email" type="email" autocomplete="email" required aria-describedby="b-email-err">
+            <span class="err" id="b-email-err"></span>
+          </div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="b-room">Room</label>
+            <select id="b-room" name="room" required aria-describedby="b-room-err">
+              <option value="">Select</option>
+              <option>Room A — valve, small monitors</option>
+              <option>Room B — full range</option>
+              <option>Loan unit, posted</option>
+            </select>
+            <span class="err" id="b-room-err"></span>
+          </div>
+          <div class="field">
+            <label for="b-date">Date</label>
+            <input id="b-date" name="date" type="date" required aria-describedby="b-date-err">
+            <span class="err" id="b-date-err"></span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="b-source">What you listen to at home</label>
+          <select id="b-source" name="source" required aria-describedby="b-source-err">
+            <option value="">Select</option>
+            <option>Turntable, moving magnet</option>
+            <option>Turntable, moving coil</option>
+            <option>CD and radio</option>
+            <option>Streaming, mostly</option>
+            <option>A bit of everything</option>
+          </select>
+          <span class="err" id="b-source-err"></span>
+        </div>
+        <div class="field">
+          <label for="b-note">Anything specific you want to hear</label>
+          <textarea id="b-note" name="note" aria-describedby="b-note-hint"></textarea>
+          <span class="err" id="b-note-err"></span>
+          <span class="mono hint-block t-chrome" id="b-note-hint">Optional. A model you are considering, a fault you are hearing, a record you would like played.</span>
+        </div>
+        <button class="btn btn--orange" type="submit" id="bookBtn">Request a session</button>
+        <p class="form-status" id="bookStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="page">
+    <div class="foot-grid">
+      <div>
+        <h3>Astrochrome</h3>
+        <p>Amplifiers, tuners and loudspeakers, built in small numbers at Attercliffe Works, Sheffield, since 1962. Rebuilt and warrantied since 2019.</p>
+      </div>
+      <div>
+        <h3>The line</h3>
+        <ul>
+          <li><a href="#line">Model 4 integrated</a></li>
+          <li><a href="#line">Model 8 valve</a></li>
+          <li><a href="#line">Model 12 preamplifier</a></li>
+          <li><a href="#line">Monitor 3 loudspeaker</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Service</h3>
+        <ul>
+          <li><a href="#service">Restoration</a></li>
+          <li><a href="#service">Repair, any brand</a></li>
+          <li><a href="#service">Spare parts</a></li>
+          <li><a href="#service">Warranty repairs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Works</h3>
+        <ul>
+          <li><a href="#booking">Listening rooms</a></li>
+          <li><a href="#specs">Bench reports</a></li>
+          <li><a href="#top">How we build</a></li>
+          <li><a href="#top">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="foot-base">
+      <span>© 2026 Astrochrome Ltd · Registered in England 01184220 · VAT GB 402 8817</span>
+      <span>Attercliffe Works S9 2QT</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* --- menu --- */
+  var burger = document.getElementById("burger");
+  var nav = document.getElementById("nav");
+  burger.addEventListener("click", function(){
+    var open = nav.getAttribute("data-open") === "true";
+    nav.setAttribute("data-open", String(!open));
+    burger.setAttribute("aria-expanded", String(!open));
+  });
+  nav.addEventListener("click", function(e){
+    if(e.target.tagName === "A" && window.matchMedia("(max-width:720px)").matches){
+      nav.setAttribute("data-open","false");
+      burger.setAttribute("aria-expanded","false");
+    }
+  });
+
+  /* --- night panel switch --- */
+  var panelSwitch = document.getElementById("panelSwitch");
+  panelSwitch.addEventListener("click", function(){
+    var night = panelSwitch.getAttribute("aria-pressed") === "true";
+    panelSwitch.setAttribute("aria-pressed", String(!night));
+    document.body.setAttribute("data-panel", night ? "cream" : "dark");
+  });
+
+  /* --- marquee: duplicate track so the loop is seamless --- */
+  var track = document.getElementById("marqueeTrack");
+  var original = track.children.length;
+  for(var i = 0; i < original; i++){
+    var clone = track.children[i].cloneNode(true);
+    clone.setAttribute("aria-hidden","true");
+    track.appendChild(clone);
+  }
+
+  /* --- tone dials: pointer drag and keyboard --- */
+  var bass = document.getElementById("dialBass");
+  var treble = document.getElementById("dialTreble");
+  var vu = document.getElementById("vuFill");
+  var readout = document.getElementById("dialReadout");
+  var values = { bass: 42, treble: 62 };
+
+  function toAngle(v){ return -120 + (v / 100) * 240; }
+
+  function render(){
+    bass.style.setProperty("--angle", toAngle(values.bass) + "deg");
+    treble.style.setProperty("--angle", toAngle(values.treble) + "deg");
+    bass.setAttribute("aria-label", "Bass tone control, currently " + values.bass);
+    treble.setAttribute("aria-label", "Treble tone control, currently " + values.treble);
+    readout.textContent = "BASS " + values.bass + " · TREBLE " + values.treble;
+    vu.style.width = Math.round((values.bass + values.treble) / 2) + "%";
+  }
+
+  function nudge(which, delta){
+    values[which] = Math.min(100, Math.max(0, values[which] + delta));
+    render();
+  }
+
+  [bass, treble].forEach(function(el){
+    var which = el === bass ? "bass" : "treble";
+    el.addEventListener("keydown", function(e){
+      if(e.key === "ArrowRight" || e.key === "ArrowUp"){ e.preventDefault(); nudge(which, 5); }
+      if(e.key === "ArrowLeft" || e.key === "ArrowDown"){ e.preventDefault(); nudge(which, -5); }
+      if(e.key === "Home"){ e.preventDefault(); values[which] = 0; render(); }
+      if(e.key === "End"){ e.preventDefault(); values[which] = 100; render(); }
+    });
+  });
+
+  function dragHandler(el, which){
+    var active = false;
+    function fromPointer(e){
+      var box = el.getBoundingClientRect();
+      var cx = box.left + box.width / 2;
+      var cy = box.top + box.height / 2;
+      var deg = Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI + 90;
+      if(deg > 180) deg -= 360;
+      var v = Math.round((deg + 120) / 240 * 100);
+      values[which] = Math.min(100, Math.max(0, v));
+      render();
+    }
+    el.addEventListener("pointerdown", function(e){
+      active = true;
+      el.setPointerCapture(e.pointerId);
+      fromPointer(e);
+    });
+    el.addEventListener("pointermove", function(e){ if(active) fromPointer(e); });
+    el.addEventListener("pointerup", function(){ active = false; });
+    el.addEventListener("pointercancel", function(){ active = false; });
+  }
+  dragHandler(bass, "bass");
+  dragHandler(treble, "treble");
+  render();
+
+  /* --- booking form --- */
+  var form = document.getElementById("bookingForm");
+  var status = document.getElementById("bookStatus");
+  var btn = document.getElementById("bookBtn");
+  var today = new Date().toISOString().slice(0,10);
+  document.getElementById("b-date").min = today;
+
+  var rules = {
+    "b-name": function(v){ return v.trim().length >= 2 ? "" : "Name, please."; },
+    "b-email": function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "A valid address for the confirmation."; },
+    "b-room": function(v){ return v !== "" ? "" : "Choose a room."; },
+    "b-date": function(v){
+      if(!v) return "Pick a day.";
+      var d = new Date(v + "T00:00:00").getDay();
+      if(d === 0) return "We are closed on Sundays.";
+      if(v < today) return "That day has gone by.";
+      return "";
+    },
+    "b-source": function(v){ return v !== "" ? "" : "Helps us set up the right input."; }
+  };
+  function check(id){
+    var input = document.getElementById(id);
+    var msg = rules[id](input.value);
+    input.closest(".field").setAttribute("data-invalid", msg ? "true" : "false");
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+    document.getElementById(id + "-err").textContent = msg;
+    return !msg;
+  }
+  Object.keys(rules).forEach(function(id){
+    var input = document.getElementById(id);
+    input.addEventListener("blur", function(){ check(id); });
+    input.addEventListener("change", function(){ check(id); });
+    input.addEventListener("input", function(){
+      if(input.closest(".field").getAttribute("data-invalid") === "true") check(id);
+    });
+  });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function(id){
+      if(!check(id) && !firstBad) firstBad = document.getElementById(id);
+    });
+    if(firstBad){
+      status.setAttribute("data-state","error");
+      status.textContent = "Not sent. Check the marked channels.";
+      firstBad.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "Holding your slot …";
+    status.removeAttribute("data-state");
+    status.textContent = "Request transmitted to the listening room.";
+    window.setTimeout(function(){
+      btn.disabled = false;
+      btn.textContent = "Request a session";
+      status.setAttribute("data-state","ok");
+      status.textContent = "Slot held. You will have a confirmation and a phone number within one working day — a person answers it.";
+      form.reset();
+      document.getElementById("b-date").min = today;
+    }, 950);
+  });
+})();
+</script>
+</body>
+</html>

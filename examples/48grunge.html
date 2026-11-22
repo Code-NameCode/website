@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<!-- Style: Grunge | 48grunge.html — Dead Static, underground band -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEAD STATIC — noise rock from a council flat</title>
+<style>
+:root{
+  /* dark neutrals, dirty whites, one red and one warning yellow */
+  --black:#0d0c0b;
+  --char:#171513;
+  --ash:#232019;
+  --smoke:#2e2a24;
+  --dirty:#cfc7b4;
+  --dirty-dim:#9c9484;
+  --white:#f2ede0;
+  --red:#c22b18;
+  --red-bright:#e63a22;
+  --yellow:#d9c02a;
+  --grey:#6d675d;
+
+  --font-display:"Haettenschweiler","Arial Narrow",Impact,"Franklin Gothic Bold",system-ui,sans-serif;
+  --font-body:"Trebuchet MS",system-ui,-apple-system,Arial,sans-serif;
+  --font-mono:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --t-mega:clamp(3.2rem,12vw,9rem);
+  --t-h2:clamp(2rem,5.2vw,3.6rem);
+  --t-h3:clamp(1.2rem,2.2vw,1.6rem);
+  --t-body:clamp(1rem,.98rem + .12vw,1.08rem);
+  --t-small:.9rem;
+  --lh:1.6;
+  --s-2:.5rem;
+  --s-3:.8rem;
+  --s-4:1.1rem;
+  --s-5:1.6rem;
+  --s-6:2.2rem;
+  --s-7:3rem;
+  --s-8:4.2rem;
+  --s-9:5.5rem;
+  --wrap:1280px;
+  --grain-opacity:.5;
+  --dur:260ms;
+  --ease:cubic-bezier(.2,.9,.3,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--black);color:var(--dirty);
+  font-family:var(--font-body);font-size:var(--t-body);line-height:var(--lh);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img,svg{display:block;max-width:100%}
+h1,h2,h3{margin:0;font-family:var(--font-display);font-weight:400;text-transform:uppercase;line-height:.92;letter-spacing:.005em}
+p{margin:0}
+a{color:inherit}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:clamp(1.1rem,4vw,2.4rem)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+
+/* grit: turbulence grain held well under the text, and a coarse scuff layer */
+.grain{
+  position:fixed;inset:0;z-index:70;pointer-events:none;opacity:var(--grain-opacity);
+  mix-blend-mode:overlay;background-repeat:repeat;background-size:220px 220px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
+}
+.tape-strip{
+  position:fixed;z-index:69;pointer-events:none;opacity:.35;left:0;right:0;height:14px;
+  background:repeating-linear-gradient(90deg,rgba(242,237,224,.5) 0 40px,transparent 40px 120px);
+  mix-blend-mode:overlay;
+}
+.tape-strip.top{top:0}
+.tape-strip.bottom{bottom:0;transform:scaleX(-1)}
+
+/* ---------- nav: raw ---------- */
+.nav{position:sticky;top:0;z-index:50;background:var(--black);border-bottom:3px solid var(--smoke)}
+.nav-in{display:flex;align-items:center;gap:var(--s-5);padding-block:.7rem;flex-wrap:wrap}
+.mark{font-family:var(--font-display);font-size:1.6rem;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;color:var(--white)}
+.mark:hover{color:var(--red-bright)}
+.nav ul{display:flex;gap:clamp(.6rem,2vw,1.8rem);list-style:none;margin:0;padding:0;margin-left:auto;flex-wrap:wrap}
+.nav a{
+  display:block;min-height:44px;line-height:2.4;text-decoration:none;font-family:var(--font-mono);
+  font-size:.84rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dirty-dim);
+  border-bottom:2px solid transparent;padding-block:.4rem;
+}
+.nav a:hover{color:var(--white);border-bottom-color:var(--red-bright)}
+.nav a.go{color:var(--yellow)}
+.nav a.go:hover{color:var(--black);background:var(--yellow)}
+.nav-toggle{display:none;margin-left:auto;background:var(--ash);color:var(--dirty);border:2px solid var(--smoke);padding:.6rem .9rem;min-height:44px;font:inherit;font-family:var(--font-mono);cursor:pointer}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding-block:var(--s-7) var(--s-8);overflow:hidden}
+.hero::before{ /* harsh spotlight, not a glow */
+  content:"";position:absolute;left:50%;top:-30%;width:120%;height:90%;transform:translateX(-50%);
+  background:conic-gradient(from 180deg at 50% 0%,transparent 42%,rgba(217,192,42,.12) 50%,transparent 58%);
+  pointer-events:none;
+}
+.hero-in{position:relative;display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(1.4rem,4vw,3rem);align-items:end}
+.hero h1{font-size:var(--t-mega);color:var(--white);text-shadow:6px 6px 0 var(--red)}
+.hero h1 span{display:block}
+.hero .sub{
+  font-family:var(--font-mono);font-size:.86rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dirty-dim);margin-top:var(--s-4);max-width:52ch;
+}
+.hero .sub b{color:var(--yellow);font-weight:400}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-5)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:.85rem 1.7rem;
+  font-family:var(--font-display);font-size:1.15rem;text-transform:uppercase;letter-spacing:.03em;
+  text-decoration:none;cursor:pointer;border:3px solid var(--white);color:var(--white);background:transparent;
+  transition:transform var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease);
+}
+.btn:hover{background:var(--white);color:var(--black);transform:translate(-3px,-3px)}
+.btn:active{transform:translate(1px,1px)}
+.btn-red{background:var(--red);border-color:var(--red);color:var(--white)}
+.btn-red:hover{background:var(--black);border-color:var(--yellow);color:var(--yellow)}
+.hero-art{border:3px solid var(--smoke);position:relative}
+.hero-art::before,.hero-art::after{
+  content:"";position:absolute;width:60px;height:14px;background:rgba(207,199,180,.22);z-index:2;
+}
+.hero-art::before{top:12px;left:-14px;transform:rotate(-8deg)}
+.hero-art::after{bottom:12px;right:-14px;transform:rotate(6deg)}
+.hero-art svg{border:3px solid var(--smoke)}
+.stamp{
+  position:absolute;right:-.6rem;bottom:-1.2rem;z-index:3;background:var(--yellow);color:var(--black);
+  font-family:var(--font-display);font-size:1rem;text-transform:uppercase;padding:.4rem 1rem;
+  border:3px solid var(--black);transform:rotate(-7deg);letter-spacing:.06em;
+}
+
+/* ---------- a raw statement strip ---------- */
+.statement{
+  background:var(--red);color:var(--white);border-block:4px solid var(--black);
+  padding-block:var(--s-4);
+}
+.statement p{
+  font-family:var(--font-display);font-size:clamp(1.3rem,3.2vw,2.2rem);text-transform:uppercase;
+  line-height:1.05;letter-spacing:.01em;max-width:30ch;
+}
+.statement span{display:block;font-family:var(--font-mono);font-size:.8rem;letter-spacing:.2em;margin-top:.5rem;opacity:.85}
+
+/* ---------- releases: poster grid ---------- */
+.releases{padding-block:var(--s-8)}
+.sec-head{max-width:60ch;margin-bottom:var(--s-6)}
+.sec-head h2{font-size:var(--t-h2);color:var(--white)}
+.sec-head p{color:var(--dirty-dim);margin-top:.7rem;max-width:58ch}
+.kicker{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;color:var(--red-bright);display:block;margin-bottom:.6rem}
+.posters{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2.5vw,1.8rem)}
+.poster{background:var(--char);border:3px solid var(--smoke);padding:var(--s-4);position:relative}
+.poster:nth-child(1){transform:rotate(-1.4deg)}
+.poster:nth-child(2){transform:rotate(1deg) translateY(10px);border-color:var(--red)}
+.poster:nth-child(3){transform:rotate(-.6deg)}
+.poster:hover{transform:rotate(0) translateY(-4px);border-color:var(--dirty);transition:transform var(--dur) var(--ease)}
+.poster .art{border:2px solid var(--smoke);margin-bottom:var(--s-3);filter:grayscale(1) contrast(1.15)}
+.poster:nth-child(2) .art{filter:grayscale(1) contrast(1.5) sepia(.3)}
+.poster h3{font-size:var(--t-h3);color:var(--white)}
+.poster .meta{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);margin-top:.4rem}
+.poster p{font-size:var(--t-small);color:var(--dirty-dim);margin-top:.6rem}
+.poster .num{position:absolute;top:-16px;left:-10px;background:var(--white);color:var(--black);font-family:var(--font-display);font-size:1.2rem;padding:.1rem .6rem;border:3px solid var(--black);transform:rotate(-6deg)}
+
+/* ---------- tracklist: a tape, not a fake player ---------- */
+.tape{background:var(--ash);border-block:3px solid var(--black);padding-block:var(--s-8)}
+.tape-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(1.6rem,4vw,3.2rem);align-items:start}
+.tape h2{font-size:var(--t-h2);color:var(--white)}
+.cassette{margin-top:var(--s-5);filter:contrast(1.1)}
+.tape-side h2{color:var(--white)}
+.tracklist{list-style:none;margin:var(--s-4) 0 0;padding:0;border:2px solid var(--smoke)}
+.tracklist li{
+  display:grid;grid-template-columns:2.4rem 1fr auto;gap:1rem;align-items:center;
+  padding:.7rem .9rem;border-bottom:1px solid var(--smoke);font-family:var(--font-mono);font-size:.9rem;
+}
+.tracklist li:last-child{border-bottom:0}
+.tracklist .no{color:var(--grey)}
+.tracklist .t{color:var(--dirty)}
+.tracklist .d{color:var(--yellow);font-variant-numeric:tabular-nums}
+.tracklist li.current{background:var(--red)}
+.tracklist li.current .t{color:var(--white)}
+.tracklist li.current .no,.tracklist li.current .d{color:var(--white)}
+.tape-note{font-family:var(--font-mono);font-size:.82rem;color:var(--grey);margin-top:var(--s-3);letter-spacing:.06em}
+
+/* ---------- tour: raw date blocks ---------- */
+.tour{padding-block:var(--s-8)}
+.dates{border-top:3px solid var(--smoke);margin-top:var(--s-5)}
+.date{
+  display:grid;grid-template-columns:150px 1fr 190px;gap:clamp(.8rem,2vw,2rem);align-items:center;
+  padding:1.1rem .6rem;border-bottom:1px solid var(--smoke);text-decoration:none;
+  transition:background var(--dur) var(--ease),padding-left var(--dur) var(--ease);
+}
+.date:hover{background:var(--char);padding-left:1.2rem}
+.date .d{font-family:var(--font-mono);font-size:.92rem;color:var(--yellow);letter-spacing:.06em}
+.date .venue{font-family:var(--font-display);font-size:clamp(1.1rem,2.2vw,1.5rem);text-transform:uppercase;color:var(--white)}
+.date .venue small{display:block;font-family:var(--font-body);font-size:.78rem;text-transform:none;letter-spacing:.02em;color:var(--dirty-dim);margin-top:.3rem}
+.date .status{
+  justify-self:end;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  border:2px solid var(--smoke);padding:.45rem .8rem;min-height:40px;display:inline-flex;align-items:center;color:var(--dirty-dim);
+}
+.date .status.gone{color:var(--grey);text-decoration:line-through}
+.date .status.sold{color:var(--black);background:var(--yellow);border-color:var(--yellow)}
+.date .status.few{color:var(--white);background:var(--red);border-color:var(--red)}
+.dates-note{font-family:var(--font-mono);font-size:.82rem;color:var(--grey);margin-top:var(--s-3);letter-spacing:.06em}
+
+/* ---------- merch: a plain table, deliberately unstyled-ish ---------- */
+.merch{padding-block:var(--s-8);background:var(--char);border-block:3px solid var(--black)}
+.merch-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(1.6rem,4vw,3.2rem);align-items:start}
+.merch h2{font-size:var(--t-h2);color:var(--white)}
+.merch p{color:var(--dirty-dim);margin-top:.7rem;max-width:46ch}
+.merch table{width:100%;border-collapse:collapse;border:2px solid var(--smoke);background:var(--black)}
+.merch th,.merch td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--smoke);font-size:.9rem}
+.merch thead th{font-family:var(--font-mono);font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow);background:var(--ash)}
+.merch tbody tr:last-child td{border-bottom:0}
+.merch td.num{text-align:right;font-variant-numeric:tabular-nums;color:var(--white)}
+.merch td.state{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--grey)}
+.merch td.state.in{color:var(--red-bright)}
+.merch-msg{margin-top:var(--s-3);min-height:1.6em;font-family:var(--font-mono);font-size:.86rem;color:var(--yellow)}
+
+/* ---------- list: signup ---------- */
+.list{background:var(--white);color:var(--black);padding-block:var(--s-8)}
+.list-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.6rem,4vw,3.2rem);align-items:center}
+.list h2{font-size:var(--t-h2)}
+.list p{margin-top:.8rem;max-width:46ch;color:#3a352c}
+.list .kicker{color:var(--red)}
+.field{display:grid;gap:.4rem;margin-bottom:var(--s-4)}
+.field label{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase}
+.field input,.field select{
+  font:inherit;color:var(--black);background:#fff;border:3px solid var(--black);border-radius:0;
+  padding:.85rem 1rem;min-height:50px;width:100%;
+}
+.field input:focus,.field select:focus{outline:3px solid var(--red);outline-offset:2px}
+.field input[aria-invalid="true"]{background:#ffe7e2;border-color:var(--red)}
+.field .hint{font-size:.82rem;color:#5a5348}
+.list .btn{border-color:var(--black);color:var(--black)}
+.list .btn:hover{background:var(--black);color:var(--white)}
+.list .btn-red{background:var(--red);border-color:var(--red);color:var(--white)}
+.list .btn-red:hover{background:var(--black);border-color:var(--black);color:var(--yellow)}
+.form-msg{margin-top:var(--s-3);min-height:2.2em;font-family:var(--font-mono);font-size:.88rem;letter-spacing:.04em}
+.form-msg[data-tone="error"]{color:var(--red)}
+.form-msg[data-tone="ok"]{color:#2f6b2a}
+
+/* ---------- footer ---------- */
+.foot{background:var(--black);color:var(--grey);padding-block:var(--s-7) var(--s-5);border-top:3px solid var(--smoke)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:var(--s-5)}
+.foot h2{font-family:var(--font-mono);font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dirty-dim);margin-bottom:var(--s-3)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.4rem;font-size:var(--t-small)}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--yellow)}
+.foot-note{margin-top:var(--s-6);padding-top:var(--s-4);border-top:1px solid var(--smoke);font-family:var(--font-mono);font-size:.78rem;letter-spacing:.06em;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between}
+
+@media (max-width:1040px){
+  .hero-in,.tape-grid,.merch-grid,.list-grid{grid-template-columns:1fr}
+  .posters{grid-template-columns:1fr 1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .hero-art{max-width:520px}
+}
+@media (max-width:820px){
+  .nav-toggle{display:inline-flex;align-items:center}
+  .nav ul{order:3;width:100%;margin-left:0;flex-direction:column;gap:0;display:none}
+  .nav ul[data-open="true"]{display:flex}
+  .nav li{border-top:1px solid var(--smoke)}
+  .nav a{border-bottom:0}
+}
+@media (max-width:680px){
+  .posters{grid-template-columns:1fr}
+  .poster{transform:none!important}
+  .date{grid-template-columns:1fr;gap:.35rem;padding:1rem .4rem}
+  .date .status{justify-self:start}
+  .foot-grid{grid-template-columns:1fr}
+  .merch th,.merch td{padding:.6rem .7rem;font-size:.82rem}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .grain{display:none}
+}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="tape-strip top" aria-hidden="true"></div>
+<div class="tape-strip bottom" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="mark" href="#top">Dead Static</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">menu</button>
+    <nav aria-label="Main">
+    <ul id="site-nav" data-open="true">
+      <li><a href="#recordings">recordings</a></li>
+      <li><a href="#tape">tape</a></li>
+      <li><a href="#tour">tour</a></li>
+      <li><a href="#merch">merch</a></li>
+      <li><a class="go" href="#list">get the demo</a></li>
+    </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap hero-in">
+      <div>
+        <p class="kicker">Noise rock · Sheffield &amp; Rotterdam · since 2019</p>
+        <h1 id="hero-h"><span>Dead</span><span>Static</span></h1>
+        <p class="sub">Four people, <b>two pedalboards</b>, one van that smells permanently of amp dust. We play short. We play loud. We have never released a song under three minutes and we are not planning to start.</p>
+        <div class="hero-actions">
+          <a class="btn btn-red" href="#tour">Tour dates</a>
+          <a class="btn" href="#tape">Hear the new EP</a>
+        </div>
+      </div>
+      <div>
+        <div class="hero-art">
+          <svg viewBox="0 0 340 380" role="img" aria-label="Grainy high-contrast band photograph: four figures on a stage under a single light, shot from below">
+            <rect width="340" height="380" fill="#171513"/>
+            <path d="M0 300h340v80H0Z" fill="#0d0c0b"/>
+            <g fill="#2e2a24">
+              <path d="M20 300v-90l150-140 150 140v90Z" opacity=".35"/>
+            </g>
+            <path d="M170 40L60 300h220Z" fill="#232019" opacity=".8"/>
+            <g fill="#cfc7b4">
+              <circle cx="96" cy="196" r="20"/><path d="M64 300v-70a32 32 0 0 1 64 0v70Z"/>
+              <circle cx="248" cy="200" r="18"/><path d="M218 300v-64a30 30 0 0 1 60 0v64Z"/>
+            </g>
+            <g fill="#6d675d">
+              <circle cx="150" cy="182" r="16"/><path d="M124 300v-74a26 26 0 0 1 52 0v74Z"/>
+              <circle cx="196" cy="186" r="15"/><path d="M172 300v-70a24 24 0 0 1 48 0v70Z"/>
+            </g>
+            <g fill="#0d0c0b">
+              <rect x="30" y="240" width="66" height="70"/><rect x="248" y="252" width="64" height="58"/>
+            </g>
+            <g fill="#cfc7b4" opacity=".55">
+              <rect x="34" y="248" width="12" height="12"/><rect x="52" y="248" width="12" height="12"/><rect x="70" y="248" width="12" height="12"/>
+              <circle cx="288" cy="272" r="9"/><circle cx="300" cy="290" r="6"/>
+            </g>
+            <g stroke="#c22b18" stroke-width="3" fill="none" opacity=".85">
+              <path d="M20 340c60-20 120 20 180 0s100-10 120 6"/>
+            </g>
+          </svg>
+        </div>
+        <span class="stamp">New EP — out now</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="statement">
+    <div class="wrap">
+      <p>We would rather play a kennel to forty people than an arena to four thousand.</p>
+      <span>— interview, Loaded fanzine, issue 31</span>
+    </div>
+  </div>
+
+  <section class="releases" id="recordings" aria-labelledby="rec-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Discography</span>
+        <h2 id="rec-h">Four releases. Nothing on a streaming service that wasn't already ruined by one.</h2>
+        <p>Every record is a short run on cassette and vinyl, sold from the van or by post. When they're gone, they're gone — we do not repress, because then they'd just sit in a warehouse looking like product.</p>
+      </div>
+      <div class="posters">
+        <article class="poster">
+          <span class="num">01</span>
+          <div class="art">
+            <svg viewBox="0 0 300 200" role="img" aria-label="Cover art for Floorboard: harsh black and white shapes of broken boards">
+              <rect width="300" height="200" fill="#cfc7b4"/>
+              <g fill="#0d0c0b">
+                <path d="M0 0h300v40H0Z"/><path d="M0 90h220v34H0Z"/><path d="M60 170h240v30H60Z"/>
+                <path d="M240 40h20v140h-20Z" opacity=".5"/>
+              </g>
+              <text x="16" y="76" font-family="Haettenschweiler,Impact,sans-serif" font-size="34" fill="#c22b18">FLOORBOARD</text>
+            </svg>
+          </div>
+          <h3>Floorboard</h3>
+          <p class="meta">EP · 2021 · 11 tracks · 19 min</p>
+          <p>Recorded in a stairwell in a fortnight. The one people found, which has confused us for five years.</p>
+        </article>
+        <article class="poster">
+          <span class="num">02</span>
+          <div class="art">
+            <svg viewBox="0 0 300 200" role="img" aria-label="Cover art for Half Light: a red sun over a black horizon">
+              <rect width="300" height="200" fill="#c22b18"/>
+              <circle cx="150" cy="112" r="66" fill="#f2ede0"/>
+              <path d="M0 150h300v50H0Z" fill="#0d0c0b"/>
+              <text x="16" y="52" font-family="Haettenschweiler,Impact,sans-serif" font-size="42" fill="#0d0c0b">HALF LIGHT</text>
+            </svg>
+          </div>
+          <h3>Half Light</h3>
+          <p class="meta">LP · 2022 · 9 tracks · 31 min</p>
+          <p>Our only record with a song over four minutes. The label asked us to cut it. We said no, loudly, in a meeting we were then removed from.</p>
+        </article>
+        <article class="poster">
+          <span class="num">03</span>
+          <div class="art">
+            <svg viewBox="0 0 300 200" role="img" aria-label="Cover art for Damp Course: vertical scratches and drips">
+              <rect width="300" height="200" fill="#171513"/>
+              <g stroke="#6d675d" stroke-width="2" opacity=".8">
+                <path d="M24 0v200M60 0v200M96 0v200M132 0v200M168 0v200M204 0v200M240 0v200M276 0v200"/>
+              </g>
+              <g stroke="#cfc7b4" stroke-width="3" opacity=".55">
+                <path d="M42 20v90M114 10v140M186 40v70M258 20v120"/>
+              </g>
+              <text x="18" y="180" font-family="Haettenschweiler,Impact,sans-serif" font-size="34" fill="#cfc7b4">DAMP COURSE</text>
+            </svg>
+          </div>
+          <h3>Damp Course</h3>
+          <p class="meta">EP · 2024 · 7 tracks · 14 min</p>
+          <p>Written in a rented flat with a leaking roof. We kept the rain, then removed it, then added it back in a gate.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="tape" id="tape" aria-labelledby="tape-h">
+    <div class="wrap tape-grid">
+      <div>
+        <span class="kicker">Side A / Side B</span>
+        <h2 id="tape-h">New EP: <em>Twelve Weeks of Nothing</em></h2>
+        <p style="color:var(--dirty-dim);margin-top:.8rem;max-width:44ch">Seven tracks, recorded live to tape in a barn outside Todmorden in one day. No overdubs, no click, one broken microphone that stays in the mix on track four because we liked how it made the room sound.</p>
+        <figure class="cassette" style="margin-top:var(--s-5)">
+          <svg viewBox="0 0 320 200" role="img" aria-label="Illustration of a cassette tape with a handwritten label reading Twelve Weeks of Nothing, Dead Static">
+            <rect x="8" y="24" width="304" height="152" fill="#171513" stroke="#6d675d" stroke-width="2"/>
+            <rect x="8" y="24" width="304" height="34" fill="#cfc7b4"/>
+            <text x="20" y="46" font-family="Segoe Script,Bradley Hand,cursive" font-size="17" fill="#0d0c0b">Twelve Weeks of Nothing</text>
+            <g fill="#2e2a24">
+              <rect x="40" y="78" width="90" height="70" rx="6"/>
+              <rect x="190" y="78" width="90" height="70" rx="6"/>
+            </g>
+            <g fill="#9c9484">
+              <circle cx="85" cy="113" r="26"/><circle cx="235" cy="113" r="26"/>
+            </g>
+            <g fill="#0d0c0b">
+              <circle cx="85" cy="113" r="9"/><circle cx="235" cy="113" r="9"/>
+            </g>
+            <g fill="#9c9484">
+              <rect x="140" y="82" width="40" height="18" rx="4"/>
+              <rect x="120" y="126" width="80" height="12" rx="4"/>
+            </g>
+            <text x="20" y="170" font-family="ui-monospace,Consolas,monospace" font-size="12" fill="#6d675d" letter-spacing="2">SIDE A — DEAD STATIC — MC-24</text>
+          </svg>
+        </figure>
+      </div>
+      <div class="tape-side">
+        <span class="kicker">Tracklist</span>
+        <h2 class="sr-only">Tracklist for Twelve Weeks of Nothing</h2>
+        <ol class="tracklist">
+          <li><span class="no">A1</span><span class="t">Hollow Ribs</span><span class="d">2:41</span></li>
+          <li><span class="no">A2</span><span class="t">Barn, 6am</span><span class="d">1:58</span></li>
+          <li class="current"><span class="no">A3</span><span class="t">Nobody Rides For Free</span><span class="d">3:04</span></li>
+          <li><span class="no">A4</span><span class="t">Broken Mic (Room Tone)</span><span class="d">4:12</span></li>
+          <li><span class="no">A5</span><span class="t">Twelve Weeks of Nothing</span><span class="d">2:22</span></li>
+          <li><span class="no">B1</span><span class="t">Municipal</span><span class="d">1:47</span></li>
+          <li><span class="no">B2</span><span class="t">Long Way Round, Short Way Home</span><span class="d">2:55</span></li>
+        </ol>
+        <p class="tape-note">7 tracks · 19:00 total · the red row is the one we play live</p>
+        <p style="margin-top:var(--s-4)"><a class="btn" href="#list">Get the cassette</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tour" id="tour" aria-labelledby="tour-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Live</span>
+        <h2 id="tour-h">Dates, or don't. We mean it.</h2>
+        <p>Every ticket includes the support and a sound engineer we paid properly. No support slots sold on this page — ask the promoter, we don't have a say and wouldn't use it.</p>
+      </div>
+      <div class="dates">
+        <a class="date" href="#list">
+          <span class="d">12 SEP 2026</span>
+          <span class="venue">The Crypt, Sheffield<small>with Pale Cassette · 19:30</small></span>
+          <span class="status sold">Sold out</span>
+        </a>
+        <a class="date" href="#list">
+          <span class="d">19 SEP 2026</span>
+          <span class="venue">Zero, Manchester<small>with Vantablack Sunday · 20:00</small></span>
+          <span class="status few">6 left</span>
+        </a>
+        <a class="date" href="#list">
+          <span class="d">03 OCT 2026</span>
+          <span class="venue">The Old Tannery, Bristol<small>with Sable Winslow · 19:00</small></span>
+          <span class="status">Tickets</span>
+        </a>
+        <a class="date" href="#list">
+          <span class="d">11 OCT 2026</span>
+          <span class="venue">Worm, Rotterdam<small>with Fernweh · 20:30</small></span>
+          <span class="status few">14 left</span>
+        </a>
+        <a class="date" href="#list">
+          <span class="d">24 OCT 2026</span>
+          <span class="venue">The George, London<small>support to be confirmed · 19:30</small></span>
+          <span class="status">Tickets</span>
+        </a>
+        <a class="date" href="#list">
+          <span class="d">07 NOV 2026</span>
+          <span class="venue">Walters, Leeds<small>with Ninth Almanac · 19:00</small></span>
+          <span class="status gone">Passed</span>
+        </a>
+      </div>
+      <p class="dates-note">Ticket links are placeholders on this page — ask us and we'll send the real ones, because we don't trust ticketbots either.</p>
+    </div>
+  </section>
+
+  <section class="merch" id="merch" aria-labelledby="merch-h">
+    <div class="wrap merch-grid">
+      <div>
+        <span class="kicker">Merch</span>
+        <h2 id="merch-h">Printed on demand, in a bedroom, badly.</h2>
+        <p>Screen-printed one at a time in a rota of four. Sizes run small; the shirts are boxy by accident and we stopped apologising for it. Everything's printed to order, so nothing sits in a cupboard for a year.</p>
+      </div>
+      <div>
+        <table>
+          <caption class="sr-only">Merchandise and prices</caption>
+          <thead><tr><th scope="col">Item</th><th scope="col">Colour</th><th scope="col">Price</th><th scope="col">State</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Floorboard tee</th><td>Black, white ink</td><td class="num">£22</td><td class="state in">In stock</td></tr>
+            <tr><th scope="row">Half Light longsleeve</th><td>Bone, red ink</td><td class="num">£32</td><td class="state">Made to order</td></tr>
+            <tr><th scope="row">Damp Course patch</th><td>Black on bone</td><td class="num">£6</td><td class="state in">In stock</td></tr>
+            <tr><th scope="row">Twelve Weeks cassette</th><td>—</td><td class="num">£9</td><td class="state">40 left</td></tr>
+            <tr><th scope="row">Lyrics zine, hand numbered</th><td>Photocopied</td><td class="num">£3</td><td class="state">Sold out</td></tr>
+            <tr><th scope="row">Tour poster, screen-printed</th><td>Three colours</td><td class="num">£12</td><td class="state in">In stock</td></tr>
+          </tbody>
+        </table>
+        <p class="merch-msg" id="merch-msg" role="status" aria-live="polite">Post from the van, or from a PO box in Leeds. We answer emails on Sundays.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="list" id="list" aria-labelledby="list-h">
+    <div class="wrap list-grid">
+      <div>
+        <span class="kicker">Mailing list</span>
+        <h2 id="list-h">One email, when there is something to say.</h2>
+        <p>New dates, new records, the occasional rehearsal-room photo that came out badly. Roughly eight emails a year. We do not sell the list, and we do not "partner" with anyone.</p>
+      </div>
+      <form id="list-form" novalidate>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-hint" required>
+          <span class="hint" id="email-hint">Eight emails a year, unsubscribe in one click.</span>
+        </div>
+        <div class="field">
+          <label for="city">Nearest city</label>
+          <select id="city" name="city">
+            <option value="">Where are you?</option>
+            <option>Sheffield</option><option>Manchester</option><option>Bristol</option>
+            <option>London</option><option>Leeds</option><option>Rotterdam</option><option>Somewhere else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="format">How do you want to hear about releases?</label>
+          <select id="format" name="format">
+            <option>Cassette post only</option>
+            <option>Vinyl post only</option>
+            <option>Either, whatever exists</option>
+            <option>Just email, no physical</option>
+          </select>
+        </div>
+        <button class="btn btn-red" type="submit">Add me</button>
+        <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h2>Dead Static</h2>
+        <p style="font-size:.95rem;max-width:38ch">Noise rock, Sheffield and Rotterdam. Van: a 2001 Transit that we have stopped calling reliable.</p>
+      </div>
+      <div><h2>Listen</h2><ul><li><a href="#tape">Twelve Weeks of Nothing</a></li><li><a href="#recordings">Damp Course</a></li><li><a href="#recordings">Half Light</a></li><li><a href="#recordings">Floorboard</a></li></ul></div>
+      <div><h2>See</h2><ul><li><a href="#tour">Tour dates</a></li><li><a href="#tour">Past dates</a></li><li><a href="#merch">Merch</a></li></ul></div>
+      <div><h2>Write</h2><ul><li><a href="#list">deadstatic@example</a></li><li><a href="#list">Booking / press</a></li><li><a href="#list">Mailing list</a></li></ul></div>
+    </div>
+    <div class="foot-note">
+      <span>© 2026 Dead Static. All rights reserved, which is a phrase we've never enjoyed.</span>
+      <span>Recorded too loud. Played at half volume if neighbours.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var toggle=document.querySelector('.nav-toggle');
+  var list=document.getElementById('site-nav');
+  toggle.addEventListener('click',function(){
+    var open=toggle.getAttribute('aria-expanded')==='true';
+    toggle.setAttribute('aria-expanded',String(!open));
+    list.setAttribute('data-open',String(!open));
+  });
+
+  /* merch: a plain acknowledgement, announced politely */
+  var merch=document.getElementById('merch-msg');
+  document.querySelectorAll('.merch tbody tr').forEach(function(row){
+    row.setAttribute('tabindex','0');
+    row.addEventListener('click',function(){note(row)});
+    row.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); note(row); } });
+  });
+  function note(row){
+    var name=row.querySelector('th').textContent;
+    var price=row.querySelector('.num').textContent;
+    var state=row.querySelector('.state').textContent;
+    merch.textContent=name+' — '+price+', '+state.toLowerCase()+'. Add it to the list message and we will sort it when we post.';
+  }
+
+  var form=document.getElementById('list-form');
+  var msg=document.getElementById('form-msg');
+  var email=document.getElementById('email');
+  var city=document.getElementById('city');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var missing=[];
+    if(!email.value.trim()) missing.push('an email address');
+    else if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) missing.push('an email that works');
+    if(!city.value) missing.push('the city you are nearest to');
+    if(missing.length){
+      email.setAttribute('aria-invalid',String(missing.some(function(m){return m.indexOf('email')>-1})));
+      city.setAttribute('aria-invalid',String(missing.some(function(m){return m.indexOf('city')>-1})));
+      msg.dataset.tone='error';
+      msg.textContent='Still need '+missing.join(' and ')+'.';
+      (!email.value.trim()?email:city).focus();
+      return;
+    }
+    email.removeAttribute('aria-invalid');city.removeAttribute('aria-invalid');
+    msg.dataset.tone='ok';
+    msg.textContent='In. Next email is the September dates, which are the good ones.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

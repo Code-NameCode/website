@@ -1,0 +1,649 @@
+<!-- Style: Arcade | 56arcade.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEON ALLEY - the tournament arcade</title>
+<style>
+  :root{
+    --void:#080a10;
+    --cabinet:#11141d;
+    --cabinet-2:#181c28;
+    --bezel:#232838;
+    --line:#2f3648;
+    --ink:#e9edf7;
+    --dim:#9aa5bd;
+    --magenta:#ff2e88;
+    --cyan:#22e0ff;
+    --yellow:#ffd23f;
+    --green:#3dff9e;
+    --red:#ff5566;
+
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --t-hero:clamp(2.6rem,9vw,6.2rem);
+    --t-h2:clamp(1.6rem,3.6vw,2.6rem);
+    --t-h3:clamp(1.05rem,1.7vw,1.25rem);
+    --t-body:clamp(.95rem,1.05vw,1.02rem);
+    --t-small:.84rem;
+    --t-score:clamp(1.6rem,4vw,2.8rem);
+
+    --r-sm:4px; --r:8px;
+    --glow-pink:0 0 0 1px var(--magenta), 0 0 18px -2px rgba(255,46,136,.65);
+    --glow-cyan:0 0 0 1px var(--cyan), 0 0 18px -2px rgba(34,224,255,.6);
+    --s-1:.4rem; --s-2:.75rem; --s-3:1.25rem; --s-4:2rem; --s-5:3rem; --s-6:4.2rem;
+    --gutter:clamp(1rem,3vw,2.2rem);
+    --wrap:1200px;
+    --motion:160ms;
+    --scan:linear-gradient(rgba(255,255,255,.035) 50%,transparent 50%);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--void);color:var(--ink);font-family:var(--font);font-size:var(--t-body);line-height:1.55;
+    background-image:
+      repeating-linear-gradient(0deg,var(--scan) 0 2px,transparent 2px 4px),
+      radial-gradient(120% 80% at 50% -10%, rgba(34,224,255,.10), transparent 60%),
+      radial-gradient(100% 70% at 50% 110%, rgba(255,46,136,.10), transparent 60%);
+  }
+  h1,h2,h3{margin:0;line-height:1.05;font-weight:800;letter-spacing:.01em}
+  h1{font-size:var(--t-hero);text-transform:uppercase;line-height:.88}
+  h2{font-size:var(--t-h2);text-transform:uppercase}
+  h3{font-size:var(--t-h3);font-weight:750}
+  p{margin:0 0 1em}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  button{font:inherit}
+  svg{display:block;max-width:100%}
+  :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+  .wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+  .skip{position:absolute;left:-999px;background:var(--yellow);color:#000;padding:.7rem 1rem;font-weight:800}
+  .skip:focus{left:.5rem;top:.5rem;z-index:60}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .panel{background:var(--cabinet);border:1px solid var(--line);border-radius:var(--r)}
+  .tag{display:inline-block;font-family:var(--font-mono);font-size:var(--t-small);text-transform:uppercase;letter-spacing:.18em;
+    color:var(--cyan);margin-bottom:var(--s-2)}
+  .neon{color:var(--magenta);text-shadow:0 0 12px rgba(255,46,136,.7)}
+  .neon-c{color:var(--cyan);text-shadow:0 0 12px rgba(34,224,255,.6)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:52px;padding:.8rem 1.5rem;
+    font-weight:800;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;cursor:pointer;
+    border:2px solid var(--magenta);border-radius:var(--r);background:var(--magenta);color:#12000a;
+    box-shadow:var(--glow-pink);transition:transform var(--motion) ease,box-shadow var(--motion) ease}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--magenta),0 0 26px rgba(255,46,136,.85)}
+  .btn:active{transform:translateY(1px)}
+  .btn--cyan{border-color:var(--cyan);background:transparent;color:var(--cyan);box-shadow:var(--glow-cyan)}
+  .btn--cyan:hover{background:rgba(34,224,255,.12)}
+  .btn--yellow{border-color:var(--yellow);background:transparent;color:var(--yellow);box-shadow:0 0 0 1px var(--yellow),0 0 18px -2px rgba(255,210,63,.6)}
+  .btn--sm{min-height:44px;padding:.45rem .9rem;font-size:var(--t-small);border-width:1px}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:30;background:rgba(8,10,16,.92);border-bottom:2px solid var(--line);backdrop-filter:blur(2px)}
+  .nav-in{display:flex;align-items:center;gap:var(--s-2);min-height:70px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;margin-right:auto;font-weight:800;
+    font-size:1.15rem;letter-spacing:.16em;text-transform:uppercase}
+  .brand svg{width:34px;height:34px;filter:drop-shadow(0 0 6px rgba(34,224,255,.8))}
+  .nav-links{display:flex;gap:.3rem;flex-wrap:wrap}
+  .nav-links a{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .85rem;text-decoration:none;
+    font-size:var(--t-small);text-transform:uppercase;letter-spacing:.1em;color:var(--dim);border:1px solid transparent;border-radius:var(--r)}
+  .nav-links a:hover{color:var(--cyan);border-color:var(--cyan)}
+  .nav-toggle{display:none;background:var(--cabinet-2);color:var(--ink);border:2px solid var(--cyan);border-radius:var(--r);
+    min-height:44px;padding:.5rem .9rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;cursor:pointer}
+
+  /* attract hero */
+  .hero{padding-block:var(--s-5) var(--s-6)}
+  .crt{border:2px solid var(--line);border-radius:14px;background:var(--cabinet);padding:clamp(1rem,3vw,2.4rem);position:relative;overflow:hidden}
+  .crt::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 2px,transparent 2px 4px)}
+  .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:var(--s-4);align-items:center;position:relative;z-index:1}
+  .hero h1 span{display:block}
+  .hero .sub{font-family:var(--font-mono);letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);font-size:clamp(.8rem,1.6vw,1rem);margin:var(--s-2) 0}
+  .lede{color:var(--dim);max-width:48ch}
+  .hero-cta{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-block:var(--s-3)}
+  .credit{display:flex;gap:.5rem;align-items:center;font-family:var(--font-mono);font-size:var(--t-small);
+    letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  .credit .coin{width:14px;height:14px;border-radius:50%;background:var(--yellow);box-shadow:0 0 10px rgba(255,210,63,.8)}
+  .marquee{display:grid;gap:.4rem;margin-top:var(--s-3);border-top:1px solid var(--line);padding-top:var(--s-3)}
+  .match-row{display:grid;grid-template-columns:1fr auto 1fr;gap:.6rem;align-items:center;font-family:var(--font-mono);font-size:var(--t-small)}
+  .match-row .p1,.match-row .p2{padding:.4rem .6rem;background:var(--cabinet-2);border-radius:var(--r);border:1px solid var(--line)}
+  .match-row .p1{text-align:right}
+  .match-row .p1 b{color:var(--yellow)}
+  .match-row .p2 b{color:var(--yellow)}
+  .match-row .clock{color:var(--dim);letter-spacing:.1em}
+  .live{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-mono);font-size:var(--t-small);
+    letter-spacing:.16em;color:var(--red);text-transform:uppercase}
+  .live i{width:10px;height:10px;border-radius:50%;background:var(--red);animation:beat 1.6s steps(1,end) infinite}
+  @keyframes beat{0%,60%{opacity:1}61%,100%{opacity:.25}}
+
+  /* scoreboard strip */
+  .score-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    border-block:2px solid var(--line)}
+  .score-cell{background:var(--cabinet);padding:var(--s-3);text-align:center}
+  .score-cell b{display:block;font-family:var(--font-mono);font-size:var(--t-score);color:var(--yellow);
+    text-shadow:0 0 14px rgba(255,210,63,.55);line-height:1}
+  .score-cell small{font-family:var(--font-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-size:var(--t-small)}
+
+  section{padding-block:var(--s-5)}
+  .sec-head{margin-bottom:var(--s-4);max-width:64ch}
+  .sec-head p{color:var(--dim);margin:.4rem 0 0}
+
+  /* machines */
+  .machines{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-3)}
+  .machine{background:var(--cabinet);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+    display:flex;flex-direction:column;transition:border-color var(--motion) ease,transform var(--motion) ease}
+  .machine:hover{border-color:var(--cyan);transform:translateY(-4px)}
+  .machine .screen{aspect-ratio:4/3;background:var(--void);border-bottom:1px solid var(--line);display:grid;place-items:center;position:relative}
+  .machine .screen svg{width:74%;height:auto}
+  .machine .body{padding:var(--s-3);display:flex;flex-direction:column;gap:.4rem;flex:1}
+  .machine .body p{margin:0;color:var(--dim);font-size:.94rem;flex:1}
+  .cabinet-meta{display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-family:var(--font-mono);
+    font-size:var(--t-small);color:var(--dim);letter-spacing:.08em;border-top:1px dashed var(--line);padding-top:.5rem}
+  .cabinet-meta b{color:var(--yellow)}
+  .diff{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--void);background:var(--green);
+    padding:.1rem .4rem;border-radius:2px;font-weight:800}
+  .diff--mid{background:var(--yellow)} .diff--hard{background:var(--red);color:#fff}
+
+  /* bracket */
+  .bracket{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3)}
+  .round{display:flex;flex-direction:column;justify-content:space-around;gap:var(--s-2)}
+  .round h3{font-family:var(--font-mono);font-size:var(--t-small);letter-spacing:.16em;text-transform:uppercase;
+    color:var(--dim);margin-bottom:.2rem}
+  .seed{background:var(--cabinet-2);border:1px solid var(--line);border-left:3px solid var(--dim);border-radius:var(--r);
+    padding:.55rem .7rem;font-family:var(--font-mono);font-size:var(--t-small);display:flex;justify-content:space-between;gap:.5rem}
+  .seed b{color:var(--yellow)}
+  .seed--win{border-left-color:var(--green)}
+  .seed--live{border-left-color:var(--magenta);box-shadow:var(--glow-pink)}
+  .seed--next{border-left-color:var(--cyan);border-style:dashed}
+
+  /* tickets form */
+  .tickets{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:start}
+  .form-panel{padding:var(--s-4)}
+  .field{display:block;margin-bottom:var(--s-3)}
+  .field .lab{display:block;font-family:var(--font-mono);font-size:var(--t-small);letter-spacing:.12em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:.4rem}
+  .field select,.field input{width:100%;min-height:50px;padding:.6rem .8rem;background:var(--cabinet-2);color:var(--ink);
+    border:2px solid var(--line);border-radius:var(--r);font:inherit}
+  .field select:focus,.field input:focus{border-color:var(--cyan)}
+  .field .err{display:none;font-size:var(--t-small);color:var(--red);font-family:var(--font-mono);margin-top:.35rem}
+  .field[data-invalid] .err{display:block}
+  .field[data-invalid] select,.field[data-invalid] input{border-color:var(--red)}
+  .ticket-total{background:var(--void);border:1px dashed var(--line);border-radius:var(--r);padding:var(--s-3);
+    font-family:var(--font-mono);display:grid;gap:.3rem;margin-bottom:var(--s-3)}
+  .ticket-total div{display:flex;justify-content:space-between;gap:var(--s-2)}
+  .ticket-total .grand{font-size:1.3rem;color:var(--yellow);border-top:1px solid var(--line);padding-top:.5rem;margin-top:.3rem}
+  .order-status{margin-top:var(--s-2);font-family:var(--font-mono);font-size:var(--t-small);min-height:1.5em}
+  .order-status[data-state="ok"]{color:var(--green)} .order-status[data-state="err"]{color:var(--red)}
+  .side-info dl{display:grid;grid-template-columns:auto 1fr;gap:.5rem 1rem;margin:0;font-size:.95rem}
+  .side-info dt{color:var(--dim);font-family:var(--font-mono);font-size:var(--t-small);letter-spacing:.1em;text-transform:uppercase}
+  .side-info dd{margin:0}
+
+  /* high scores */
+  .hs{counter-reset:rank;list-style:none;padding:var(--s-3);display:grid;gap:.35rem}
+  .hs li{counter-increment:rank;display:grid;grid-template-columns:44px 1fr auto;gap:var(--s-2);align-items:center;
+    font-family:var(--font-mono);font-size:.98rem;background:var(--cabinet-2);border-radius:var(--r);padding:.55rem .7rem;
+    border-left:3px solid transparent}
+  .hs li::before{content:counter(rank,decimal-leading-zero);color:var(--dim)}
+  .hs li:nth-child(-n+3){border-left-color:var(--yellow)}
+  .hs li:nth-child(1) b{color:var(--yellow);text-shadow:0 0 10px rgba(255,210,63,.6)}
+  .hs li small{color:var(--dim);display:block;font-size:.72rem;letter-spacing:.1em}
+
+  /* rules */
+  .rules details{border:1px solid var(--line);border-radius:var(--r);background:var(--cabinet);margin-bottom:.5rem}
+  .rules summary{cursor:pointer;padding:.9rem 1rem;font-weight:750;min-height:52px;display:flex;align-items:center;gap:.6rem}
+  .rules summary::marker{color:var(--cyan)}
+  .rules details p{padding:0 1rem 1rem;margin:0;color:var(--dim);max-width:66ch}
+
+  footer{border-top:2px solid var(--line);background:var(--cabinet);padding-block:var(--s-4) var(--s-3);margin-top:var(--s-4)}
+  .foot{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:var(--s-3)}
+  footer h3{font-family:var(--font-mono);font-size:var(--t-small);letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:.5rem}
+  footer li{margin-bottom:.3rem}
+  footer a{text-decoration:none;color:var(--dim);font-size:.94rem}
+  footer a:hover{color:var(--magenta)}
+  .fine{margin-top:var(--s-3);padding-top:var(--s-2);border-top:1px solid var(--line);display:flex;justify-content:space-between;
+    gap:var(--s-2);flex-wrap:wrap;color:var(--dim);font-family:var(--font-mono);font-size:var(--t-small)}
+
+  @media (max-width:1000px){
+    .hero-grid,.tickets{grid-template-columns:1fr}
+    .machines{grid-template-columns:1fr 1fr}
+    .score-strip{grid-template-columns:1fr 1fr}
+    .bracket{grid-template-columns:1fr 1fr}
+    .nav-toggle{display:inline-block}
+    .nav-links{display:none;width:100%;order:3;padding-bottom:var(--s-2)}
+    .nav-links[data-open="true"]{display:flex}
+  }
+  @media (max-width:620px){
+    .machines{grid-template-columns:1fr}
+    .bracket{grid-template-columns:1fr}
+    .foot{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+    .live i{animation:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#tickets">Skip to tickets</a>
+
+<header>
+  <nav class="wrap" aria-label="Primary">
+    <div class="nav-in">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="10" width="14" height="14" fill="#ff2e88"/><rect x="22" y="10" width="14" height="14" fill="#22e0ff"/><rect x="4" y="28" width="14" height="8" fill="#ffd23f"/><rect x="22" y="28" width="14" height="8" fill="#3dff9e"/></svg>
+        Neon Alley
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="nav-links" id="menu">
+        <a href="#machines">Machines</a>
+        <a href="#bracket">Bracket</a>
+        <a href="#scores">High scores</a>
+        <a href="#rules">Rules</a>
+      </div>
+      <a class="btn btn--sm" href="#tickets">Buy tickets</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap crt">
+      <div class="hero-grid">
+        <div>
+          <span class="tag">Season 4 &middot; 40 cabinets &middot; doors at 10:00</span>
+          <h1 id="hero-title"><span class="neon">Neon</span><span>Alley</span></h1>
+          <p class="sub">The tournament arcade</p>
+          <p class="lede">Forty original cabinets, one bracket, and a crowd that will not shut up. Bring a controller, bring a rival, bring cash for the token machine. First tournament of the season is Saturday, doors at 10:00, first match at 11:00 sharp.</p>
+          <div class="hero-cta">
+            <a class="btn" href="#tickets">Reserve a seat</a>
+            <a class="btn btn--cyan" href="#bracket">See the bracket</a>
+          </div>
+          <p class="credit"><i class="coin" aria-hidden="true"></i> Credits: $0.75 &middot; Play any four, get the fifth free &middot; Cash and card</p>
+          <div class="marquee">
+            <p class="live" style="margin:0"><i aria-hidden="true"></i>Live now &mdash; grand final of Season 3</p>
+            <div class="match-row">
+              <span class="p1">K. OYELARAN <b>3</b></span>
+              <span class="clock">2:1</span>
+              <span class="p2"><b>2</b> R. VASQUEZ</span>
+            </div>
+            <div class="match-row">
+              <span class="p1">DUSK RUNNERS <b>1</b></span>
+              <span class="clock">0:0</span>
+              <span class="p2"><b>0</b> HALF-LIFE CLUB</span>
+            </div>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 200 260" role="img" aria-label="An arcade cabinet with a lit marquee, a joystick and a coin slot" style="justify-self:center;width:min(100%,260px)">
+          <rect x="30" y="10" width="140" height="26" fill="#ff2e88"/>
+          <text x="100" y="29" text-anchor="middle" font-family="monospace" font-size="15" font-weight="700" fill="#12000a">NEON ALLEY</text>
+          <rect x="38" y="40" width="124" height="86" fill="#080a10" stroke="#2f3648" stroke-width="3"/>
+          <rect x="48" y="50" width="104" height="66" fill="#22e0ff" opacity=".2"/>
+          <rect x="60" y="64" width="30" height="30" fill="#ffd23f"/>
+          <rect x="100" y="76" width="34" height="8" fill="#ff2e88"/>
+          <rect x="60" y="100" width="60" height="6" fill="#22e0ff"/>
+          <rect x="38" y="132" width="124" height="24" fill="#181c28" stroke="#2f3648" stroke-width="3"/>
+          <rect x="52" y="140" width="18" height="8" fill="#3dff9e"/>
+          <rect x="52" y="152" width="18" height="8" fill="#ff5566"/>
+          <circle cx="122" cy="140" r="6" fill="#ff2e88"/>
+          <rect x="112" y="148" width="8" height="12" fill="#232838" stroke="#2f3648" stroke-width="2"/>
+          <path d="M44 160l-8 74h128l-8-74z" fill="#11141d" stroke="#2f3648" stroke-width="3"/>
+          <rect x="58" y="180" width="84" height="40" fill="#080a10"/>
+          <rect x="66" y="190" width="30" height="6" fill="#22e0ff"/>
+          <rect x="66" y="204" width="56" height="6" fill="#ff2e88"/>
+          <rect x="30" y="234" width="140" height="10" fill="#232838" stroke="#2f3648" stroke-width="3"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="score-strip" role="group" aria-label="Alley statistics">
+    <div class="score-cell"><b>1,284</b><small>Tournament entries</small></div>
+    <div class="score-cell"><b>37</b><small>Cabinets on the floor</small></div>
+    <div class="score-cell"><b>$0.75</b><small>One credit</small></div>
+    <div class="score-cell"><b>4:52</b><small>Longest final</small></div>
+  </div>
+
+  <section id="machines" aria-labelledby="machines-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="tag">Floor map &middot; 37 cabinets</span>
+        <h2 id="machines-title">The lineup</h2>
+        <p>Seven originals and a wall of two-player classics. Difficulty is honest: the label says how hard the game actually is, not how hard the marketing wants it to sound.</p>
+      </div>
+      <ul class="machines">
+        <li class="machine">
+          <div class="screen">
+            <svg viewBox="0 0 120 90" aria-hidden="true"><rect x="0" y="30" width="120" height="30" fill="#ff2e88" opacity=".35"/><rect x="10" y="10" width="10" height="70" fill="#ffd23f"/><rect x="30" y="24" width="10" height="56" fill="#22e0ff"/><rect x="50" y="38" width="10" height="42" fill="#3dff9e"/><rect x="70" y="16" width="10" height="64" fill="#ff2e88"/><rect x="90" y="46" width="10" height="34" fill="#ffd23f"/></svg>
+          </div>
+          <div class="body">
+            <h3>Rhythm Bunker</h3>
+            <p>Seven tracks, one bar, and a beatmap the operator swears he drew himself. Tournament-legal.</p>
+            <div class="cabinet-meta"><span class="diff">Easy</span><span>$0.75 / play</span></div>
+          </div>
+        </li>
+        <li class="machine">
+          <div class="screen">
+            <svg viewBox="0 0 120 90" aria-hidden="true"><rect x="8" y="8" width="104" height="74" fill="none" stroke="#22e0ff" stroke-width="4"/><rect x="24" y="24" width="24" height="24" fill="#ff2e88"/><rect x="56" y="40" width="24" height="24" fill="#ffd23f"/><rect x="40" y="40" width="8" height="8" fill="#3dff9e"/></svg>
+          </div>
+          <div class="body">
+            <h3>Vector Vulture</h3>
+            <p>Wireframe flying, six axes, one life. The score is displayed as a number because there is no time to enjoy it.</p>
+            <div class="cabinet-meta"><span class="diff diff--mid">Medium</span><span>$0.75 / play</span></div>
+          </div>
+        </li>
+        <li class="machine">
+          <div class="screen">
+            <svg viewBox="0 0 120 90" aria-hidden="true"><circle cx="60" cy="45" r="30" fill="none" stroke="#ffd23f" stroke-width="4"/><path d="M60 15v60M30 45h60" stroke="#ff5566" stroke-width="3"/><rect x="52" y="37" width="16" height="16" fill="#22e0ff"/></svg>
+          </div>
+          <div class="body">
+            <h3>Crosshair</h3>
+            <p>Two sticks, one reticle, ninety seconds. The tournament bracket has been decided on this cabinet more than once.</p>
+            <div class="cabinet-meta"><span class="diff diff--hard">Brutal</span><span>$1.00 / play</span></div>
+          </div>
+        </li>
+        <li class="machine">
+          <div class="screen">
+            <svg viewBox="0 0 120 90" aria-hidden="true"><rect x="14" y="20" width="28" height="28" fill="#3dff9e"/><rect x="48" y="20" width="28" height="28" fill="#22e0ff"/><rect x="82" y="20" width="24" height="28" fill="#ff2e88"/><rect x="14" y="56" width="28" height="20" fill="#ffd23f"/><rect x="48" y="56" width="58" height="20" fill="#232838"/></svg>
+          </div>
+          <div class="body">
+            <h3>Block Cascade</h3>
+            <p>Puzzle, four panels, no timer. The only cabinet on the floor where children beat adults, regularly.</p>
+            <div class="cabinet-meta"><span class="diff">Easy</span><span>$0.50 / play</span></div>
+          </div>
+        </li>
+        <li class="machine">
+          <div class="screen">
+            <svg viewBox="0 0 120 90" aria-hidden="true"><path d="M10 70l30-50 20 30 20-40 30 60z" fill="#ff2e88" opacity=".5"/><circle cx="90" cy="24" r="8" fill="#ffd23f"/><path d="M10 78h100" stroke="#22e0ff" stroke-width="4"/></svg>
+          </div>
+          <div class="body">
+            <h3>Long Road 84</h3>
+            <p>Endless driving, no brakes, one lane. Played entirely with the gas pedal taped down and a lot of nerve.</p>
+            <div class="cabinet-meta"><span class="diff diff--mid">Medium</span><span>$0.75 / play</span></div>
+          </div>
+        </li>
+        <li class="machine">
+          <div class="screen">
+            <svg viewBox="0 0 120 90" aria-hidden="true"><rect x="20" y="14" width="80" height="62" fill="#181c28" stroke="#ff2e88" stroke-width="3"/><path d="M30 60l18-22 14 12 16-24 12 34" fill="none" stroke="#3dff9e" stroke-width="4"/><rect x="30" y="24" width="24" height="4" fill="#22e0ff"/></svg>
+          </div>
+          <div class="body">
+            <h3>Hold The Line</h3>
+            <p>Twenty waves of escalating siege. The wave counter has a hand-drawn sticker on it because we kept breaking the printed one.</p>
+            <div class="cabinet-meta"><span class="diff diff--hard">Brutal</span><span>$1.00 / play</span></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="bracket" aria-labelledby="bracket-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="tag">Season 4 &middot; saturday 16:00</span>
+        <h2 id="bracket-title">The bracket</h2>
+        <p>Sixteen entrants, single elimination, best of three. Dashed entries have not been decided yet, which usually means somebody has not paid.</p>
+      </div>
+      <div class="panel bracket" style="padding:var(--s-3)">
+        <div class="round">
+          <h3>Quarter-finals</h3>
+          <div class="seed seed--win"><span>K. OYELARAN</span><b>2</b></div>
+          <div class="seed"><span>BYTE SIREN</span><b>0</b></div>
+          <div class="seed seed--win"><span>R. VASQUEZ</span><b>2</b></div>
+          <div class="seed"><span>PALE HORSE</span><b>1</b></div>
+          <div class="seed seed--win"><span>DUSK RUNNERS</span><b>2</b></div>
+          <div class="seed"><span>HALF-LIFE CLUB</span><b>0</b></div>
+          <div class="seed seed--live"><span>M. TAYLOR</span><b>1</b></div>
+          <div class="seed"><span>ZERO SUM</span><b>1</b></div>
+        </div>
+        <div class="round">
+          <h3>Semi-finals</h3>
+          <div class="seed seed--next"><span>K. OYELARAN</span><b>&mdash;</b></div>
+          <div class="seed seed--next"><span>R. VASQUEZ</span><b>&mdash;</b></div>
+          <div class="seed seed--next"><span>DUSK RUNNERS</span><b>&mdash;</b></div>
+          <div class="seed seed--next"><span>M. TAYLOR</span><b>&mdash;</b></div>
+        </div>
+        <div class="round">
+          <h3>Final</h3>
+          <div class="seed seed--next"><span>TBD</span><b>&mdash;</b></div>
+          <div class="seed seed--next"><span>TBD</span><b>&mdash;</b></div>
+        </div>
+        <div class="round">
+          <h3>Champion</h3>
+          <div class="seed" style="border-left-color:var(--yellow)"><span>Season 4</span><b>$2,500</b></div>
+          <p style="font-family:var(--font-mono);font-size:var(--t-small);color:var(--dim);margin:.4rem 0 0">
+            Plus a cabinet on the floor with your initials on the marquee, permanently.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="scores" aria-labelledby="scores-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="tag">Rhythm Bunker &middot; all time</span>
+        <h2 id="scores-title">High scores</h2>
+        <p>Reset once a year, on the anniversary of the alley opening. The 2019 board is in the window, for reference and for quiet shame.</p>
+      </div>
+      <ol class="hs panel">
+        <li><span>NHK / T. Abara</span><b>9,412,880</b></li>
+        <li><span>K. OYELARAN</span><b>8,977,140</b><small>season 3 finalist</small></li>
+        <li><span>guest cabinet 07</span><b>7,204,555</b></li>
+        <li><span>M. TAYLOR</span><b>6,889,010</b></li>
+        <li><span>STAFF (R. V.)</span><b>6,410,775</b><small>not eligible for prize money</small></li>
+        <li><span>you, probably</span><b>1,204,000</b></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="tickets" aria-labelledby="tickets-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="tag">Entry</span>
+        <h2 id="tickets-title">Tournament tickets</h2>
+        <p>Everyone who walks in gets to watch and to queue for a cabinet. A ticket is what gets you into a bracket slot.</p>
+      </div>
+      <div class="tickets">
+        <form class="panel form-panel" id="ticketForm" novalidate>
+          <label class="field" for="tier">
+            <span class="lab">Ticket tier</span>
+            <select id="tier" name="tier">
+              <option value="spectator" data-price="0">Spectator &mdash; free</option>
+              <option value="open" data-price="15" selected>Open bracket &mdash; $15</option>
+              <option value="seeded" data-price="40">Seeded (ranked) &mdash; $40</option>
+              <option value="team" data-price="120">Team of four &mdash; $120</option>
+            </select>
+          </label>
+
+          <label class="field" for="qty">
+            <span class="lab">How many</span>
+            <input id="qty" name="qty" type="number" min="1" max="8" value="1" inputmode="numeric">
+            <span class="err">Between 1 and 8. The floor only holds 8 bracket slots.</span>
+          </label>
+
+          <label class="field" for="handle">
+            <span class="lab">Handle on the scoreboard</span>
+            <input id="handle" name="handle" type="text" maxlength="12" placeholder="K. OYELARAN" required>
+            <span class="err">A handle of 2 or more characters, please.</span>
+          </label>
+
+          <label class="field" for="agree">
+            <span class="lab">Waiver</span>
+            <span style="display:flex;gap:.7rem;align-items:flex-start;background:var(--cabinet-2);border:1px solid var(--line);
+              border-radius:var(--r);padding:.8rem;cursor:pointer">
+              <input id="agree" type="checkbox" style="width:22px;height:22px;accent-color:var(--magenta);flex:none;margin-top:2px">
+              <span style="font-size:.92rem;color:var(--dim)">I will lose gracefully and I will not touch another person's cabinet mid-match.</span>
+            </span>
+          </label>
+
+          <div class="ticket-total" aria-live="polite">
+            <div><span>Tier</span><span id="tTier">Open bracket</span></div>
+            <div><span>Quantity</span><span id="tQty">1</span></div>
+            <div><span>Credits included</span><span id="tCred">4</span></div>
+            <div class="grand"><span>Total</span><span id="tTotal">$15.00</span></div>
+          </div>
+
+          <button class="btn" type="submit">Reserve &amp; pay at the door</button>
+          <p class="order-status" id="orderStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="panel side-info" style="padding:var(--s-4)">
+          <h3>Good to know</h3>
+          <dl style="margin-top:var(--s-3)">
+            <dt>Doors</dt><dd>10:00 Saturday. First match 11:00. No late entry after round two.</dd>
+            <dt>Age</dt><dd>Under 12s play in the Sunday bracket, free, on the two-player cabinets.</dd>
+            <dt>Format</dt><dd>Single elimination, best of three, loser keeps their entry fee as credits.</dd>
+            <dt>Prize</dt><dd>$2,500 plus a cabinet with your marquee. Yes, permanently.</dd>
+            <dt>Getting here</dt><dd>Alley is four minutes from Canal Street on the number 6. The doors are on the side, not the front.</dd>
+          </dl>
+          <p style="margin-top:var(--s-3);font-family:var(--font-mono);font-size:var(--t-small);color:var(--yellow)">
+            Tokens accepted. Card accepted. Cash accepted, please, the machine eats fives.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rules" aria-labelledby="rules-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="tag">Read before you queue</span>
+        <h2 id="rules-title">House rules</h2>
+      </div>
+      <div class="rules">
+        <details>
+          <summary>What happens if I lose in round one?</summary>
+          <p>You keep your entry fee as alley credits, which is roughly four plays on the mid-tier cabinets. This is deliberate: nobody enjoys watching a friend walk out after nine minutes.</p>
+        </details>
+        <details>
+          <summary>Can I touch my opponent's controls?</summary>
+          <p>No. This is the one rule that gets people thrown out, and the operators have been trained to enforce it. Everything else is a warning.</p>
+        </details>
+        <details>
+          <summary>Is there a prize for second place?</summary>
+          <p>A hoodie, and the knowledge that you were beaten by someone who has a hoodie. The hoodie is genuinely good, which is the problem.</p>
+        </details>
+        <details>
+          <summary>Can I just come and watch?</summary>
+          <p>Yes, and you should. Spectator entry is free, standing room is fine, and the commentary booth will explain what is going on for anyone who asks.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h3>Neon Alley</h3>
+        <p>A fictional tournament arcade, built for a style demo. 37 cabinets, 4 seasons, one very tired token machine on the north wall.</p>
+      </div>
+      <div>
+        <h3>Tournament</h3>
+        <ul>
+          <li><a href="#bracket">Bracket</a></li>
+          <li><a href="#scores">High scores</a></li>
+          <li><a href="#rules">House rules</a></li>
+          <li><a href="#tickets">Tickets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Visit</h3>
+        <ul>
+          <li><a href="#top">Hours &amp; location</a></li>
+          <li><a href="#top">Accessibility</a></li>
+          <li><a href="#top">Private hire</a></li>
+          <li><a href="#top">Press</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>&copy; 2026 Neon Alley. A fictional brand, built for a style demo.</span>
+      <span>Do not lean on the cabinets. The operators will know.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  var toggle = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.getAttribute('data-open') === 'true';
+    menu.setAttribute('data-open', String(!open));
+    toggle.setAttribute('aria-expanded', String(!open));
+    toggle.textContent = open ? 'Menu' : 'Close';
+  });
+
+  // Ticket calculator
+  var tier = document.getElementById('tier');
+  var qty = document.getElementById('qty');
+  var tiers = {
+    spectator: { label: 'Spectator', credits: 0 },
+    open: { label: 'Open bracket', credits: 4 },
+    seeded: { label: 'Seeded (ranked)', credits: 8 },
+    team: { label: 'Team of four', credits: 16 }
+  };
+
+  function money(n) { return '$' + n.toFixed(2); }
+
+  function recalc() {
+    var key = tier.value;
+    var count = parseInt(qty.value, 10);
+    if (isNaN(count) || count < 1) count = 1;
+    var price = parseFloat(tier.options[tier.selectedIndex].dataset.price);
+    document.getElementById('tTier').textContent = tiers[key].label;
+    document.getElementById('tQty').textContent = String(count);
+    document.getElementById('tCred').textContent = String(tiers[key].credits * count);
+    document.getElementById('tTotal').textContent = money(price * count);
+  }
+
+  tier.addEventListener('change', recalc);
+  qty.addEventListener('input', recalc);
+  recalc();
+
+  // Submit
+  var form = document.getElementById('ticketForm');
+  var status = document.getElementById('orderStatus');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    status.removeAttribute('data-state');
+
+    var count = parseInt(qty.value, 10);
+    var qtyOk = !isNaN(count) && count >= 1 && count <= 8;
+    var qtyField = qty.closest('.field');
+    qtyField.toggleAttribute('data-invalid', !qtyOk);
+
+    var handle = document.getElementById('handle');
+    var handleOk = handle.value.trim().length >= 2;
+    var handleField = handle.closest('.field');
+    handleField.toggleAttribute('data-invalid', !handleOk);
+
+    if (!qtyOk) {
+      status.setAttribute('data-state', 'err');
+      status.textContent = 'Check the quantity: 1 to 8 tickets per order.';
+      qty.focus();
+      return;
+    }
+    if (!handleOk) {
+      status.setAttribute('data-state', 'err');
+      status.textContent = 'Pick a handle for the scoreboard, 2 characters or more.';
+      handle.focus();
+      return;
+    }
+    if (!document.getElementById('agree').checked) {
+      status.setAttribute('data-state', 'err');
+      status.textContent = 'Tick the waiver box before we hold the seat.';
+      document.getElementById('agree').focus();
+      return;
+    }
+    var price = parseFloat(tier.options[tier.selectedIndex].dataset.price) * count;
+    status.setAttribute('data-state', 'ok');
+    status.textContent = 'HELD: ' + count + ' x ' + tiers[tier.value].label + ' for ' + handle.value.trim() +
+      '. Pay ' + money(price) + ' at the door. Seats held for 20 minutes.';
+  });
+</script>
+</body>
+</html>

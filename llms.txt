@@ -1,0 +1,73 @@
+# Goodstuff Designs — Managed IT, Networks, Websites, Hosting, AI & Digital Marketing
+
+> Goodstuff Designs (Pty) Ltd is a technology studio in Heidelberg, Gauteng, South Africa, providing managed IT support, business networks and fibre connectivity, Kaspersky security, websites and managed Linux hosting, AI expert services (workflows, integrations, AI-assisted support and AI-powered marketing), and digital marketing (social media, Google Ads, Google Analytics and Search Console). It also develops Goodstuff-Studio, a desktop AI workspace for Windows with agents, projects, skills and scheduled tasks. Services are delivered across South Africa and internationally through remote delivery.
+
+Also note we supply Kaspersky endpoint protection from R278 per device per year, managed Linux hosting from R100 per month, and home fibre connectivity from R349 per month through Vox ISP — with coverage checks handled from first enquiry to installed line. Business websites start from R5,000 and e-commerce from R8,500, built, hosted and supported by one team.
+
+Public commercial data was last checked on 2026-08-30. Prices, coverage, compatibility, availability, and contract or licence terms must be confirmed before purchase.
+
+## Company profile
+- [Home](https://goodstuffdesigns.co.za/): Corporate homepage and introduction to the full service range, with an FAQ covering support, marketing, website pricing, hosting and AI (#faq).
+- [Services](https://goodstuffdesigns.co.za/services): Overview of managed IT, networks and fibre, Kaspersky security, websites, AI and marketing, plus how an engagement runs.
+- [Contact us](https://goodstuffdesigns.co.za/contact): Email admin@goodstuffdesigns.co.za, call or WhatsApp +27 79 937 4801, business hours and enquiry form. The form is also a declarative WebMCP tool (submit_contact_enquiry).
+- [Privacy Policy](https://goodstuffdesigns.co.za/privacy): How Goodstuff Designs processes personal information.
+- [Cookies Policy](https://goodstuffdesigns.co.za/cookie-policy): Essential and optional analytics storage, providers and visitor controls.
+
+## Services
+- [IT and Networks](https://goodstuffdesigns.co.za/it-and-networks): Network administration (routers, switches, WiFi, VLANs, firewalls), managed IT support, cybersecurity (Kaspersky, backups, incident response), IT infrastructure and open source monitoring, and AI for IT operations.
+- [Business networks and fibre](https://goodstuffdesigns.co.za/it-and-networks#network-administration): Vox ISP connectivity — home FTTH from R349/month, business FTTB, fixed LTE-A/5G, fixed wireless, rural satellite and uncapped VoIP, from coverage check to installed line.
+- [Cybersecurity](https://goodstuffdesigns.co.za/it-and-networks#cybersecurity): Vulnerability assessments, security audits, Kaspersky endpoint protection from R278/device/year, and incident response.
+- [Websites and Hosting](https://goodstuffdesigns.co.za/websites-and-hosting): Business websites from R5,000, e-commerce from R8,500, custom web applications, and managed Linux hosting from R100/month (Novice), R200/month (Business) and R600/month (Pro).
+- [AI](https://goodstuffdesigns.co.za/ai): AI experts designing human-controlled workflows, business integrations, AI-assisted support and AI-powered marketing that stay explainable and audited.
+- [Digital Marketing](https://goodstuffdesigns.co.za/digital-marketing): Measurement and tracking with GA4, Search Console and Tag Manager, social media marketing, Google Ads management, and reporting with cost per lead and ROI.
+
+## Products & showcase
+- [Goodstuff-Studio](https://goodstuffdesigns.co.za/studio): Desktop AI workspace for Windows — agents, projects, skills, scheduled tasks, notes and a built-in browser. Download buttons open https://studio.goodstuffdesigns.co.za/.
+- [Portfolio](https://goodstuffdesigns.co.za/portfolio): Selected websites, applications, dashboards and business tools with case notes.
+- [Design Styles](https://goodstuffdesigns.co.za/design-styles): Eighty named visual styles shown as live working examples, plus layout archetypes.
+- [The Project Vault](https://code-namecode.github.io/Project-Vault/): self-updating archive of nineteen real, shipped websites, dashboards, calculators and design experiments built by Goodstuff Designs; every entry documented, classified and previewable in the browser. Source: https://github.com/Code-NameCode/Project-Vault
+
+## Machine-readable resources
+- Service catalogue (JSON): https://goodstuffdesigns.co.za/service-catalog.json
+- XML sitemap: https://goodstuffdesigns.co.za/sitemap.xml
+- Markdown sitemap: https://goodstuffdesigns.co.za/sitemap.md
+- Public GitHub (code and The Project Vault): https://github.com/Code-NameCode
+
+## WebMCP tools
+Registered on every page via document.modelContext.
+
+- search_services: read-only search of the service catalogue by need or keyword (fibre, antivirus, website, hosting, network, support).
+- list_site_pages: read-only list of canonical pages and the purpose of each.
+- get_service_pricing: read-only published pricing for hosting, Kaspersky licences or Vox ISP connectivity; does not place orders.
+- list_integrations: read-only integration categories available for assessment.
+- start_contact_enquiry: navigates to a visible contact route; it does not send a message.
+- submit_contact_enquiry: declarative tool (the visible contact form on /contact); submits a real enquiry via the fields name, email, phone, company, topic, message.
+
+## Comments
+- Contact details: email admin@goodstuffdesigns.co.za · phone/WhatsApp +27 79 937 4801 · Heidelberg, Gauteng, South Africa; international clients served remotely.
+- Business hours: Mon–Fri 08:00–17:00, Sat 08:00–13:00, Sun closed (SAST / GMT+2). Critical managed-support issues target a response within four hours during business hours; enquiries are answered within two business days.
+- Legacy routes /web-development and /hosting permanently redirect to /websites-and-hosting.
+- The site footer links to GitHub (https://github.com/Code-NameCode) in three places: the social icon row, the Contact column ("Project Vault" after "Enquiry form") and the copyright bar; each opens in a new tab.
+- This file is intended to feed AI models and agents. Markdown mirrors of every page are listed under Optional.
+
+## Frequently asked questions for agents
+- What services does Goodstuff Designs provide? — Managed IT support, business networks and fibre connectivity, cybersecurity (Kaspersky, backups, incident response), website design/development and managed Linux hosting, AI workflows and integrations, and digital marketing.
+- Do they work with international clients? — Yes; services are provided internationally through remote delivery, with the studio based in Heidelberg, Gauteng, South Africa.
+- What does hosting cost? — Managed Linux hosting from R100/month (Novice), R200/month (Business) and R600/month (Pro), as checked on 2026-08-30; confirm current pricing before purchase.
+- What is Goodstuff-Studio? — A desktop AI workspace for Windows developed by Goodstuff Designs, with agents, projects, skills, scheduled tasks and a built-in browser; learn more at https://studio.goodstuffdesigns.co.za/.
+- How can an agent submit an enquiry on the user's behalf? — Use the declarative WebMCP tool submit_contact_enquiry (the visible contact form on /contact), which requires name, email, topic and message. The imperative tool start_contact_enquiry only opens the contact page and never sends a message.
+
+## Optional
+Markdown mirrors of each page, at the same URL with a .md extension.
+
+- [Home](https://goodstuffdesigns.co.za/index.md)
+- [Services](https://goodstuffdesigns.co.za/services.md)
+- [IT and Networks](https://goodstuffdesigns.co.za/it-and-networks.md)
+- [Digital Marketing](https://goodstuffdesigns.co.za/digital-marketing.md)
+- [Websites and Hosting](https://goodstuffdesigns.co.za/websites-and-hosting.md)
+- [AI](https://goodstuffdesigns.co.za/ai.md)
+- [Portfolio](https://goodstuffdesigns.co.za/portfolio.md)
+- [Contact](https://goodstuffdesigns.co.za/contact.md)
+- [Privacy Policy](https://goodstuffdesigns.co.za/privacy.md)
+- [Cookies Policy](https://goodstuffdesigns.co.za/cookie-policy.md)
+- [Design Styles](https://goodstuffdesigns.co.za/design-styles.md)

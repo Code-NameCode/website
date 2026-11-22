@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<!-- Style: Modular Grid | 30modulargrid.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ostara — a product design system</title>
+<meta name="description" content="Ostara is a design system for product teams: 12-column modular grid, 60 components, one token set shipped to web, iOS and Android.">
+<style>
+:root{
+  /* 8px base unit drives every measurement on the page */
+  --u:8px;
+  --m1:calc(var(--u)*1);   /* 8  */
+  --m2:calc(var(--u)*2);   /* 16 */
+  --m3:calc(var(--u)*3);   /* 24 */
+  --m4:calc(var(--u)*5);   /* 40 */
+  --m5:calc(var(--u)*8);   /* 64 */
+  --m6:calc(var(--u)*12);  /* 96 */
+  --m7:calc(var(--u)*16);  /* 128 */
+  --col-gap:24px;
+  --section-pad:clamp(56px,7vw,120px);
+  /* palette */
+  --bone:#f2f1ea;
+  --bone-2:#e7e5db;
+  --graphite:#16191b;
+  --graphite-2:#23272a;
+  --ink:#14171a;
+  --text:#1c2023;
+  --muted:#5d6469;
+  --muted-2:#6d7479;
+  --rule:#d4d2c6;
+  --rule-2:#e2e0d5;
+  --oxblood:#7b2436;
+  --oxblood-2:#982f44;
+  --moss:#3d5540;
+  --brass:#a07a2c;
+  /* type */
+  --sans:"Inter","Helvetica Neue",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Consolas,Menlo,monospace;
+  --t-mega:clamp(2.8rem,7.2vw,6.2rem);
+  --t-h1:clamp(1.9rem,3.4vw,3rem);
+  --t-h2:clamp(1.35rem,2vw,1.9rem);
+  --t-h3:clamp(1.05rem,1.2vw,1.2rem);
+  --t-body:clamp(0.97rem,1vw,1.03rem);
+  --t-label:.72rem;
+  /* edges */
+  --r:0px;
+  --shadow:0 1px 0 var(--rule);
+  /* motion */
+  --d-fast:130ms;--d-base:240ms;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --nav-h:66px;
+  --container:1280px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bone);color:var(--text);
+  font-family:var(--sans);font-size:var(--t-body);line-height:1.6;
+}
+h1,h2,h3,h4{margin:0;line-height:1.06;letter-spacing:-.035em;font-weight:660}
+p{margin:0}
+a{color:inherit}
+svg{display:block;max-width:100%}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--oxblood);color:#fff}
+:focus-visible{outline:3px solid var(--oxblood);outline-offset:2px}
+.mono{font-family:var(--mono)}
+.midx{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2)}
+
+/* the module ruler: 12 columns, always visible behind content */
+.ruler{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  display:grid;grid-template-columns:repeat(12,1fr);gap:var(--col-gap);
+  padding-inline:clamp(18px,4vw,56px);
+}
+.ruler span{background:linear-gradient(180deg,rgba(123,36,54,.045),rgba(123,36,54,.015))}
+.shell{position:relative;z-index:1}
+.container{max-width:var(--container);margin:0 auto;padding-inline:clamp(18px,4vw,56px)}
+.section{padding-block:var(--section-pad);border-top:1px solid var(--rule)}
+.module-num{display:flex;align-items:baseline;gap:var(--m2);margin-bottom:var(--m3)}
+.module-num .n{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.2em;color:var(--oxblood);font-weight:700}
+.module-num .t{font-size:var(--t-label);letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2);font-weight:600}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(242,241,234,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.nav .container{display:flex;align-items:center;gap:var(--m3);min-height:var(--nav-h)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;letter-spacing:-.03em;font-size:1.1rem}
+.brand svg{width:22px;height:22px;color:var(--oxblood)}
+.nav ul{display:flex;gap:var(--m1)}
+.nav ul a{
+  text-decoration:none;font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);padding:10px 12px;min-height:44px;display:inline-flex;align-items:center;
+}
+.nav ul a:hover{color:var(--text);background:var(--bone-2)}
+.nav ul a[aria-current]{color:var(--oxblood);font-weight:700}
+.nav .spacer{margin-left:auto}
+.nav .ver{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--muted-2)}
+.nav-toggle{display:none;min-height:44px;min-width:44px;place-items:center;background:var(--bone-2);border:1px solid var(--rule);color:var(--text);cursor:pointer;font-family:inherit}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 var(--m3);
+  font:inherit;font-size:.9rem;font-weight:600;text-decoration:none;cursor:pointer;
+  background:var(--ink);color:var(--bone);border:1px solid var(--ink);border-radius:var(--r);
+  transition:background var(--d-fast) var(--ease),color var(--d-fast) var(--ease);
+}
+.btn:hover{background:var(--oxblood);border-color:var(--oxblood)}
+.btn-line{background:transparent;color:var(--text);border-color:var(--rule)}
+.btn-line:hover{background:var(--ink);color:var(--bone);border-color:var(--ink)}
+.btn-invert{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.btn-invert:hover{background:#fff;color:var(--ink)}
+.btn svg{width:16px;height:16px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* ---------- hero ---------- */
+.hero{padding-block:clamp(40px,6vw,96px)}
+.hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--col-gap);align-items:end}
+.hero-copy{grid-column:1 / span 7}
+.hero-panel{grid-column:9 / span 4;background:var(--ink);color:var(--bone);padding:var(--m3)}
+.hero h1{font-size:var(--t-mega);letter-spacing:-.045em}
+.hero h1 span{color:var(--oxblood)}
+.hero-sub{margin-top:var(--m2);font-size:clamp(1.02rem,1.25vw,1.18rem);color:var(--muted);max-width:46ch}
+.hero-meta{display:flex;flex-wrap:wrap;gap:var(--m1) var(--m3);margin-top:var(--m3);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2)}
+.hero-panel dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:var(--m1) var(--m2);font-family:var(--mono);font-size:.8rem}
+.hero-panel dt{color:#8a9197;letter-spacing:.1em;text-transform:uppercase;font-size:var(--t-label)}
+.hero-panel dd{margin:0;color:var(--bone);text-align:right}
+.hero-actions{display:flex;gap:var(--m1);flex-wrap:wrap;margin-top:var(--m3)}
+
+/* ---------- type scale ---------- */
+.scale{grid-column:1 / -1;margin-top:var(--m5);border-top:1px solid var(--rule)}
+.scale-row{display:grid;grid-template-columns:200px minmax(0,1fr) 190px;gap:var(--col-gap);align-items:baseline;padding:var(--m2) 0;border-bottom:1px solid var(--rule-2)}
+.scale-row .spec{font-family:var(--mono);font-size:var(--t-label);color:var(--muted-2);letter-spacing:.08em}
+.scale-row .spec b{display:block;color:var(--text);font-weight:600}
+.scale-row .use{font-family:var(--mono);font-size:var(--t-label);color:var(--muted-2);text-align:right}
+.sample-xl{font-size:clamp(2.1rem,4.4vw,3.4rem);font-weight:660;letter-spacing:-.04em;line-height:1.02}
+.sample-l{font-size:clamp(1.5rem,2.4vw,2rem);font-weight:640;letter-spacing:-.03em}
+.sample-m{font-size:clamp(1.1rem,1.5vw,1.35rem);font-weight:620;letter-spacing:-.02em}
+.sample-b{font-size:1rem}
+.sample-s{font-size:.875rem;color:var(--muted)}
+.sample-mono{font-family:var(--mono);font-size:.85rem}
+
+/* ---------- colour modules ---------- */
+.swatches{grid-column:1 / -1;display:grid;grid-template-columns:repeat(12,1fr);gap:var(--col-gap);margin-top:var(--m4)}
+.sw{grid-column:span 3;display:flex;flex-direction:column;border:1px solid var(--rule);background:var(--bone)}
+.sw .chip{height:112px;display:flex;align-items:flex-end;padding:var(--m1);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em}
+.sw .meta{padding:var(--m2)}
+.sw b{display:block;font-size:.95rem}
+.sw span{font-family:var(--mono);font-size:var(--t-label);color:var(--muted-2);display:block;margin-top:4px}
+.sw.wide{grid-column:span 6}
+.sw.tall .chip{height:170px}
+
+/* ---------- spacing / radius / elevation ---------- */
+.metrics{grid-column:1 / -1;display:grid;grid-template-columns:repeat(12,1fr);gap:var(--col-gap);margin-top:var(--m4)}
+.metric{grid-column:span 4;border:1px solid var(--rule);background:var(--bone);padding:var(--m3)}
+.metric h3{font-size:var(--t-h3);letter-spacing:-.02em}
+.metric .bars{margin-top:var(--m2);display:grid;gap:6px}
+.metric .bar{display:flex;align-items:center;gap:var(--m1);font-family:var(--mono);font-size:var(--t-label);color:var(--muted-2)}
+.metric .bar i{height:12px;background:var(--ink);display:block}
+.metric .bar i.ox{background:var(--oxblood)}
+.metric p{margin-top:var(--m2);font-size:.9rem;color:var(--muted)}
+
+/* ---------- component inventory matrix ---------- */
+.matrix{grid-column:1 / -1;margin-top:var(--m4);border:1px solid var(--rule);background:var(--bone)}
+.matrix-head,.matrix-row{display:grid;grid-template-columns:repeat(12,1fr);gap:0}
+.matrix-head div{padding:var(--m1) var(--m2);border-bottom:1px solid var(--rule);background:var(--bone-2);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)}
+.matrix-row div{padding:var(--m2);border-bottom:1px solid var(--rule-2);font-size:.88rem;display:flex;align-items:center;gap:8px;min-height:56px}
+.matrix-row div:first-child{font-weight:620;grid-column:span 3}
+.matrix-row div:nth-child(2){grid-column:span 3;color:var(--muted)}
+.matrix-row div:nth-child(3){grid-column:span 2;font-family:var(--mono);font-size:.8rem;color:var(--muted-2)}
+.matrix-row div:nth-child(4){grid-column:span 2}
+.matrix-row div:nth-child(5){grid-column:span 2;font-family:var(--mono);font-size:.8rem}
+.pill{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--rule);color:var(--muted);display:inline-block}
+.pill.solid{background:var(--ink);color:var(--bone);border-color:var(--ink)}
+.pill.ox{background:var(--oxblood);color:#fff;border-color:var(--oxblood)}
+.pill.moss{background:var(--moss);color:#fff;border-color:var(--moss)}
+.matrix-foot{display:flex;gap:var(--m2);flex-wrap:wrap;padding:var(--m2);font-family:var(--mono);font-size:var(--t-label);color:var(--muted-2)}
+
+/* ---------- token table ---------- */
+.tokens{grid-column:1 / -1;margin-top:var(--m4);overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:.88rem}
+th,td{text-align:left;padding:12px var(--m2);border-bottom:1px solid var(--rule-2)}
+thead th{background:var(--bone-2);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);font-weight:600}
+tbody th{font-family:var(--mono);font-size:.82rem;font-weight:600}
+tbody td{color:var(--muted)}
+td .swatchdot{display:inline-block;width:14px;height:14px;border:1px solid var(--rule);vertical-align:-2px;margin-right:8px}
+
+/* ---------- release matrix ---------- */
+.releases{grid-column:1 / -1;margin-top:var(--m4);display:grid;grid-template-columns:repeat(12,1fr);gap:var(--col-gap)}
+.release{grid-column:span 3;border:1px solid var(--rule);background:var(--bone);padding:var(--m3);display:flex;flex-direction:column;gap:var(--m1)}
+.release .ver{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--oxblood);font-weight:700}
+.release h3{font-size:1.05rem}
+.release p{font-size:.88rem;color:var(--muted);flex:1}
+.release .stats{display:flex;gap:var(--m2);border-top:1px solid var(--rule-2);padding-top:var(--m1);font-family:var(--mono);font-size:var(--t-label);color:var(--muted-2)}
+.release.next{background:var(--ink);color:var(--bone);border-color:var(--ink)}
+.release.next p{color:#a6adb3}
+.release.next .ver{color:#e0a3ae}
+.release.next .stats{border-color:#33383c;color:#8a9197}
+
+/* ---------- CTA + form ---------- */
+.cta{grid-column:1 / -1;background:var(--ink);color:var(--bone);padding:var(--m5) clamp(24px,4vw,56px);display:grid;grid-template-columns:repeat(12,1fr);gap:var(--col-gap);align-items:center}
+.cta .cta-copy{grid-column:1 / span 6}
+.cta h2{color:var(--bone);font-size:var(--t-h1)}
+.cta p{margin-top:var(--m2);color:#a6adb3;max-width:44ch}
+.cta form{grid-column:8 / span 5}
+.field{display:grid;gap:6px;margin-bottom:var(--m2)}
+.field label{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:#a6adb3}
+.field .req{color:#e0a3ae}
+.field input,.field select{
+  font:inherit;font-size:.95rem;color:var(--text);background:var(--bone);
+  border:1px solid transparent;border-radius:var(--r);padding:13px 14px;min-height:50px;width:100%;
+}
+.field input:focus-visible,.field select:focus-visible{outline:none;box-shadow:0 0 0 3px var(--oxblood-2)}
+.field input[aria-invalid="true"]{box-shadow:0 0 0 3px #e0a3ae}
+.field .help{font-family:var(--mono);font-size:var(--t-label);color:#8a9197}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--m2)}
+.checkline{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:#a6adb3;cursor:pointer;margin-bottom:var(--m1);line-height:1.4}
+.checkline input{width:20px;height:20px;margin-top:1px;accent-color:var(--oxblood);flex:none}
+.form-status{font-family:var(--mono);font-size:.84rem;min-height:1.5em;margin-top:var(--m2);color:#9fd0a8;letter-spacing:.04em}
+.form-status[data-state="error"]{color:#e8a58a}
+.form-status[data-state="busy"]{color:#8a9197}
+
+/* ---------- quote / usage ---------- */
+.usage{grid-column:1 / -1;display:grid;grid-template-columns:repeat(12,1fr);gap:var(--col-gap);margin-top:var(--m5)}
+.usage figure{grid-column:1 / span 7;border-left:3px solid var(--oxblood);padding-left:var(--m3)}
+.usage blockquote{margin:0;font-size:clamp(1.2rem,2.1vw,1.7rem);line-height:1.3;letter-spacing:-.025em}
+.usage figcaption{margin-top:var(--m2);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
+.usage .figures{grid-column:9 / span 4;display:grid;gap:var(--m2)}
+.usage .figures div{border-top:1px solid var(--rule);padding-top:var(--m1);display:flex;justify-content:space-between;gap:var(--m2);align-items:baseline}
+.usage .figures b{font-size:1.5rem;letter-spacing:-.03em}
+.usage .figures span{font-family:var(--mono);font-size:var(--t-label);color:var(--muted-2);text-align:right}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--rule);padding-block:var(--m5) var(--m4);background:var(--bone-2)}
+.foot{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--col-gap)}
+.foot > div:nth-child(1){grid-column:1 / span 4}
+.foot > div:nth-child(2){grid-column:5 / span 3}
+.foot > div:nth-child(3){grid-column:8 / span 2}
+.foot > div:nth-child(4){grid-column:10 / span 3}
+footer h3{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2);margin-bottom:var(--m2);font-weight:600}
+footer ul{display:grid;gap:8px}
+footer a{text-decoration:none;font-size:.9rem;color:var(--text)}
+footer a:hover{color:var(--oxblood);text-decoration:underline;text-underline-offset:3px}
+.foot-base{margin-top:var(--m4);padding-top:var(--m2);border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:var(--m1) var(--m3);justify-content:space-between;font-family:var(--mono);font-size:var(--t-label);color:var(--muted-2)}
+
+/* ---------- responsive: modules recompose, reading order preserved ---------- */
+@media (max-width:1100px){
+  .sw{grid-column:span 6}
+  .metric{grid-column:span 6}
+  .release{grid-column:span 6}
+  .hero-copy{grid-column:1 / span 12}
+  .hero-panel{grid-column:1 / span 12}
+  .cta .cta-copy,.cta form{grid-column:1 / span 12}
+  .usage figure{grid-column:1 / span 12}
+  .usage .figures{grid-column:1 / span 12}
+}
+@media (max-width:860px){
+  .ruler{grid-template-columns:repeat(6,1fr)}
+  .nav ul{display:none}
+  .nav ul.open{position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--bone);border-bottom:1px solid var(--rule);padding:6px 18px 14px}
+  .nav ul.open a{min-height:48px;border-bottom:1px solid var(--rule-2)}
+  .nav-toggle{display:grid;margin-left:auto;order:9}
+  .nav .ver{display:none}
+  .hero-grid,.swatches,.metrics,.releases,.usage,.foot{grid-template-columns:1fr}
+  .sw,.metric,.release,.foot > div:nth-child(n){grid-column:1 / -1}
+  .scale-row{grid-template-columns:1fr;gap:8px}
+  .scale-row .use{text-align:left}
+  .matrix-row div:first-child,.matrix-row div:nth-child(n){grid-column:1 / -1}
+  .matrix-head{display:none}
+  .matrix-row{grid-template-columns:1fr;gap:2px;padding:6px 0}
+  .field-row{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<div class="ruler" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<div class="shell">
+
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M9 3v18M15 3v18"/></svg>
+      Ostara
+    </a>
+    <nav aria-label="Primary">
+      <ul id="nav-list">
+        <li><a href="#foundations" aria-current="page">Foundations</a></li>
+        <li><a href="#components">Components</a></li>
+        <li><a href="#tokens">Tokens</a></li>
+        <li><a href="#releases">Releases</a></li>
+      </ul>
+    </nav>
+    <div class="spacer"></div>
+    <span class="ver">v4.2 · 60 components</span>
+    <a class="btn" href="#get">Get the package</a>
+    <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="module-num"><span class="n">M00</span><span class="t">Design system · product</span></div>
+          <h1>One grid.<br><span>Sixty parts.</span><br>Three platforms.</h1>
+          <p class="hero-sub">Ostara is the design system behind a mid-sized product suite. Everything is built from a 12-column module and a single token set, so a change lands identically on web, iOS and Android.</p>
+          <p class="hero-meta"><span>12-column module</span><span>8px base unit</span><span>3 platforms</span><span>WCAG 2.2 AA</span></p>
+          <div class="hero-actions">
+            <a class="btn" href="#get">Get the package
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5"/></svg>
+            </a>
+            <a class="btn btn-line" href="#components">Browse components</a>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <p class="mono" style="font-size:var(--t-label);letter-spacing:.18em;text-transform:uppercase;color:#8a9197;margin-bottom:var(--m2)">At a glance</p>
+          <dl>
+            <dt>Components</dt><dd>60</dd>
+            <dt>Tokens</dt><dd>412</dd>
+            <dt>Releases / yr</dt><dd>6</dd>
+            <dt>Adoption</dt><dd>94%</dd>
+            <dt>Bundle</dt><dd>38 kB gz</dd>
+            <dt>Licence</dt><dd>MIT</dd>
+          </dl>
+          <p class="mono" style="font-size:var(--t-label);color:#8a9197;margin-top:var(--m3);line-height:1.7">Ships as React, SwiftUI and Compose,<br>plus raw CSS custom properties.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="foundations" aria-labelledby="f-h">
+    <div class="container">
+      <div class="module-num"><span class="n">M01</span><span class="t">Foundations — type scale</span></div>
+      <h2 id="f-h" style="font-size:var(--t-h1);max-width:22ch">Six sizes, no exceptions in the wild.</h2>
+      <p style="margin-top:var(--m2);color:var(--muted);max-width:62ch">The scale is derived from an 8px base unit and a 1.25 ratio, rounded to whole pixels at every step. A seventh size was proposed in 2024 and retired after it appeared in production four times.</p>
+
+      <div class="scale">
+        <div class="scale-row">
+          <p class="spec"><b>Display / 72</b>type.display.xl</p>
+          <p class="sample-xl">Balance sheet</p>
+          <p class="use">Marketing hero only · 1 per page</p>
+        </div>
+        <div class="scale-row">
+          <p class="spec"><b>Heading 1 / 44</b>type.heading.lg</p>
+          <p class="sample-l">Balance sheet</p>
+          <p class="use">Page title · 1 per page</p>
+        </div>
+        <div class="scale-row">
+          <p class="spec"><b>Heading 2 / 28</b>type.heading.md</p>
+          <p class="sample-m">Balance sheet</p>
+          <p class="use">Section title</p>
+        </div>
+        <div class="scale-row">
+          <p class="spec"><b>Heading 3 / 22</b>type.heading.sm</p>
+          <p class="sample-m" style="font-size:1.1rem">Balance sheet</p>
+          <p class="use">Card and panel title</p>
+        </div>
+        <div class="scale-row">
+          <p class="spec"><b>Body / 16</b>type.body.md</p>
+          <p class="sample-b">Balance sheet</p>
+          <p class="use">Default reading size, 65ch measure</p>
+        </div>
+        <div class="scale-row">
+          <p class="spec"><b>Caption / 14</b>type.body.sm</p>
+          <p class="sample-s">Balance sheet · metadata, helper text</p>
+          <p class="use">Never below 14px on touch</p>
+        </div>
+        <div class="scale-row">
+          <p class="spec"><b>Mono / 13.6</b>type.mono.md</p>
+          <p class="sample-mono">ostara build --target web</p>
+          <p class="use">Code, IDs, keyboard hints</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="c-h" style="background:var(--bone-2)">
+    <div class="container">
+      <div class="module-num"><span class="n">M02</span><span class="t">Foundations — colour and space</span></div>
+      <h2 id="c-h" style="font-size:var(--t-h1);max-width:24ch">Nine colours that carry meaning, and a spacing unit that never moves.</h2>
+
+      <div class="swatches">
+        <div class="sw tall">
+          <div class="chip" style="background:#f2f1ea;color:#5d6469">BONE / 50</div>
+          <div class="meta"><b>Surface default</b><span>bg.surface.100</span></div>
+        </div>
+        <div class="sw">
+          <div class="chip" style="background:#14171a;color:#a6adb3">INK / 900</div>
+          <div class="meta"><b>Text primary</b><span>fg.default</span></div>
+        </div>
+        <div class="sw tall">
+          <div class="chip" style="background:#7b2436;color:#f6e2e6">OXBLOOD / 600</div>
+          <div class="meta"><b>Primary action</b><span>accent.primary</span></div>
+        </div>
+        <div class="sw">
+          <div class="chip" style="background:#3d5540;color:#e2ece4">MOSS / 700</div>
+          <div class="meta"><b>Positive state</b><span>state.success</span></div>
+        </div>
+        <div class="sw">
+          <div class="chip" style="background:#a07a2c;color:#f6efdd">BRASS / 600</div>
+          <div class="meta"><b>Caution state</b><span>state.warning</span></div>
+        </div>
+        <div class="sw">
+          <div class="chip" style="background:#d4d2c6;color:#5d6469">RULE / 200</div>
+          <div class="meta"><b>Divider, border</b><span>border.default</span></div>
+        </div>
+        <div class="sw wide">
+          <div class="chip" style="background:#8a9197;color:#14171a">MUTED / 500 — also the disabled fill for controls that cannot be edited</div>
+          <div class="meta"><b>Secondary text</b><span>fg.muted · also border on disabled controls, never for interactive text</span></div>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <h3>Space</h3>
+          <div class="bars">
+            <div class="bar"><i style="width:8px"></i>8 · m1</div>
+            <div class="bar"><i style="width:16px"></i>16 · m2</div>
+            <div class="bar"><i style="width:24px"></i>24 · m3</div>
+            <div class="bar"><i style="width:40px"></i>40 · m4</div>
+            <div class="bar"><i style="width:64px"></i>64 · m5</div>
+            <div class="bar"><i style="width:96px"></i>96 · m6</div>
+          </div>
+          <p>Seven steps from an 8px base. Padding is never a value that is not in this list.</p>
+        </div>
+        <div class="metric">
+          <h3>Radius &amp; elevation</h3>
+          <div class="bars">
+            <div class="bar"><i class="ox" style="width:100%"></i>0 — module, table, panel</div>
+            <div class="bar"><i class="ox" style="width:100%"></i>4 — input, button, chip</div>
+            <div class="bar"><i class="ox" style="width:100%"></i>8 — popover, menu</div>
+            <div class="bar"><i class="ox" style="width:100%"></i>full — avatar, toggle, progress</div>
+          </div>
+          <p>Elevation is a 1px rule, not a shadow. Shadows are reserved for floating layers only.</p>
+        </div>
+        <div class="metric">
+          <h3>Breakpoints &amp; columns</h3>
+          <div class="bars">
+            <div class="bar"><i style="width:100%"></i>4 columns &lt; 640</div>
+            <div class="bar"><i style="width:100%"></i>8 columns &lt; 1024</div>
+            <div class="bar"><i style="width:100%"></i>12 columns ≥ 1024</div>
+            <div class="bar"><i style="width:100%"></i>24px column gap, always</div>
+            <div class="bar"><i style="width:100%"></i>1280px max content</div>
+          </div>
+          <p>Components declare spans in columns, never pixels, so the same markup works at every size.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="components" aria-labelledby="comp-h">
+    <div class="container">
+      <div class="module-num"><span class="n">M03</span><span class="t">Component inventory</span></div>
+      <h2 id="comp-h" style="font-size:var(--t-h1)">Sixty components, four states each, three platforms.</h2>
+      <p style="margin-top:var(--m2);color:var(--muted);max-width:64ch">A component ships only when it exists in all three platforms with identical names, identical token references and a documented empty state. That rule is why the count is sixty and not four hundred.</p>
+
+      <div class="matrix">
+        <div class="matrix-head" aria-hidden="true">
+          <div style="grid-column:span 3">Component</div>
+          <div style="grid-column:span 3">Purpose</div>
+          <div style="grid-column:span 2">Count</div>
+          <div style="grid-column:span 2">Status</div>
+          <div style="grid-column:span 2">Since</div>
+        </div>
+        <div class="matrix-row">
+          <div>Inputs &amp; selection</div>
+          <div>Text field, select, checkbox, radio, switch, slider, date</div>
+          <div>12 parts</div>
+          <div><span class="pill solid">stable</span></div>
+          <div>v1.0</div>
+        </div>
+        <div class="matrix-row">
+          <div>Feedback</div>
+          <div>Toast, inline alert, progress, skeleton, empty state</div>
+          <div>8 parts</div>
+          <div><span class="pill solid">stable</span></div>
+          <div>v1.0</div>
+        </div>
+        <div class="matrix-row">
+          <div>Data display</div>
+          <div>Table, data grid, list, card, key–value, chart frame</div>
+          <div>14 parts</div>
+          <div><span class="pill solid">stable</span></div>
+          <div>v2.1</div>
+        </div>
+        <div class="matrix-row">
+          <div>Navigation</div>
+          <div>Tabs, side nav, breadcrumb, pagination, command bar</div>
+          <div>11 parts</div>
+          <div><span class="pill ox">changed in v4</span></div>
+          <div>v3.0</div>
+        </div>
+        <div class="matrix-row">
+          <div>Overlay</div>
+          <div>Dialog, drawer, popover, tooltip, menu</div>
+          <div>7 parts</div>
+          <div><span class="pill moss">beta</span></div>
+          <div>v4.0</div>
+        </div>
+        <div class="matrix-row">
+          <div>Layout</div>
+          <div>Module, stack, cluster, sidebar frame</div>
+          <div>8 parts</div>
+          <div><span class="pill solid">stable</span></div>
+          <div>v1.0</div>
+        </div>
+        <div class="matrix-foot">
+          <span>60 components</span><span>·</span><span>412 tokens</span><span>·</span><span>3 platforms</span><span>·</span><span>38 kB gzipped</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tokens" aria-labelledby="tok-h" style="background:var(--bone-2)">
+    <div class="container">
+      <div class="module-num"><span class="n">M04</span><span class="t">Token reference</span></div>
+      <h2 id="tok-h" style="font-size:var(--t-h1)">The eleven tokens a product team actually touches.</h2>
+      <p style="margin-top:var(--m2);color:var(--muted);max-width:64ch">The other four hundred are derived. Teams set semantic tokens; the system resolves them against the active theme. A raw value in product code is a lint error.</p>
+
+      <div class="tokens">
+        <table>
+          <caption class="mono" style="text-align:left;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);padding-bottom:12px">Semantic tokens · web value, iOS name, Android name</caption>
+          <thead>
+            <tr><th scope="col">Token</th><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Since</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">bg.surface.100</th><td>Page background</td><td><span class="swatchdot" style="background:#f2f1ea"></span>Bone 50</td><td><span class="swatchdot" style="background:#14171a"></span>Ink 900</td><td class="mono">v1.0</td></tr>
+            <tr><th scope="row">bg.raised.200</th><td>Card, panel, menu</td><td><span class="swatchdot" style="background:#ffffff"></span>Pure white</td><td><span class="swatchdot" style="background:#23272a"></span>Graphite 800</td><td class="mono">v1.0</td></tr>
+            <tr><th scope="row">fg.default</th><td>Body text</td><td><span class="swatchdot" style="background:#14171a"></span>Ink 900</td><td><span class="swatchdot" style="background:#f2f1ea"></span>Bone 50</td><td class="mono">v1.0</td></tr>
+            <tr><th scope="row">fg.muted</th><td>Caption, helper</td><td><span class="swatchdot" style="background:#5d6469"></span>Muted 600</td><td><span class="swatchdot" style="background:#a6adb3"></span>Muted 300</td><td class="mono">v1.0</td></tr>
+            <tr><th scope="row">accent.primary</th><td>Primary action</td><td><span class="swatchdot" style="background:#7b2436"></span>Oxblood 600</td><td><span class="swatchdot" style="background:#982f44"></span>Oxblood 500</td><td class="mono">v2.0</td></tr>
+            <tr><th scope="row">border.default</th><td>Divider, input edge</td><td><span class="swatchdot" style="background:#d4d2c6"></span>Rule 200</td><td><span class="swatchdot" style="background:#33383c"></span>Rule 700</td><td class="mono">v1.0</td></tr>
+            <tr><th scope="row">state.success</th><td>Confirmation</td><td><span class="swatchdot" style="background:#3d5540"></span>Moss 700</td><td><span class="swatchdot" style="background:#5b7a5f"></span>Moss 500</td><td class="mono">v3.2</td></tr>
+            <tr><th scope="row">state.warning</th><td>Needs attention</td><td><span class="swatchdot" style="background:#a07a2c"></span>Brass 600</td><td><span class="swatchdot" style="background:#c39a44"></span>Brass 400</td><td class="mono">v3.2</td></tr>
+            <tr><th scope="row">focus.ring</th><td>Keyboard focus</td><td><span class="swatchdot" style="background:#7b2436"></span>Oxblood 600</td><td><span class="swatchdot" style="background:#e0a3ae"></span>Rose 300</td><td class="mono">v4.0</td></tr>
+            <tr><th scope="row">space.m3</th><td>Component padding</td><td class="mono">24px</td><td class="mono">24px</td><td class="mono">v1.0</td></tr>
+            <tr><th scope="row">radius.control</th><td>Control corner</td><td class="mono">4px</td><td class="mono">4px</td><td class="mono">v1.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="usage">
+        <figure>
+          <blockquote>“We replaced three styling systems with Ostara in a quarter. The parts that mattered were not the components — it was that nobody had to invent a spacing value any more.”</blockquote>
+          <figcaption>Priya Raman · Design systems lead, Kestrel Labs</figcaption>
+        </figure>
+        <div class="figures">
+          <div><b>3</b><span>systems retired</span></div>
+          <div><b>94%</b><span>of screens on Ostara</span></div>
+          <div><b>11 wk</b><span>from install to first migration</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="releases" aria-labelledby="rel-h">
+    <div class="container">
+      <div class="module-num"><span class="n">M05</span><span class="t">Release cadence</span></div>
+      <h2 id="rel-h" style="font-size:var(--t-h1)">Every second Thursday, whether it is finished or not.</h2>
+      <p style="margin-top:var(--m2);color:var(--muted);max-width:64ch">Six releases a year, dated, with a migration note for anything breaking. A release never ships a component without the same change on iOS and Android — that is the whole point of the schedule.</p>
+
+      <div class="releases">
+        <article class="release next">
+          <p class="ver">v4.3 · 13 Nov</p>
+          <h3>Overlay family</h3>
+          <p>Dialog, drawer and popover graduate from beta with focus-trap and scroll-lock parity across platforms.</p>
+          <p class="stats"><span>7 components</span><span>in progress</span></p>
+        </article>
+        <article class="release">
+          <p class="ver">v4.2 · 14 Aug</p>
+          <h3>Command bar</h3>
+          <p>Fuzzy search over every registered action, with keyboard-only operation and a documented shortcut scheme.</p>
+          <p class="stats"><span>1 new</span><span>4.0 kB</span></p>
+        </article>
+        <article class="release">
+          <p class="ver">v4.1 · 12 Jun</p>
+          <h3>Focus ring</h3>
+          <p>A single focus token, raised to a theme-aware colour after an audit found 22% of our own controls used the old one inconsistently.</p>
+          <p class="stats"><span>breaking</span><span>auto-migrated</span></p>
+        </article>
+        <article class="release">
+          <p class="ver">v4.0 · 14 Feb</p>
+          <h3>Modules and spans</h3>
+          <p>Layout primitives replace per-screen grids. Components declare column spans instead of pixel widths.</p>
+          <p class="stats"><span>8 components</span><span>breaking</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="get" aria-labelledby="get-h" style="border-top:1px solid var(--rule)">
+    <div class="container">
+      <div class="cta">
+        <div class="cta-copy">
+          <div class="module-num"><span class="n" style="color:#e0a3ae">M06</span><span class="t" style="color:#8a9197">Get the package</span></div>
+          <h2 id="get-h">Install Ostara in an afternoon.</h2>
+          <p>One package per platform, a token file you commit, and a lint rule that keeps raw values out. The migration guide assumes you are starting from nothing.</p>
+          <p class="mono" style="margin-top:var(--m3);font-size:var(--t-label);color:#8a9197;letter-spacing:.1em">npm i @ostara/react · swift package Ostara · gradle dev.ostara:compose</p>
+        </div>
+        <form id="get-form" novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="g-name">Name <span class="req" aria-hidden="true">*</span></label>
+              <input id="g-name" name="name" type="text" autocomplete="name" placeholder="Amara Osei" required>
+            </div>
+            <div class="field">
+              <label for="g-email">Work email <span class="req" aria-hidden="true">*</span></label>
+              <input id="g-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="g-platform">Primary platform</label>
+            <select id="g-platform" name="platform">
+              <option>React (web)</option>
+              <option>SwiftUI (iOS)</option>
+              <option>Compose (Android)</option>
+              <option>All three</option>
+            </select>
+            <p class="help">Decides which migration guide we send first.</p>
+          </div>
+          <label class="checkline"><input type="checkbox" name="breaking" value="yes" checked> Notify me about breaking changes before they ship</label>
+          <label class="checkline"><input type="checkbox" name="news" value="yes"> Send the release note, not just the diff</label>
+          <div style="display:flex;gap:var(--m2);flex-wrap:wrap;align-items:center;margin-top:var(--m2)">
+            <button class="btn btn-invert" type="submit" id="g-submit">Send me the package
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5"/></svg>
+            </button>
+          </div>
+          <p class="form-status" id="g-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div>
+        <h3>Ostara</h3>
+        <p style="max-width:32ch;font-size:.92rem;color:var(--muted)">A product design system, maintained in the open by the six teams that use it. Named for the spring equinox, when the day and the night are the same length.</p>
+      </div>
+      <div>
+        <h3>Foundations</h3>
+        <ul>
+          <li><a href="#foundations">Type scale</a></li>
+          <li><a href="#foundations">Colour</a></li>
+          <li><a href="#foundations">Space &amp; grid</a></li>
+          <li><a href="#tokens">Token reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Build</h3>
+        <ul>
+          <li><a href="#components">Components</a></li>
+          <li><a href="#releases">Releases</a></li>
+          <li><a href="#tokens">Migration</a></li>
+          <li><a href="#get">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Repository</h3>
+        <ul>
+          <li><a href="#get">Source</a></li>
+          <li><a href="#get">Issues</a></li>
+          <li><a href="#get">Contributing</a></li>
+          <li><a href="mailto:ostara@system.example">ostara@system.example</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 Ostara · MIT licence</span>
+      <span>v4.2.1 · built on an 8px unit</span>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var toggle=document.getElementById('nav-toggle');
+  var list=document.getElementById('nav-list');
+  toggle.addEventListener('click',function(){
+    var open=toggle.getAttribute('aria-expanded')==='true';
+    toggle.setAttribute('aria-expanded',String(!open));
+    toggle.setAttribute('aria-label',open?'Open menu':'Close menu');
+    list.classList.toggle('open',!open);
+  });
+
+  /* section-aware nav */
+  var links=Array.prototype.slice.call(document.querySelectorAll('#nav-list a'));
+  var sections=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        links.forEach(function(a){a.removeAttribute('aria-current');});
+        var i=sections.indexOf(e.target);
+        if(i>-1) links[i].setAttribute('aria-current','page');
+      });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){if(s) io.observe(s);});
+  }
+
+  var form=document.getElementById('get-form');
+  var status=document.getElementById('g-status');
+  var submit=document.getElementById('g-submit');
+  form.addEventListener('input',function(e){ if(e.target.hasAttribute('aria-invalid')) e.target.removeAttribute('aria-invalid'); });
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('g-name');
+    var email=document.getElementById('g-email');
+    var bad=false;
+    if(!name.value.trim()){ name.setAttribute('aria-invalid','true'); bad=true; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){ email.setAttribute('aria-invalid','true'); bad=true; }
+    if(bad){
+      status.dataset.state='error';
+      status.textContent='A name and a valid work email are both required.';
+      var f=form.querySelector('[aria-invalid="true"]'); if(f) f.focus();
+      return;
+    }
+    submit.disabled=true; submit.textContent='Sending…'; status.dataset.state='busy'; status.textContent='Preparing the tarball link.';
+    setTimeout(function(){
+      submit.disabled=false; submit.textContent='Send me the package';
+      status.dataset.state='ok';
+      status.textContent='On its way, '+name.value.trim().split(' ')[0]+'. The link is valid for 24 hours and includes the migration guide.';
+      form.reset();
+    },700);
+  });
+})();
+</script>
+</body>
+</html>

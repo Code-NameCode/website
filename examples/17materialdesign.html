@@ -1,0 +1,650 @@
+<!-- Style: Material Design | 17materialdesign.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ledgerline — expense management</title>
+<style>
+:root{
+  --primary:#1a5fb4;
+  --primary-dark:#12488a;
+  --on-primary:#ffffff;
+  --primary-container:#d8e4f7;
+  --on-primary-container:#0d2a4f;
+  --secondary:#00695c;
+  --secondary-container:#cdeee8;
+  --on-secondary-container:#04372f;
+  --tertiary-container:#ffe0b2;
+  --on-tertiary-container:#5a3a00;
+  --error:#b3261e;
+  --error-container:#f9dedc;
+  --bg:#f4f6f8;
+  --surface:#ffffff;
+  --surface-2:#eef1f4;
+  --on-surface:#1a1c1e;
+  --on-surface-2:#43474e;
+  --on-surface-3:#6b7078;
+  --outline:#c3c7ce;
+  --outline-2:#dde0e5;
+  --state-hover:rgba(26,92,180,.08);
+  --state-press:rgba(26,92,180,.14);
+  --el1:0 1px 2px rgba(16,24,40,.10),0 1px 3px rgba(16,24,40,.08);
+  --el2:0 1px 3px rgba(16,24,40,.10),0 4px 8px rgba(16,24,40,.08);
+  --el3:0 4px 8px rgba(16,24,40,.10),0 12px 24px rgba(16,24,40,.10);
+  --el4:0 8px 16px rgba(16,24,40,.10),0 24px 48px rgba(16,24,40,.14);
+  --font:"Roboto","Segoe UI",system-ui,-apple-system,sans-serif;
+  --t-xs:clamp(.73rem,.7rem + .12vw,.81rem);
+  --t-sm:clamp(.85rem,.82rem + .15vw,.94rem);
+  --t-md:clamp(.95rem,.92rem + .18vw,1.05rem);
+  --t-lg:clamp(1.22rem,1.08rem + .6vw,1.5rem);
+  --t-xl:clamp(1.7rem,1.4rem + 1.5vw,2.3rem);
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;--s-6:2rem;--s-7:2.75rem;
+  --r-s:8px;--r-m:14px;--r-l:20px;--r-pill:999px;
+  --d-short:120ms;--d-med:260ms;--d-long:420ms;
+  --ease-std:cubic-bezier(.2,0,0,1);--ease-decel:cubic-bezier(0,0,0,1);--ease-acc:cubic-bezier(.3,0,1,1);
+  --w:min(1240px,100% - 2.5rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--on-surface);font-family:var(--font);font-size:var(--t-md);line-height:1.55}
+h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.wrap{width:var(--w);margin-inline:auto}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:.5rem;top:.5rem;z-index:90;background:var(--primary);color:#fff;padding:.6rem 1rem;border-radius:var(--r-s)}
+.label{font-size:var(--t-xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--on-surface-3)}
+.body-2{color:var(--on-surface-2);font-size:var(--t-sm)}
+
+/* app bar */
+.appbar{background:var(--primary);color:var(--on-primary);position:sticky;top:0;z-index:40;
+  box-shadow:var(--el2);display:flex;align-items:center;gap:var(--s-3);min-height:64px;padding:0 var(--s-4)}
+.iconbtn{
+  width:48px;height:48px;border-radius:var(--r-pill);border:0;background:transparent;color:inherit;cursor:pointer;
+  display:grid;place-items:center;position:relative;overflow:hidden;flex:none;
+}
+.iconbtn:hover{background:rgba(255,255,255,.14)}
+.iconbtn:active{background:rgba(255,255,255,.24)}
+.appbar__title{font-size:var(--t-lg);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appbar__actions{margin-left:auto;display:flex;align-items:center}
+.appbar .avatar{width:36px;height:36px;border-radius:50%;background:#fff;color:var(--primary);display:grid;place-items:center;
+  font-size:var(--t-xs);font-weight:700;margin-left:var(--s-2)}
+
+/* nav drawer */
+.drawer{
+  position:fixed;top:0;bottom:0;left:0;width:296px;background:var(--surface);z-index:50;
+  transform:translateX(-100%);transition:transform var(--d-med) var(--ease-std);
+  box-shadow:var(--el4);display:flex;flex-direction:column;padding-top:64px;overflow-y:auto;
+}
+.drawer[data-open="true"]{transform:translateX(0)}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:45;opacity:0;pointer-events:none;transition:opacity var(--d-med) var(--ease-std)}
+.scrim[data-open="true"]{opacity:1;pointer-events:auto}
+.drawer__head{background:var(--primary-container);color:var(--on-primary-container);padding:var(--s-4);margin:0;height:auto;min-height:0}
+.drawer nav{padding:var(--s-3) 0}
+.drawer nav a{display:flex;align-items:center;gap:var(--s-4);min-height:56px;padding:0 var(--s-5);color:var(--on-surface);font-size:var(--t-sm)}
+.drawer nav a:hover{background:var(--state-hover);text-decoration:none}
+.drawer nav a[aria-current]{background:var(--secondary-container);color:var(--on-secondary-container);font-weight:500}
+.drawer nav a .badge{margin-left:auto;background:var(--error);color:#fff;font-size:.68rem;font-weight:700;
+  min-width:22px;height:22px;border-radius:var(--r-pill);display:grid;place-items:center;padding:0 6px}
+.drawer__foot{margin-top:auto;padding:var(--s-4);border-top:1px solid var(--outline-2);font-size:var(--t-xs);color:var(--on-surface-3)}
+
+/* nav rail (wide) */
+.rail{display:none}
+
+/* tabs */
+.tabs{background:var(--surface);box-shadow:var(--el1);display:flex;overflow-x:auto;padding:0 var(--s-4);position:sticky;top:64px;z-index:30}
+.tabs button{background:none;border:0;font-family:inherit;font-size:var(--t-sm);font-weight:500;color:var(--on-surface-3);
+  min-height:56px;padding:0 var(--s-4);cursor:pointer;position:relative;white-space:nowrap}
+.tabs button:hover{background:var(--state-hover);color:var(--on-surface)}
+.tabs button[aria-selected="true"]{color:var(--primary)}
+.tabs button[aria-selected="true"]::after{content:"";position:absolute;left:var(--s-3);right:var(--s-3);bottom:0;height:3px;
+  background:var(--primary);border-radius:3px 3px 0 0}
+.tabpanel[hidden]{display:none}
+
+/* buttons with state layer */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  font-family:inherit;font-size:var(--t-sm);font-weight:500;letter-spacing:.02em;min-height:44px;padding:0 var(--s-5);
+  border-radius:var(--r-pill);border:1px solid transparent;cursor:pointer;text-decoration:none;
+  transition:box-shadow var(--d-short) var(--ease-std),background var(--d-short) var(--ease-std);}
+.btn::before{content:"";position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity var(--d-short) linear;pointer-events:none}
+.btn:hover::before{opacity:.09}
+.btn:active::before{opacity:.16}
+.btn--filled{background:var(--primary);color:var(--on-primary);box-shadow:var(--el1)}
+.btn--filled:hover{box-shadow:var(--el2);text-decoration:none}
+.btn--tonal{background:var(--secondary-container);color:var(--on-secondary-container);box-shadow:var(--el1)}
+.btn--tonal:hover{text-decoration:none;box-shadow:var(--el2)}
+.btn--outlined{border-color:var(--outline);color:var(--primary);background:transparent}
+.btn--outlined:hover{background:var(--state-hover);text-decoration:none}
+.btn--text{color:var(--primary);background:transparent;padding:0 var(--s-3)}
+.btn--text:hover{background:var(--state-hover);text-decoration:none}
+.btn[disabled]{background:var(--outline-2);color:var(--on-surface-3);box-shadow:none;cursor:not-allowed}
+.btn[disabled]::before{opacity:0}
+
+/* surfaces */
+.card{background:var(--surface);border-radius:var(--r-m);box-shadow:var(--el1)}
+.card--2{box-shadow:var(--el2)}
+.card__hd{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-4) var(--s-4) var(--s-2)}
+.card__bd{padding:var(--s-2) var(--s-4) var(--s-4)}
+
+/* page head */
+.pagehead{padding:var(--s-6) 0 var(--s-4);display:flex;flex-wrap:wrap;gap:var(--s-4);align-items:flex-end;justify-content:space-between}
+.pagehead h1,.pagehead h2{font-size:var(--t-xl)}
+.pagehead p{color:var(--on-surface-2);font-size:var(--t-sm);max-width:56ch;margin-top:.3rem}
+.head-actions{display:flex;gap:var(--s-2);flex-wrap:wrap}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:var(--s-5);align-items:start;padding-bottom:var(--s-8)}
+.stack{display:grid;gap:var(--s-5)}
+
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4)}
+.kpi{padding:var(--s-4);display:flex;flex-direction:column;gap:.2rem}
+.kpi b{font-size:var(--t-lg);font-weight:500;font-variant-numeric:tabular-nums}
+.kpi span{font-size:var(--t-xs);color:var(--on-surface-3)}
+.kpi--accent{background:var(--secondary-container);color:var(--on-secondary-container);box-shadow:none}
+.kpi--accent span{color:var(--on-secondary-container);opacity:.75}
+.delta{font-size:var(--t-xs);font-weight:600}
+.delta--up{color:var(--error)} .delta--down{color:var(--secondary)}
+
+/* chips */
+.chips{display:flex;gap:.4rem;flex-wrap:wrap}
+.chip{border-radius:var(--r-s);font-size:var(--t-xs);font-weight:500;padding:.3rem .6rem;background:var(--surface-2);color:var(--on-surface-2)}
+.chip--ok{background:var(--secondary-container);color:var(--on-secondary-container)}
+.chip--warn{background:var(--tertiary-container);color:var(--on-tertiary-container)}
+.chip--err{background:var(--error-container);color:var(--error)}
+
+/* chart */
+.chart{padding:var(--s-4)}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:var(--s-4);flex-wrap:wrap;font-size:var(--t-xs);color:var(--on-surface-2);padding-top:var(--s-3)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:.35rem;vertical-align:-1px}
+
+/* list */
+.expenses{list-style:none;margin:0;padding:0}
+.expenses li{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4);border-bottom:1px solid var(--outline-2);min-height:72px}
+.expenses li:last-child{border-bottom:0}
+.expenses .ico{width:40px;height:40px;border-radius:var(--r-s);display:grid;place-items:center;flex:none;background:var(--surface-2);color:var(--on-surface-2)}
+.expenses .who{flex:1;min-width:0}
+.expenses .who b{display:block;font-weight:500;font-size:var(--t-sm)}
+.expenses .who span{font-size:var(--t-xs);color:var(--on-surface-3)}
+.expenses .amt{font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
+.expenses li[hidden]{display:none}
+
+/* form — outlined fields with helper + error */
+.form{padding:var(--s-4)}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.field{display:grid;gap:.3rem;position:relative}
+.field--full{grid-column:1/-1}
+label{font-size:var(--t-sm);color:var(--on-surface-2);font-weight:500}
+input,select,textarea{
+  font-family:inherit;font-size:var(--t-sm);color:var(--on-surface);background:transparent;
+  border:1px solid var(--outline);border-radius:var(--r-s);padding:1rem .8rem .55rem;min-height:56px;width:100%;
+  transition:border-color var(--d-short) var(--ease-std),box-shadow var(--d-short) var(--ease-std);
+}
+textarea{min-height:96px;resize:vertical;padding-top:1.2rem}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px var(--primary)}
+.field[data-invalid="true"] input,.field[data-invalid="true"] textarea{border-color:var(--error);box-shadow:inset 0 0 0 1px var(--error)}
+.field[data-invalid="true"] label{color:var(--error)}
+.helper{font-size:var(--t-xs);color:var(--on-surface-3);min-height:1.1em}
+.field[data-invalid="true"] .helper{color:var(--error);font-weight:500}
+.formmsg{margin-top:var(--s-4);padding:var(--s-3) var(--s-4);border-radius:var(--r-s);background:var(--secondary-container);
+  color:var(--on-secondary-container);font-size:var(--t-sm);display:flex;gap:.5rem;align-items:flex-start}
+.formmsg[data-tone="err"]{background:var(--error-container);color:var(--error)}
+
+/* FAB */
+.fab{
+  position:fixed;right:var(--s-5);bottom:var(--s-5);z-index:35;border:0;cursor:pointer;
+  height:56px;padding:0 var(--s-5);border-radius:var(--r-m);background:var(--secondary-container);color:var(--on-secondary-container);
+  font-family:inherit;font-size:var(--t-sm);font-weight:500;box-shadow:var(--el3);display:inline-flex;align-items:center;gap:.5rem;
+  text-decoration:none;overflow:hidden;
+}
+.fab:hover{box-shadow:var(--el4);text-decoration:none}
+.fab:active{box-shadow:var(--el2)}
+
+/* budget rail */
+.budget{padding:var(--s-4)}
+.bar{height:10px;border-radius:var(--r-pill);background:var(--surface-2);overflow:hidden;margin:var(--s-2) 0 var(--s-1)}
+.bar span{display:block;height:100%;background:var(--primary);border-radius:var(--r-pill)}
+.bar--warn span{background:#c77800} .bar--over span{background:var(--error)}
+.budget dl{margin:0;display:grid;gap:var(--s-3)}
+.budget dl div{display:flex;justify-content:space-between;gap:var(--s-3);font-size:var(--t-sm)}
+.budget dt{color:var(--on-surface-2)} .budget dd{margin:0;font-weight:500;font-variant-numeric:tabular-nums}
+
+.reviewlist{list-style:none;margin:0;padding:0}
+.reviewlist li{display:flex;gap:var(--s-3);padding:var(--s-3) var(--s-4);border-bottom:1px solid var(--outline-2);font-size:var(--t-sm)}
+.reviewlist li:last-child{border-bottom:0}
+.reviewlist .day{font-size:var(--t-xs);color:var(--on-surface-3);white-space:nowrap;min-width:44px}
+.reviewlist b{font-weight:500;display:block}
+
+footer{border-top:1px solid var(--outline-2);background:var(--surface);padding:var(--s-5) 0;margin-top:var(--s-6)}
+.foot{display:flex;flex-wrap:wrap;gap:var(--s-4) var(--s-6);justify-content:space-between;align-items:center;font-size:var(--t-sm);color:var(--on-surface-2)}
+.foot ul{list-style:none;display:flex;flex-wrap:wrap;gap:var(--s-4);margin:0;padding:0}
+.foot a{color:var(--on-surface-2);display:inline-flex;align-items:center;min-height:44px}
+.foot a:hover{color:var(--primary)}
+
+@media (min-width:1100px){
+  .shell{display:grid;grid-template-columns:80px minmax(0,1fr)}
+  .rail{display:grid;align-content:start;gap:var(--s-2);padding:var(--s-4) var(--s-2);background:var(--surface);box-shadow:var(--el1);min-height:calc(100vh - 64px)}
+  .rail a{display:grid;justify-items:center;gap:.25rem;padding:.6rem .2rem;border-radius:var(--r-m);min-height:64px;
+    font-size:.68rem;color:var(--on-surface-2);text-align:center;text-decoration:none}
+  .rail a:hover{background:var(--state-hover);text-decoration:none}
+  .rail a[aria-current]{background:var(--secondary-container);color:var(--on-secondary-container)}
+  .content{padding-left:var(--s-5)}
+}
+@media (max-width:1099px){
+  .shell{padding-left:0}
+}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .formgrid{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr}
+  .pagehead{flex-direction:column;align-items:flex-start}
+  .appbar__title{font-size:var(--t-md)}
+  .tabs{top:64px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .drawer{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="scrim" id="scrim" data-open="false"></div>
+
+<header class="appbar">
+  <button class="iconbtn" id="drawerbtn" aria-expanded="false" aria-controls="drawer" aria-label="Open navigation menu">
+    <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true"><path d="M0 1h22M0 9h22M0 17h22" stroke="currentColor" stroke-width="2"/></svg>
+  </button>
+  <h1 class="appbar__title">Ledgerline</h1>
+  <div class="appbar__actions">
+    <button class="iconbtn" type="button" aria-label="Search expenses">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.5 13.5L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button class="iconbtn" type="button" aria-label="Notifications">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a5 5 0 0 1 5 5v3l1.5 3h-13L5 10V7a5 5 0 0 1 5-5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 16a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+    </button>
+    <span class="avatar" aria-hidden="true">MP</span>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" data-open="false" role="dialog" aria-modal="false" aria-label="Navigation menu">
+  <div class="drawer__head">
+    <p class="label" style="color:inherit;opacity:.75">Account</p>
+    <strong>Meridian Freight Ltd</strong>
+  </div>
+  <nav aria-label="Main">
+    <a href="#overview" aria-current="page">Overview</a>
+    <a href="#expenses">Expenses <span class="badge">7</span></a>
+    <a href="#spend">Spend by category</a>
+    <a href="#submit">Submit a claim</a>
+    <a href="#approvals">Approvals <span class="badge">3</span></a>
+    <a href="#policy">Policy</a>
+  </nav>
+  <div class="drawer__foot">Ledgerline 7.4 · FY26 Q2 · Close in 9 days</div>
+</div>
+
+<div class="shell">
+  <nav class="rail" aria-label="Quick navigation">
+    <a href="#overview" aria-current="page">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+      Overview
+    </a>
+    <a href="#expenses">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>
+      Claims
+    </a>
+    <a href="#spend">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 20V9M10 20V4M16 20v-7M22 20H2"/></svg>
+      Reports
+    </a>
+    <a href="#submit">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+      New
+    </a>
+    <a href="#policy">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M9 11h6M9 15h6"/></svg>
+      Policy
+    </a>
+  </nav>
+
+  <div>
+    <div class="tabs" role="tablist" aria-label="Ledger sections">
+      <button role="tab" id="tab-overview" aria-controls="p-overview" aria-selected="true">Overview</button>
+      <button role="tab" id="tab-expenses" aria-controls="p-expenses" aria-selected="false">Expenses</button>
+      <button role="tab" id="tab-submit" aria-controls="p-submit" aria-selected="false">Submit a claim</button>
+    </div>
+
+    <main class="wrap" id="main">
+      <div id="p-overview" role="tabpanel" aria-labelledby="tab-overview">
+        <div class="pagehead">
+          <div>
+            <h2>Good morning, Priya</h2>
+            <p>FY26 Q2 closes in 9 days. Three claims are waiting on you and freight fuel is 12% over plan — mostly the Rotterdam runs.</p>
+          </div>
+          <div class="head-actions">
+            <a class="btn btn--outlined" href="#spend">Export report</a>
+            <a class="btn btn--filled" href="#submit">New claim</a>
+          </div>
+        </div>
+
+        <div class="layout">
+          <div class="stack">
+            <div class="kpis">
+              <div class="card kpi card--2">
+                <span>Unsubmitted</span>
+                <b>£18,420</b>
+                <span class="delta delta--up">↑ 12% vs last month</span>
+              </div>
+              <div class="card kpi card--2">
+                <span>Awaiting approval</span>
+                <b>£6,915</b>
+                <span class="delta">3 claims, oldest 4 days</span>
+              </div>
+              <div class="card kpi kpi--accent">
+                <span>Policy compliance</span>
+                <b>96.2%</b>
+                <span class="delta">↑ 1.8 pts this quarter</span>
+              </div>
+            </div>
+
+            <section class="card" id="spend" aria-labelledby="spend-h">
+              <div class="card__hd">
+                <h2 id="spend-h" style="font-size:var(--t-lg)">Spend by month</h2>
+                <div class="chips" style="margin-left:auto">
+              <span class="chip chip--ok">Under plan</span>
+              <span class="chip chip--warn">Watch</span>
+              <span class="chip chip--err">Over plan</span>
+                </div>
+              </div>
+              <div class="card__bd">
+                <div class="chart">
+                  <svg viewBox="0 0 640 260" role="img" aria-label="Stacked bar chart of claim spend per month, split into freight, fuel, lodging and other, with a dashed plan line">
+                    <g stroke="#dde0e5" stroke-width="1">
+                      <path d="M40 20V220H620"/><path d="M40 180H620M40 140H620M40 100H620M40 60H620"/>
+                    </g>
+                    <path d="M40 96H620" stroke="#6b7078" stroke-width="1.5" stroke-dasharray="6 5" fill="none"/>
+                    <text x="628" y="90" font-size="11" fill="#6b7078" text-anchor="end">Plan £72k</text>
+                    <g>
+                      <rect x="60"  y="160" width="52" height="60" fill="#1a5fb4"/><rect x="60"  y="120" width="52" height="40" fill="#00695c"/>
+                      <rect x="60"  y="102" width="52" height="18" fill="#c77800"/><rect x="60"  y="92" width="52" height="10" fill="#b3261e"/>
+                      <rect x="170" y="168" width="52" height="52" fill="#1a5fb4"/><rect x="170" y="126" width="52" height="42" fill="#00695c"/>
+                      <rect x="170" y="110" width="52" height="16" fill="#c77800"/><rect x="170" y="100" width="52" height="10" fill="#b3261e"/>
+                      <rect x="280" y="150" width="52" height="70" fill="#1a5fb4"/><rect x="280" y="100" width="52" height="50" fill="#00695c"/>
+                      <rect x="280" y="80"  width="52" height="20" fill="#c77800"/><rect x="280" y="68"  width="52" height="12" fill="#b3261e"/>
+                      <rect x="390" y="162" width="52" height="58" fill="#1a5fb4"/><rect x="390" y="116" width="52" height="46" fill="#00695c"/>
+                      <rect x="390" y="100" width="52" height="16" fill="#c77800"/><rect x="390" y="88"  width="52" height="12" fill="#b3261e"/>
+                      <rect x="500" y="140" width="52" height="80" fill="#1a5fb4"/><rect x="500" y="86"  width="52" height="54" fill="#00695c"/>
+                      <rect x="500" y="64"  width="52" height="22" fill="#c77800"/><rect x="500" y="50"  width="52" height="14" fill="#b3261e"/>
+                    </g>
+                    <g font-size="12" fill="#43474e" text-anchor="middle">
+                      <text x="86" y="240">Sep</text><text x="196" y="240">Oct</text><text x="306" y="240">Nov</text>
+                      <text x="416" y="240">Dec</text><text x="526" y="240">Jan</text>
+                    </g>
+                  </svg>
+                  <p class="legend">
+                    <span><i style="background:#1a5fb4"></i>Freight</span>
+                    <span><i style="background:#00695c"></i>Fuel</span>
+                    <span><i style="background:#c77800"></i>Lodging</span>
+                    <span><i style="background:#b3261e"></i>Other</span>
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="card" aria-labelledby="recent-h">
+              <div class="card__hd">
+                <h2 id="recent-h" style="font-size:var(--t-lg)">Awaiting your approval</h2>
+                <a class="btn btn--text" href="#expenses" style="margin-left:auto">See all</a>
+              </div>
+              <ul class="expenses">
+                <li>
+                  <span class="ico" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 16V8h11l4 4h3v4h-2a2 2 0 0 1-4 0H9a2 2 0 0 1-4 0H3z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+                  </span>
+                  <span class="who"><b>Rotterdam → Köln, haulage</b><span>T. Ekwueme · 14 Mar · Card 4417</span></span>
+                  <span class="chip chip--warn">Missing receipt</span>
+                  <span class="amt">£2,418.00</span>
+                </li>
+                <li>
+                  <span class="ico" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V6h16v14z"/><path d="M4 10h16M9 6v14"/></svg>
+                  </span>
+                  <span class="who"><b>Düsseldorf depot, night shift</b><span>H. Lindqvist · 13 Mar · Reimbursement</span></span>
+                  <span class="chip chip--ok">Within policy</span>
+                  <span class="amt">£1,204.60</span>
+                </li>
+                <li>
+                  <span class="ico" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20V10M12 20V4M18 20v-7"/></svg>
+                  </span>
+                  <span class="who"><b>Telematics subscription, 12 vehicles</b><span>Procurement · 12 Mar · Direct debit</span></span>
+                  <span class="chip chip--err">Over £1k limit</span>
+                  <span class="amt">£3,292.40</span>
+                </li>
+              </ul>
+            </section>
+          </div>
+
+          <aside class="stack" style="display:grid;gap:var(--s-5)">
+            <section class="card budget" aria-labelledby="budget-h">
+              <div class="card__hd" style="padding:0 0 var(--s-2)">
+                <h2 id="budget-h" style="font-size:var(--t-lg)">Budget</h2>
+              </div>
+              <p class="label">Freight &amp; fuel · FY26 Q2</p>
+              <p style="font-size:var(--t-lg);font-weight:500;margin-top:.2rem">£412,880 <span class="body-2">of £480,000</span></p>
+              <div class="bar" role="img" aria-label="86 percent of quarterly freight and fuel budget used"><span style="width:86%"></span></div>
+              <p class="body-2">£67,120 remaining · 9 days left</p>
+              <hr style="border:0;border-top:1px solid var(--outline-2);margin:var(--s-4) 0">
+              <dl>
+                <div><dt>Lodging</dt><dd>£38,400 / £52,000</dd></div>
+                <div><dt>Tools &amp; software</dt><dd>£22,100 / £24,000</dd></div>
+                <div><dt>Meals</dt><dd>£9,860 / £18,000</dd></div>
+              </dl>
+              <a class="btn btn--tonal" href="#policy" style="margin-top:var(--s-4)">Review policy</a>
+            </section>
+
+            <section class="card" id="approvals" aria-labelledby="ap-h">
+              <div class="card__hd" style="padding:0 0 var(--s-2)">
+                <h2 id="ap-h" style="font-size:var(--t-lg)">Approval queue</h2>
+              </div>
+              <ul class="reviewlist">
+                <li><span class="day">18 Mar</span><span><b>£3,292.40</b> Telematics · Procurement</span></li>
+                <li><span class="day">17 Mar</span><span><b>£2,418.00</b> Haulage · T. Ekwueme</span></li>
+                <li><span class="day">16 Mar</span><span><b>£1,204.60</b> Night shift · H. Lindqvist</span></li>
+              </ul>
+              <div style="padding:0 var(--s-4) var(--s-4);display:grid;gap:var(--s-2)">
+                <button class="btn btn--filled" type="button" id="approve">Approve all three</button>
+                <button class="btn btn--outlined" type="button" id="reject">Send back with notes</button>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </div>
+
+      <div id="p-expenses" role="tabpanel" aria-labelledby="tab-expenses" hidden>
+        <div class="pagehead">
+          <div><h2>All expenses</h2><p>Every claim raised in FY26 Q2. Filter by state; amounts include VAT where claimed back.</p></div>
+        </div>
+        <div class="chips" style="margin-bottom:var(--s-4)">
+          <button class="btn btn--tonal" type="button" data-state="all" aria-pressed="true">All</button>
+          <button class="btn btn--outlined" type="button" data-state="pending" aria-pressed="false">Pending</button>
+          <button class="btn btn--outlined" type="button" data-state="flagged" aria-pressed="false">Flagged</button>
+          <button class="btn btn--outlined" type="button" data-state="paid" aria-pressed="false">Paid</button>
+        </div>
+        <section class="card" id="expenses" style="margin-bottom:var(--s-8)">
+          <ul class="expenses" id="expenselist">
+            <li data-state="flagged"><span class="ico" aria-hidden="true">✈</span><span class="who"><b>Client visit, Lyon</b><span>P. Raman · 11 Mar · Air</span></span><span class="chip chip--err">Over nightly cap</span><span class="amt">£884.20</span></li>
+            <li data-state="paid"><span class="ico" aria-hidden="true">⛽</span><span class="who"><b>Fuel, A24 northbound</b><span>S. Whitlock · 10 Mar · Card 8821</span></span><span class="chip chip--ok">Paid 12 Mar</span><span class="amt">£141.70</span></li>
+            <li data-state="pending"><span class="ico" aria-hidden="true">🏨</span><span class="who"><b>Rotterdam, 2 nights</b><span>T. Ekwueme · 09 Mar · Lodging</span></span><span class="chip chip--warn">Pending</span><span class="amt">£310.00</span></li>
+            <li data-state="flagged"><span class="ico" aria-hidden="true">🍽️</span><span class="who"><b>Team dinner, Ashford depot</b><span>H. Lindqvist · 08 Mar · Meals</span></span><span class="chip chip--err">6 attendees, no itemisation</span><span class="amt">£412.00</span></li>
+            <li data-state="paid"><span class="ico" aria-hidden="true">🧾</span><span class="who"><b>Toll charges, October</b><span>Finance · 02 Mar · Other</span></span><span class="chip chip--ok">Paid 04 Mar</span><span class="amt">£96.15</span></li>
+            <li data-state="pending"><span class="ico" aria-hidden="true">🚐</span><span class="who"><b>Hire van, Bristol depot</b><span>D. Achebe · 28 Feb · Freight</span></span><span class="chip chip--warn">Pending</span><span class="amt">£268.90</span></li>
+          </ul>
+          <p class="body-2" id="expmsg" role="status" aria-live="polite" style="padding:var(--s-3) var(--s-4)">Showing all 6 claims.</p>
+        </section>
+      </div>
+
+      <div id="p-submit" role="tabpanel" aria-labelledby="tab-submit" hidden>
+        <div class="pagehead">
+          <div><h2>Submit a claim</h2><p>Claims under £250 auto-approve if the policy fields are complete. Attach the receipt before you submit — chasing it afterwards is slower.</p></div>
+        </div>
+        <div class="layout" id="submit">
+          <section class="card form" aria-labelledby="claim-h">
+            <h2 id="claim-h" class="label" style="margin-bottom:var(--s-3)">Claim details</h2>
+            <form id="claimform" novalidate>
+              <div class="formgrid">
+                <div class="field">
+                  <label for="c-desc">Description</label>
+                  <input id="c-desc" name="desc" type="text" required aria-describedby="c-desc-h" placeholder="Rotterdam depot, night shift meal">
+                  <p class="helper" id="c-desc-h">Write it the way you would tell a colleague.</p>
+                </div>
+                <div class="field">
+                  <label for="c-cat">Category</label>
+                  <select id="c-cat" name="cat">
+                    <option>Freight</option><option>Fuel</option><option selected>Lodging</option>
+                    <option>Meals</option><option>Tools &amp; software</option><option>Other</option>
+                  </select>
+                  <p class="helper">Determines the nightly and daily caps.</p>
+                </div>
+                <div class="field">
+                  <label for="c-amt">Amount (GBP)</label>
+                  <input id="c-amt" name="amount" type="number" min="0" step="0.01" value="" required aria-describedby="c-amt-h">
+                  <p class="helper" id="c-amt-h">Include VAT where you are reclaiming it.</p>
+                </div>
+                <div class="field">
+                  <label for="c-date">Date of expense</label>
+                  <input id="c-date" name="date" type="date" value="2026-03-18" required aria-describedby="c-date-h">
+                  <p class="helper" id="c-date-h">Claims older than 60 days need a director's note.</p>
+                </div>
+                <div class="field field--full">
+                  <label for="c-note">Note for the approver</label>
+                  <textarea id="c-note" name="note" placeholder="Anything that explains the number."></textarea>
+                  <p class="helper">Optional, but it is what stops a claim bouncing back.</p>
+                </div>
+              </div>
+              <p class="formmsg" id="c-msg" role="status" aria-live="polite">Nothing is sent until you press submit.</p>
+              <div style="display:flex;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-4)">
+                <button class="btn btn--filled" type="submit">Submit claim</button>
+                <button class="btn btn--outlined" type="button" id="save">Save as draft</button>
+                <button class="btn btn--text" type="button">Cancel</button>
+              </div>
+            </form>
+          </section>
+
+          <aside class="card" id="policy" style="padding:var(--s-4)">
+            <h2 class="label" style="margin-bottom:var(--s-3)">Policy check</h2>
+            <dl style="margin:0;display:grid;gap:var(--s-3);font-size:var(--t-sm)">
+              <div><dt style="color:var(--on-surface-2)">Lodging nightly cap</dt><dd style="margin:0;font-weight:500">£140 incl. VAT</dd></div>
+              <div><dt style="color:var(--on-surface-2)">Meals daily cap</dt><dd style="margin:0;font-weight:500">£32 incl. VAT</dd></div>
+              <div><dt style="color:var(--on-surface-2)">Receipt required over</dt><dd style="margin:0;font-weight:500">£20</dd></div>
+              <div><dt style="color:var(--on-surface-2)">Auto-approval under</dt><dd style="margin:0;font-weight:500">£250</dd></div>
+            </dl>
+            <hr style="border:0;border-top:1px solid var(--outline-2);margin:var(--s-4) 0">
+            <p class="body-2">The full policy is two pages. Read it once; it is shorter than the exceptions.</p>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap foot">
+        <p>Ledgerline · Meridian Freight Ltd · FY26 Q2</p>
+        <ul>
+          <li><a href="#policy">Expense policy</a></li>
+          <li><a href="#approvals">Approvals</a></li>
+          <li><a href="#spend">Reports</a></li>
+          <li><a href="#main">Data export</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<a class="fab" href="#submit" id="fab">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+  New claim
+</a>
+
+<script>
+(function(){
+  var btn=document.getElementById('drawerbtn'),drawer=document.getElementById('drawer'),scrim=document.getElementById('scrim');
+  function setOpen(open){
+    btn.setAttribute('aria-expanded',String(open));
+    drawer.setAttribute('data-open',String(open));
+    scrim.setAttribute('data-open',String(open));
+  }
+  btn.addEventListener('click',function(){setOpen(btn.getAttribute('aria-expanded')!=='true');});
+  scrim.addEventListener('click',function(){setOpen(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){setOpen(false);}});
+
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      tabs.forEach(function(x){x.setAttribute('aria-selected','false');document.getElementById(x.getAttribute('aria-controls')).hidden=true;});
+      t.setAttribute('aria-selected','true');
+      document.getElementById(t.getAttribute('aria-controls')).hidden=false;
+    });
+  });
+
+  var rows=Array.prototype.slice.call(document.querySelectorAll('#expenselist li'));
+  var expmsg=document.getElementById('expmsg');
+  document.querySelectorAll('[data-state]').forEach(function(b){
+    if(b.tagName!=='BUTTON') return;
+    b.addEventListener('click',function(){
+      document.querySelectorAll('button[data-state]').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      var s=b.getAttribute('data-state'),n=0;
+      rows.forEach(function(r){
+        var show=s==='all'||r.getAttribute('data-state')===s;
+        r.hidden=!show; if(show) n++;
+      });
+      expmsg.textContent='Showing '+n+' of '+rows.length+' claims'+(s==='all'?'.':' filtered to '+s+'.');
+    });
+  });
+
+  var status=document.getElementById('c-msg');
+  document.getElementById('approve').addEventListener('click',function(){
+    status.removeAttribute('data-tone');
+    status.textContent='Three claims approved. Payments are scheduled for 20 Mar.';
+  });
+  document.getElementById('reject').addEventListener('click',function(){
+    status.removeAttribute('data-tone');
+    status.textContent='Sent back to the three submitters with your note attached.';
+  });
+  document.getElementById('save').addEventListener('click',function(){
+    status.removeAttribute('data-tone');
+    status.textContent='Draft saved to this device. It is not visible to your approver.';
+  });
+  document.getElementById('fab').addEventListener('click',function(){
+    document.getElementById('tab-submit').click();
+  });
+
+  var form=document.getElementById('claimform');
+  function setErr(input,helperId,text){
+    var h=document.getElementById(helperId);
+    if(h) h.textContent=text;
+    input.closest('.field').setAttribute('data-invalid',text?'true':'false');
+    if(text){input.setAttribute('aria-invalid','true');}else{input.removeAttribute('aria-invalid');}
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var desc=document.getElementById('c-desc'),amt=document.getElementById('c-amt'),date=document.getElementById('c-date'),bad=false;
+    if(desc.value.trim().length<5){setErr(desc,'c-desc-h','Give a description of at least a few words.');bad=true;}else setErr(desc,'c-desc-h','Write it the way you would tell a colleague.');
+    var v=Number(amt.value);
+    if(!(v>0&&v<5000)){setErr(amt,'c-amt-h','Enter an amount between £0.01 and £5,000.');bad=true;}else setErr(amt,'c-amt-h','Include VAT where you are reclaiming it.');
+    if(!date.value){setErr(date,'c-date-h','Pick the date the money was spent.');bad=true;}else setErr(date,'c-date-h','Claims older than 60 days need a director’s note.');
+    if(bad){status.setAttribute('data-tone','err');status.textContent='Not submitted — check the highlighted fields.';return;}
+    status.removeAttribute('data-tone');
+    status.textContent='Claim CLM-4471 submitted for £'+v.toFixed(2)+' under '+document.getElementById('c-cat').value+'. It is now in the approval queue.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

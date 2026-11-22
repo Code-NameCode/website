@@ -1,0 +1,723 @@
+<!-- Style: Swiss | 4swiss.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Institut für Gestaltung — Ausstellung, Programm, Fakultät</title>
+<meta name="description" content="Institut für Gestaltung, Zürich: Hochschule für angewandte Gestaltung. Ausstellung, Vorlesungsprogramm, Fakultät und Anmeldung zum Wintersemester 2026/27.">
+<style>
+  :root{
+    /* colour */
+    --white:#ffffff;
+    --black:#111111;
+    --grey-1:#f2f2f0;
+    --grey-2:#d9d9d5;
+    --grey-3:#8c8c88;
+    --grey-4:#5c5c58;
+    --red:#e2231a;
+    --error:#b3180f;
+    /* type */
+    --sans:"Helvetica Neue",Helvetica,"Neue Haas Grotesk",Arial,system-ui,sans-serif;
+    --fs-mega:clamp(3.4rem,12.5vw,11rem);
+    --fs-xl:clamp(2.1rem,5.2vw,4.2rem);
+    --fs-l:clamp(1.5rem,2.8vw,2.3rem);
+    --fs-m:clamp(1.1rem,1.5vw,1.3rem);
+    --fs-body:clamp(.98rem,1.05vw,1.06rem);
+    --fs-sm:.875rem;
+    --fs-xs:.75rem;
+    --lh:1.5;
+    --lh-flat:1.02;
+    --tr-tight:-.035em;
+    /* grid + space */
+    --gutter:clamp(1.1rem,2.6vw,2rem);
+    --col-gap:clamp(.75rem,1.4vw,1.25rem);
+    --sec-pad:clamp(3.5rem,8vw,6.5rem);
+    --page:82rem;
+    --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:3rem;--s8:4.5rem;
+    /* edges */
+    --r:0;
+    --bw:1px;
+    --bw-thick:2px;
+    /* motion */
+    --dur:140ms;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--white);color:var(--black);font-family:var(--sans);font-size:var(--fs-body);line-height:var(--lh);-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--red);outline-offset:2px}
+  .page{max-width:var(--page);margin-inline:auto;padding-inline:var(--gutter)}
+  .grid12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--col-gap)}
+  .label{font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--grey-4)}
+  .hr{border:0;border-top:var(--bw) solid var(--black);height:1px}
+  .hr-grey{border:0;border-top:var(--bw) solid var(--grey-2);height:1px}
+  .mt-4{margin-top:var(--s4)}
+  .mt-6{margin-top:var(--s6)}
+  .intro-narrow{max-width:52ch}
+  .err-full{grid-column:1/-1}
+
+  /* ---------- header ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:40;background:var(--white);
+    border-bottom:var(--bw-thick) solid var(--black)
+  }
+  .topbar-in{display:flex;align-items:center;justify-content:space-between;gap:var(--s5);min-height:62px}
+  .mark{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-weight:700;letter-spacing:-.01em;font-size:1.02rem}
+  .mark i{width:16px;height:16px;background:var(--red);display:block;flex:none}
+  .nav{display:flex;align-items:center;gap:clamp(.75rem,1.8vw,1.6rem)}
+  .nav a{
+    font-size:var(--fs-sm);text-decoration:none;font-weight:500;padding-block:.4rem;
+    border-bottom:2px solid transparent;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease)
+  }
+  .nav a:hover{border-bottom-color:var(--black)}
+  .nav a[aria-current="page"]{color:var(--red);border-bottom-color:var(--red)}
+  .nav-loc{font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--grey-4);white-space:nowrap}
+  .burger{
+    display:none;min-height:44px;padding:0 .85rem;background:var(--white);
+    border:var(--bw-thick) solid var(--black);font:inherit;font-size:var(--fs-sm);font-weight:700;cursor:pointer
+  }
+
+  /* ---------- hero poster ---------- */
+  .hero{padding-top:clamp(2.5rem,5vw,4rem)}
+  .hero-poster{position:relative;border-bottom:var(--bw-thick) solid var(--black);padding-bottom:clamp(2rem,4vw,3rem)}
+  .hero-poster h1{
+    font-size:var(--fs-mega);line-height:var(--lh-flat);letter-spacing:var(--tr-tight);
+    font-weight:700;margin-top:var(--s4)
+  }
+  .hero-poster h1 span{display:block}
+  .hero-poster h1 .indent{padding-left:clamp(1.5rem,9vw,10rem)}
+  .poster-meta{
+    margin-top:clamp(2rem,4vw,3rem);display:grid;
+    grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--col-gap);
+    border-top:var(--bw) solid var(--black);padding-top:var(--s4)
+  }
+  .poster-meta div:nth-child(1){grid-column:1/span 3}
+  .poster-meta div:nth-child(2){grid-column:4/span 4}
+  .poster-meta div:nth-child(3){grid-column:8/span 3}
+  .poster-meta div:nth-child(4){grid-column:11/span 2;text-align:right}
+  .poster-meta p{font-size:var(--fs-sm);margin-top:.4rem}
+  .red-block{
+    position:absolute;top:0;right:0;width:clamp(64px,9vw,132px);aspect-ratio:1;
+    background:var(--red)
+  }
+  .red-block span{
+    position:absolute;inset:auto .5rem .4rem auto;color:var(--white);
+    font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;writing-mode:vertical-rl
+  }
+  .hero-actions{display:flex;flex-wrap:wrap;gap:var(--col-gap);margin-top:var(--s6)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 var(--s5);
+    border:var(--bw-thick) solid var(--black);background:var(--white);color:var(--black);
+    font:inherit;font-size:var(--fs-sm);font-weight:700;text-decoration:none;cursor:pointer;
+    transition:background var(--dur) var(--ease),color var(--dur) var(--ease)
+  }
+  .btn:hover{background:var(--black);color:var(--white)}
+  .btn--red{border-color:var(--red);background:var(--red);color:var(--white)}
+  .btn--red:hover{background:var(--black);border-color:var(--black)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+
+  /* ---------- index (Verzeichnis) ---------- */
+  .index-section{padding-block:var(--sec-pad)}
+  .sec-head{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--col-gap);border-top:var(--bw-thick) solid var(--black);padding-top:var(--s4);margin-bottom:clamp(2rem,4vw,3.25rem)}
+  .sec-head .label{grid-column:1/span 3}
+  .sec-head h2{grid-column:4/span 6;font-size:var(--fs-l);line-height:1.08;letter-spacing:var(--tr-tight);font-weight:700}
+  .sec-head .side{grid-column:11/span 2;text-align:right;font-size:var(--fs-sm);color:var(--grey-4)}
+
+  .verzeichnis li{border-top:var(--bw) solid var(--black);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--col-gap);align-items:baseline;padding-block:var(--s4)}
+  .verzeichnis li:last-child{border-bottom:var(--bw) solid var(--black)}
+  .verzeichnis a{grid-column:1/span 12;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--col-gap);text-decoration:none;align-items:baseline}
+  .verzeichnis .num{grid-column:1/span 1;font-size:var(--fs-sm);font-weight:700;color:var(--red);font-variant-numeric:tabular-nums}
+  .verzeichnis .date{grid-column:2/span 2;font-size:var(--fs-sm);color:var(--grey-4);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .verzeichnis .title{grid-column:4/span 4;font-size:var(--fs-m);line-height:1.25;letter-spacing:-.01em;transition:color var(--dur) var(--ease)}
+  .verzeichnis .who{grid-column:8/span 3;font-size:var(--fs-sm);color:var(--grey-4)}
+  .verzeichnis .kind{grid-column:11/span 2;text-align:right;font-size:var(--fs-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--grey-4)}
+  .verzeichnis a:hover .title{color:var(--red)}
+  .verzeichnis a:hover{background:var(--grey-1)}
+
+  /* ---------- programme grid ---------- */
+  .programme{padding-block:var(--sec-pad);background:var(--grey-1);border-block:var(--bw-thick) solid var(--black)}
+  .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 var(--col-gap)}
+  .card{border-top:var(--bw-thick) solid var(--black);padding-block:var(--s5) var(--s6);display:flex;flex-direction:column;gap:var(--s3);min-height:14rem}
+  .card-top{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3)}
+  .card h3{font-size:var(--fs-m);line-height:1.15;letter-spacing:-.015em;font-weight:700}
+  .card p{font-size:var(--fs-sm);color:var(--grey-4)}
+  .card .facts{margin-top:auto;display:grid;gap:.2rem;font-size:var(--fs-xs);letter-spacing:.06em;text-transform:uppercase;color:var(--black);border-top:var(--bw) solid var(--grey-2);padding-top:var(--s3)}
+  .card a{font-size:var(--fs-sm);font-weight:700;text-decoration:none;border-bottom:var(--bw-thick) solid var(--black);align-self:flex-start;padding-bottom:1px}
+  .card a:hover{color:var(--red);border-bottom-color:var(--red)}
+
+  /* ---------- red statement ---------- */
+  .statement{background:var(--red);color:var(--white);padding-block:var(--sec-pad)}
+  .statement .grid12{align-items:start}
+  .statement .q{grid-column:1/span 7;font-size:var(--fs-xl);line-height:1.02;letter-spacing:var(--tr-tight);font-weight:700}
+  .statement .diagram{grid-column:9/span 4}
+  .statement .diagram svg{display:block;width:100%;height:auto}
+  .statement .cap{grid-column:1/span 7;margin-top:var(--s6);font-size:var(--fs-sm);max-width:46ch}
+  .statement .cap strong{color:var(--black)}
+
+  /* ---------- faculty table ---------- */
+  .fakultaet{padding-block:var(--sec-pad)}
+  .fac-table{border-top:var(--bw-thick) solid var(--black)}
+  .fac-table li{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--col-gap);padding-block:var(--s4);border-bottom:var(--bw) solid var(--grey-2);align-items:baseline}
+  .fac-name{grid-column:1/span 4;font-size:var(--fs-body)}
+  .fac-name b{font-weight:700;display:block;letter-spacing:-.01em}
+  .fac-name span{font-size:var(--fs-sm);color:var(--grey-4)}
+  .fac-area{grid-column:5/span 4;font-size:var(--fs-sm)}
+  .fac-since{grid-column:9/span 2;font-size:var(--fs-sm);color:var(--grey-4);font-variant-numeric:tabular-nums}
+  .fac-lang{grid-column:11/span 2;text-align:right;font-size:var(--fs-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--grey-4)}
+
+  /* ---------- anmeldung ---------- */
+  .anmeldung{padding-block:var(--sec-pad);border-top:var(--bw-thick) solid var(--black)}
+  .form-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--col-gap) var(--s4);margin-top:var(--s6)}
+  .f{grid-column:span 6;margin-bottom:var(--s5)}
+  .f--full{grid-column:1/-1}
+  .f--third{grid-column:span 4}
+  .f label{display:block;font-size:var(--fs-sm);font-weight:700;margin-bottom:var(--s2)}
+  .f .hint{display:block;font-size:var(--fs-xs);color:var(--grey-4);margin-top:var(--s2)}
+  .f input,.f select,.f textarea{
+    width:100%;min-height:48px;padding:.6rem .7rem;background:var(--white);color:var(--black);
+    border:var(--bw) solid var(--black);border-radius:var(--r);font:inherit;font-size:var(--fs-sm);
+    appearance:none;border-radius:0
+  }
+  .f select{background-image:linear-gradient(45deg,transparent 50%,var(--black) 50%),linear-gradient(135deg,var(--black) 50%,transparent 50%);background-position:calc(100% - 16px) 21px,calc(100% - 11px) 21px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  .f textarea{min-height:6.5rem;resize:vertical}
+  .f input:focus,.f select:focus,.f textarea:focus{outline:2px solid var(--red);outline-offset:0;border-color:var(--red)}
+  .f[data-invalid="true"] input,.f[data-invalid="true"] select,.f[data-invalid="true"] textarea{border-color:var(--error);border-width:2px}
+  .f .err{display:block;font-size:var(--fs-sm);color:var(--error);margin-top:var(--s2);min-height:1.1em;font-weight:700}
+  .checks{grid-column:1/-1;margin-bottom:var(--s5);display:grid;gap:var(--s3)}
+  .check{display:grid;grid-template-columns:20px minmax(0,1fr);gap:var(--s3);align-items:start;font-size:var(--fs-sm)}
+  .check input{width:20px;height:20px;margin:0;accent-color:var(--red)}
+  .form-foot{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:var(--s4);align-items:center}
+  .form-status{font-size:var(--fs-sm);min-height:1.3em;color:var(--grey-4);flex:1;min-width:16rem}
+  .form-status[data-state="ok"]{color:var(--black);font-weight:700}
+  .form-status[data-state="error"]{color:var(--error);font-weight:700}
+
+  /* ---------- footer ---------- */
+  .foot{border-top:var(--bw-thick) solid var(--black);padding-block:var(--s6) var(--s7);background:var(--white)}
+  .foot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s5)}
+  .foot h3{margin-bottom:var(--s3)}
+  .foot li{margin-bottom:.35rem}
+  .foot a{font-size:var(--fs-sm);text-decoration:none;display:inline-block;min-height:32px;padding-block:.15rem}
+  .foot a:hover{color:var(--red)}
+  .foot p{font-size:var(--fs-sm);color:var(--grey-4)}
+  .foot-base{margin-top:var(--s6);padding-top:var(--s4);border-top:var(--bw) solid var(--grey-2);display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);font-size:var(--fs-xs);letter-spacing:.06em;color:var(--grey-4);text-transform:uppercase}
+
+  @media (max-width:1000px){
+    .sec-head .label{grid-column:1/-1}
+    .sec-head h2{grid-column:1/-1;margin-top:var(--s3)}
+    .sec-head .side{grid-column:1/-1;text-align:left;margin-top:var(--s3)}
+    .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .statement .q,.statement .cap{grid-column:1/-1}
+    .statement .diagram{grid-column:1/-1;margin-top:var(--s6);max-width:22rem}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:760px){
+    .burger{display:inline-flex;align-items:center}
+    .nav-loc{display:none}
+    .nav{
+      position:absolute;left:0;right:0;top:100%;background:var(--white);border-bottom:var(--bw-thick) solid var(--black);
+      display:none;padding:var(--s3) var(--gutter) var(--s4)
+    }
+    .nav[data-open="true"]{display:block}
+    .nav{flex-direction:column;align-items:flex-start;gap:0}
+    .nav a{width:100%;padding-block:.85rem;border-bottom:var(--bw) solid var(--grey-2)}
+    .poster-meta div:nth-child(n){grid-column:1/span 6;text-align:left}
+    .poster-meta div:nth-child(even){grid-column:7/span 6}
+    .verzeichnis .num{grid-column:1/span 2}
+    .verzeichnis .date{grid-column:3/span 4}
+    .verzeichnis .kind{grid-column:7/span 6;text-align:right}
+    .verzeichnis .title{grid-column:1/span 12;margin-top:var(--s2)}
+    .verzeichnis .who{grid-column:1/span 12;margin-top:.2rem}
+    .cards{grid-template-columns:1fr}
+    .fac-name{grid-column:1/span 12}
+    .fac-area{grid-column:1/span 12;margin-top:.3rem}
+    .fac-since{grid-column:1/span 6;margin-top:.3rem}
+    .fac-lang{grid-column:7/span 6;margin-top:.3rem}
+    .f,.f--third{grid-column:1/-1}
+    .foot-grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="page topbar-in">
+    <a class="mark" href="#top"><i aria-hidden="true"></i>Institut für Gestaltung</a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav">Menü</button>
+    <nav class="nav" id="nav" aria-label="Hauptnavigation">
+      <a href="#ausstellung" aria-current="page">Ausstellung</a>
+      <a href="#verzeichnis">Veranstaltungen</a>
+      <a href="#programm">Programm</a>
+      <a href="#fakultaet">Fakultät</a>
+      <a href="#anmeldung">Anmeldung</a>
+    </nav>
+    <p class="nav-loc">Zürich · CH–8001</p>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero page" id="ausstellung" aria-labelledby="hero-title">
+    <div class="hero-poster">
+      <div class="red-block" aria-hidden="true"><span>ISSUE 12</span></div>
+      <p class="label">Ausstellung · 12. November 2026 – 3. Januar 2027 · Gebäude A, Erdgeschoss</p>
+      <h1 id="hero-title">
+        <span>Gestaltung</span>
+        <span class="indent">ist eine</span>
+        <span>Haltung,</span>
+        <span class="indent">kein Stil.</span>
+      </h1>
+      <div class="poster-meta">
+        <div><p class="label">Kuratorin</p><p>Dr. Petra Zeller</p></div>
+        <div><p class="label">Ort</p><p>Hochschule für Gestaltung, Hohlstrasse 110, Zürich</p></div>
+        <div><p class="label">Öffnungszeiten</p><p>Di – So, 11–19 Uhr. Eintritt frei.</p></div>
+        <div><p class="label">Werk</p><p>218</p></div>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn--red" href="#anmeldung">Führung anfragen</a>
+        <a class="btn" href="#verzeichnis">Programm herunterladen (PDF)</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="page index-section" id="verzeichnis" aria-labelledby="verzeichnis-title">
+    <div class="sec-head">
+      <p class="label">01 — Veranstaltungen</p>
+      <h2 id="verzeichnis-title">Was zwischen November und Januar stattfindet</h2>
+      <p class="side">6 Einträge<br>18.–26. Jan.</p>
+    </div>
+    <ol class="verzeichnis">
+      <li>
+        <a href="#verzeichnis">
+          <span class="num">01</span>
+          <span class="date">18.11.2026 · 19:00</span>
+          <span class="title">Eröffnung: «Zwölf Regeln, die 1970 alles entschieden»</span>
+          <span class="who">Einführung: Prof. Dr. Ines Bärtschi</span>
+          <span class="kind">Vortrag</span>
+        </a>
+      </li>
+      <li>
+        <a href="#verzeichnis">
+          <span class="num">02</span>
+          <span class="date">21.11.2026 · 14:00</span>
+          <span class="title">Raster, Fluchtlinie, Intervall — eine Schulung für Erstsemester</span>
+          <span class="who">Leitung: Studio Grundriss</span>
+          <span class="kind">Werkstatt</span>
+        </a>
+      </li>
+      <li>
+        <a href="#verzeichnis">
+          <span class="num">03</span>
+          <span class="date">05.12.2026 · 10:00</span>
+          <span class="title">Fotografie im Auftrag: Wann ein Bild Evidence ist</span>
+          <span class="who">Jonas Aebli, Bildredaktion NZZ am Sonntag</span>
+          <span class="kind">Seminar</span>
+        </a>
+      </li>
+      <li>
+        <a href="#verzeichnis">
+          <span class="num">04</span>
+          <span class="date">12.12.2026 · 16:30</span>
+          <span class="title">Schrift im Öffis — Signet, Fahrplankopf, Türschild</span>
+          <span class="who">Werkstatt mit Marina Ostermann</span>
+          <span class="kind">Praxis</span>
+        </a>
+      </li>
+      <li>
+        <a href="#verzeichnis">
+          <span class="num">05</span>
+          <span class="date">20.01.2027 · 18:00</span>
+          <span class="title">Abschlussgespräch: 68 Diplomarbeiten in vier Minuten</span>
+          <span class="who">Jury: Fachbereich Gestaltung</span>
+          <span class="kind">Prüfung</span>
+        </a>
+      </li>
+      <li>
+        <a href="#verzeichnis">
+          <span class="num">06</span>
+          <span class="date">26.01.2027 · 19:30</span>
+          <span class="title">Finissage mit Buchvorstellung «Das Raster liest sich»</span>
+          <span class="who">mit der Verlagsbuchhandlung Orell Füssli</span>
+          <span class="kind">Anlass</span>
+        </a>
+      </li>
+    </ol>
+  </section>
+
+  <section class="programme" id="programm" aria-labelledby="programm-title">
+    <div class="page">
+      <div class="sec-head">
+        <p class="label">02 — Programm</p>
+        <h2 id="programm-title">Fünf Institute, ein Semester, keine Pflichtveranstaltung ohne Anhang</h2>
+        <p class="side">Wintersemester<br>2026 / 27</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="card-top"><p class="label">Institut 01</p><p class="label">Zürich</p></div>
+          <h3>Visuelle Kommunikation</h3>
+          <p>Typografie, Layout, Bildredaktion. 340 Studierende, sechs Werkstätten, eine gemeinsame Abschlussausstellung im Juni.</p>
+          <div class="facts">
+            <p>6 Kurse · 3 Werkstätten</p>
+            <p>Leitung: Prof. Dr. Ines Bärtschi</p>
+            <p>Zulassung offen</p>
+          </div>
+          <a href="#anmeldung">Modulübersicht ansehen</a>
+        </article>
+        <article class="card">
+          <div class="card-top"><p class="label">Institut 02</p><p class="label">Zürich</p></div>
+          <h3>Industrial Design</h3>
+          <p>Produktentwicklung von der Skizze bis zur Serie. Zusammenarbeit mit zwei Herstellern in Winterthur und Lenzburg.</p>
+          <div class="facts">
+            <p>4 Kurse · 1 Werkstatt</p>
+            <p>Leitung: Prof. Milo Rüegg</p>
+            <p>Zulassung beschränkt</p>
+          </div>
+          <a href="#anmeldung">Modulübersicht ansehen</a>
+        </article>
+        <article class="card">
+          <div class="card-top"><p class="label">Institut 03</p><p class="label">Basel</p></div>
+          <h3>Digitalgestaltung</h3>
+          <p>Interfacedesign, Prototyping, Bewegung. Wir lehren in Code und im Browser, mit Ausgabe auf Papier.</p>
+          <div class="facts">
+            <p>5 Kurse · 2 Werkstätten</p>
+            <p>Leitung: Dr. Salome Keller</p>
+            <p>Zulassung offen</p>
+          </div>
+          <a href="#anmeldung">Modulübersicht ansehen</a>
+        </article>
+        <article class="card">
+          <div class="card-top"><p class="label">Institut 04</p><p class="label">Zürich</p></div>
+          <h3>Geschichte und Theorie</h3>
+          <p>Konstruktivismen, Reklamegeschichte, Kritik am Neuen. Vorlesungen mit offenem Auditorium, ohne Anmeldung.</p>
+          <div class="facts">
+            <p>3 Vorlesungen</p>
+            <p>Leitung: Prof. Dr. Reto Amsler</p>
+            <p>Offenes Auditorium</p>
+          </div>
+          <a href="#anmeldung">Stundenplan ansehen</a>
+        </article>
+        <article class="card">
+          <div class="card-top"><p class="label">Institut 05</p><p class="label">Lausanne</p></div>
+          <h3>Design durable</h3>
+          <p>Reparierbarkeit, Materialkreisläufe, Herstellung in der Schweiz und in Frankreich. Gemeinsamer Abschluss mit Nantes.</p>
+          <div class="facts">
+            <p>4 Kurse · 1 Projekt</p>
+            <p>Leitung: Prof. Camille Rochat</p>
+            <p>Zulassung offen</p>
+          </div>
+          <a href="#anmeldung">Modulübersicht ansehen</a>
+        </article>
+        <article class="card">
+          <div class="card-top"><p class="label">Querschnitt</p><p class="label">Beide Standorte</p></div>
+          <h3>Schrift und Werbung</h3>
+          <p>Das älteste Fach der Schule, unverändert im Lehrplan. Zeichenstunde, Schriftrecherche, Plakatproduktion im eigenen Satzstudio.</p>
+          <div class="facts">
+            <p>2 Kurse · Satzstudio</p>
+            <p>Leitung: Marina Ostermann</p>
+            <p>Zulassung offen</p>
+          </div>
+          <a href="#anmeldung">Modulübersicht ansehen</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement" aria-labelledby="statement-title">
+    <div class="page grid12">
+      <p class="q" id="statement-title">Ein Raster ist kein Stilmittel. Es ist die schriftliche Form einer Absicht.</p>
+      <div class="diagram">
+        <svg viewBox="0 0 300 300" role="img" aria-label="Diagramm der Rasterkonstruktion: 12 Spalten, 8 Zeilen, mit Massen beschriftet">
+          <g fill="none" stroke="#ffffff" stroke-width="1" opacity=".9">
+            <rect x="1" y="1" width="298" height="298"/>
+          </g>
+          <g fill="none" stroke="#ffffff" stroke-width=".5" opacity=".55">
+            <path d="M25.8 1v298M50.7 1v298M75.5 1v298M100.4 1v298M125.2 1v298M150 1v298M174.8 1v298M199.7 1v298M224.5 1v298M249.3 1v298M274.2 1v298"/>
+            <path d="M1 38.25h298M1 75.5h298M1 112.75h298M1 150h298M1 187.25h298M1 224.5h298M1 261.75h298"/>
+          </g>
+          <rect x="100.4" y="38.25" width="124.9" height="74.5" fill="#111111"/>
+          <rect x="25.8" y="187.25" width="74.9" height="74.5" fill="#ffffff"/>
+          <g fill="#ffffff" font-family="Helvetica, Arial, sans-serif" font-size="9" letter-spacing="1">
+            <text x="100.4" y="30">B 124.9</text>
+            <text x="1" y="293">12 SPALTEN</text>
+            <text x="222" y="293">8 ZEILEN</text>
+            <text x="14" y="182">8 × 37.25</text>
+          </g>
+        </svg>
+      </div>
+      <p class="cap">Der Grundriss-Kurs im ersten Semester arbeitet seit 2021 ausschliesslich mit dieser Konstruktion: <strong>12 Spalten, 8 Zeilen, ein Intervall von 24.9</strong>. Studierende bauen damit Plakate, Websites und Broschüren — und lernen, dass die Entscheidung für oder gegen ein Raster die eigentliche gestalterische Entscheidung ist. <strong>Alles Weitere ist Konsequenz.</strong></p>
+    </div>
+  </section>
+
+  <section class="page fakultaet" id="fakultaet" aria-labelledby="fakultaet-title">
+    <div class="sec-head">
+      <p class="label">03 — Fakultät</p>
+      <h2 id="fakultaet-title">Vierundzwanzig Lehrende, davon neun Professorinnen und Professoren</h2>
+      <p class="side">Stand<br>September 2026</p>
+    </div>
+    <ul class="fac-table">
+      <li>
+        <p class="fac-name"><b>Ines Bärtschi</b><span>Professorin, Leitung Institut 01</span></p>
+        <p class="fac-area">Raster, Typografie, Schulbuch</p>
+        <p class="fac-since">seit 2009</p>
+        <p class="fac-lang">de / en / fr</p>
+      </li>
+      <li>
+        <p class="fac-name"><b>Milo Rüegg</b><span>Professor, Leitung Institut 02</span></p>
+        <p class="fac-area">Produktentwicklung, Fertigung</p>
+        <p class="fac-since">seit 2014</p>
+        <p class="fac-lang">de / en</p>
+      </li>
+      <li>
+        <p class="fac-name"><b>Salome Keller</b><span>Leiterin Institut 03</span></p>
+        <p class="fac-area">Interfacedesign, Prototyping</p>
+        <p class="fac-since">seit 2020</p>
+        <p class="fac-lang">de / en</p>
+      </li>
+      <li>
+        <p class="fac-name"><b>Reto Amsler</b><span>Professor, Leitung Institut 04</span></p>
+        <p class="fac-area">Konstruktivismen, Reklamegeschichte</p>
+        <p class="fac-since">seit 2003</p>
+        <p class="fac-lang">de / en / it</p>
+      </li>
+      <li>
+        <p class="fac-name"><b>Camille Rochat</b><span>Professorin, Leitung Institut 05</span></p>
+        <p class="fac-area">Reparierbarkeit, Materialkreisläufe</p>
+        <p class="fac-since">seit 2018</p>
+        <p class="fac-lang">fr / en / de</p>
+      </li>
+      <li>
+        <p class="fac-name"><b>Marina Ostermann</b><span>Leiterin Satzstudio</span></p>
+        <p class="fac-area">Schrift im Öffis, Plakatproduktion</p>
+        <p class="fac-since">seit 1996</p>
+        <p class="fac-lang">de</p>
+      </li>
+      <li>
+        <p class="fac-name"><b>Jonas Aebli</b><span>Dozent, Bildredaktion</span></p>
+        <p class="fac-area">Fotografie, Bildauswahl, Ethik</p>
+        <p class="fac-since">seit 2017</p>
+        <p class="fac-lang">de / en</p>
+      </li>
+      <li>
+        <p class="fac-name"><b>Anneli Zürcher</b><span>Dozentin, Schriftrecherche</span></p>
+        <p class="fac-area">Typografie, Schriftgeschichte</p>
+        <p class="fac-since">seit 2011</p>
+        <p class="fac-lang">de / en</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="anmeldung page" id="anmeldung" aria-labelledby="anmeldung-title">
+    <div class="sec-head">
+      <p class="label">04 — Anmeldung</p>
+      <h2 id="anmeldung-title">Führung, Gastseminar, Einschreibung</h2>
+      <p class="side">Antwort<br>innerhalb 5 Tagen</p>
+    </div>
+    <p class="intro-narrow">Führungen durch die Ausstellung finden donnerstags um 17 Uhr statt und dauern etwa neunzig Minuten. Studierende der Hochschule melden sich über das Sekretariat an; alle anderen über dieses Formular.</p>
+
+    <form id="anmeldungForm" novalidate>
+      <div class="form-grid">
+        <div class="f f--third">
+          <label for="a-anrede">Anrede</label>
+          <select id="a-anrede" name="anrede" required aria-describedby="a-anrede-err">
+            <option value="">Bitte wählen</option>
+            <option>Frau</option>
+            <option>Herr</option>
+            <option>Divers / keine Angabe</option>
+          </select>
+          <span class="err" id="a-anrede-err"></span>
+        </div>
+        <div class="f f--third">
+          <label for="a-name">Name</label>
+          <input id="a-name" name="name" type="text" autocomplete="name" required aria-describedby="a-name-err">
+          <span class="err" id="a-name-err"></span>
+        </div>
+        <div class="f f--third">
+          <label for="a-mail">E-Mail</label>
+          <input id="a-mail" name="mail" type="email" autocomplete="email" required aria-describedby="a-mail-err">
+          <span class="err" id="a-mail-err"></span>
+        </div>
+        <div class="f f--third">
+          <label for="a-typ">Anliegen</label>
+          <select id="a-typ" name="typ" required aria-describedby="a-typ-err">
+            <option value="">Bitte wählen</option>
+            <option>Öffentliche Führung</option>
+            <option>Führung für Schulklassen</option>
+            <option>Gastseminar anfragen</option>
+            <option>Einschreibung WS 2026/27</option>
+          </select>
+          <span class="err" id="a-typ-err"></span>
+        </div>
+        <div class="f f--third">
+          <label for="a-termin">Wunschtermin</label>
+          <input id="a-termin" name="termin" type="date" required aria-describedby="a-termin-help a-termin-err">
+          <span class="hint" id="a-termin-help">Donnerstags, 11–19 Uhr</span>
+          <span class="err" id="a-termin-err"></span>
+        </div>
+        <div class="f f--third">
+          <label for="a-personen">Personenzahl</label>
+          <input id="a-personen" name="personen" type="number" min="1" max="40" step="1" value="1" required aria-describedby="a-personen-err">
+          <span class="err" id="a-personen-err"></span>
+        </div>
+        <div class="f f--full">
+          <label for="a-text">Nachricht</label>
+          <textarea id="a-text" name="text" required aria-describedby="a-text-help a-text-err" placeholder="Institution, Anliegen, gewünschte Uhrzeit"></textarea>
+          <span class="hint" id="a-text-help">Für Schulklassen bitte Klassenstufe und Schulform angeben.</span>
+          <span class="err" id="a-text-err"></span>
+        </div>
+
+        <div class="checks">
+          <label class="check" for="a-ds">
+            <input id="a-ds" name="dsgvo" type="checkbox" required aria-describedby="a-ds-err">
+            <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. Die Einwilligung kann jederzeit widerrufen werden.</span>
+          </label>
+          <span class="err err-full" id="a-ds-err"></span>
+        </div>
+
+        <div class="form-foot">
+          <button class="btn btn--red" type="submit" id="a-submit">Anfrage senden</button>
+          <p class="form-status" id="a-status" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </form>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="page">
+    <div class="foot-grid">
+      <div>
+        <h3 class="label">Adresse</h3>
+        <p>Institut für Gestaltung<br>Hohlstrasse 110<br>8004 Zürich, Schweiz</p>
+      </div>
+      <div>
+        <h3 class="label">Sekretariat</h3>
+        <p>+41 44 262 11 40<br>sekretariat@ifg.example<br>Mo – Fr, 9–16 Uhr</p>
+      </div>
+      <div>
+        <h3 class="label">Standorte</h3>
+        <ul>
+          <li><a href="#top">Zürich, Hohlstrasse</a></li>
+          <li><a href="#programm">Basel, Werkhalle</a></li>
+          <li><a href="#programm">Lausanne, Cite</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="label">Dokumente</h3>
+        <ul>
+          <li><a href="#fakultaet">Jahresbericht 2025</a></li>
+          <li><a href="#anmeldung">Studienordnung</a></li>
+          <li><a href="#anmeldung">Barrierefreiheit</a></li>
+          <li><a href="#anmeldung">Impressum</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <p>Hochschule für Gestaltung Zürich — Institut für Gestaltung</p>
+      <p>12 Spalten · 8 Zeilen · Raster 1970–2026</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var burger = document.getElementById("burger");
+  var nav = document.getElementById("nav");
+  burger.addEventListener("click", function(){
+    var open = nav.getAttribute("data-open") === "true";
+    nav.setAttribute("data-open", String(!open));
+    burger.setAttribute("aria-expanded", String(!open));
+  });
+  nav.addEventListener("click", function(e){
+    if(e.target.tagName === "A" && window.matchMedia("(max-width:760px)").matches){
+      nav.setAttribute("data-open","false");
+      burger.setAttribute("aria-expanded","false");
+    }
+  });
+
+  var form = document.getElementById("anmeldungForm");
+  var status = document.getElementById("a-status");
+  var btn = document.getElementById("a-submit");
+  var today = new Date().toISOString().slice(0,10);
+  document.getElementById("a-termin").min = today;
+
+  var rules = {
+    "a-anrede": function(v){ return v !== "" ? "" : "Bitte Anrede wählen."; },
+    "a-name":   function(v){ return v.trim().length >= 2 ? "" : "Bitte Namen angeben."; },
+    "a-mail":   function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "Gültige E-Mail-Adresse erforderlich."; },
+    "a-typ":    function(v){ return v !== "" ? "" : "Anliegen wählen."; },
+    "a-termin": function(v){
+      if(!v) return "Datum wählen.";
+      var picked = new Date(v + "T00:00:00");
+      if(picked.getDay() !== 4) return "Führungen finden donnerstags statt.";
+      if(v < today) return "Bitte ein zukünftiges Datum wählen.";
+      return "";
+    },
+    "a-personen": function(v){ return /^[0-9]+$/.test(v) && +v >= 1 && +v <= 40 ? "" : "Zwischen 1 und 40 Personen."; },
+    "a-text":   function(v){ return v.trim().length >= 15 ? "" : "Bitte kurz beschreiben (mind. 15 Zeichen)."; }
+  };
+
+  function check(id){
+    var input = document.getElementById(id);
+    var msg = rules[id](input.value);
+    var field = input.closest(".f");
+    field.setAttribute("data-invalid", msg ? "true" : "false");
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+    document.getElementById(id + "-err").textContent = msg;
+    return !msg;
+  }
+  Object.keys(rules).forEach(function(id){
+    var input = document.getElementById(id);
+    input.addEventListener("blur", function(){ check(id); });
+    input.addEventListener("change", function(){ check(id); });
+    input.addEventListener("input", function(){
+      if(input.closest(".f").getAttribute("data-invalid") === "true") check(id);
+    });
+  });
+
+  var ds = document.getElementById("a-ds");
+  function checkDs(){
+    var err = document.getElementById("a-ds-err");
+    ds.setAttribute("aria-invalid", ds.checked ? "false" : "true");
+    err.textContent = ds.checked ? "" : "Ohne Einwilligung können wir die Anfrage nicht bearbeiten.";
+    return ds.checked;
+  }
+  ds.addEventListener("change", checkDs);
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function(id){
+      if(!check(id) && !firstBad) firstBad = document.getElementById(id);
+    });
+    if(!checkDs() && !firstBad) firstBad = ds;
+    if(firstBad){
+      status.setAttribute("data-state","error");
+      status.textContent = "Bitte die markierten Felder korrigieren.";
+      firstBad.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "Wird gesendet …";
+    status.removeAttribute("data-state");
+    status.textContent = "Übermittlung läuft.";
+    window.setTimeout(function(){
+      btn.disabled = false;
+      btn.textContent = "Anfrage senden";
+      status.setAttribute("data-state","ok");
+      status.textContent = "Eingegangen. Das Sekretariat bestätigt Ihren Termin innert fünf Arbeitstagen per E-Mail.";
+      form.reset();
+    }, 900);
+  });
+})();
+</script>
+</body>
+</html>

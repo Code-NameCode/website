@@ -1,0 +1,814 @@
+<!-- Style: Mid Century Modern | 8midcenturymodern.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cedar &amp; Stone — midcentury furniture, made in Oregon</title>
+<meta name="description" content="Cedar &amp; Stone makes a small, deliberate range of midcentury furniture: lounge chairs, casegoods, tables and lighting, built to order in Eugene, Oregon since 2009.">
+<style>
+  :root{
+    /* colour */
+    --cream:#F4EBDB;
+    --cream-2:#EADFCB;
+    --paper:#FDF9F2;
+    --walnut:#4A3423;
+    --bark:#6B4A2F;
+    --ink:#2E241A;
+    --ink-2:#584839;
+    --muted:#6E5C48;
+    --olive:#6E7A4E;
+    --teal:#2C6660;
+    --clay:#BE5F2C;
+    --mustard:#D2A03C;
+    --line:#D8C8AE;
+    --ok:#2F6B3E;
+    --error:#A3311A;
+    /* type */
+    --display:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --humanist:Optima,Candara,"Segoe UI",Calibri,system-ui,-apple-system,sans-serif;
+    --fs-display:clamp(2.4rem,5.4vw,4.4rem);
+    --fs-h2:clamp(1.8rem,3.4vw,2.8rem);
+    --fs-h3:clamp(1.12rem,1.6vw,1.32rem);
+    --fs-body:clamp(1rem,1.08vw,1.07rem);
+    --fs-sm:.9rem;
+    --fs-xs:.76rem;
+    --lh:1.62;
+    --lh-head:1.14;
+    /* space */
+    --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:3rem;--s8:4.25rem;--s9:6rem;
+    --pad:clamp(1.1rem,3.5vw,2.5rem);
+    --sec:clamp(3.5rem,8vw,6.5rem);
+    --page:76rem;
+    /* edges */
+    --r-sm:8px;
+    --r:12px;
+    --r-lg:26px;
+    --r-arch:220px 220px 20px 20px;
+    --bw:1.5px;
+    --sh-sm:0 2px 0 rgba(74,52,35,.10), 0 6px 18px rgba(74,52,35,.08);
+    --sh:0 3px 0 rgba(74,52,35,.10), 0 14px 34px rgba(74,52,35,.12);
+    /* motion */
+    --dur:320ms;
+    --dur-fast:160ms;
+    --ease:cubic-bezier(.3,.8,.3,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--cream);color:var(--ink);
+    font-family:var(--humanist);font-size:var(--fs-body);line-height:var(--lh);
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(107,74,47,.055) 1px,transparent 1px);
+    background-size:6px 6px
+  }
+  h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--clay);outline-offset:3px;border-radius:var(--r-sm)}
+  .page{max-width:var(--page);margin-inline:auto;padding-inline:var(--pad)}
+  .h-display{font-family:var(--display);font-weight:400;letter-spacing:-.02em}
+  .eyebrow{font-size:var(--fs-xs);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--clay)}
+  .sec-title{font-family:var(--display);font-size:var(--fs-h2);line-height:var(--lh-head);letter-spacing:-.02em;font-weight:400;margin-top:var(--s3)}
+  .lede{font-size:clamp(1.05rem,1.35vw,1.18rem);color:var(--ink-2)}
+  .measure{max-width:46ch}
+  .mt4{margin-top:var(--s4)}
+  .mt6{margin-top:var(--s6)}
+
+  /* ---------- nav ---------- */
+  .head{background:var(--cream);border-bottom:var(--bw) solid var(--line);position:sticky;top:0;z-index:40;box-shadow:0 1px 0 rgba(74,52,35,.04)}
+  .head-in{display:flex;align-items:center;justify-content:space-between;gap:var(--s5);min-height:76px}
+  .brand{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+  .brand svg{flex:none}
+  .brand-name{font-family:var(--display);font-size:1.28rem;letter-spacing:-.01em;line-height:1.05}
+  .brand-sub{display:block;font-family:var(--humanist);font-size:var(--fs-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .nav ul{display:flex;align-items:center;gap:clamp(.75rem,2vw,1.9rem)}
+  .nav a{
+    text-decoration:none;font-size:var(--fs-sm);padding-block:.55rem;border-bottom:2px solid transparent;
+    transition:color var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)
+  }
+  .nav a:hover{color:var(--clay);border-bottom-color:var(--clay)}
+  .nav a[aria-current="page"]{color:var(--walnut);border-bottom-color:var(--walnut)}
+  .head-actions{display:flex;align-items:center;gap:var(--s3)}
+  .cart-btn{
+    display:inline-flex;align-items:center;gap:.5rem;min-height:46px;padding:0 var(--s4);
+    background:var(--paper);border:var(--bw) solid var(--bark);border-radius:var(--r);
+    font:inherit;font-size:var(--fs-sm);font-weight:600;cursor:pointer;box-shadow:var(--sh-sm);
+    transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease)
+  }
+  .cart-btn:hover{transform:translateY(-1px);box-shadow:var(--sh)}
+  .cart-count{background:var(--clay);color:var(--paper);border-radius:var(--r-pill,50%);min-width:1.5rem;height:1.5rem;display:grid;place-items:center;font-size:.78rem;padding-inline:.3rem}
+  .burger{
+    display:none;min-height:44px;padding:0 var(--s4);background:var(--paper);border:var(--bw) solid var(--bark);
+    border-radius:var(--r);font:inherit;font-size:var(--fs-sm);cursor:pointer;color:var(--ink)
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding-block:clamp(2.5rem,6vw,4.5rem) var(--s8)}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(2rem,5vw,4rem);align-items:center}
+  .hero h1{font-size:var(--fs-display);line-height:1.05;letter-spacing:-.03em;margin-block:var(--s4) var(--s5)}
+  .hero h1 em{font-style:italic;color:var(--clay)}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s6)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:52px;padding:0 var(--s6);
+    font:inherit;font-size:var(--fs-body);font-weight:600;text-decoration:none;cursor:pointer;
+    border:var(--bw) solid var(--walnut);border-radius:var(--r);background:var(--walnut);color:var(--cream);
+    box-shadow:0 4px 0 var(--bark);
+    transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease)
+  }
+  .btn:hover{background:var(--bark);transform:translateY(-1px);box-shadow:0 6px 0 var(--walnut)}
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--walnut)}
+  .btn--ghost{background:transparent;color:var(--walnut);box-shadow:none}
+  .btn--ghost:hover{background:var(--cream-2);color:var(--walnut);box-shadow:0 4px 0 var(--bark)}
+  .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+  .hero-scene{position:relative}
+  .hero-arch{
+    background:var(--cream-2);border-radius:var(--r-arch);padding:clamp(1.5rem,4vw,3rem) clamp(1rem,3vw,2.5rem);
+    box-shadow:inset 0 0 0 var(--bw) var(--line)
+  }
+  .hero-arch svg{display:block;width:100%;height:auto}
+  .hero-badge{
+    position:absolute;left:-10px;bottom:-18px;background:var(--mustard);color:var(--walnut);
+    border:var(--bw) solid var(--walnut);border-radius:var(--r-lg);box-shadow:var(--sh);
+    padding:var(--s3) var(--s4);max-width:14rem;font-size:var(--fs-sm);line-height:1.35
+  }
+  .hero-stats{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s6);margin-top:var(--s7);padding-top:var(--s5);border-top:var(--bw) solid var(--line)}
+  .hero-stats b{display:block;font-family:var(--display);font-size:1.6rem;line-height:1.1}
+  .hero-stats span{font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  /* ---------- marquee strip ---------- */
+  .strip{background:var(--walnut);color:var(--cream);padding-block:var(--s3);border-block:var(--bw) solid var(--walnut)}
+  .strip p{text-align:center;font-size:var(--fs-xs);letter-spacing:.24em;text-transform:uppercase;font-weight:600}
+
+  /* ---------- collection ---------- */
+  .collection{padding-block:var(--sec)}
+  .sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,20rem);gap:var(--s5);align-items:end;margin-bottom:var(--s7)}
+  .products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s6)}
+  .product{
+    background:var(--paper);border:var(--bw) solid var(--line);border-radius:var(--r-lg);
+    overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--sh-sm);
+    transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease)
+  }
+  .product:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+  .product-art{
+    background:var(--cream-2);padding:clamp(1.25rem,3vw,2rem);display:grid;place-items:center;
+    border-bottom:var(--bw) solid var(--line)
+  }
+  .product-art svg{display:block;width:100%;height:auto;max-width:16rem}
+  .product-body{padding:var(--s5);display:flex;flex-direction:column;gap:var(--s2);flex:1}
+  .product-meta{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .product-body h3{font-family:var(--display);font-size:1.28rem;font-weight:400;letter-spacing:-.01em}
+  .product-body p{font-size:var(--fs-sm);color:var(--ink-2)}
+  .product-specs{margin-top:var(--s2);display:grid;gap:.2rem;font-size:var(--fs-sm);color:var(--muted)}
+  .product-foot{margin-top:auto;padding-top:var(--s4);display:flex;align-items:center;justify-content:space-between;gap:var(--s3);flex-wrap:wrap}
+  .price{font-family:var(--display);font-size:1.5rem}
+  .price small{font-family:var(--humanist);font-size:var(--fs-xs);color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-left:.4rem}
+  .add-btn{
+    min-height:48px;padding:0 var(--s5);background:var(--cream);color:var(--walnut);
+    border:var(--bw) solid var(--walnut);border-radius:var(--r);font:inherit;font-size:var(--fs-sm);font-weight:600;cursor:pointer;
+    box-shadow:0 3px 0 var(--bark);
+    transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease)
+  }
+  .add-btn:hover{background:var(--mustard);transform:translateY(-1px)}
+  .add-btn:active{transform:translateY(2px);box-shadow:none}
+  .add-btn[data-added="true"]{background:var(--olive);color:#fff;border-color:var(--olive)}
+  .cart-status{margin-top:var(--s4);font-size:var(--fs-sm);color:var(--ink-2);min-height:1.3em}
+  .cart-status b{color:var(--walnut)}
+
+  /* ---------- story ---------- */
+  .story{padding-block:var(--sec);background:var(--teal);color:#F2EDE2}
+  .story .eyebrow{color:var(--mustard)}
+  .story .lede,.story p{color:#E4EEE9}
+  .story-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(2rem,5vw,4rem);align-items:center}
+  .story-figure{position:relative}
+  .story-figure svg{display:block;width:100%;height:auto}
+  .story-figcap{margin-top:var(--s3);font-size:var(--fs-sm);color:#C8DCD6}
+  .story h2{font-family:var(--display);font-size:var(--fs-h2);line-height:var(--lh-head);font-weight:400;letter-spacing:-.02em;margin-block:var(--s3) var(--s4)}
+  .pull{margin-top:var(--s6);border-left:3px solid var(--mustard);padding-left:var(--s4);font-family:var(--display);font-size:1.2rem;line-height:1.4;font-style:italic}
+  .story cite{display:block;margin-top:var(--s2);font-family:var(--humanist);font-size:var(--fs-sm);font-style:normal;color:#C8DCD6}
+
+  /* ---------- process ---------- */
+  .process{padding-block:var(--sec)}
+  .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s6);position:relative;margin-top:var(--s7)}
+  .steps::before{content:"";position:absolute;top:1.5rem;left:6%;right:6%;height:2px;background:var(--line);z-index:0}
+  .step{position:relative;z-index:1}
+  .step-num{
+    width:3rem;height:3rem;border-radius:50%;background:var(--cream);border:var(--bw) solid var(--walnut);
+    display:grid;place-items:center;font-family:var(--display);font-size:1.1rem;margin-bottom:var(--s4);box-shadow:var(--sh-sm)
+  }
+  .step:nth-child(2) .step-num{background:var(--mustard)}
+  .step:nth-child(3) .step-num{background:var(--clay);color:var(--cream)}
+  .step h3{font-family:var(--display);font-weight:400;font-size:1.2rem;margin-bottom:var(--s2)}
+  .step p{font-size:var(--fs-sm);color:var(--ink-2)}
+
+  /* ---------- materials band ---------- */
+  .materials{background:var(--paper);border-block:var(--bw) solid var(--line);padding-block:var(--sec)}
+  .mat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(2rem,5vw,4rem);align-items:center}
+  .mat-list{display:grid;gap:var(--s4)}
+  .mat-list div{border-top:var(--bw) solid var(--line);padding-top:var(--s3)}
+  .mat-list dt{font-family:var(--display);font-size:1.15rem;margin-bottom:.2rem}
+  .mat-list dd{margin:0;font-size:var(--fs-sm);color:var(--ink-2)}
+
+  /* ---------- showroom form ---------- */
+  .showroom{padding-block:var(--sec)}
+  .show-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(2rem,5vw,4rem);align-items:start}
+  .show-panel{
+    background:var(--paper);border:var(--bw) solid var(--line);border-radius:var(--r-lg);
+    box-shadow:var(--sh);padding:clamp(1.5rem,3.5vw,2.5rem)
+  }
+  .field{margin-bottom:var(--s4)}
+  .field label{display:block;font-size:var(--fs-sm);font-weight:600;margin-bottom:var(--s2)}
+  .field .hint{display:block;font-size:var(--fs-sm);color:var(--muted);margin-top:var(--s2)}
+  .field input,.field select,.field textarea{
+    width:100%;min-height:50px;padding:.6rem .9rem;background:var(--cream);color:var(--ink);
+    border:var(--bw) solid var(--line);border-radius:var(--r);font:inherit;font-size:var(--fs-sm);
+    transition:border-color var(--dur-fast) var(--ease)
+  }
+  .field textarea{min-height:6.5rem;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--walnut);background:var(--paper);outline:3px solid rgba(190,95,44,.35);outline-offset:1px}
+  .field[data-invalid="true"] input,.field[data-invalid="true"] select,.field[data-invalid="true"] textarea{border-color:var(--error);background:#FCEEE9}
+  .field .err{display:block;font-size:var(--fs-sm);color:var(--error);margin-top:var(--s2);min-height:1.1em}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+  .form-status{margin-top:var(--s3);font-size:var(--fs-sm);min-height:1.3em;color:var(--ink-2)}
+  .form-status[data-state="ok"]{color:var(--ok);font-weight:600}
+  .form-status[data-state="error"]{color:var(--error);font-weight:600}
+  .show-info dl{display:grid;gap:var(--s4);margin-top:var(--s5)}
+  .show-info dl div{border-left:3px solid var(--mustard);padding-left:var(--s4)}
+  .show-info dt{font-size:var(--fs-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .show-info dd{margin:.2rem 0 0;font-size:var(--fs-sm)}
+
+  /* ---------- footer ---------- */
+  .foot{background:var(--walnut);color:#EADFCB;padding-block:var(--s7) var(--s5);border-top:var(--bw) solid var(--walnut)}
+  .foot-grid{display:grid;grid-template-columns:1.5fr repeat(3,minmax(0,1fr));gap:var(--s5)}
+  .foot h3{font-family:var(--display);font-weight:400;font-size:1.1rem;margin-bottom:var(--s3);color:var(--cream)}
+  .foot p,.foot a{font-size:var(--fs-sm);color:#D9CCB6}
+  .foot a{display:inline-block;min-height:34px;padding-block:.1rem}
+  .foot a:hover{color:var(--mustard)}
+  .foot li{margin-bottom:.25rem}
+  .foot-base{margin-top:var(--s6);padding-top:var(--s4);border-top:1px solid rgba(234,223,203,.24);display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);font-size:var(--fs-xs);color:#BCAE99}
+
+  @media (max-width:1000px){
+    .hero-grid{grid-template-columns:1fr}
+    .hero-scene{max-width:34rem}
+    .hero-badge{left:auto;right:0}
+    .sec-head{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .steps::before{display:none}
+    .story-grid,.mat-grid,.show-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:640px){
+    .products{grid-template-columns:1fr}
+    .row2{grid-template-columns:1fr}
+    .burger{display:inline-flex;align-items:center}
+    .cart-btn{font-size:0;padding:0 var(--s3);gap:0}
+    .cart-btn .cart-label{display:none}
+    .head-in{position:relative;flex-wrap:wrap;padding-block:var(--s2);gap:var(--s3)}
+    .nav{width:100%}
+    .nav ul{display:none;flex-direction:column;align-items:flex-start;gap:0;padding-block:var(--s2) var(--s3)}
+    .nav ul[data-open="true"]{display:flex}
+    .nav a{width:100%;padding-block:.8rem;border-bottom:1px solid var(--line)}
+    .hero-arch{border-radius:64px 64px var(--r-lg) var(--r-lg)}
+    .foot-grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    .product:hover,.btn:hover,.add-btn:hover{transform:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="page head-in">
+    <a class="brand" href="#top">
+      <svg width="34" height="34" viewBox="0 0 34 34" role="img" aria-label="Cedar and Stone mark">
+        <rect x="1" y="1" width="32" height="32" rx="10" fill="#4A3423"/>
+        <path d="M17 7c4 4 6 7.5 6 10.5A6 6 0 0 1 11 17.5C11 14.5 13 11 17 7z" fill="#D2A03C"/>
+        <path d="M8 25h18" stroke="#F4EBDB" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-name">Cedar &amp; Stone<span class="brand-sub">Eugene, Oregon</span></span>
+    </a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" aria-label="Primary">
+      <ul id="nav">
+        <li><a href="#collection" aria-current="page">Collection</a></li>
+        <li><a href="#story">Workshop</a></li>
+        <li><a href="#materials">Materials</a></li>
+        <li><a href="#showroom">Showroom</a></li>
+      </ul>
+    </nav>
+    <div class="head-actions">
+      <button class="cart-btn" type="button" id="cartBtn" aria-describedby="cartStatus">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 4h2l2 9h8l2-7H6"/><circle cx="9" cy="16.5" r="1.4"/><circle cx="15" cy="16.5" r="1.4"/></svg>
+        <span class="cart-label">Cart</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero page" aria-labelledby="hero-title">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Est. 2009 · Made to order · 14 pieces in the range</p>
+        <h1 class="h-display" id="hero-title">Furniture with <em>good bones</em> and nothing to prove.</h1>
+        <p class="lede measure">Fourteen pieces. Walnut, white oak, saddle leather, brass. Built in a two-bay shop in Eugene, finished by one team, repaired by us for as long as you own it.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#collection">See the collection</a>
+          <a class="btn btn--ghost" href="#showroom">Book a showroom visit</a>
+        </div>
+        <div class="hero-stats">
+          <div><b>14</b><span>Pieces, no more</span></div>
+          <div><b>11 yrs</b><span>Average warranty</span></div>
+          <div><b>2,900</b><span>Chairs repaired free</span></div>
+        </div>
+      </div>
+
+      <div class="hero-scene">
+        <div class="hero-arch">
+          <svg viewBox="0 0 420 360" role="img" aria-label="Illustration of a midcentury lounge chair with splayed legs, an ottoman, a starburst clock and a tripod floor lamp">
+            <circle cx="286" cy="86" r="62" fill="#D2A03C" opacity=".45"/>
+            <g stroke="#4A3423" stroke-width="3" fill="none" stroke-linecap="round">
+              <path d="M286 86V30M286 86l48 30M286 86l-48 30M286 86h58M286 86l20-46M286 86l-20-46"/>
+            </g>
+            <circle cx="286" cy="86" r="6" fill="#4A3423"/>
+            <g>
+              <path d="M118 196c0-34 26-58 62-58s62 24 62 58v22H118z" fill="#BE5F2C"/>
+              <path d="M132 218h142c14 0 22 10 22 22v10H110v-10c0-12 8-22 22-22z" fill="#6E7A4E"/>
+              <path d="M128 250l-18 62M276 250l18 62" stroke="#4A3423" stroke-width="7" stroke-linecap="round"/>
+              <path d="M110 264l-14 44M284 264l14 44" stroke="#4A3423" stroke-width="7" stroke-linecap="round"/>
+              <path d="M120 180c-8 24-8 44 2 62M258 180c8 24 8 44-2 62" stroke="#4A3423" stroke-width="5" fill="none" stroke-linecap="round"/>
+            </g>
+            <g>
+              <path d="M300 268h96a12 12 0 0 1 0 24h-96a22 22 0 0 1 0-24z" fill="#BE5F2C"/>
+              <path d="M310 292l-10 34M386 292l10 34" stroke="#4A3423" stroke-width="6" stroke-linecap="round"/>
+            </g>
+            <g stroke="#4A3423" stroke-width="5" stroke-linecap="round" fill="none">
+              <path d="M74 320V176"/>
+              <path d="M40 320h68"/>
+              <path d="M74 176l0-24"/>
+            </g>
+            <path d="M50 152h48l-12-30H62z" fill="#2C6660"/>
+            <g fill="#4A3423" opacity=".5">
+              <rect x="20" y="330" width="380" height="4" rx="2"/>
+            </g>
+          </svg>
+        </div>
+        <p class="hero-badge"><strong>The Halloran lounge chair</strong><br>Walnut, saddle leather, 1958 proportions, 2026 joinery.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <p>Made to order in 10–14 weeks · Free delivery in the contiguous US · Lifetime repair service</p>
+  </div>
+
+  <section class="collection page" id="collection" aria-labelledby="collection-title">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">The collection</p>
+        <h2 class="sec-title" id="collection-title">Four pieces from a range of fourteen</h2>
+      </div>
+      <p class="lede">Prices are for the standard finish. Custom timber and leather are quoted separately, and we will tell you honestly if a request will not age well.</p>
+    </div>
+
+    <div class="products">
+      <article class="product">
+        <div class="product-art">
+          <svg viewBox="0 0 260 200" role="img" aria-label="Line drawing of the Halloran lounge chair in three-quarter view" fill="none" stroke="#4A3423" stroke-width="3" stroke-linecap="round">
+            <path d="M40 92c0-30 24-52 58-52s58 22 58 52v22H40z" fill="#BE5F2C" stroke="none"/>
+            <path d="M52 114h124c12 0 20 9 20 20v8H32v-8c0-11 8-20 20-20z" fill="#6E7A4E" stroke="none"/>
+            <path d="M48 142l-14 46M180 142l14 46M70 142l-8 46M158 142l8 46"/>
+            <path d="M50 78c-8 22-8 40 2 56M158 78c8 22 8 40-2 56" stroke-width="4"/>
+          </svg>
+        </div>
+        <div class="product-body">
+          <p class="product-meta"><span>Seating</span><span>Made in Eugene</span></p>
+          <h3>Halloran lounge chair</h3>
+          <p>Steam-bent walnut arms, eight-way hand-tied seat, saddle leather that darkens rather than cracks. The 1958 form, re-jointed for a longer life.</p>
+          <p class="product-specs"><span>Walnut · saddle leather</span><span>W 74 × D 82 × H 76 cm</span></p>
+          <div class="product-foot">
+            <p class="price">$1,890 <small>each</small></p>
+            <button class="add-btn" type="button" data-name="Halloran lounge chair">Add to cart</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product">
+        <div class="product-art">
+          <svg viewBox="0 0 260 200" role="img" aria-label="Line drawing of the Sorenson credenza with sliding tambour doors" fill="none" stroke="#4A3423" stroke-width="3" stroke-linecap="round">
+            <rect x="26" y="52" width="208" height="96" rx="6" fill="#6B4A2F" stroke="none"/>
+            <rect x="36" y="62" width="188" height="76" rx="4" fill="#F4EBDB" stroke="none"/>
+            <path d="M36 80h188M36 100h188M36 120h188M60 62v76M88 62v76M116 62v76M144 62v76M172 62v76M200 62v76" stroke-width="1.4" opacity=".55"/>
+            <path d="M34 148l-6 22M226 148l6 22M60 148v22M200 148v22"/>
+            <circle cx="168" cy="100" r="4" fill="#D2A03C" stroke="none"/>
+          </svg>
+        </div>
+        <div class="product-body">
+          <p class="product-meta"><span>Storage</span><span>Made in Eugene</span></p>
+          <h3>Sorenson credenza</h3>
+          <p>White oak case, solid walnut tambour doors on solid brass tracks. Takes a record player on one side and the paperwork you promised to file on the other.</p>
+          <p class="product-specs"><span>White oak · walnut · brass</span><span>W 168 × D 46 × H 72 cm</span></p>
+          <div class="product-foot">
+            <p class="price">$2,340 <small>each</small></p>
+            <button class="add-btn" type="button" data-name="Sorenson credenza">Add to cart</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product">
+        <div class="product-art">
+          <svg viewBox="0 0 260 200" role="img" aria-label="Line drawing of the Ellingsen dining table with splayed legs" fill="none" stroke="#4A3423" stroke-width="3" stroke-linecap="round">
+            <path d="M22 96c0-8 6-14 14-14h188c8 0 14 6 14 14s-6 14-14 14H36c-8 0-14-6-14-14z" fill="#6B4A2F" stroke="none"/>
+            <path d="M46 110l-10 58M214 110l10 58M74 110l-6 58M186 110l6 58"/>
+            <path d="M60 90v-14h60v14M150 90v-14h50v14"/>
+          </svg>
+        </div>
+        <div class="product-body">
+          <p class="product-meta"><span>Tables</span><span>Made in Eugene</span></p>
+          <h3>Ellingsen dining table</h3>
+          <p>A 34mm solid top with a soft arris, on a tapered trestle. Seats six comfortably, eight when someone is prepared to sit at the end.</p>
+          <p class="product-specs"><span>Solid walnut</span><span>W 200 × D 92 × H 74 cm</span></p>
+          <div class="product-foot">
+            <p class="price">$3,150 <small>each</small></p>
+            <button class="add-btn" type="button" data-name="Ellingsen dining table">Add to cart</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product">
+        <div class="product-art">
+          <svg viewBox="0 0 260 200" role="img" aria-label="Line drawing of the Marchetti tripod floor lamp with a conical shade" fill="none" stroke="#4A3423" stroke-width="3" stroke-linecap="round">
+            <path d="M96 46h68l-14-32h-40z" fill="#2C6660" stroke="none"/>
+            <path d="M130 46v96"/>
+            <path d="M130 142L96 186M130 142l34 44M130 142v46"/>
+            <path d="M118 58h24" stroke-width="2"/>
+            <ellipse cx="130" cy="188" rx="46" ry="6" fill="#4A3423" opacity=".2" stroke="none"/>
+          </svg>
+        </div>
+        <div class="product-body">
+          <p class="product-meta"><span>Lighting</span><span>Made in Portland</span></p>
+          <h3>Marchetti floor lamp</h3>
+          <p>Spun aluminium shade, brass stem, three-legged base that will not tip over when a cat lands on it. Wired for a dimmer, with a cloth cord.</p>
+          <p class="product-specs"><span>Aluminium · brass</span><span>H 148 cm · E27 · 6 W LED</span></p>
+          <div class="product-foot">
+            <p class="price">$480 <small>each</small></p>
+            <button class="add-btn" type="button" data-name="Marchetti floor lamp">Add to cart</button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <p class="cart-status" id="cartStatus" role="status" aria-live="polite">Cart is empty. Add a piece above and we will hold it for 30 days while you decide.</p>
+  </section>
+
+  <section class="story" id="story" aria-labelledby="story-title">
+    <div class="page story-grid">
+      <figure class="story-figure">
+        <svg viewBox="0 0 480 400" role="img" aria-label="Illustration of a workshop bench with hand tools, a half-finished chair frame and shavings">
+          <rect x="0" y="0" width="480" height="400" fill="#245A55"/>
+          <rect x="40" y="250" width="400" height="18" rx="6" fill="#F4EBDB"/>
+          <path d="M60 268v100M420 268v100" stroke="#F4EBDB" stroke-width="10" stroke-linecap="round"/>
+          <g stroke="#D2A03C" stroke-width="5" stroke-linecap="round" fill="none">
+            <path d="M120 250V140h60v110"/>
+            <path d="M120 170h60M120 200h60M180 140l40-20"/>
+          </g>
+          <g fill="#BE5F2C">
+            <rect x="230" y="222" width="60" height="28" rx="4"/>
+            <rect x="310" y="236" width="40" height="14" rx="4"/>
+          </g>
+          <g stroke="#F4EBDB" stroke-width="4" fill="none" stroke-linecap="round">
+            <path d="M300 140l40 30-16 20-40-30z"/>
+            <path d="M356 150h60"/>
+            <circle cx="270" cy="120" r="18"/>
+            <path d="M270 138v30"/>
+          </g>
+          <g fill="#D2A03C" opacity=".7">
+            <circle cx="90" cy="300" r="3"/><circle cx="130" cy="316" r="2.5"/><circle cx="400" cy="304" r="3"/>
+            <circle cx="356" cy="322" r="2"/><circle cx="200" cy="308" r="2.5"/>
+          </g>
+        </svg>
+        <p class="story-figcap">Bay 2, Tuesday morning. Every frame is dry-fitted before it is glued, which adds a day and saves the next twenty years.</p>
+      </figure>
+
+      <div>
+        <p class="eyebrow">The workshop</p>
+        <h2 id="story-title">We are a small shop with a long memory</h2>
+        <p class="measure">Cedar &amp; Stone started in 2009 as a two-person repair bench. Most of what we know came from taking other people's furniture apart and finding out why it failed — the glue joints, the veneer, the one screw holding everything together.</p>
+        <p class="measure mt4">So we design for the repair, not just the photograph. Every joint can be reached, every part can be replaced, and every drawing we publish includes what to use if the part wears out in year twenty.</p>
+        <blockquote class="pull">
+          “A chair that cannot be taken apart is furniture that cannot be kept. That is the whole design brief, and it is why our arm comes off in four bolts.”
+          <cite>Ingrid Cedar, founder</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="process page" id="process" aria-labelledby="process-title">
+    <div>
+      <p class="eyebrow">How a piece is made</p>
+      <h2 class="sec-title" id="process-title">Three stages, ten to fourteen weeks, no shortcuts hidden in the small print</h2>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <span class="step-num" aria-hidden="true">1</span>
+        <h3>Timber, chosen</h3>
+        <p>Walnut and white oak from a single mill in Pennsylvania, air-dried and then kiln-finished to eight per cent. You get the board number on the invoice.</p>
+      </li>
+      <li class="step">
+        <span class="step-num" aria-hidden="true">2</span>
+        <h3>Built, then dry-fitted</h3>
+        <p>Joinery first, no glue. The frame is assembled, taken apart, adjusted, and only then glued and pinned. It costs a day and it is the reason the chairs do not rack.</p>
+      </li>
+      <li class="step">
+        <span class="step-num" aria-hidden="true">3</span>
+        <h3>Finished in oil and wax</h3>
+        <p>Three coats of hardwax oil, burnished between each. It is a finish you can repair at your own kitchen table in ten minutes, which matters more than a perfect gloss.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="materials" id="materials" aria-labelledby="materials-title">
+    <div class="page mat-grid">
+      <div>
+        <p class="eyebrow">Materials</p>
+        <h2 class="sec-title" id="materials-title">Four materials, chosen to age rather than fail</h2>
+        <p class="lede mt4">Nothing in the range is finished with lacquer, and nothing is glued where a screw will do. If a component wears out, you replace that component — not the piece.</p>
+        <dl class="mat-list mt6">
+          <div>
+            <dt>Black walnut</dt>
+            <dd>American, from a single mill. Colour shifts warm over about five years, then settles. Every board is photographed before it enters the shop.</dd>
+          </div>
+          <div>
+            <dt>White oak</dt>
+            <dd>Quarter-sawn where the grain shows, rift-sawn where it does not. Used for casework, and for anything that will be near a window.</dd>
+          </div>
+          <div>
+            <dt>Saddle leather</dt>
+            <dd>Vegetable-tanned, 4mm, from a tannery in Santa Croce that has closed on Sundays since 1961. It creases; it does not crack.</dd>
+          </div>
+          <div>
+            <dt>Unlacquered brass</dt>
+            <dd>Left raw and allowed to patinate. If you want it bright, the care kit includes the cloth. If you do not touch it for a decade, it goes dark and stays handsome.</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <svg viewBox="0 0 400 460" role="img" aria-label="Illustration of stacked timber offcuts and a sample board on a workshop table" width="100%">
+          <rect x="0" y="0" width="400" height="460" rx="200" fill="#EADFCB"/>
+          <g>
+            <rect x="60" y="270" width="280" height="30" rx="6" fill="#6B4A2F"/>
+            <rect x="76" y="238" width="248" height="30" rx="6" fill="#8A5C39"/>
+            <rect x="60" y="206" width="280" height="30" rx="6" fill="#4A3423"/>
+            <rect x="92" y="174" width="216" height="30" rx="6" fill="#6B4A2F"/>
+          </g>
+          <g opacity=".5" stroke="#2E241A" stroke-width="1.6" fill="none">
+            <path d="M74 285c40-8 60 6 100-2s70 4 152-6"/>
+            <path d="M90 253c40-8 60 6 100-2s70 4 120-6"/>
+            <path d="M74 221c40-8 60 6 100-2s70 4 152-6"/>
+          </g>
+          <rect x="128" y="96" width="144" height="76" rx="8" fill="#D2A03C"/>
+          <path d="M148 148c20-40 44-40 64-16s34 20 44-12" stroke="#4A3423" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <g fill="#BE5F2C">
+            <circle cx="60" cy="120" r="16"/><circle cx="340" cy="132" r="22"/>
+          </g>
+          <path d="M60 120h-22M340 132h30" stroke="#4A3423" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="showroom page" id="showroom" aria-labelledby="showroom-title">
+    <div class="show-grid">
+      <div class="show-info">
+        <p class="eyebrow">The showroom</p>
+        <h2 class="sec-title" id="showroom-title">Sit in them before you decide</h2>
+        <p class="lede mt4">A photograph will not tell you whether a lounge chair suits your floor, your back and your 1970s rug. Come and sit. We will put the kettle on.</p>
+        <dl>
+          <div>
+            <dt>Address</dt>
+            <dd>418 Oak Street, Eugene, OR 97401 — the old upholstery shop.</dd>
+          </div>
+          <div>
+            <dt>Hours</dt>
+            <dd>Wednesday to Saturday, 10–5. First and last Thursday by appointment.</dd>
+          </div>
+          <div>
+            <dt>What happens</dt>
+            <dd>Forty-five minutes, all fourteen pieces out, fabric and timber samples to handle, no sales script and no obligation to buy anything at all.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <form class="show-panel" id="showForm" novalidate>
+        <div class="row2">
+          <div class="field">
+            <label for="v-name">Name</label>
+            <input id="v-name" name="name" type="text" autocomplete="name" required aria-describedby="v-name-err">
+            <span class="err" id="v-name-err"></span>
+          </div>
+          <div class="field">
+            <label for="v-email">Email</label>
+            <input id="v-email" name="email" type="email" autocomplete="email" required aria-describedby="v-email-err">
+            <span class="err" id="v-email-err"></span>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="v-date">Preferred day</label>
+            <input id="v-date" name="date" type="date" required aria-describedby="v-date-err">
+            <span class="err" id="v-date-err"></span>
+          </div>
+          <div class="field">
+            <label for="v-people">How many coming</label>
+            <input id="v-people" name="people" type="number" min="1" max="6" step="1" value="2" required aria-describedby="v-people-err">
+            <span class="err" id="v-people-err"></span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="v-interest">Anything you are thinking about?</label>
+          <select id="v-interest" name="interest" required aria-describedby="v-interest-err">
+            <option value="">Choose one</option>
+            <option>A lounge chair</option>
+            <option>A dining table</option>
+            <option>Storage for a small flat</option>
+            <option>Lighting only</option>
+            <option>Repairing something I already own</option>
+          </select>
+          <span class="err" id="v-interest-err"></span>
+        </div>
+        <div class="field">
+          <label for="v-note">Anything we should know?</label>
+          <textarea id="v-note" name="note" aria-describedby="v-note-hint"></textarea>
+          <span class="hint" id="v-note-hint">Optional. Stairs, parking, a dog, a deadline — all useful.</span>
+        </div>
+        <button class="btn" type="submit" id="showSubmit">Request a time</button>
+        <p class="form-status" id="showStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="page">
+    <div class="foot-grid">
+      <div>
+        <h3>Cedar &amp; Stone</h3>
+        <p>Fourteen pieces, built in Eugene since 2009. Drawings for every joint published free, because the next person to own a chair should be able to fix it.</p>
+      </div>
+      <div>
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="#collection">Seating</a></li>
+          <li><a href="#collection">Tables</a></li>
+          <li><a href="#collection">Storage</a></li>
+          <li><a href="#collection">Lighting</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Service</h3>
+        <ul>
+          <li><a href="#story">Repair service</a></li>
+          <li><a href="#process">Care kits</a></li>
+          <li><a href="#materials">Timber sourcing</a></li>
+          <li><a href="#showroom">Trade &amp; interior</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Studio</h3>
+        <ul>
+          <li><a href="#showroom">Showroom</a></li>
+          <li><a href="#top">Journal</a></li>
+          <li><a href="#top">Careers</a></li>
+          <li><a href="#top">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <p>© 2026 Cedar &amp; Stone LLC · Eugene, Oregon · Made in the USA</p>
+      <p>Repair before replacement, always</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* --- menu --- */
+  var burger = document.getElementById("burger");
+  var nav = document.getElementById("nav");
+  burger.addEventListener("click", function(){
+    var open = nav.getAttribute("data-open") === "true";
+    nav.setAttribute("data-open", String(!open));
+    burger.setAttribute("aria-expanded", String(!open));
+  });
+  nav.addEventListener("click", function(e){
+    if(e.target.tagName === "A" && window.matchMedia("(max-width:640px)").matches){
+      nav.setAttribute("data-open","false");
+      burger.setAttribute("aria-expanded","false");
+    }
+  });
+
+  /* --- cart --- */
+  var countEl = document.getElementById("cartCount");
+  var status = document.getElementById("cartStatus");
+  var buttons = Array.prototype.slice.call(document.querySelectorAll(".add-btn"));
+  var count = 0;
+  var lastItem = "";
+
+  buttons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      count += 1;
+      lastItem = btn.getAttribute("data-name");
+      countEl.textContent = String(count);
+      btn.setAttribute("data-added","true");
+      btn.textContent = "Added";
+      status.textContent = lastItem + " is in the cart — " + count + (count === 1 ? " piece" : " pieces") + ". We hold it for 30 days while you decide.";
+      window.setTimeout(function(){
+        btn.setAttribute("data-added","false");
+        btn.textContent = "Add to cart";
+      }, 1800);
+    });
+  });
+
+  document.getElementById("cartBtn").addEventListener("click", function(){
+    if(count === 0){
+      status.textContent = "Cart is empty. Add a piece above and we will hold it for 30 days while you decide.";
+    }else{
+      status.textContent = "Cart: " + count + (count === 1 ? " piece" : " pieces") + ", starting with the " + lastItem + ". Checkout opens at the till — this is a demonstration shop, so nothing is charged.";
+    }
+  });
+
+  /* --- showroom form --- */
+  var form = document.getElementById("showForm");
+  var formStatus = document.getElementById("showStatus");
+  var submit = document.getElementById("showSubmit");
+  var today = new Date().toISOString().slice(0,10);
+  var dateInput = document.getElementById("v-date");
+  dateInput.min = today;
+
+  var rules = {
+    "v-name": function(v){ return v.trim().length >= 2 ? "" : "We need a name for the door list."; },
+    "v-email": function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "A valid email, so we can confirm."; },
+    "v-date": function(v){
+      if(!v) return "Pick a day that suits you.";
+      var d = new Date(v + "T00:00:00");
+      var day = d.getDay();
+      if(day < 3 || day > 6) return "We are open Wednesday to Saturday.";
+      if(v < today) return "That day has already gone by.";
+      return "";
+    },
+    "v-people": function(v){ return /^[0-9]+$/.test(v) && +v >= 1 && +v <= 6 ? "" : "We can seat up to six at a time."; },
+    "v-interest": function(v){ return v !== "" ? "" : "Choose the closest, it helps us set the room out."; }
+  };
+  function check(id){
+    var input = document.getElementById(id);
+    var msg = rules[id](input.value);
+    input.closest(".field").setAttribute("data-invalid", msg ? "true" : "false");
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+    document.getElementById(id + "-err").textContent = msg;
+    return !msg;
+  }
+  Object.keys(rules).forEach(function(id){
+    var input = document.getElementById(id);
+    input.addEventListener("blur", function(){ check(id); });
+    input.addEventListener("change", function(){ check(id); });
+    input.addEventListener("input", function(){
+      if(input.closest(".field").getAttribute("data-invalid") === "true") check(id);
+    });
+  });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function(id){
+      if(!check(id) && !firstBad) firstBad = document.getElementById(id);
+    });
+    if(firstBad){
+      formStatus.setAttribute("data-state","error");
+      formStatus.textContent = "A couple of details to fix first — they are marked below.";
+      firstBad.focus();
+      return;
+    }
+    submit.disabled = true;
+    submit.textContent = "Sending …";
+    formStatus.removeAttribute("data-state");
+    formStatus.textContent = "Sending your request …";
+    window.setTimeout(function(){
+      submit.disabled = false;
+      submit.textContent = "Request a time";
+      formStatus.setAttribute("data-state","ok");
+      formStatus.textContent = "Lovely. We will email you within one working day with two times that day, and put the kettle on.";
+      form.reset();
+      dateInput.min = today;
+    }, 900);
+  });
+})();
+</script>
+</body>
+</html>

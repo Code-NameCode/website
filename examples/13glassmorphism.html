@@ -1,0 +1,515 @@
+<!-- Style: Glassmorphism | 13glassmorphism.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aeris — Climate Intelligence</title>
+<style>
+:root{
+  --sky-0:#04222b;      /* deep backdrop */
+  --sky-1:#0a3b42;
+  --sky-2:#12565a;
+  --sand:#e9dcc6;
+  --amber:#f0a860;
+  --foam:#d8f1ee;
+  --ink:#062028;
+  --ink-2:#0d3540;
+  --muted:#4b6b72;
+  --danger:#b4462f;
+  --glass:rgba(226,244,241,.14);
+  --glass-2:rgba(226,244,241,.09);
+  --glass-line:rgba(226,244,241,.30);
+  --glass-line-2:rgba(226,244,241,.16);
+  --opaque:#f4faf8;
+  --opaque-line:#c3d8d4;
+  --font-sans:"Segoe UI",Inter,system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  --t-xs:clamp(.72rem,.69rem + .12vw,.8rem);
+  --t-sm:clamp(.85rem,.82rem + .16vw,.95rem);
+  --t-md:clamp(1rem,.96rem + .22vw,1.12rem);
+  --t-lg:clamp(1.25rem,1.05rem + .9vw,1.7rem);
+  --t-xl:clamp(1.8rem,1.3rem + 2.4vw,3rem);
+  --t-2xl:clamp(2.4rem,1.5rem + 4.4vw,5rem);
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;--s-6:2rem;--s-7:3rem;--s-8:4.5rem;
+  --r-lg:20px;--r-md:14px;--r-sm:9px;
+  --sh-1:0 2px 10px rgba(3,26,32,.20);
+  --sh-2:0 18px 48px -22px rgba(3,26,32,.65);
+  --d:240ms;--ease:cubic-bezier(.2,.8,.2,1);
+  --w:min(1180px,100% - 2.5rem);
+  --blur:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:var(--font-sans);font-size:var(--t-md);line-height:1.62;
+  background:var(--sky-0);min-height:100%}
+h1,h2,h3{margin:0 0 var(--s-3);line-height:1.08;font-weight:600;letter-spacing:-.015em}
+p{margin:0 0 var(--s-3)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+.wrap{width:var(--w);margin-inline:auto}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--s-4);top:var(--s-4);z-index:60;background:var(--foam);color:var(--ink);padding:.6rem 1rem;border-radius:var(--r-sm)}
+
+/* atmospheric backdrop — isobars + wind streamlines, fixed so glass has something to refract */
+.sky{position:fixed;inset:0;z-index:-2;background:linear-gradient(168deg,var(--sky-0) 0%,var(--sky-1) 38%,var(--sky-2) 72%,#1a6a63 100%)}
+.sky svg{width:100%;height:100%;display:block;opacity:.5}
+.sky::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,transparent 30%,rgba(4,34,43,.72) 100%)}
+.drift{animation:drift 44s linear infinite}
+@keyframes drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-160px,-40px,0)}}
+
+/* glass primitives */
+.glass{
+  background:var(--glass);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(140%);
+  backdrop-filter:blur(var(--blur)) saturate(140%);
+  border:1px solid var(--glass-line);
+  border-radius:var(--r-lg);
+  box-shadow:var(--sh-2),inset 0 1px 0 rgba(255,255,255,.22);
+  color:var(--foam);
+}
+.glass--soft{background:var(--glass-2);box-shadow:var(--sh-1),inset 0 1px 0 rgba(255,255,255,.14)}
+.sheen{position:relative;overflow:hidden}
+.sheen::before{content:"";position:absolute;inset:0;transform:translateY(-100%);
+  background:linear-gradient(180deg,rgba(255,255,255,.20),transparent 60%);
+  transition:transform 700ms var(--ease);pointer-events:none}
+.sheen:hover::before{transform:translateY(100%)}
+.opaque{background:var(--opaque);color:var(--ink-2);border:1px solid var(--opaque-line);border-radius:var(--r-lg);box-shadow:var(--sh-2)}
+
+.eyebrow{font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin:0 0 var(--s-3);font-weight:600}
+.lead{font-size:var(--t-lg);line-height:1.45;max-width:46ch}
+.muted{color:rgba(216,241,238,.76)}
+.on-opaque .muted{color:var(--muted)}
+
+/* nav */
+.nav{position:sticky;top:var(--s-3);z-index:40;width:max-content;max-width:var(--w);margin:var(--s-3) auto 0;padding:.35rem}
+.nav__in{display:flex;align-items:center;gap:var(--s-5);padding:.4rem .5rem .4rem 1.1rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-weight:600;letter-spacing:.01em}
+.nav__links{display:flex;gap:var(--s-2);margin-left:var(--s-4)}
+.nav__links a{
+  text-decoration:none;font-size:var(--t-sm);color:rgba(216,241,238,.82);
+  padding:.55rem .85rem;border-radius:999px;min-height:44px;display:inline-flex;align-items:center;
+  transition:background var(--d) var(--ease),color var(--d) var(--ease);
+}
+.nav__links a:hover{background:rgba(216,241,238,.14);color:#fff}
+.nav__links a[aria-current]{background:rgba(216,241,238,.2);color:#fff}
+.burger{display:none;background:none;border:1px solid var(--glass-line);color:var(--foam);width:46px;height:46px;border-radius:var(--r-sm);cursor:pointer;margin-left:auto}
+.burger[aria-expanded="true"]{background:var(--foam);color:var(--sky-0)}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;cursor:pointer;text-decoration:none;
+  min-height:48px;padding:0 var(--s-5);border-radius:999px;font-size:var(--t-sm);font-weight:600;
+  border:1px solid transparent;transition:transform var(--d) var(--ease),background var(--d) var(--ease),box-shadow var(--d) var(--ease);
+}
+.btn--solid{background:var(--foam);color:var(--sky-0);box-shadow:0 10px 24px -12px rgba(3,26,32,.9)}
+.btn--solid:hover{transform:translateY(-2px);background:#fff}
+.btn--solid:active{transform:translateY(0)}
+.btn--glass{background:rgba(226,244,241,.12);border-color:var(--glass-line);color:var(--foam);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.btn--glass:hover{background:rgba(226,244,241,.22)}
+.on-opaque .btn--glass{background:transparent;border-color:var(--opaque-line);color:var(--ink-2)}
+.on-opaque .btn--glass:hover{background:rgba(13,53,64,.06)}
+.btn--ink{background:var(--ink-2);color:var(--foam)}
+.btn--ink:hover{background:#082c36}
+
+/* hero */
+.hero{padding:var(--s-8) 0 var(--s-7)}
+.hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:var(--s-5);align-items:stretch}
+.hero__panel{padding:var(--s-6) var(--s-5) var(--s-5);display:flex;flex-direction:column;gap:var(--s-3)}
+.hero h1{font-size:var(--t-2xl);color:#fff}
+.hero h1 span{color:var(--amber)}
+.hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-3)}
+.hero__side{display:grid;gap:var(--s-4);grid-template-rows:1fr auto}
+.ticker{padding:var(--s-4) var(--s-5);display:grid;gap:var(--s-3)}
+.ticker__row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-3);border-bottom:1px solid var(--glass-line-2);padding-bottom:var(--s-2)}
+.ticker__row:last-child{border-bottom:0;padding-bottom:0}
+.ticker__row b{font-size:var(--t-lg);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.rise{color:#8ff0c0} .fall{color:#ffb08a} .hold{color:rgba(216,241,238,.7)}
+
+.strip{margin-top:var(--s-5);padding:var(--s-4) var(--s-5);display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-4)}
+.strip div{text-align:left}
+.strip b{display:block;font-size:var(--t-lg);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.strip span{font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:rgba(216,241,238,.7)}
+
+/* sections */
+section{padding:var(--s-8) 0}
+.sec-head{max-width:62ch;margin-bottom:var(--s-6)}
+.sec-head h2{font-size:var(--t-xl)}
+.lay{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4);align-items:stretch}
+.lay > *{grid-column:span 6}
+.lay .w7{grid-column:span 7}
+.lay .w5{grid-column:span 5}
+.layer{padding:var(--s-5)}
+.layer h3{font-size:var(--t-lg);color:#fff}
+.layer p{color:rgba(216,241,238,.8);font-size:var(--t-sm)}
+.ribbon{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3)}
+.ribbon span{font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;padding:.35rem .7rem;border:1px solid var(--glass-line);border-radius:999px;color:var(--foam)}
+.layer--opaque h3{color:var(--ink-2)} .layer--opaque p{color:var(--muted)}
+.layer--opaque .ribbon span{border-color:var(--opaque-line);color:var(--ink-2)}
+
+.figure{padding:var(--s-5);display:flex;flex-direction:column;gap:var(--s-3)}
+.figure svg{width:100%;height:auto;border-radius:var(--r-md);background:rgba(4,34,43,.28);border:1px solid var(--glass-line-2)}
+figcaption{font-size:var(--t-xs);color:rgba(216,241,238,.72);letter-spacing:.04em}
+
+.quote{padding:var(--s-6);text-align:left}
+.quote blockquote{margin:0;font-size:var(--t-lg);line-height:1.4;color:#fff;font-weight:300}
+.quote figcaption{margin-top:var(--s-4);font-size:var(--t-sm);color:var(--amber);letter-spacing:.1em;text-transform:uppercase}
+
+/* table on opaque surface */
+.data{padding:var(--s-4) var(--s-5);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:var(--t-sm);min-width:520px}
+caption{text-align:left;font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-bottom:var(--s-3)}
+th,td{text-align:left;padding:.7rem .6rem;border-bottom:1px solid var(--opaque-line)}
+th{font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num{font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.state{font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;border:1px solid currentColor}
+.state--ok{color:#177a56} .state--warn{color:#9a6a12} .state--alert{color:var(--danger)}
+
+/* form */
+.form{padding:var(--s-5);display:grid;gap:var(--s-4);grid-template-columns:1fr 1fr}
+.briefgrid{display:grid;gap:var(--s-4);grid-template-columns:1fr 1fr}
+.field{display:grid;gap:.4rem}
+.field--full{grid-column:1/-1}
+label{font-size:var(--t-sm);font-weight:600;color:var(--ink-2)}
+.on-dark label{color:var(--foam)}
+input,select,textarea{
+  font-family:inherit;font-size:var(--t-sm);color:var(--ink);
+  background:#fff;border:1px solid var(--opaque-line);border-radius:var(--r-sm);
+  padding:.7rem .8rem;min-height:48px;width:100%;
+}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--ink-2);outline:none;box-shadow:0 0 0 3px rgba(13,53,64,.16)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.field[data-invalid="true"] input,.field[data-invalid="true"] textarea{border-color:var(--danger);box-shadow:0 0 0 3px rgba(180,70,47,.16)}
+.hint{font-size:var(--t-xs);color:var(--muted)}
+.on-dark .hint{color:rgba(216,241,238,.7)}
+.err{font-size:var(--t-xs);color:var(--danger);min-height:1.2em}
+.on-dark .err{color:#ffb08a}
+.formmsg{grid-column:1/-1;font-size:var(--t-sm);padding:var(--s-3) var(--s-4);border-radius:var(--r-sm);
+  background:rgba(4,34,43,.42);border:1px solid var(--glass-line-2);color:var(--foam)}
+.formmsg[data-tone="ok"]{border-color:#8ff0c0;color:#b6f7d6}
+.formmsg[data-tone="bad"]{border-color:#ffb08a;color:#ffd0bd}
+
+footer{margin-top:var(--s-6);padding:var(--s-7) 0;position:relative}
+.foot{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:var(--s-5);padding:var(--s-5)}
+.foot h3{font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+.foot a{text-decoration:none;font-size:var(--t-sm);color:rgba(216,241,238,.8);min-height:32px;display:inline-block}
+.foot a:hover{color:#fff}
+
+@media (max-width:960px){
+  .hero__grid{grid-template-columns:1fr}
+  .lay > *,.lay .w7,.lay .w5{grid-column:1/-1}
+  .strip{grid-template-columns:1fr 1fr}
+  .nav{width:calc(100% - 1.5rem)}
+  .nav__links{display:none;position:absolute;left:var(--s-3);right:var(--s-3);top:100%;flex-direction:column;gap:.25rem;padding:.5rem}
+  .nav__links[data-open="true"]{display:flex}
+  .nav__in{position:relative;flex-wrap:wrap}
+  .burger{display:flex;align-items:center;justify-content:center}
+  .foot{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .form,.briefgrid{grid-template-columns:1fr}
+  .hero__actions .btn{flex:1 1 100%}
+  .strip{grid-template-columns:1fr}
+}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
+  .glass{background:rgba(9,58,64,.92)}
+  .sky{opacity:.65}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .drift{animation:none}
+  .sheen::before{display:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="sky" aria-hidden="true">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+    <g class="drift" fill="none" stroke="#9fe4dc" stroke-width="1" opacity=".5">
+      <path d="M-200 180C220 60 520 300 900 190S1560 120 1700 220"/>
+      <path d="M-200 250C240 130 540 370 920 260S1580 190 1700 290"/>
+      <path d="M-200 320C260 200 560 440 940 330S1600 260 1700 360"/>
+      <path d="M-200 390C280 270 580 510 960 400S1620 330 1700 430"/>
+      <path d="M-200 460C300 340 600 580 980 470S1640 400 1700 500"/>
+      <path d="M-200 530C320 410 620 650 1000 540S1660 470 1700 570"/>
+      <path d="M-200 600C340 480 640 720 1020 610S1680 540 1700 640"/>
+    </g>
+    <g fill="none" stroke="#f0a860" stroke-width="1.2" opacity=".38">
+      <path d="M120 760C300 640 420 820 640 720S980 600 1180 690s300 130 420 60"/>
+      <path d="M60 820C260 700 400 880 640 780S1000 660 1200 750s320 140 440 70"/>
+    </g>
+    <g fill="none" stroke="#d8f1ee" stroke-width="1" opacity=".3">
+      <ellipse cx="1080" cy="240" rx="330" ry="150"/>
+      <ellipse cx="1080" cy="240" rx="270" ry="118"/>
+      <ellipse cx="1080" cy="240" rx="210" ry="86"/>
+    </g>
+  </svg>
+</div>
+
+<header>
+  <nav class="glass nav" aria-label="Primary">
+    <div class="nav__in">
+      <a class="brand" href="#top">
+        <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+          <circle cx="13" cy="13" r="11" fill="none" stroke="#d8f1ee" stroke-width="1.2"/>
+          <path d="M2 13h22M13 2c4 4 4 18 0 22M13 2c-4 4-4 18 0 22" fill="none" stroke="#f0a860" stroke-width="1.2"/>
+        </svg>
+        Aeris
+      </a>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="links" aria-label="Open navigation">
+        <svg width="20" height="16" viewBox="0 0 20 16" aria-hidden="true"><path d="M0 1h20M0 8h20M0 15h20" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+      <div class="nav__links" id="links">
+        <a href="#top" aria-current="page">Overview</a>
+        <a href="#layers">Platform</a>
+        <a href="#basins">Basins</a>
+        <a href="#voices">Field notes</a>
+        <a href="#contact">Talk to us</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero wrap" id="top">
+    <div class="hero__grid">
+      <div class="glass hero__panel sheen">
+        <p class="eyebrow">Climate intelligence</p>
+        <h1>Read the atmosphere<br>before it <span>reacts.</span></h1>
+        <p class="lead muted">Aeris fuses 41 satellites, 9,100 ground stations and four decades of reanalysis into a single working picture of water, heat and risk — delivered to the people who have to make a decision this quarter.</p>
+        <div class="hero__actions">
+          <a class="btn btn--solid" href="#contact">Request a basin brief</a>
+          <a class="btn btn--glass" href="#layers">See the layers</a>
+        </div>
+      </div>
+
+      <div class="hero__side">
+        <div class="glass ticker">
+          <p class="eyebrow" style="margin:0">Global surface anomaly · 30-day</p>
+          <div class="ticker__row"><span class="muted">Northern hemi</span><b class="rise">+0.41 °C</b></div>
+          <div class="ticker__row"><span class="muted">Southern hemi</span><b class="fall">−0.18 °C</b></div>
+          <div class="ticker__row"><span class="muted">North Atlantic</span><b class="fall">−0.62 °C</b></div>
+          <div class="ticker__row"><span class="muted">Indian ocean</span><b class="rise">+0.87 °C</b></div>
+          <div class="ticker__row"><span class="muted">Arctic cap extent</span><b class="hold">4.62 M km²</b></div>
+        </div>
+        <div class="glass glass--soft sheen" style="padding:var(--s-4) var(--s-5)">
+          <p class="muted" style="font-size:var(--t-sm);margin:0">Reanalysis window closes <b style="color:#fff">02:40 UTC</b>. Values shown are 9-day lagged, as published.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass glass--soft strip">
+      <div><b>41</b><span>Satellites</span></div>
+      <div><b>9,100</b><span>Ground stations</span></div>
+      <div><b>1980</b><span>Reanalysis start</span></div>
+      <div><b>2.1 km</b><span>Median grid</span></div>
+    </div>
+  </section>
+
+  <section class="wrap" id="layers">
+    <div class="sec-head on-dark">
+      <p class="eyebrow">The platform</p>
+      <h2>Four layers, one timeline, no guesswork</h2>
+      <p class="lead muted">Most tools hand you a map. Aeris hands you the map, the uncertainty band, and the decisions that changed because of it — so an analyst and a board member read the same object differently without arguing about the picture.</p>
+    </div>
+
+    <div class="lay">
+      <article class="glass glass--soft layer sheen w7">
+        <h3>Hydro — where the water actually is</h3>
+        <p>Soil moisture, snow water equivalent, river stage and groundwater, on a single 2.1 km grid that updates every six hours. Reservoirs, not just riverbanks, because a full river tells you nothing about a dry basin.</p>
+        <div class="ribbon"><span>SMAP L4</span><span>GRDC stage</span><span>MODIS snow</span><span>6 h cadence</span></div>
+      </article>
+      <article class="layer opaque on-opaque sheen w5">
+        <h3>Audit trail, in plain language</h3>
+        <p>Every figure in Aeris carries its lineage: source, processing version and date. Export the whole stack or cite the single cell. This panel is deliberately solid, not glass — audit material should never depend on a backdrop blur.</p>
+        <div class="ribbon"><span>Provenance logs</span><span>Signed exports</span><span>3-year retention</span></div>
+      </article>
+      <article class="glass figure w5">
+        <h3>Heat — anomaly against 1991–2020</h3>
+        <figure style="margin:0">
+          <svg viewBox="0 0 320 200" role="img" aria-label="Stylised anomaly map of twelve monitored basins, most trending warmer">
+            <defs>
+              <linearGradient id="heat" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#2c7f8c"/><stop offset=".5" stop-color="#e8b25a"/><stop offset="1" stop-color="#c4522c"/>
+              </linearGradient>
+            </defs>
+            <rect width="320" height="200" fill="url(#heat)" opacity=".5"/>
+            <g fill="none" stroke="#d8f1ee" stroke-width=".8" opacity=".7">
+              <path d="M20 60h280M20 100h280M20 140h280M90 20v160M170 20v160M250 20v160"/>
+            </g>
+            <g fill="#d8f1ee" font-family="monospace" font-size="9" opacity=".9">
+              <text x="26" y="30">AMAZON</text><text x="196" y="30">SAHARA</text>
+              <text x="26" y="186">PATAGONIA</text><text x="196" y="186">INDONESIA</text>
+            </g>
+            <g fill="#fff">
+              <circle cx="120" cy="120" r="3"/><circle cx="210" cy="70" r="3"/><circle cx="60" cy="150" r="3"/><circle cx="265" cy="140" r="3"/>
+            </g>
+          </svg>
+          <figcaption>Twelve monitored basins. Nine trending above the 1991–2020 mean; three below.</figcaption>
+        </figure>
+      </article>
+      <article class="glass glass--soft layer w7">
+        <h3>Impact — from signal to a decision someone owns</h3>
+        <p>Aeris writes the decision, not the prediction: which reservoir rule changes, which insurer moves a threshold, which district pre-positions pumps. Each alert carries a named owner, a review date and a cost estimate, so nothing sits unresolved in a queue.</p>
+        <div class="ribbon"><span>2,140 open actions</span><span>Median lead 11 days</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap" id="basins">
+    <div class="sec-head on-dark">
+      <p class="eyebrow">Watch list · March</p>
+      <h2>Basins under a formal watch this quarter</h2>
+    </div>
+    <div class="layer opaque on-opaque data">
+      <table>
+        <caption>Twelve monitored basins with current watch status</caption>
+        <thead>
+          <tr><th scope="col">Basin</th><th scope="col">Watch</th><th scope="col">Signal</th><th scope="col">Owner</th><th scope="col">Review</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Rio Grande do Sul</td><td><span class="state state--alert">Alert</span></td><td class="num">−31% inflow</td><td>South Basin Authority</td><td>18 Mar</td></tr>
+          <tr><td>Sahel Belt 4</td><td><span class="state state--alert">Alert</span></td><td class="num">+2.1 °C</td><td>Agricultural Resilience Unit</td><td>21 Mar</td></tr>
+          <tr><td>Rhône–Saône</td><td><span class="state state--warn">Watch</span></td><td class="num">−12% soil moisture</td><td>Hydrometric Service</td><td>02 Apr</td></tr>
+          <tr><td>Cape Fold Belt</td><td><span class="state state--warn">Watch</span></td><td class="num">−18% snow water</td><td>Water Resources Board</td><td>04 Apr</td></tr>
+          <tr><td>Java Coast</td><td><span class="state state--ok">Normal</span></td><td class="num">+3% stage</td><td>Coastal Defence</td><td>11 Apr</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap" id="voices">
+    <div class="lay">
+      <figure class="glass quote w7">
+        <blockquote>“We used to argue about whose map was right. Now we argue about what to do, which is a much better argument to be having in February.”</blockquote>
+        <figcaption>Ingrid Solberg · Chief Water Planner, Drammen Kommune</figcaption>
+      </figure>
+      <div class="glass glass--soft layer w5">
+        <h3>How briefings actually run</h3>
+        <p>A standing 30-minute slot each Monday. Aeris brings the delta since last week, the actions that fell due, and the two basins that changed status. No slides, no screenshot tours.</p>
+        <p style="margin:0"><a class="btn btn--glass" href="#contact">Book a briefing</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap on-dark" id="contact">
+    <div class="lay">
+      <div class="glass form w7" id="contactform-wrap">
+        <div class="field field--full" style="grid-column:1/-1">
+          <h2 style="margin:0">Ask for a basin brief</h2>
+          <p class="muted" style="margin:0">Tell us the basin and the decision you are trying to make. We reply with a sample pack, not a sales call.</p>
+        </div>
+        <form class="briefgrid" id="brief" novalidate>
+          <div class="field">
+            <label for="b-name">Name</label>
+            <input id="b-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+            <p class="err" id="e-name" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="b-email">Work email</label>
+            <input id="b-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+            <p class="err" id="e-email" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="b-basin">Basin of interest</label>
+            <select id="b-basin" name="basin">
+              <option>Rio Grande do Sul</option>
+              <option>Sahel Belt 4</option>
+              <option>Rhône–Saône</option>
+              <option>Cape Fold Belt</option>
+              <option>Java Coast</option>
+            </select>
+            <p class="hint">Only monitored basins are listed.</p>
+          </div>
+          <div class="field">
+            <label for="b-horizon">Decision horizon</label>
+            <select id="b-horizon" name="horizon">
+              <option>0–3 months</option>
+              <option>3–12 months</option>
+              <option>1–3 years</option>
+            </select>
+          </div>
+          <div class="field field--full">
+            <label for="b-note">The decision you are trying to make</label>
+            <textarea id="b-note" name="note" required aria-describedby="e-note" placeholder="Allocation rules, reserve thresholds, crop switching…"></textarea>
+            <p class="err" id="e-note" aria-live="polite"></p>
+          </div>
+          <p class="formmsg" id="b-msg" role="status" aria-live="polite">No newsletter. One reply from a hydrologist, not a sequence.</p>
+          <div class="field field--full">
+            <button class="btn btn--solid" type="submit">Request the sample pack</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="glass glass--soft layer w5 on-dark">
+        <h3>What you get first</h3>
+        <p>A 12-page pack for your basin: the current anomaly, the trend line back to 1980, the three decisions that are sensitive to the forecast, and the raw lineage for every number in it.</p>
+        <p style="margin:0"><a class="btn btn--glass" href="#top">Read a sample pack</a></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap glass foot">
+    <div>
+      <p class="eyebrow">Aeris</p>
+      <p class="muted" style="max-width:34ch">Climate intelligence for people who have to act on it. Built by hydrologists and satellite engineers in Lisbon and Nairobi.</p>
+    </div>
+    <div>
+      <h3>Platform</h3>
+      <ul>
+        <li><a href="#layers">Layers</a></li>
+        <li><a href="#basins">Watch list</a></li>
+        <li><a href="#voices">Briefings</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Method</h3>
+      <ul>
+        <li><a href="#basins">Basin methodology</a></li>
+        <li><a href="#contact">Data licensing</a></li>
+        <li><a href="#contact">Uncertainty policy</a></li>
+        <li><a href="#contact">Citing Aeris</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var burger=document.getElementById('burger'),links=document.getElementById('links');
+  burger.addEventListener('click',function(){
+    var open=burger.getAttribute('aria-expanded')==='true';
+    burger.setAttribute('aria-expanded',String(!open));
+    links.setAttribute('data-open',String(!open));
+  });
+  links.addEventListener('click',function(e){if(e.target.tagName==='A'){burger.setAttribute('aria-expanded','false');links.setAttribute('data-open','false');}});
+
+  var form=document.getElementById('brief'),msg=document.getElementById('b-msg');
+  function setErr(input,id,text){
+    document.getElementById(id).textContent=text;
+    input.closest('.field').setAttribute('data-invalid',text?'true':'false');
+    if(text){input.setAttribute('aria-invalid','true');}else{input.removeAttribute('aria-invalid');}
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('b-name'),email=document.getElementById('b-email'),
+        note=document.getElementById('b-note'),bad=false;
+    if(name.value.trim().length<2){setErr(name,'e-name','Please give us a name to reply to.');bad=true;}else setErr(name,'e-name','');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())){setErr(email,'e-email','That address does not look routable.');bad=true;}else setErr(email,'e-email','');
+    if(note.value.trim().length<15){setErr(note,'e-note','A sentence about the decision helps us aim the pack.');bad=true;}else setErr(note,'e-note','');
+    if(bad){msg.setAttribute('data-tone','bad');msg.textContent='Not sent — check the highlighted fields.';return;}
+    msg.setAttribute('data-tone','ok');
+    msg.textContent='Received. A hydrologist for '+document.getElementById('b-basin').value+' will reply within two working days.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!-- Style: Vaporwave | 57vaporwave.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mallsoft Collective - records for the in-between hours</title>
+<style>
+  :root{
+    --night:#150c26;
+    --night-2:#211239;
+    --panel:#261641;
+    --panel-2:#31205a;
+    --pink:#ff8ad8;
+    --pink-deep:#e055b0;
+    --cyan:#7ef0e0;
+    --violet:#c9a7ff;
+    --cream:#ffeede;
+    --sun:#ffd3a8;
+    --dim:#b09ad0;
+
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --t-hero:clamp(2.4rem,8.5vw,6rem);
+    --t-h2:clamp(1.7rem,4vw,2.9rem);
+    --t-h3:clamp(1.1rem,1.8vw,1.35rem);
+    --t-body:clamp(.96rem,1.05vw,1.04rem);
+    --t-small:.84rem;
+
+    --r:6px; --r-lg:14px;
+    --haze:0 18px 50px -24px rgba(0,0,0,.9);
+    --s-1:.4rem; --s-2:.8rem; --s-3:1.3rem; --s-4:2.1rem; --s-5:3.2rem; --s-6:4.6rem;
+    --gutter:clamp(1.1rem,3.5vw,2.6rem);
+    --wrap:1200px;
+    --motion:220ms;
+    --drift:26s;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--night);color:var(--cream);font-family:var(--font);font-size:var(--t-body);line-height:1.6;
+    position:relative;
+  }
+  /* VHS scanline veil: 3% opacity, never over content density */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:60;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px);
+  }
+  h1,h2,h3{margin:0;line-height:1.08;font-weight:700}
+  h1{font-size:var(--t-hero);letter-spacing:.02em}
+  h2{font-size:var(--t-h2)}
+  h3{font-size:var(--t-h3)}
+  p{margin:0 0 1em}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  button{font:inherit}
+  svg{display:block;max-width:100%}
+  :focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+  .wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .skip{position:absolute;left:-999px;background:var(--cyan);color:var(--night);padding:.7rem 1rem;font-weight:700}
+  .skip:focus{left:.5rem;top:.5rem;z-index:70}
+  .panel{background:var(--panel);border:1px solid rgba(201,167,255,.22);border-radius:var(--r-lg);box-shadow:var(--haze)}
+
+  .chrome{
+    background:linear-gradient(180deg,#fff 4%,var(--violet) 34%,#fff 52%,var(--cyan) 76%,var(--pink) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  }
+  @supports not (background-clip:text){ .chrome{color:var(--violet);-webkit-text-fill-color:currentColor} }
+  .glow-pink{text-shadow:0 0 22px rgba(255,138,216,.55)}
+  .glow-cyan{text-shadow:0 0 18px rgba(126,240,224,.5)}
+  .kicker{font-size:var(--t-small);letter-spacing:.34em;text-transform:uppercase;color:var(--cyan);margin-bottom:var(--s-2);display:block}
+  .rule{height:1px;border:0;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:52px;padding:.85rem 1.6rem;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:var(--t-small);text-decoration:none;cursor:pointer;
+    border:1px solid var(--pink);border-radius:var(--r);background:linear-gradient(180deg,var(--pink),var(--pink-deep));
+    color:#2a0b22;box-shadow:0 0 24px -6px rgba(255,138,216,.8);
+    transition:transform var(--motion) ease,box-shadow var(--motion) ease}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(255,138,216,.95)}
+  .btn--ghost{background:transparent;color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 20px -8px rgba(126,240,224,.9)}
+  .btn--ghost:hover{background:rgba(126,240,224,.1)}
+  .btn--sm{min-height:44px;padding:.45rem .95rem;font-size:.78rem}
+
+  /* hero */
+  .hero{position:relative;min-height:min(92vh,760px);display:flex;align-items:flex-end;overflow:hidden;
+    background:linear-gradient(180deg,#100820 0%,#2a1050 34%,#6a1f6e 62%,#c94b8f 82%,#ffb07a 100%)}
+  .sun{position:absolute;left:50%;top:38%;width:min(60vw,420px);aspect-ratio:1;transform:translate(-50%,-50%);
+    background:linear-gradient(180deg,#fff3d6,#ffcf9c 55%,#ff8ad8);
+    border-radius:50%;filter:blur(.4px);
+    box-shadow:0 0 90px 20px rgba(255,175,220,.5);
+    animation:breathe 14s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-52%) scale(1.04)}}
+  .plane{position:absolute;left:-25%;right:-25%;bottom:-2%;height:52%;
+    background-image:
+      repeating-linear-gradient(90deg,rgba(126,240,224,.55) 0 2px,transparent 2px 96px),
+      repeating-linear-gradient(0deg,rgba(255,138,216,.5) 0 2px,transparent 2px 56px);
+    transform:perspective(340px) rotateX(72deg);
+    transform-origin:bottom center;
+    mask-image:linear-gradient(180deg,transparent,#000 26%);
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 26%);
+    animation:slide var(--drift) linear infinite}
+  @keyframes slide{from{background-position:0 0,0 0}to{background-position:0 0,0 560px}}
+  .bust{position:absolute;left:50%;bottom:6%;width:min(46vw,300px);transform:translateX(-50%);
+    filter:drop-shadow(0 0 40px rgba(201,167,255,.5));animation:float 9s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-14px)}}
+  .hero-inner{position:relative;z-index:5;width:100%;padding-block:var(--s-5) var(--s-4);text-align:center}
+  .hero-inner h1{line-height:.92}
+  .hero-inner .tag-line{font-size:clamp(.8rem,1.7vw,1.05rem);letter-spacing:.4em;text-transform:uppercase;color:var(--cyan);margin:var(--s-2) 0}
+  .hero-inner .lede{max-width:56ch;margin:0 auto var(--s-3);color:#f4e7f7}
+  .hero-cta{display:flex;gap:var(--s-2);justify-content:center;flex-wrap:wrap}
+  .hero-scroll{position:absolute;left:50%;bottom:.8rem;transform:translateX(-50%);z-index:6;font-size:var(--t-small);
+    letter-spacing:.3em;text-transform:uppercase;color:rgba(255,238,222,.7)}
+
+  /* storefront nav */
+  .sign{background:var(--night-2);border-block:1px solid rgba(201,167,255,.3);position:relative;z-index:10}
+  .sign-in{display:flex;align-items:center;gap:var(--s-2);min-height:72px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;margin-right:auto;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;font-size:1.05rem}
+  .brand svg{width:36px;height:36px}
+  .sign-links{display:flex;gap:.25rem;flex-wrap:wrap}
+  .sign-links a{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .9rem;text-decoration:none;
+    font-size:var(--t-small);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border:1px solid transparent;border-radius:var(--r)}
+  .sign-links a:hover{color:var(--cyan);border-color:rgba(126,240,224,.5)}
+  .sign-toggle{display:none;background:transparent;color:var(--cream);border:1px solid var(--cyan);border-radius:var(--r);
+    min-height:44px;padding:.5rem .9rem;text-transform:uppercase;letter-spacing:.1em;cursor:pointer}
+
+  /* marquee */
+  .marquee{overflow:hidden;border-bottom:1px solid rgba(201,167,255,.25);background:var(--panel)}
+  .marquee-track{display:flex;gap:var(--s-4);width:max-content;padding:.6rem 0;animation:slide-x 34s linear infinite;
+    font-size:var(--t-small);letter-spacing:.24em;text-transform:uppercase;color:var(--violet)}
+  .marquee-track em{font-style:normal;color:var(--pink)}
+  @keyframes slide-x{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  section{padding-block:var(--s-5)}
+  .sec-head{max-width:62ch;margin-bottom:var(--s-4)}
+  .sec-head p{color:var(--dim);margin:.4rem 0 0}
+
+  /* shelf */
+  .shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4) var(--s-3)}
+  .release{display:flex;flex-direction:column;gap:.5rem}
+  .sleeve{aspect-ratio:1;border:1px solid rgba(201,167,255,.35);border-radius:var(--r);position:relative;overflow:hidden;
+    display:grid;place-items:center;box-shadow:var(--haze)}
+  .sleeve .s-title{font-size:clamp(1.1rem,2.4vw,1.6rem);font-weight:700;letter-spacing:.02em;text-align:center;padding:1rem;line-height:1.1}
+  .sleeve .s-sub{position:absolute;bottom:.8rem;left:.9rem;right:.9rem;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;opacity:.85}
+  .s-1{background:linear-gradient(160deg,#ff8ad8,#5a1a6e 70%)}
+  .s-2{background:linear-gradient(160deg,#7ef0e0,#123a5e 70%)}
+  .s-3{background:linear-gradient(160deg,#ffd3a8,#7a2a5e 70%)}
+  .s-4{background:linear-gradient(160deg,#c9a7ff,#2a1250 70%)}
+  .s-5{background:linear-gradient(160deg,#ffb4c9,#3d1140 70%)}
+  .s-6{background:linear-gradient(160deg,#a8f0c8,#103a3a 70%)}
+  .release h3{font-size:1.12rem}
+  .release p{color:var(--dim);font-size:.92rem;margin:0}
+  .buy-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-top:.3rem}
+  .price{font-weight:700;font-size:1.1rem;color:var(--cream)}
+  .format{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(126,240,224,.4);
+    border-radius:var(--r);padding:.1rem .45rem}
+
+  /* roster */
+  .roster{display:grid;grid-template-columns:1fr 1fr;gap:0 var(--s-4);border-top:1px solid rgba(201,167,255,.25)}
+  .artist{display:grid;grid-template-columns:76px 1fr auto;gap:var(--s-3);align-items:center;padding:var(--s-3) 0;
+    border-bottom:1px solid rgba(201,167,255,.18)}
+  .artist .plate{width:76px;height:76px;border-radius:var(--r);display:grid;place-items:center;font-weight:700;font-size:1.3rem;
+    letter-spacing:.06em;border:1px solid rgba(201,167,255,.35)}
+  .artist b{display:block}
+  .artist small{color:var(--dim);font-size:var(--t-small)}
+  .artist .yrs{font-size:var(--t-small);color:var(--violet);letter-spacing:.1em;white-space:nowrap}
+
+  /* manifesto */
+  .manifesto{display:grid;grid-template-columns:1.25fr .75fr;gap:var(--s-4);align-items:start}
+  .drop::first-letter{float:left;font-size:4.2rem;line-height:.78;padding:.1rem .5rem .1rem 0;color:var(--pink);font-weight:700}
+  .essay p{color:#e2d5ef}
+  .pull{background:linear-gradient(150deg,rgba(255,138,216,.16),rgba(126,240,224,.12));border:1px solid rgba(201,167,255,.3);
+    border-radius:var(--r-lg);padding:var(--s-3)}
+  .pull blockquote{margin:0;font-size:clamp(1.1rem,1.9vw,1.4rem);line-height:1.35}
+  .pull cite{display:block;margin-top:var(--s-2);font-style:normal;font-size:var(--t-small);color:var(--cyan);letter-spacing:.14em;text-transform:uppercase}
+
+  /* schedule */
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:.75rem .7rem;border-bottom:1px solid rgba(201,167,255,.18);font-size:.95rem}
+  thead th{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+  tbody tr:hover{background:rgba(201,167,255,.07)}
+  .on-air{color:var(--pink)}
+
+  /* guestbook */
+  .guestbook{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:start}
+  .stamp{display:inline-block;border:2px solid var(--pink);border-radius:var(--r);padding:.15rem .5rem;
+    font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);transform:rotate(-3deg)}
+  .field{display:block;margin-bottom:var(--s-2)}
+  .field .lab{display:block;font-size:var(--t-small);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:.4rem}
+  .field input,.field select,.field textarea{width:100%;min-height:50px;padding:.7rem .9rem;font:inherit;
+    background:var(--night-2);color:var(--cream);border:1px solid rgba(201,167,255,.3);border-radius:var(--r)}
+  .field textarea{min-height:120px;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--cyan)}
+  .field .err{display:none;font-size:var(--t-small);color:var(--pink);margin-top:.35rem}
+  .field[data-invalid] .err{display:block}
+  .field[data-invalid] input,.field[data-invalid] textarea{border-color:var(--pink)}
+  .entries{display:grid;gap:var(--s-2)}
+  .entry{background:var(--night-2);border:1px solid rgba(201,167,255,.2);border-radius:var(--r);padding:var(--s-2) var(--s-3)}
+  .entry header{display:flex;justify-content:space-between;gap:var(--s-2);align-items:baseline}
+  .entry b{font-size:.98rem}
+  .entry time{font-size:var(--t-small);color:var(--dim)}
+  .entry p{margin:.3rem 0 0;color:#e2d5ef;font-size:.95rem}
+  .entry-status{margin-top:var(--s-2);font-size:var(--t-small);min-height:1.5em;color:var(--cyan)}
+
+  footer{background:var(--night-2);border-top:1px solid rgba(201,167,255,.3);padding-block:var(--s-4) var(--s-3);margin-top:var(--s-4)}
+  .foot{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:var(--s-3)}
+  footer h3{font-size:var(--t-small);letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:.6rem}
+  footer li{margin-bottom:.3rem}
+  footer a{text-decoration:none;color:var(--dim);font-size:.94rem}
+  footer a:hover{color:var(--pink)}
+  .fine{margin-top:var(--s-3);padding-top:var(--s-2);border-top:1px solid rgba(201,167,255,.2);display:flex;
+    justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;color:var(--dim);font-size:var(--t-small)}
+
+  @media (max-width:1000px){
+    .shelf{grid-template-columns:1fr 1fr}
+    .manifesto,.guestbook{grid-template-columns:1fr}
+    .roster{grid-template-columns:1fr}
+    .foot{grid-template-columns:1fr 1fr}
+    .sign-toggle{display:inline-block}
+    .sign-links{display:none;width:100%;order:3;padding-bottom:var(--s-2)}
+    .sign-links[data-open="true"]{display:flex}
+  }
+  @media (max-width:640px){
+    .shelf{grid-template-columns:1fr}
+    .hero{min-height:auto;padding-bottom:var(--s-5)}
+    .bust{display:none}
+    .artist{grid-template-columns:64px 1fr}
+    .artist .plate{width:64px;height:64px}
+    .artist .yrs{grid-column:2}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#store">Skip to the store</a>
+
+<header class="hero">
+  <div class="sun" aria-hidden="true"></div>
+  <div class="plane" aria-hidden="true"></div>
+  <svg class="bust" viewBox="0 0 200 240" role="img" aria-label="A marble bust of a figure with a blank, pleasant face" aria-hidden="false">
+    <defs>
+      <linearGradient id="marble" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#efe4ff"/><stop offset=".45" stop-color="#c9a7ff"/><stop offset="1" stop-color="#7a5a9e"/>
+      </linearGradient>
+    </defs>
+    <path d="M60 236c-6-34 4-58 22-72l-4-22c-16-8-26-26-26-46 0-30 22-54 48-54s48 24 48 54c0 20-10 38-26 46l-4 22c18 14 28 38 22 72z" fill="url(#marble)"/>
+    <path d="M78 92c0-14 10-24 22-24s22 10 22 24" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>
+    <circle cx="88" cy="104" r="4" fill="#5a3f80"/><circle cx="112" cy="104" r="4" fill="#5a3f80"/>
+    <path d="M92 124q8 6 16 0" fill="none" stroke="#5a3f80" stroke-width="3" stroke-linecap="round"/>
+    <path d="M46 236c-4-40 8-68 30-84M154 236c4-40-8-68-30-84" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="4"/>
+  </svg>
+  <div class="hero-inner wrap">
+    <span class="kicker">Est. 1994 &middot; a record label for the in-between hours</span>
+    <h1 class="chrome">Mallsoft<br>Collective</h1>
+    <p class="tag-line">Est. 1994 &mdash; Still open</p>
+    <p class="lede">Twenty-nine releases of tape hiss, mall organ, and the specific hum of a closing department store at 9pm. Everything we have ever pressed is in the store below, including the four that should not exist.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#store">Enter the store</a>
+      <a class="btn btn--ghost" href="#radio">Listen to the radio</a>
+    </div>
+  </div>
+  <p class="hero-scroll" aria-hidden="true">Scroll</p>
+</header>
+
+<div class="sign">
+  <nav class="wrap" aria-label="Primary">
+    <div class="sign-in">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="none" stroke="#ff8ad8" stroke-width="2"/><circle cx="20" cy="20" r="8" fill="#7ef0e0"/><circle cx="20" cy="20" r="2" fill="#150c26"/><path d="M20 12V3M28 20h9" stroke="#c9a7ff" stroke-width="2"/></svg>
+        Mallsoft
+      </a>
+      <button class="sign-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="sign-links" id="menu">
+        <a href="#store">Store</a>
+        <a href="#roster">Roster</a>
+        <a href="#manifesto">Manifesto</a>
+        <a href="#radio">Radio</a>
+        <a href="#guestbook">Guestbook</a>
+      </div>
+      <a class="btn btn--sm" href="#store">Cart &mdash; 0</a>
+    </div>
+  </nav>
+</div>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span><em>&#9834;</em> New: Escalator Bloom out now</span><span>Free shipping over $40</span><span><em>&#9834;</em> Test pressings, one copy each</span>
+    <span><em>&#9834;</em> New: Escalator Bloom out now</span><span>Free shipping over $40</span><span><em>&#9834;</em> Test pressings, one copy each</span>
+  </div>
+</div>
+
+<main id="top">
+  <section id="store" aria-labelledby="store-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">In the store</span>
+        <h2 id="store-title">Everything we have ever pressed</h2>
+        <p>Twenty-nine releases, four formats, no reissues. When a pressing is gone it is gone, which is why there is no &ldquo;back in stock&rdquo; on this page.</p>
+      </div>
+      <ul class="shelf">
+        <li class="release">
+          <div class="sleeve s-1">
+            <span class="s-title">Escalator<br>Bloom</span>
+            <span class="s-sub">Mallsoft 029 &middot; 2026</span>
+          </div>
+          <h3>Escalator Bloom</h3>
+          <p>Hollow drum machines, a detuned electric piano, and eleven minutes of a fountain running somewhere off-mic.</p>
+          <div class="buy-row"><span class="price">$18</span><span class="format">Cassette</span><button class="btn btn--sm" type="button" data-item="Escalator Bloom">Add</button></div>
+        </li>
+        <li class="release">
+          <div class="sleeve s-2">
+            <span class="s-title">Wet<br>Concrete</span>
+            <span class="s-sub">Mallsoft 026 &middot; 2025</span>
+          </div>
+          <h3>Wet Concrete</h3>
+          <p>Tape loops recorded in a car park in Utrecht, overdubbed with the hum of a fridge and nothing else.</p>
+          <div class="buy-row"><span class="price">$22</span><span class="format">Vinyl LP</span><button class="btn btn--sm" type="button" data-item="Wet Concrete">Add</button></div>
+        </li>
+        <li class="release">
+          <div class="sleeve s-3">
+            <span class="s-title">Food Court<br>Sunset</span>
+            <span class="s-sub">Mallsoft 024 &middot; 2025</span>
+          </div>
+          <h3>Food Court Sunset</h3>
+          <p>Nine short pieces built from a cassette found in a hotel nightstand. The band claims none of it. We believe them.</p>
+          <div class="buy-row"><span class="price">$9</span><span class="format">Cassette</span><button class="btn btn--sm" type="button" data-item="Food Court Sunset">Add</button></div>
+        </li>
+        <li class="release">
+          <div class="sleeve s-4">
+            <span class="s-title">Vitrine<br>Nocturne</span>
+            <span class="s-sub">Mallsoft 021 &middot; 2024</span>
+          </div>
+          <h3>Vitrine Nocturne</h3>
+          <p>Written for a display window that was emptied in 2019 and refilled in 2024 with a different shop. It still works.</p>
+          <div class="buy-row"><span class="price">$14</span><span class="format">CD</span><button class="btn btn--sm" type="button" data-item="Vitrine Nocturne">Add</button></div>
+        </li>
+        <li class="release">
+          <div class="sleeve s-5">
+            <span class="s-title">Closing<br>Time</span>
+            <span class="s-sub">Mallsoft 018 &middot; 2023</span>
+          </div>
+          <h3>Closing Time</h3>
+          <p>The record that made the label briefly famous and permanently difficult to explain at parties.</p>
+          <div class="buy-row"><span class="price">$26</span><span class="format">Vinyl LP</span><button class="btn btn--sm" type="button" data-item="Closing Time">Add</button></div>
+        </li>
+        <li class="release">
+          <div class="sleeve s-6">
+            <span class="s-title">Atrium<br>Green</span>
+            <span class="s-sub">Mallsoft 012 &middot; 2021</span>
+          </div>
+          <h3>Atrium Green</h3>
+          <p>Plants, water features, and one very patient soprano. Our slowest seller and our proudest.</p>
+          <div class="buy-row"><span class="price">$11</span><span class="format">Cassette</span><button class="btn btn--sm" type="button" data-item="Atrium Green">Add</button></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="roster" aria-labelledby="roster-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">The collective</span>
+        <h2 id="roster-title">Nine artists, no contracts</h2>
+        <p>We have never had a recording contract and are not planning one. Artists keep everything, including the four tracks we were not allowed to release.</p>
+      </div>
+      <ul class="roster">
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#ff8ad8,#4a1258)" aria-hidden="true">EB</span>
+          <span><b>Escalator Bloom</b><small>Solo. Hollow drum machines and a detuned piano.</small></span>
+          <span class="yrs">2019&ndash;</span>
+        </li>
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#7ef0e0,#123a5e)" aria-hidden="true">PW</span>
+          <span><b>Parking Wave</b><small>Four people, one four-track, no overdubs.</small></span>
+          <span class="yrs">2020&ndash;</span>
+        </li>
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#ffd3a8,#7a2a5e)" aria-hidden="true">MS</span>
+          <span><b>Meridian Sigh</b><small>One long piece, edited once, in 1998.</small></span>
+          <span class="yrs">1994&ndash;2003</span>
+        </li>
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#c9a7ff,#2a1250)" aria-hidden="true">VT</span>
+          <span><b>Vitrine</b><small>Duet for two tape machines and a glass wall.</small></span>
+          <span class="yrs">2016&ndash;</span>
+        </li>
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#ffb4c9,#3d1140)" aria-hidden="true">CK</span>
+          <span><b>Car Park 6</b><small>Field recordings, extremely faint guitar.</small></span>
+          <span class="yrs">2011&ndash;2018</span>
+        </li>
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#a8f0c8,#103a3a)" aria-hidden="true">HS</span>
+          <span><b>Hours &amp; Centimetres</b><small>Sound for empty retail floor, commissioned 2013.</small></span>
+          <span class="yrs">2013&ndash;</span>
+        </li>
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#ff9ecb,#2a0b22)" aria-hidden="true">NB</span>
+          <span><b>Night Bell</b><small>Recorded entirely between 1am and 4am.</small></span>
+          <span class="yrs">2007&ndash;</span>
+        </li>
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#9ed6ff,#1a2a5e)" aria-hidden="true">SF</span>
+          <span><b>Soft Fountain</b><small>Water features, a soprano, and patience.</small></span>
+          <span class="yrs">2015&ndash;2022</span>
+        </li>
+        <li class="artist">
+          <span class="plate" style="background:linear-gradient(140deg,#e0c08a,#4a2a12)" aria-hidden="true">AD</span>
+          <span><b>Atrium Dawn</b><small>One 40-minute piece. Sleep to it.</small></span>
+          <span class="yrs">2021&ndash;</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="manifesto" aria-labelledby="manifesto-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">From the 1994 catalogue notes</span>
+        <h2 id="manifesto-title">A label for buildings that are open but empty</h2>
+      </div>
+      <div class="manifesto">
+        <div class="essay drop">
+          <p>There is a sound that belongs to a place at a specific hour: the atrium of a shopping centre at 9:40pm, twenty minutes after closing, when the escalators have stopped but the air handling has not. Nobody is there. Everything is still lit. It is the most generous and the loneliest sound we know how to record.</p>
+          <p>Mallsoft Collective was started in 1994 to put that sound on a format you could hold. Thirty-two years later the buildings have mostly gone, and the sound has not, and neither has the label. We have pressed twenty-nine releases, sold about forty thousand units in total, and made a profit in eleven of those years, which we consider a fair result for a company that exists because a shopping centre stayed open too late.</p>
+          <p>We do not use synthesizers we cannot explain, we do not remaster anything, and we do not put anything on a record that we have not heard on a bad speaker in a car park. Artists keep their masters and their money. There are no contracts here, only handshakes, and we have only ever broken one, badly, in 2001.</p>
+          <p>Everything in the store is the complete catalogue. If a title is not there, it is because the pressing is finished, not because we are hiding it from you.</p>
+        </div>
+        <aside class="pull">
+          <blockquote>&ldquo;Everything we have ever pressed is here, including the four that should not exist.&rdquo;</blockquote>
+          <cite>Ilse Ranta, label head</cite>
+          <hr class="rule" style="margin:var(--s-3) 0">
+          <p style="font-size:.94rem;color:var(--dim);margin:0">Interview, Wire magazine, 2019. Ilse still has the original tape of the interview and will not release it.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="radio" aria-labelledby="radio-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Mallsoft Radio &middot; 88.3</span>
+        <h2 id="radio-title">Broadcast schedule</h2>
+        <p>Continuous, free, and mostly unattended. The overnight block is played from a cupboard above a launderette in Rotterdam and cannot be skipped.</p>
+      </div>
+      <div class="panel" style="overflow-x:auto">
+        <table>
+          <caption class="sr-only">Mallsoft Radio weekly schedule</caption>
+          <thead>
+            <tr><th scope="col">Slot</th><th scope="col">Programme</th><th scope="col">Host</th><th scope="col">Source</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>06:00&ndash;09:00</td><td>Morning Escalator</td><td>Ilse Ranta</td><td>New releases and the odd apology</td></tr>
+            <tr><td>09:00&ndash;13:00</td><td>Open Floor</td><td>Joris P.</td><td>Requests, taken by postcard only</td></tr>
+            <tr><td>13:00&ndash;16:00</td><td>Lunch Hour Hiss</td><td>Automated</td><td>Unedited 1994 sessions</td></tr>
+            <tr><td class="on-air">16:00&ndash;19:00</td><td class="on-air">Closing Time (on air now)</td><td>Vitrine</td><td>Long pieces, low light</td></tr>
+            <tr><td>19:00&ndash;22:00</td><td>Shop Floor</td><td>Willem K.</td><td>Band interviews, unedited</td></tr>
+            <tr><td>22:00&ndash;04:00</td><td>The Cupboard</td><td>Automated, Rotterdam</td><td>Archive only. Do not call in.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="guestbook" aria-labelledby="guestbook-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Sign the book</span>
+        <h2 id="guestbook-title">The physical guestbook, online</h2>
+        <p>There is a real book at the shop. This is a copy of it, and it has the same rules: say something you meant.</p>
+      </div>
+      <div class="guestbook">
+        <form class="panel" id="guestForm" novalidate style="padding:var(--s-3)">
+          <label class="field" for="gname">
+            <span class="lab">Your name</span>
+            <input id="gname" name="gname" type="text" autocomplete="name" required>
+            <span class="err">A name, so we know who to blame.</span>
+          </label>
+          <label class="field" for="gmood">
+            <span class="lab">Where were you when you first heard us?</span>
+            <select id="gmood">
+              <option>A shopping centre, closing time</option>
+              <option>On a cassette someone left in the car</option>
+              <option>A friend had it on in 1998 and would not explain</option>
+              <option>I bought this record today</option>
+              <option>Somewhere I still cannot explain</option>
+            </select>
+          </label>
+          <label class="field" for="gmsg">
+            <span class="lab">Your message</span>
+            <textarea id="gmsg" name="gmsg" minlength="12" required placeholder="Say something you meant."></textarea>
+            <span class="err">At least twelve characters. The book is for the ones that meant something.</span>
+          </label>
+          <button class="btn" type="submit">Sign the book</button>
+          <p class="entry-status" id="guestStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <p style="margin-bottom:var(--s-2)"><span class="stamp">recent entries</span></p>
+          <ul class="entries" id="entries">
+            <li class="entry">
+              <header><b>Hanne V.</b><time datetime="2026-04-02">2 Apr</time></header>
+              <p>Found the tape in my parents' kitchen drawer in 2022. My dad had no memory of buying it. Neither did my mum. It is still the best thing in that drawer.</p>
+            </li>
+            <li class="entry">
+              <header><b>anon (Leiden)</b><time datetime="2026-03-19">19 Mar</time></header>
+              <p>Closing Time at 2am in a supermarket car park. A security guard asked me to turn it off. I did not.</p>
+            </li>
+            <li class="entry">
+              <header><b>Marek D.</b><time datetime="2026-02-28">28 Feb</time></header>
+              <p>Escalator Bloom arrived before I ordered it, which I understand is not how mail works. Thank you.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h3>Mallsoft Collective</h3>
+        <p>A fictional record label, built for a style demo. Twenty-nine releases, no contracts, no remasters, one cupboard in Rotterdam.</p>
+      </div>
+      <div>
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="#store">All releases</a></li>
+          <li><a href="#roster">Roster</a></li>
+          <li><a href="#store">Shipping &amp; returns</a></li>
+          <li><a href="#guestbook">Guestbook</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Label</h3>
+        <ul>
+          <li><a href="#manifesto">Manifesto</a></li>
+          <li><a href="#radio">Mallsoft Radio</a></li>
+          <li><a href="#manifesto">Demos</a></li>
+          <li><a href="#guestbook">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>&copy; 2026 Mallsoft Collective. A fictional brand, built for a style demo.</span>
+      <span>All audio described. No autoplay, ever.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Storefront nav
+  var toggle = document.querySelector('.sign-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.getAttribute('data-open') === 'true';
+    menu.setAttribute('data-open', String(!open));
+    toggle.setAttribute('aria-expanded', String(!open));
+    toggle.textContent = open ? 'Menu' : 'Close';
+  });
+
+  // Add to cart (count only, no checkout flow on a demo page)
+  var cartBtn = document.querySelector('.sign-in .btn');
+  var count = 0;
+  document.querySelectorAll('[data-item]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      count += 1;
+      cartBtn.textContent = 'Cart \u2014 ' + count;
+      var was = btn.textContent;
+      btn.textContent = 'Added';
+      setTimeout(function () { btn.textContent = was; }, 1200);
+    });
+  });
+
+  // Guestbook
+  var form = document.getElementById('guestForm');
+  var status = document.getElementById('guestStatus');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var nameInput = document.getElementById('gname');
+    var msgInput = document.getElementById('gmsg');
+    var nameField = nameInput.closest('.field');
+    var msgField = msgInput.closest('.field');
+
+    var nameOk = nameInput.value.trim().length >= 2;
+    var msgOk = msgInput.value.trim().length >= 12;
+    nameField.toggleAttribute('data-invalid', !nameOk);
+    msgField.toggleAttribute('data-invalid', !msgOk);
+    nameInput.setAttribute('aria-invalid', String(!nameOk));
+    msgInput.setAttribute('aria-invalid', String(!msgOk));
+
+    if (!nameOk) {
+      status.textContent = 'We need a name before we write it in.';
+      nameInput.focus();
+      return;
+    }
+    if (!msgOk) {
+      status.textContent = 'A little longer, please. The book is for messages that meant something.';
+      msgInput.focus();
+      return;
+    }
+
+    var li = document.createElement('li');
+    li.className = 'entry';
+    var head = document.createElement('header');
+    var who = document.createElement('b');
+    who.textContent = nameInput.value.trim();
+    var when = document.createElement('time');
+    when.textContent = 'just now';
+    head.appendChild(who);
+    head.appendChild(when);
+    var body = document.createElement('p');
+    body.textContent = msgInput.value.trim();
+    li.appendChild(head);
+    li.appendChild(body);
+    document.getElementById('entries').prepend(li);
+
+    form.reset();
+    status.textContent = 'Signed. It is at the top of the book, and in the real one it is on page 1,412.';
+  });
+</script>
+</body>
+</html>

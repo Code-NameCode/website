@@ -1,0 +1,924 @@
+<!-- Style: Three Dimensional Immersive | 39threedimensionalimmersive.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier — Sofa Configurator</title>
+<style>
+:root{
+  /* colour: workshop neutrals, oak, and the fabrics themselves */
+  --shop:#f2efe9;
+  --board:#ffffff;
+  --ink:#1c1a17;
+  --ink-2:#3a352e;
+  --mute:#7b736a;
+  --line:rgba(28,26,23,.14);
+  --line-2:rgba(28,26,23,.32);
+  --oak:#b08551;
+  --walnut:#6b4a2f;
+  --clay:#a8502e;
+  --ok:#2f6b4c;
+  --focus:#0b62bd;
+  /* type */
+  --font-ui:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-serif:Georgia,"Iowan Old Style","Book Antiqua",serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --t-xs:clamp(.68rem,.66rem + .1vw,.76rem);
+  --t-sm:clamp(.82rem,.79rem + .14vw,.93rem);
+  --t-base:clamp(.96rem,.93rem + .18vw,1.08rem);
+  --t-lg:clamp(1.16rem,1.06rem + .4vw,1.44rem);
+  --t-xl:clamp(1.5rem,1.2rem + 1.3vw,2.3rem);
+  --t-2xl:clamp(2rem,1.3rem + 3.2vw,3.8rem);
+  --t-stage:clamp(2.2rem,1.4rem + 3.6vw,4.4rem);
+  /* space */
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;
+  --s-6:2rem;--s-7:2.75rem;--s-8:4rem;--s-9:5.5rem;
+  --gutter:clamp(1rem,4vw,4rem);
+  /* edges + depth */
+  --r-sm:4px;--r-md:8px;--r-lg:14px;
+  --sh-float:0 24px 60px -28px rgba(28,26,23,.55);
+  --sh-panel:0 2px 10px rgba(28,26,23,.07);
+  --tap:44px;
+  --persp:1400px;
+  /* motion */
+  --d-ui:260ms;
+  --d-slow:700ms;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--shop);color:var(--ink);font-family:var(--font-ui);font-size:var(--t-base);line-height:1.6}
+h1,h2,h3{line-height:1.1;letter-spacing:-.02em}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---------- masthead ---------- */
+.masthead{position:absolute;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:var(--s-4);padding:var(--s-4) var(--gutter)}
+.wordmark{font-family:var(--font-serif);font-size:var(--t-lg);letter-spacing:.3em;text-transform:uppercase;text-decoration:none;color:var(--ink);white-space:nowrap}
+.masthead nav{margin-left:auto;display:flex;gap:clamp(.6rem,2vw,1.75rem)}
+.masthead nav a{color:var(--ink-2);text-decoration:none;font-size:var(--t-sm);display:inline-flex;align-items:center;min-height:var(--tap);transition:color var(--d-ui) var(--ease)}
+.masthead nav a:hover{color:var(--clay)}
+.masthead nav a:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+@media (max-width:760px){ .masthead nav a:nth-child(2){display:none} }
+
+/* ---------- buttons ---------- */
+.btn{
+  min-height:var(--tap);padding:0 var(--s-5);background:var(--ink);color:var(--board);
+  border:1px solid var(--ink);border-radius:var(--r-sm);cursor:pointer;
+  font-size:var(--t-sm);font-weight:600;
+  display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);
+  transition:background var(--d-ui) var(--ease),border-color var(--d-ui) var(--ease),transform 120ms var(--ease);
+}
+.btn:hover{background:var(--ink-2)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.btn-clay{background:var(--clay);border-color:var(--clay)}
+.btn-clay:hover{background:#8c4226}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn-ghost:hover{background:var(--board)}
+.btn-sm{min-height:36px;padding:0 var(--s-4);font-size:var(--t-xs);letter-spacing:.06em}
+.btn[disabled]{background:#c8c3ba;border-color:#c8c3ba;cursor:not-allowed}
+
+/* ============================================================
+   THE 3D STAGE — CSS 3D, no WebGL, no library
+   ============================================================ */
+.stage-wrap{position:relative;background:linear-gradient(170deg,#efece5 0%,#e3ded4 60%,#d8d2c6 100%);border-bottom:1px solid var(--line);overflow:hidden}
+.stage-in{max-width:88rem;margin:0 auto;padding:calc(var(--s-9) + 2rem) var(--gutter) var(--s-8);display:grid;grid-template-columns:1.4fr .6fr;gap:clamp(1.5rem,3vw,3.5rem);align-items:center}
+/* the control rail comes first in the DOM so the heading order is sane,
+   then moves to the right-hand column visually */
+.stage-rail{order:2}
+@media (max-width:900px){ .stage-rail{order:0} }
+
+/* the viewport: perspective lives here, the object lives inside */
+.viewport{
+  position:relative;height:min(62vh,30rem);min-height:20rem;
+  perspective:var(--persp);perspective-origin:50% 42%;
+  touch-action:pan-y;cursor:grab;
+}
+.viewport.dragging{cursor:grabbing}
+.viewport:focus-visible{outline:2px solid var(--focus);outline-offset:4px;border-radius:var(--r-md)}
+.floor{
+  position:absolute;left:50%;bottom:6%;width:min(110%,52rem);height:60%;transform:translateX(-50%);
+  background:radial-gradient(ellipse at 50% 40%,rgba(28,26,23,.16),rgba(28,26,23,0) 68%);
+  pointer-events:none;
+}
+
+/* the object */
+.scene3d{
+  position:absolute;inset:0;display:grid;place-items:center;
+  transform-style:preserve-3d;
+  transform:rotateX(var(--rx,68deg)) rotateY(var(--ry,-24deg));
+  transition:transform var(--d-ui) var(--ease);
+}
+.viewport.dragging .scene3d{transition:none}
+.sofa{
+  position:relative;width:16rem;height:7rem;
+  transform-style:preserve-3d;
+  transform:translateZ(var(--lift,0)) scale(var(--zoom,1));
+  transition:transform var(--d-slow) var(--ease);
+}
+/* every part is a box: two faces, plus a top, so the form reads in 3D */
+.part{position:absolute;transform-style:preserve-3d}
+.face{position:absolute;inset:0}
+.fabric{background:var(--fabric,#6f7d5c)}
+.fabric-lit{background:var(--fabric-lit,#7d8c68)}
+.fabric-dark{background:var(--fabric-dark,#586548)}
+.grain{
+  background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 2px,rgba(0,0,0,.05) 2px 4px);
+}
+.leg{background:var(--leg,#b08551)}
+.leg-dark{background:var(--leg-dark,#8f6a3f)}
+.z-base{transform:translate3d(-1rem,0,-2.2rem) rotateX(-90deg)}
+.z-back{transform:translate3d(0,0,-2.2rem)}
+.z-front{transform:translate3d(0,0,1.9rem)}
+.z-leg{transform:translate3d(0,0,-2.1rem)}
+.arm-l,.arm-r{width:1.5rem;height:3.4rem;top:2.1rem}
+.arm-l{left:0}
+.arm-r{right:0}
+.back{height:2.6rem;left:1.5rem;right:1.5rem;top:0}
+.seat{height:1.1rem;left:1.5rem;right:1.5rem;top:3.1rem}
+.cushion{height:1rem;top:2rem;border-radius:3px}
+.cushion-a{left:1.6rem;width:4.1rem}
+.cushion-b{left:5.8rem;width:4.1rem}
+.cushion-c{right:1.6rem;width:4.1rem}
+.sofa.three .cushion-a,.sofa.three .cushion-b{width:3rem}
+.sofa.three .cushion-a{left:1.6rem}
+.sofa.three .cushion-b{left:4.8rem}
+.sofa.three .cushion-c{left:8rem;right:auto;width:6.4rem}
+.foot{width:.7rem;height:1.6rem;bottom:0}
+.foot-1{left:1rem}
+.foot-2{right:1rem}
+.sofa.three .foot-3{right:5.4rem}
+
+/* loading: a real progress bar, then the object arrives */
+.loader{position:absolute;left:0;right:0;top:0;height:2px;background:rgba(28,26,23,.12);overflow:hidden}
+.loader i{display:block;height:100%;width:0;background:var(--clay);transition:width 180ms linear}
+.loading-msg{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);
+  background:var(--board);border:1px solid var(--line);padding:var(--s-3) var(--s-4);box-shadow:var(--sh-panel);
+  transition:opacity var(--d-ui) var(--ease);
+}
+.sofa{opacity:0;transition:transform var(--d-slow) var(--ease),opacity var(--d-slow) var(--ease)}
+.stage-wrap.ready .sofa{opacity:1}
+.stage-wrap.ready .loading-msg{opacity:0;pointer-events:none}
+
+/* controls live outside the 3D object, never inside it */
+.view-controls{
+  position:absolute;left:var(--gutter);bottom:var(--s-5);
+  display:flex;gap:var(--s-2);align-items:center;flex-wrap:wrap;
+}
+.vbtn{
+  min-width:var(--tap);min-height:var(--tap);display:grid;place-items:center;
+  background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:var(--r-sm);
+  color:var(--ink);cursor:pointer;box-shadow:var(--sh-panel);
+  transition:background var(--d-ui) var(--ease),border-color var(--d-ui) var(--ease);
+}
+.vbtn:hover{background:#fff;border-color:var(--line-2)}
+.vbtn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.vbtn svg{width:16px;height:16px}
+.view-presets{display:flex;gap:var(--s-2);margin-left:var(--s-3)}
+.preset{
+  min-height:36px;padding:0 var(--s-3);background:rgba(255,255,255,.86);border:1px solid var(--line);
+  border-radius:var(--r-sm);font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-2);cursor:pointer;box-shadow:var(--sh-panel);
+  transition:background var(--d-ui) var(--ease),color var(--d-ui) var(--ease);
+}
+.preset:hover{background:#fff;color:var(--ink)}
+.preset[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.preset:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.view-hint{
+  position:absolute;right:var(--gutter);bottom:var(--s-5);
+  font-family:var(--font-mono);font-size:var(--t-xs);color:var(--ink-2);
+  background:rgba(255,255,255,.7);padding:var(--s-2) var(--s-3);border:1px solid var(--line);
+}
+@media (max-width:900px){
+  .stage-in{grid-template-columns:1fr}
+  .viewport{height:min(52vh,24rem)}
+  .view-hint{display:none}
+}
+
+/* the live description of what the object is showing */
+.scene-desc{position:absolute;left:var(--gutter);top:calc(var(--s-9) + 1rem);max-width:22rem;font-family:var(--font-mono);font-size:var(--t-xs);line-height:1.8;color:var(--ink-2)}
+.scene-desc b{color:var(--ink)}
+
+/* ---------- the control rail ---------- */
+.rail h1{font-family:var(--font-serif);font-size:var(--t-stage);font-weight:400;letter-spacing:-.02em;margin:0 0 var(--s-3)}
+.rail .lede{color:var(--mute);font-size:var(--t-sm);margin:0 0 var(--s-5)}
+.opt{margin-bottom:var(--s-5)}
+.opt-legend{font-size:var(--t-sm);font-weight:650;margin-bottom:var(--s-3);padding:0;display:flex;justify-content:space-between;gap:var(--s-3);width:100%}
+.opt-legend .val{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute);font-weight:400}
+.fieldset{border:0;padding:0;margin:0}
+.swatches{display:flex;gap:var(--s-2);flex-wrap:wrap}
+.swatch{position:relative;width:var(--tap);height:var(--tap);border:1px solid var(--line-2);border-radius:var(--r-sm);cursor:pointer;padding:0;overflow:hidden;transition:transform 120ms var(--ease),box-shadow var(--d-ui) var(--ease)}
+.swatch:hover{transform:translateY(-2px);box-shadow:var(--sh-panel)}
+.swatch:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.swatch[aria-checked="true"]{box-shadow:0 0 0 2px var(--board),0 0 0 4px var(--ink)}
+.swatch[aria-checked="true"]::after{
+  content:"";position:absolute;inset:0;margin:auto;width:12px;height:12px;border-radius:50%;
+  border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)
+}
+.finishes{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2)}
+.finish{
+  min-height:var(--tap);display:flex;align-items:center;gap:var(--s-3);cursor:pointer;
+  background:var(--board);border:1px solid var(--line);border-radius:var(--r-sm);padding:0 var(--s-3);
+  font-size:var(--t-sm);font-family:var(--font-ui);
+  transition:border-color var(--d-ui) var(--ease),background var(--d-ui) var(--ease);
+}
+.finish:hover{border-color:var(--line-2)}
+.finish[aria-checked="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.finish .chipdot{width:20px;height:20px;border-radius:3px;border:1px solid rgba(0,0,0,.2);flex:0 0 auto}
+.swatch-oak{background:#b08551}
+.swatch-walnut{background:#6b4a2f}
+.swatch-black{background:#2b2a28}
+/* the swatches carry their own colour: that is the only legitimate inline style on this page */
+.finish input{position:absolute;opacity:0;width:1px;height:1px}
+.finish:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:2px}
+.seat-picker{display:flex;gap:var(--s-2)}
+.seat-opt{
+  flex:1;min-height:var(--tap);background:var(--board);border:1px solid var(--line);border-radius:var(--r-sm);
+  cursor:pointer;font-size:var(--t-sm);font-weight:600;padding:0 var(--s-3);
+  transition:border-color var(--d-ui) var(--ease),background var(--d-ui) var(--ease),color var(--d-ui) var(--ease);
+}
+.seat-opt:hover{border-color:var(--line-2)}
+.seat-opt[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.seat-opt:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.spec-card{background:var(--board);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s-4);box-shadow:var(--sh-panel)}
+.spec-title{font-size:var(--t-base);margin:0 0 var(--s-3);font-weight:650}
+.spec-lines{margin:0 0 var(--s-3);display:grid;gap:var(--s-2)}
+.spec-lines div{display:flex;justify-content:space-between;gap:var(--s-3);font-size:var(--t-sm)}
+.spec-lines dt{color:var(--mute)}
+.spec-lines dd{margin:0;font-family:var(--font-mono);font-size:var(--t-sm);font-variant-numeric:tabular-nums;text-align:right}
+.spec-lines .total{border-top:1px solid var(--line);padding-top:var(--s-3);font-weight:700}
+.spec-lines .total dt{color:var(--ink);font-weight:700}
+.spec-lines .total dd{font-size:var(--t-lg)}
+.spec-card .actions{display:grid;gap:var(--s-2)}
+.spec-card .fine{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute);margin:var(--s-2) 0 0;line-height:1.7}
+.spec-flash{color:var(--ok);font-size:var(--t-xs);margin:var(--s-2) 0 0;min-height:1.2em}
+
+/* ---------- content sections ---------- */
+.wrap{max-width:88rem;margin:0 auto;padding:var(--s-8) var(--gutter)}
+.head-narrow{max-width:46rem}
+.head-narrow h2{font-size:var(--t-2xl);margin:0 0 var(--s-3)}
+.head-narrow p{color:var(--mute);margin:0 0 var(--s-3);max-width:48ch}
+.kicker{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.24em;text-transform:uppercase;color:var(--clay);margin:0 0 var(--s-3)}
+
+/* dimensions: a drawing, not a card grid */
+.dims{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(1.5rem,4vw,4rem);align-items:center;margin-top:var(--s-6)}
+.dim-fig{margin:0;border:1px solid var(--line);background:var(--board);padding:var(--s-4)}
+.dim-fig svg{display:block;width:100%;height:auto}
+.dim-fig figcaption{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute);padding-top:var(--s-3);border-top:1px solid var(--line);margin-top:var(--s-3)}
+table{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--mute);padding-bottom:var(--s-3)}
+th,td{text-align:left;padding:var(--s-3) var(--s-3) var(--s-3) 0;border-bottom:1px solid var(--line);vertical-align:baseline}
+th{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:500}
+td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right}
+tbody tr:hover{background:var(--board)}
+@media (max-width:860px){ .dims{grid-template-columns:1fr} }
+
+/* process: numbered steps, not cards */
+.process{background:var(--board);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.steps{list-style:none;margin:var(--s-6) 0 0;padding:0;counter-reset:step;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
+.steps li{background:var(--board);padding:var(--s-5) var(--s-4);counter-increment:step}
+.steps li::before{
+  content:counter(step,decimal-leading-zero);
+  display:block;font-family:var(--font-mono);font-size:var(--t-sm);color:var(--clay);margin-bottom:var(--s-3);
+}
+.steps h3{font-size:var(--t-base);margin:0 0 var(--s-2)}
+.steps p{font-size:var(--t-sm);color:var(--mute);margin:0}
+@media (max-width:900px){ .steps{grid-template-columns:1fr 1fr} }
+@media (max-width:520px){ .steps{grid-template-columns:1fr} }
+
+/* quote */
+.quote-in{display:grid;grid-template-columns:1fr auto;gap:var(--s-7);align-items:center}
+.quote-in blockquote{font-family:var(--font-serif);font-size:var(--t-xl);line-height:1.26;margin:0;max-width:26ch}
+.quote-in blockquote span{color:var(--clay)}
+.quote-in figcaption{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute);margin-top:var(--s-3)}
+.quote-in .sig{text-align:right;border-left:1px solid var(--line);padding-left:var(--s-6)}
+.quote-in .sig b{display:block;font-family:var(--font-serif);font-size:var(--t-2xl);font-weight:400;letter-spacing:-.02em}
+.quote-in .sig span{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute)}
+@media (max-width:760px){ .quote-in{grid-template-columns:1fr} .quote-in .sig{text-align:left;border-left:0;border-top:1px solid var(--line);padding:var(--s-4) 0 0} }
+
+/* enquiry */
+.enq{background:var(--ink);color:var(--board)}
+.enq .wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(1.5rem,4vw,4.5rem);align-items:start}
+.enq h2{font-size:var(--t-2xl);margin:0 0 var(--s-3)}
+.enq p{color:rgba(255,255,255,.68);max-width:40ch}
+.enq .kicker{color:#d99a7d}
+.f{margin-bottom:var(--s-4)}
+.f label{display:block;font-size:var(--t-sm);font-weight:600;margin-bottom:var(--s-2)}
+.f input,.f select,.f textarea{
+  width:100%;min-height:var(--tap);padding:var(--s-3);
+  background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.26);border-radius:var(--r-sm);
+  font-family:var(--font-ui);font-size:var(--t-sm);
+  transition:border-color var(--d-ui) var(--ease),background var(--d-ui) var(--ease);
+}
+.f textarea{min-height:6rem;resize:vertical}
+.f select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,rgba(255,255,255,.7) 50%),linear-gradient(135deg,rgba(255,255,255,.7) 50%,transparent 50%);background-position:calc(100% - 18px) 1.25rem,calc(100% - 13px) 1.25rem;background-size:5px 5px;background-repeat:no-repeat}
+.f select option{background:var(--ink)}
+.f input::placeholder,.f textarea::placeholder{color:rgba(255,255,255,.38)}
+.f input:hover,.f select:hover,.f textarea:hover{border-color:rgba(255,255,255,.5)}
+.f input:focus-visible,.f select:focus-visible,.f textarea:focus-visible{outline:none;border-color:#fff;background:rgba(255,255,255,.13)}
+.f input[aria-invalid="true"],.f textarea[aria-invalid="true"]{border-color:#ffc0b2;box-shadow:0 0 0 3px rgba(255,192,178,.2)}
+.f .msg{display:block;font-size:var(--t-xs);color:rgba(255,255,255,.6);margin-top:var(--s-2);min-height:1.2em}
+.f .msg.error{color:#ffc0b2}
+.f .msg.ok{color:#9ee0bd}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+.f-static{
+  background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.28);border-radius:var(--r-sm);
+  padding:var(--s-3);font-family:var(--font-mono);font-size:var(--t-xs);line-height:1.9;color:rgba(255,255,255,.82);margin:0;
+}
+.form-status{font-size:var(--t-sm);margin:var(--s-4) 0 0;min-height:1.5em;color:#9ee0bd}
+.form-status.error{color:#ffc0b2}
+@media (max-width:860px){ .enq .wrap{grid-template-columns:1fr} }
+@media (max-width:520px){ .f-row{grid-template-columns:1fr} }
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:var(--s-7) var(--gutter) var(--s-8)}
+.foot-in{max-width:88rem;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--s-6)}
+.foot-in h2{font-family:var(--font-serif);font-size:var(--t-sm);letter-spacing:.26em;text-transform:uppercase;margin:0 0 var(--s-3)}
+.foot-in h3{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--clay);margin:0 0 var(--s-3)}
+.foot-in p{color:var(--mute);font-size:var(--t-sm);margin:0;max-width:36ch}
+.foot-in ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-1)}
+.foot-in a{color:var(--ink-2);text-decoration:none;font-size:var(--t-sm);display:inline-flex;align-items:center;min-height:var(--tap)}
+.foot-in a:hover{color:var(--clay)}
+.foot-in a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.legal{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute);margin:var(--s-6) 0 0;padding-top:var(--s-4);border-top:1px solid var(--line);line-height:1.9;max-width:90ch}
+@media (max-width:760px){ .foot-in{grid-template-columns:1fr} }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .scene3d{--rx:64deg;--ry:-28deg}
+  .viewport{cursor:default}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <a class="wordmark" href="#configure">Atelier</a>
+  <nav aria-label="Sections">
+    <a href="#configure">Configure</a>
+    <a href="#dimensions">Dimensions</a>
+    <a href="#how">How it's made</a>
+    <a href="#enquire">Enquire</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- CONFIGURATOR: 3D stage + controls, controls outside the object -->
+  <section class="stage-wrap" id="configure" aria-labelledby="cfg-h">
+    <div class="loader" aria-hidden="true"><i id="loader-bar"></i></div>
+
+    <div class="stage-in">
+      <!-- the control rail: real form controls, all outside the 3D object -->
+      <div class="rail stage-rail">
+        <p class="kicker">Configurator</p>
+        <h1 id="cfg-h">Build the Fenn</h1>
+        <p class="lede">One frame, three lengths, nineteen cloths. What you change here is what we cut.</p>
+
+        <fieldset class="opt fieldset">
+          <legend class="opt-legend"><span>Upholstery</span><span class="val" id="fabric-name">Moss linen</span></legend>
+          <div class="swatches" id="swatches" role="radiogroup" aria-label="Upholstery">
+            <button class="swatch" type="button" role="radio" aria-checked="true" data-fabric="moss" aria-label="Moss linen" style="background:#6f7d5c"></button>
+            <button class="swatch" type="button" role="radio" aria-checked="false" tabindex="-1" data-fabric="oat" aria-label="Oat bouclé" style="background:#cfc3ae"></button>
+            <button class="swatch" type="button" role="radio" aria-checked="false" tabindex="-1" data-fabric="clay" aria-label="Clay cotton" style="background:#9c5638"></button>
+            <button class="swatch" type="button" role="radio" aria-checked="false" tabindex="-1" data-fabric="ink" aria-label="Ink wool" style="background:#33373c"></button>
+            <button class="swatch" type="button" role="radio" aria-checked="false" tabindex="-1" data-fabric="slate" aria-label="Slate twill" style="background:#5c6670"></button>
+            <button class="swatch" type="button" role="radio" aria-checked="false" tabindex="-1" data-fabric="rust" aria-label="Rust corduroy" style="background:#a44a2a"></button>
+          </div>
+        </fieldset>
+
+        <fieldset class="opt fieldset">
+          <legend class="opt-legend"><span>Leg finish</span></legend>
+          <div class="finishes" id="finishes" role="radiogroup" aria-label="Leg finish">
+            <button class="finish" type="button" role="radio" aria-checked="true" data-leg="oak" aria-label="Oak, included in the price">
+              <span class="chipdot swatch-oak" aria-hidden="true"></span><span>Oak</span>
+            </button>
+            <button class="finish" type="button" role="radio" aria-checked="false" tabindex="-1" data-leg="walnut" aria-label="Walnut, £140 extra">
+              <span class="chipdot swatch-walnut" aria-hidden="true"></span><span>Walnut</span>
+            </button>
+            <button class="finish" type="button" role="radio" aria-checked="false" tabindex="-1" data-leg="black" aria-label="Stained black ash, £140 extra">
+              <span class="chipdot swatch-black" aria-hidden="true"></span><span>Black ash</span>
+            </button>
+          </div>
+        </fieldset>
+
+        <div class="opt">
+          <p class="opt-legend" id="seats-label"><span>Length</span><span class="val" id="seats-dims">168 × 92 cm</span></p>
+          <div class="seat-picker" role="group" aria-labelledby="seats-label">
+            <button class="seat-opt" type="button" aria-pressed="true" data-seats="2">Two-seat</button>
+            <button class="seat-opt" type="button" aria-pressed="false" data-seats="3">Three-seat</button>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <h2 class="spec-title">Your specification</h2>
+          <dl class="spec-lines">
+            <div><dt>Frame</dt><dd id="s-frame">Fenn two-seat</dd></div>
+            <div><dt>Cloth</dt><dd id="s-fabric">Moss linen</dd></div>
+            <div><dt>Legs</dt><dd id="s-leg">Oak</dd></div>
+            <div><dt>Depth</dt><dd>92 cm</dd></div>
+            <div><dt>Lead time</dt><dd id="s-lead">9 weeks</dd></div>
+            <div class="total"><dt>Price</dt><dd id="s-price">£2 240</dd></div>
+          </dl>
+          <div class="actions">
+            <button class="btn btn-clay btn-block" type="button" id="save-spec">Save this specification</button>
+            <a class="btn btn-ghost btn-block" href="#enquire" id="to-enquire">Enquire about this one</a>
+          </div>
+          <p class="spec-flash" id="spec-flash" role="status" aria-live="polite"></p>
+          <p class="fine">Prices include the frame, the cushions, delivery and assembly. Cloth is charged at zero if you send us your own, with a 12-month abrasion rating.</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="scene-desc" id="scene-desc" aria-live="polite">
+          <b>Two-seat, moss linen, oak legs.</b><br>
+          Shown from above and to the left. Drag, or use the arrow keys, to turn it.
+        </p>
+
+        <div class="viewport" id="viewport" tabindex="0" role="group"
+             aria-label="Sofa preview. Use left and right arrow keys to turn, up and down to change the viewing height."
+             aria-describedby="scene-desc-text">
+          <div class="floor" aria-hidden="true"></div>
+          <p class="loading-msg">Preparing the preview</p>
+          <div class="scene3d" id="scene3d">
+            <div class="sofa" id="sofa">
+              <!-- shell: base box -->
+              <div class="part seat fabric fabric-dark grain z-base"><div class="face"></div></div>
+              <div class="part back fabric fabric-dark grain z-back"><div class="face"></div></div>
+              <!-- arms -->
+              <div class="part arm-l fabric fabric-lit grain z-back"><div class="face"></div></div>
+              <div class="part arm-r fabric fabric-lit grain z-back"><div class="face"></div></div>
+              <!-- cushions -->
+              <div class="part cushion cushion-a fabric fabric-lit z-front"><div class="face"></div></div>
+              <div class="part cushion cushion-b fabric fabric-lit z-front"><div class="face"></div></div>
+              <div class="part cushion cushion-c fabric fabric-lit z-front"><div class="face"></div></div>
+              <!-- legs -->
+              <div class="part foot foot-1 leg z-leg"><div class="face"></div></div>
+              <div class="part foot foot-2 leg z-leg"><div class="face"></div></div>
+              <div class="part foot foot-3 leg z-leg"><div class="face"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="view-controls" role="group" aria-label="View controls">
+          <button class="vbtn" type="button" id="turn-left" aria-label="Turn the sofa left">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
+          </button>
+          <button class="vbtn" type="button" id="turn-right" aria-label="Turn the sofa right">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+          </button>
+          <button class="vbtn" type="button" id="tilt-up" aria-label="Look from higher up">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l5-5 5 5"/></svg>
+          </button>
+          <button class="vbtn" type="button" id="tilt-down" aria-label="Look from lower down">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg>
+          </button>
+          <div class="view-presets">
+            <button class="preset" type="button" data-rx="20" data-ry="-24" aria-pressed="false">Front</button>
+            <button class="preset" type="button" data-rx="68" data-ry="-24" aria-pressed="true">Three&#8209;quarter</button>
+            <button class="preset" type="button" data-rx="88" data-ry="-4" aria-pressed="false">Plan</button>
+          </div>
+        </div>
+        <p class="view-hint" aria-hidden="true">drag to turn</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIMENSIONS -->
+  <section class="wrap" id="dimensions" aria-labelledby="dim-h">
+    <div class="head-narrow">
+      <p class="kicker">Measured</p>
+      <h2 id="dim-h">It is a small sofa and it is honest about it</h2>
+      <p>Every Fenn is built on the same kiln-dried beech frame, with the same eight-way hand-tied suspension. The only thing that changes is how many modules are on it.</p>
+    </div>
+    <div class="dims">
+      <figure class="dim-fig">
+        <svg viewBox="0 0 520 300" role="img" aria-labelledby="dim-t dim-d">
+          <title id="dim-t">Dimensioned drawing of the Fenn sofa</title>
+          <desc id="dim-d">Front and side elevations showing a width of 168 centimetres and a depth of 92 centimetres, with a seat height of 43 centimetres.</desc>
+          <g fill="none" stroke="rgba(28,26,23,.14)" stroke-width="1">
+            <path d="M0 60H520M0 120H520M0 180H520M0 240H520M80 0V300M200 0V300M320 0V300M440 0V300"/>
+          </g>
+          <g fill="none" stroke="#1c1a17" stroke-width="2" stroke-linejoin="round">
+            <path d="M110 176 L110 150 L150 118 L330 118 L370 150 L370 176 Z"/>
+            <path d="M150 118 L150 96 L330 96"/>
+            <path d="M118 176 L118 190M362 176 L362 190"/>
+          </g>
+          <g stroke="#a8502e" stroke-width="1.4">
+            <path d="M110 226H370M110 220V232M370 220V232"/>
+            <path d="M410 118V190M404 118H416M404 190H416"/>
+          </g>
+          <g font-family="ui-monospace,monospace" font-size="11" fill="#a8502e">
+            <text x="240" y="246" text-anchor="middle">168 cm</text>
+            <text x="424" y="158">92 cm</text>
+          </g>
+          <g font-family="ui-monospace,monospace" font-size="11" fill="#7b736a">
+            <text x="240" y="106" text-anchor="middle">three cushions, 168 / 234 / 300 cm</text>
+            <text x="110" y="104" text-anchor="end">seat 43 cm</text>
+          </g>
+        </svg>
+        <figcaption>FIG. 01 — Front elevation, 1:20. Workshop drawings on request.</figcaption>
+      </figure>
+      <table>
+        <caption>Configuration summary</caption>
+        <thead><tr><th scope="col">Configuration</th><th scope="col">Width</th><th scope="col">Cushions</th><th scope="col">Weight</th><th scope="col">Price</th></tr></thead>
+        <tbody>
+          <tr><td>Two-seat</td><td class="num">168 cm</td><td class="num">2</td><td class="num">54 kg</td><td class="num">£2 240</td></tr>
+          <tr><td>Three-seat</td><td class="num">234 cm</td><td class="num">3</td><td class="num">71 kg</td><td class="num">£2 680</td></tr>
+          <tr><td>Three-seat, chaise end</td><td class="num">234 cm</td><td class="num">3</td><td class="num">79 kg</td><td class="num">£3 140</td></tr>
+          <tr><td>Two-seat, own cloth</td><td class="num">168 cm</td><td class="num">2</td><td class="num">54 kg</td><td class="num">£2 040</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process" id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="head-narrow">
+        <p class="kicker">How it is made</p>
+        <h2 id="how-h">Eleven weeks, four people, one frame</h2>
+        <p>Nothing here is automated except the sewing, and only because the sewing machine has been automated since 1974.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>Frame</h3><p>Kiln-dried beech, dowelled and glued, then a full day in the press. Rejected frames go to the firewood pile, not to a second chance.</p></li>
+        <li><h3>Suspension</h3><p>Eight-way hand-tied webbing. It takes an hour and it is the single reason the sofa outlives the cloth by a decade.</p></li>
+        <li><h3>Covers</h3><p>Cut from a single roll, sewn in one piece where possible, and shrink-tested on a 60 °C wash before it goes anywhere near a frame.</p></li>
+        <li><h3>Finish</h3><p>Legs turned and stained in the workshop, then the whole thing goes out on our own van and one of us stays behind to see it through the door.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="wrap" aria-labelledby="q-h">
+    <h2 class="sr-only" id="q-h">What the workshop says</h2>
+    <div class="quote-in">
+      <figure style="margin:0">
+        <blockquote>“We stopped offering three hundred cloths. <span>Nineteen is the number we can actually keep in stock</span> and dye the same twice.”</blockquote>
+        <figcaption>Elin Marchetti · founder and frame maker</figcaption>
+      </figure>
+      <p class="sig"><b>19</b><span>cloths kept in stock, permanently</span></p>
+    </div>
+  </section>
+
+  <!-- ENQUIRE -->
+  <section class="enq" id="enquire" aria-labelledby="enq-h">
+    <div class="wrap">
+      <div>
+        <p class="kicker">Enquiries</p>
+        <h2 id="enq-h">Ask about the Fenn</h2>
+        <p>Send us the specification from the configurator and we will reply with a fabric swatch in the post, a lead time confirmed against the current queue, and an honest answer about whether it will fit through your door.</p>
+        <p>We do not hold stock and we do not run a sale. If it is not on the list, it is not available this year.</p>
+      </div>
+
+      <form id="enq-form" novalidate>
+        <div class="f-row">
+          <div class="f">
+            <label for="e-name">Name</label>
+            <input id="e-name" name="name" type="text" autocomplete="name" placeholder="Elin Marchetti" aria-describedby="e-name-msg">
+            <span class="msg" id="e-name-msg" role="alert"></span>
+          </div>
+          <div class="f">
+            <label for="e-email">Email</label>
+            <input id="e-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="e-email-msg">
+            <span class="msg" id="e-email-msg" role="alert"></span>
+          </div>
+        </div>
+        <div class="f">
+          <label for="e-post">Delivery postcode</label>
+          <input id="e-post" name="postcode" type="text" autocomplete="postal-code" placeholder="E8 3RL" aria-describedby="e-post-msg">
+          <span class="msg" id="e-post-msg" role="alert"></span>
+        </div>
+        <div class="f">
+          <p class="f-static" id="spec-static" style="margin-bottom:var(--s-2)">Specification attached: Fenn two-seat · Moss linen · Oak legs · £2 240</p>
+          <label for="e-when">When do you need it?</label>
+          <select id="e-when" name="when" aria-describedby="e-when-msg">
+            <option>No particular date, just the soonest</option>
+            <option selected>Within 3 months</option>
+            <option>3 to 6 months</option>
+            <option>Next spring</option>
+          </select>
+          <span class="msg" id="e-when-msg"></span>
+        </div>
+        <div class="f">
+          <label for="e-note">Anything we should measure before we answer</label>
+          <textarea id="e-note" name="note" placeholder="Door widths, stairs, the room it is going in…" aria-describedby="e-note-msg"></textarea>
+          <span class="msg" id="e-note-msg" role="alert"></span>
+        </div>
+        <button class="btn btn-clay btn-block" type="submit">Send the enquiry</button>
+        <p class="form-status" id="enq-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<p class="sr-only" id="scene-desc-text">A rendered three-dimensional preview of the sofa you have configured. The description above the preview states the current configuration in words.</p>
+
+<footer>
+  <div class="foot-in">
+    <div>
+      <h2>Atelier</h2>
+      <p>A workshop and a small online shop. Everything is made in the room you can see from the road.</p>
+    </div>
+    <nav aria-label="Furniture">
+      <h3>Furniture</h3>
+      <ul>
+        <li><a href="#configure">The Fenn configurator</a></li>
+        <li><a href="#dimensions">Dimensions</a></li>
+        <li><a href="#how">How it is made</a></li>
+        <li><a href="#enquire">Swatches by post</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Workshop">
+      <h3>Workshop</h3>
+      <ul>
+        <li><a href="#how">Frame warranty</a></li>
+        <li><a href="#enquire">Delivery</a></li>
+        <li><a href="#enquire">Repairs, ten years on</a></li>
+        <li><a href="#enquire">Visit the workshop</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="legal" style="max-width:88rem;margin-left:auto;margin-right:auto">Atelier is a fictional furniture maker created for this example page. All prices, configurations, dimensions and lead times are invented for demonstration. The sofa preview is built entirely from HTML elements and CSS 3D transforms — there is no WebGL context, no 3D library, no model file and no image loaded from anywhere else. A reduced-motion visitor gets a fixed three-quarter view with the same configuration controls.</p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- loading: a real progress bar, then the object arrives ---------- */
+  var stage = document.querySelector('.stage-wrap');
+  var loaderBar = document.getElementById('loader-bar');
+  var progress = 0;
+  var loadTimer = window.setInterval(function(){
+    progress = Math.min(100, progress + (progress < 70 ? 9 : 22));
+    loaderBar.style.width = progress + '%';
+    if(progress >= 100){
+      window.clearInterval(loadTimer);
+      stage.classList.add('ready');
+    }
+  }, reduced ? 40 : 110);
+
+  /* ---------- catalogue of the choices ---------- */
+  var FABRIC = {
+    moss:  {name:'Moss linen',    base:'#6f7d5c', lit:'#7d8c68', dark:'#586548', add:0,   lead:9},
+    oat:   {name:'Oat bouclé',    base:'#cfc3ae', lit:'#ded3c0', dark:'#a99d8a', add:120, lead:11},
+    clay:  {name:'Clay cotton',   base:'#9c5638', lit:'#ad6546', dark:'#7d422a', add:60,  lead:8},
+    ink:   {name:'Ink wool',      base:'#33373c', lit:'#454a50', dark:'#22252a', add:180, lead:12},
+    slate: {name:'Slate twill',   base:'#5c6670', lit:'#6d7781', dark:'#454d55', add:90,  lead:10},
+    rust:  {name:'Rust corduroy', base:'#a44a2a', lit:'#b85b3a', dark:'#833a20', add:210, lead:13}
+  };
+  var LEG = {
+    oak:    {name:'Oak',       base:'#b08551', dark:'#8f6a3f', add:0,  lead:0},
+    walnut: {name:'Walnut',    base:'#6b4a2f', dark:'#4e3520', add:140,lead:1},
+    black:  {name:'Black ash', base:'#2b2a28', dark:'#1a1918', add:140,lead:2}
+  };
+  var SEAT = {
+    2:{name:'two-seat',   width:168, price:2240, lead:9, cushions:2},
+    3:{name:'three-seat', width:234, price:2680, lead:11, cushions:3}
+  };
+
+  var state = {fabric:'moss', leg:'oak', seats:2};
+
+  var sofa = document.getElementById('sofa');
+  var sceneDesc = document.getElementById('scene-desc');
+  var fabricName = document.getElementById('fabric-name');
+  var seatsDims = document.getElementById('seats-dims');
+  var sFrame = document.getElementById('s-frame');
+  var sFabric = document.getElementById('s-fabric');
+  var sLeg = document.getElementById('s-leg');
+  var sLead = document.getElementById('s-lead');
+  var sPrice = document.getElementById('s-price');
+  var specStatic = document.getElementById('spec-static');
+  var specFlash = document.getElementById('spec-flash');
+
+  function money(n){ return '£' + n.toLocaleString('en-GB').replace(/,/g,' '); }
+
+  /* ---------- apply state to the object AND to the text ---------- */
+  function apply(){
+    var f = FABRIC[state.fabric], l = LEG[state.leg], s = SEAT[state.seats];
+    sofa.style.setProperty('--fabric', f.base);
+    sofa.style.setProperty('--fabric-lit', f.lit);
+    sofa.style.setProperty('--fabric-dark', f.dark);
+    sofa.style.setProperty('--leg', l.base);
+    sofa.style.setProperty('--leg-dark', l.dark);
+    sofa.classList.toggle('three', state.seats === 3);
+    var thirdLeg = sofa.querySelector('.foot-3');
+    thirdLeg.style.display = state.seats === 3 ? '' : 'none';
+
+    var lead = s.lead + (f.lead - FABRIC.moss.lead) + l.lead;
+    var price = s.price + f.add + l.add;
+
+    fabricName.textContent = f.name;
+    seatsDims.textContent = s.width + ' × 92 cm';
+    sFrame.textContent = 'Fenn ' + s.name;
+    sFabric.textContent = f.name;
+    sLeg.textContent = l.name;
+    sLead.textContent = lead + ' weeks';
+    sPrice.textContent = money(price);
+    specStatic.textContent = 'Specification attached: Fenn ' + s.name + ' · ' + f.name + ' · ' + l.name + ' legs · ' + money(price);
+
+    var ry = readAngles().ry;
+    sceneDesc.textContent = '';
+    var strong = document.createElement('b');
+    strong.textContent = s.name + ' in ' + f.name.toLowerCase() + ', ' + l.name.toLowerCase() + ' legs. ' +
+      money(price) + ', ' + lead + ' weeks. Turned ' + Math.round(((ry % 360) + 360) % 360) + '° from the front.';
+    var br = document.createElement('br');
+    var tail = document.createElement('span');
+    tail.textContent = ' Shown from above and to the left. Drag, or use the arrow keys, to turn it.';
+    sceneDesc.appendChild(strong);
+    sceneDesc.appendChild(br);
+    sceneDesc.appendChild(tail);
+    return {price:price, lead:lead, name:s.name, fabric:f.name, leg:l.name};
+  }
+
+  /* ---------- swatches ---------- */
+  var swatches = Array.prototype.slice.call(document.querySelectorAll('.swatch'));
+  function pickSwatch(i, focus){
+    swatches.forEach(function(b, n){
+      var on = n === i;
+      b.setAttribute('aria-checked', String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
+    state.fabric = swatches[i].dataset.fabric;
+    if(focus) swatches[i].focus();
+    apply();
+  }
+  swatches.forEach(function(b, i){
+    b.addEventListener('click', function(){ pickSwatch(i); });
+    b.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); pickSwatch((i+1) % swatches.length, true); }
+      if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){ e.preventDefault(); pickSwatch((i-1 + swatches.length) % swatches.length, true); }
+    });
+  });
+
+  /* ---------- leg finishes ---------- */
+  var finishes = Array.prototype.slice.call(document.querySelectorAll('.finish'));
+  function pickLeg(i, focus){
+    finishes.forEach(function(b, n){
+      var on = n === i;
+      b.setAttribute('aria-checked', String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
+    state.leg = finishes[i].dataset.leg;
+    if(focus) finishes[i].focus();
+    apply();
+  }
+  finishes.forEach(function(b, i){
+    b.addEventListener('click', function(){ pickLeg(i); });
+    b.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); pickLeg((i+1) % finishes.length, true); }
+      if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){ e.preventDefault(); pickLeg((i-1 + finishes.length) % finishes.length, true); }
+    });
+  });
+
+  /* ---------- length ---------- */
+  var seatBtns = Array.prototype.slice.call(document.querySelectorAll('.seat-opt'));
+  seatBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      seatBtns.forEach(function(o){ o.setAttribute('aria-pressed', String(o === b)); });
+      state.seats = Number(b.dataset.seats);
+      apply();
+    });
+  });
+
+  /* ---------- rotating the object ---------- */
+  var viewport = document.getElementById('viewport');
+  var scene3d = document.getElementById('scene3d');
+  var RX_MIN = 8, RX_MAX = 90, RATE = 0.42;
+
+  function readAngles(){
+    var rx = parseFloat(scene3d.style.getPropertyValue('--rx')) || 68;
+    var ry = parseFloat(scene3d.style.getPropertyValue('--ry'));
+    if(isNaN(ry)) ry = -24;
+    return {rx:rx, ry:ry};
+  }
+  function setAngles(rx, ry, instant){
+    scene3d.style.setProperty('--rx', Math.max(RX_MIN, Math.min(RX_MAX, rx)).toFixed(1) + 'deg');
+    scene3d.style.setProperty('--ry', (((ry % 360) + 360) % 360).toFixed(1) + 'deg');
+    if(instant) viewport.classList.add('dragging');
+    matchPreset(rx, ry);
+    if(instant) window.requestAnimationFrame(function(){ viewport.classList.remove('dragging'); });
+  }
+  function turn(d){ var a = readAngles(); setAngles(a.rx, a.ry + d); }
+  function tilt(d){ var a = readAngles(); setAngles(a.rx + d, a.ry); }
+
+  document.getElementById('turn-left').addEventListener('click', function(){ turn(-RATE * 18); });
+  document.getElementById('turn-right').addEventListener('click', function(){ turn(RATE * 18); });
+  document.getElementById('tilt-up').addEventListener('click', function(){ tilt(-6); });
+  document.getElementById('tilt-down').addEventListener('click', function(){ tilt(6); });
+
+  var presets = Array.prototype.slice.call(document.querySelectorAll('.preset'));
+  function matchPreset(rx, ry){
+    presets.forEach(function(p){
+      var on = Math.abs(Number(p.dataset.rx) - rx) < 4 && Math.abs(((Number(p.dataset.ry) - ry + 540) % 360) - 180) < 4;
+      p.setAttribute('aria-pressed', String(on));
+    });
+  }
+  presets.forEach(function(p){
+    p.addEventListener('click', function(){
+      setAngles(Number(p.dataset.rx), Number(p.dataset.ry));
+    });
+  });
+
+  /* drag */
+  var dragging = false, lastX = 0, lastY = 0;
+  viewport.addEventListener('pointerdown', function(e){
+    if(reduced) return;
+    dragging = true;
+    lastX = e.clientX; lastY = e.clientY;
+    viewport.classList.add('dragging');
+    viewport.setPointerCapture(e.pointerId);
+  });
+  viewport.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    var dx = e.clientX - lastX, dy = e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    var a = readAngles();
+    setAngles(a.rx + dy * 0.4, a.ry + dx * 0.5, true);
+  });
+  function endDrag(e){
+    if(!dragging) return;
+    dragging = false;
+    viewport.classList.remove('dragging');
+    if(e && e.pointerId !== undefined && viewport.hasPointerCapture(e.pointerId)) viewport.releasePointerCapture(e.pointerId);
+  }
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
+  viewport.addEventListener('lostpointercapture', function(){ dragging = false; viewport.classList.remove('dragging'); });
+
+  /* keyboard, so the preview is not a mouse-only thing */
+  viewport.addEventListener('keydown', function(e){
+    var step = 8;
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); turn(-step); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); turn(step); }
+    else if(e.key === 'ArrowUp'){ e.preventDefault(); tilt(-4); }
+    else if(e.key === 'ArrowDown'){ e.preventDefault(); tilt(4); }
+    else if(e.key === 'Home'){ e.preventDefault(); setAngles(68, -24); }
+  });
+
+  /* ---------- actions ---------- */
+  document.getElementById('save-spec').addEventListener('click', function(){
+    var s = apply();
+    specFlash.textContent = 'Saved. Reference ATL-' + state.seats + state.fabric.slice(0,2).toUpperCase() +
+      state.leg.slice(0,2).toUpperCase() + ' · ' + money(s.price) + '. We will hold the cloth for 30 days.';
+  });
+  document.getElementById('to-enquire').addEventListener('click', function(){
+    var s = apply();
+    specFlash.textContent = 'Specification carried into the enquiry form below — ' + s.name + ', ' + s.fabric + ', ' + s.leg + '.';
+  });
+
+  /* ---------- enquiry ---------- */
+  var form = document.getElementById('enq-form');
+  var fields = {
+    name: {el:document.getElementById('e-name'), msg:document.getElementById('e-name-msg')},
+    email:{el:document.getElementById('e-email'),msg:document.getElementById('e-email-msg')},
+    post: {el:document.getElementById('e-post'), msg:document.getElementById('e-post-msg')},
+    note: {el:document.getElementById('e-note'), msg:document.getElementById('e-note-msg')}
+  };
+  function setMsg(key, text, kind){
+    fields[key].msg.textContent = text;
+    fields[key].msg.className = 'msg' + (kind ? ' ' + kind : '');
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var bad = false;
+    if(fields.name.el.value.trim().length < 2){
+      setMsg('name','We need a name to reply to.','error'); fields.name.el.setAttribute('aria-invalid','true'); bad = true;
+    } else { setMsg('name','Accepted.','ok'); fields.name.el.removeAttribute('aria-invalid'); }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(fields.email.el.value.trim())){
+      setMsg('email','Check the address — the swatch goes out by post, not email.','error'); fields.email.el.setAttribute('aria-invalid','true'); bad = true;
+    } else { setMsg('email','Accepted.','ok'); fields.email.el.removeAttribute('aria-invalid'); }
+    var pc = fields.post.el.value.trim().toUpperCase().replace(/\s/g,'');
+    if(!/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(pc)){
+      setMsg('post','A postcode, so we can check the van route. Try E8 3RL.','error'); fields.post.el.setAttribute('aria-invalid','true'); bad = true;
+    } else { setMsg('post','Route checked.','ok'); fields.post.el.removeAttribute('aria-invalid'); }
+    if(fields.note.el.value.length > 400){
+      setMsg('note','Keep it under 400 characters.','error'); fields.note.el.setAttribute('aria-invalid','true'); bad = true;
+    }
+    if(bad){
+      var st = document.getElementById('enq-status');
+      st.className = 'form-status error';
+      st.textContent = 'Check the highlighted fields. Nothing has been sent and no swatch is reserved.';
+      return;
+    }
+    var s = apply();
+    var when = document.getElementById('e-when').options[document.getElementById('e-when').selectedIndex].text;
+    var status = document.getElementById('enq-status');
+    status.className = 'form-status';
+    status.textContent = 'Enquiry received. We will post two swatches of ' + s.fabric + ' within three working days, ' +
+      'confirm the ' + s.lead + '-week lead time for ' + when.toLowerCase() +
+      ', and tell you the width of our narrowest van if the door gives us trouble.';
+  });
+
+  /* ---------- first paint ---------- */
+  setAngles(68, -24, true);
+  apply();
+})();
+</script>
+</body>
+</html>

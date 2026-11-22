@@ -1,0 +1,562 @@
+<!-- Style: Pixel Art | 55pixelart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grimforge - a small, mean dungeon crawler</title>
+<style>
+  :root{
+    /* limited 16-colour dungeon palette */
+    --void:#0b0d13;
+    --stone:#161b26;
+    --stone-2:#1f2635;
+    --stone-3:#2b3446;
+    --edge:#465370;
+    --ink:#e9edf6;
+    --muted:#8e9ab3;
+    --ember:#ff8a3d;
+    --blood:#c8383f;
+    --gold:#e3b341;
+    --moss:#5f9e70;
+    --arcane:#7a6bd0;
+
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+    --t-logo:clamp(2.2rem,9vw,5.4rem);
+    --t-h2:clamp(1.15rem,2.6vw,1.7rem);
+    --t-h3:clamp(.95rem,1.5vw,1.05rem);
+    --t-body:clamp(.92rem,1.05vw,1rem);
+    --t-small:.82rem;
+
+    /* pixel edges: no radius, no blur, stepped shadow borders */
+    --px:0;
+    --px-border:
+      0 -4px 0 0 var(--edge), 0 4px 0 0 var(--edge),
+     -4px 0 0 0 var(--edge),  4px 0 0 0 var(--edge);
+    --px-soft:
+      0 -3px 0 0 var(--stone-3), 0 3px 0 0 var(--stone-3),
+     -3px 0 0 0 var(--stone-3),  3px 0 0 0 var(--stone-3);
+    --s-1:.4rem; --s-2:.75rem; --s-3:1.2rem; --s-4:1.9rem; --s-5:2.8rem; --s-6:4rem;
+    --gutter:clamp(1rem,3vw,2.2rem);
+    --wrap:1140px;
+    --steps:steps(2,end);
+    --motion:140ms;
+  }
+  *,*::before,*::after{box-sizing:border-box;box-shadow:none}
+  body{
+    margin:0;background:var(--void);color:var(--ink);font-family:var(--font-mono);
+    font-size:var(--t-body);line-height:1.6;
+    background-image:
+      linear-gradient(rgba(70,83,112,.08) 2px,transparent 2px),
+      linear-gradient(90deg,rgba(70,83,112,.08) 2px,transparent 2px);
+    background-size:32px 32px;
+  }
+  h1,h2,h3{margin:0;line-height:1.15;font-weight:700}
+  h2{font-size:var(--t-h2)}
+  h3{font-size:var(--t-h3)}
+  p{margin:0 0 1em}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:var(--ink)}
+  button{font:inherit}
+  svg{display:block;max-width:100%;image-rendering:pixelated;shape-rendering:crispEdges}
+  :focus-visible{outline:4px solid var(--gold);outline-offset:0}
+  .wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+  .skip{position:absolute;left:-999px;background:var(--gold);color:var(--void);padding:.7rem 1rem}
+  .skip:focus{left:.5rem;top:.5rem;z-index:50}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  .panel{background:var(--stone);box-shadow:var(--px-soft);padding:var(--s-4)}
+  .panel--edge{box-shadow:var(--px-border)}
+  .pixel-text{letter-spacing:.06em;text-shadow:2px 2px 0 var(--void),4px 4px 0 rgba(0,0,0,.5)}
+  .rule{border:0;border-top:4px solid var(--edge);margin:0 0 var(--s-3)}
+
+  /* nav */
+  header{background:var(--stone);box-shadow:0 4px 0 0 var(--edge);position:relative;z-index:10}
+  .nav-in{display:flex;align-items:center;gap:var(--s-2);min-height:64px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-weight:700;letter-spacing:.1em;margin-right:auto;
+    font-size:1.05rem;text-transform:uppercase}
+  .brand svg{width:32px;height:32px}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap}
+  .nav-links a{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .9rem;text-decoration:none;
+    font-size:var(--t-small);text-transform:uppercase;letter-spacing:.08em;background:var(--stone-2);box-shadow:inset 0 0 0 2px var(--stone-3)}
+  .nav-links a:hover{background:var(--stone-3);color:var(--ember);box-shadow:inset 0 0 0 2px var(--ember)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;padding:.7rem 1.2rem;
+    background:var(--ember);color:var(--void);border:0;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+    cursor:pointer;text-decoration:none;box-shadow:inset 0 -4px 0 0 #b4551d,inset 0 4px 0 0 #ffa96a;
+    transition:filter var(--motion) steps(2,end)}
+  .btn:hover{filter:brightness(1.15)}
+  .btn:active{box-shadow:inset 0 4px 0 0 #b4551d,inset 0 -4px 0 0 #ffa96a}
+  .btn--gold{background:var(--gold);box-shadow:inset 0 -4px 0 0 #9c7a1e,inset 0 4px 0 0 #f7d981}
+  .btn--arcane{background:var(--arcane);color:#fff;box-shadow:inset 0 -4px 0 0 #4c4090,inset 0 4px 0 0 #a79ceb}
+  .btn--ghost{background:var(--stone-2);color:var(--ink);box-shadow:inset 0 0 0 2px var(--edge)}
+  .btn--sm{min-height:44px;padding:.4rem .8rem;font-size:var(--t-small)}
+  .nav-toggle{display:none;background:var(--stone-2);color:var(--ink);border:0;min-height:44px;padding:.5rem .9rem;
+    cursor:pointer;text-transform:uppercase;letter-spacing:.08em;box-shadow:inset 0 0 0 2px var(--edge)}
+
+  /* hero / title screen */
+  .hero{padding-block:var(--s-5);position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--s-4);align-items:center}
+  .tag{display:inline-block;background:var(--moss);color:var(--void);padding:.25rem .6rem;font-size:var(--t-small);
+    text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--s-2);box-shadow:inset 0 -3px 0 0 #3f6f4d}
+  h1{font-size:var(--t-logo);letter-spacing:.06em;text-transform:uppercase;line-height:.9;margin-bottom:var(--s-2)}
+  .hero h1 span{display:block}
+  .h-sub{color:var(--ember);font-size:clamp(.95rem,1.6vw,1.2rem);letter-spacing:.14em;text-transform:uppercase;margin-bottom:var(--s-3)}
+  .lede{color:var(--muted);max-width:46ch}
+  .hero-cta{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-block:var(--s-3)}
+  .hud{display:grid;gap:6px;margin-top:var(--s-3);max-width:340px}
+  .hud-row{display:grid;grid-template-columns:44px 1fr 46px;gap:.5rem;align-items:center;font-size:var(--t-small)}
+  .hud-bar{height:14px;background:var(--stone-2);box-shadow:inset 0 0 0 2px var(--stone-3)}
+  .hud-bar i{display:block;height:100%;width:62%;background:var(--blood);animation:flicker 2.4s var(--steps) infinite}
+  .hud-bar--mp i{background:var(--arcane);animation-delay:.6s}
+  .hud-bar--xp i{background:var(--gold);animation-delay:1.2s;width:38%}
+  @keyframes flicker{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
+  .scene{border:4px solid var(--edge);background:var(--stone-2);image-rendering:pixelated}
+
+  section{padding-block:var(--s-5)}
+  .sec-head{margin-bottom:var(--s-4)}
+  .sec-head p{color:var(--muted);margin:.4rem 0 0;max-width:62ch}
+  .kicker{color:var(--ember);text-transform:uppercase;letter-spacing:.16em;font-size:var(--t-small)}
+
+  /* run builder */
+  .builder{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:start}
+  .classes{display:grid;gap:var(--s-2)}
+  .class{display:grid;grid-template-columns:56px 1fr;gap:var(--s-2);align-items:center;padding:var(--s-2);
+    background:var(--stone-2);box-shadow:inset 0 0 0 2px var(--stone-3);cursor:pointer;min-height:64px}
+  .class:hover{box-shadow:inset 0 0 0 2px var(--ember)}
+  .class input{position:absolute;opacity:0;width:1px;height:1px}
+  .class:has(input:checked){box-shadow:inset 0 0 0 2px var(--gold);background:var(--stone-3)}
+  .class:has(input:focus-visible){outline:4px solid var(--gold);outline-offset:2px}
+  .class svg{width:56px;height:56px}
+  .class b{display:block;text-transform:uppercase;letter-spacing:.06em;font-size:var(--t-small)}
+  .class small{color:var(--muted);font-size:var(--t-small)}
+  .field{display:block;margin-bottom:var(--s-2)}
+  .field .lab{display:block;font-size:var(--t-small);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.35rem}
+  .field input,.field select{width:100%;min-height:48px;padding:.6rem .8rem;background:var(--stone-2);color:var(--ink);
+    border:0;box-shadow:inset 0 0 0 2px var(--edge);font:inherit;border-radius:0}
+  .field input:focus,.field select:focus{box-shadow:inset 0 0 0 2px var(--gold)}
+  .field .err{display:none;color:var(--blood);font-size:var(--t-small);margin-top:.3rem}
+  .field[data-invalid] .err{display:block}
+  .field[data-invalid] input{box-shadow:inset 0 0 0 2px var(--blood)}
+  .card-out{background:var(--stone-2);box-shadow:var(--px-border);padding:var(--s-3)}
+  .card-out dl{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1rem;margin:0;font-size:var(--t-small)}
+  .card-out dt{color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .card-out dd{margin:0}
+  .card-out .big-sprite{width:96px;height:96px;margin:0 auto var(--s-2)}
+
+  /* map */
+  .map{display:grid;grid-template-columns:repeat(16,1fr);gap:0;border:4px solid var(--edge);background:var(--void);
+    image-rendering:pixelated}
+  .tile{aspect-ratio:1;background:var(--stone-2)}
+  .tile--wall{background:var(--stone-3)}
+  .tile--void{background:var(--void)}
+  .tile--water{background:#264a5c}
+  .tile--you{background:var(--gold)}
+  .tile--foe{background:var(--blood)}
+  .tile--chest{background:var(--moss)}
+  .legend{display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-2);font-size:var(--t-small);color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:.4rem}
+  .legend i{width:16px;height:16px;display:inline-block;border:2px solid var(--stone-3)}
+
+  /* bestiary */
+  .bestiary{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:2px;background:var(--edge);
+    box-shadow:var(--px-soft)}
+  .beast{background:var(--stone);padding:var(--s-2);display:flex;gap:.7rem;align-items:center}
+  .beast svg{width:48px;height:48px;flex:none}
+  .beast b{display:block;font-size:var(--t-small);text-transform:uppercase;letter-spacing:.05em}
+  .beast small{color:var(--muted);font-size:.75rem}
+
+  /* devlog */
+  .devlog{background:var(--void);box-shadow:inset 0 0 0 2px var(--stone-3);padding:var(--s-3);
+    font-size:var(--t-small);line-height:1.9;overflow-x:auto;white-space:pre-wrap}
+  .devlog .c{color:var(--muted)}
+  .devlog .g{color:var(--moss)}
+  .devlog .y{color:var(--gold)}
+  .changelog{display:grid;gap:var(--s-2)}
+  .changelog li{display:grid;grid-template-columns:88px 1fr;gap:var(--s-2);padding-bottom:var(--s-2);border-bottom:2px solid var(--stone-3)}
+  .changelog b{color:var(--ember);font-size:var(--t-small)}
+  .changelog p{margin:0;color:var(--muted)}
+
+  footer{background:var(--stone);box-shadow:0 -4px 0 0 var(--edge);padding-block:var(--s-4) var(--s-3)}
+  .foot{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:var(--s-3);font-size:var(--t-small)}
+  footer h3{color:var(--ember);text-transform:uppercase;letter-spacing:.1em;font-size:var(--t-small);margin-bottom:.5rem}
+  footer li{margin-bottom:.3rem}
+  footer a{text-decoration:none;color:var(--muted)}
+  footer a:hover{color:var(--gold)}
+  .fine{margin-top:var(--s-3);padding-top:var(--s-2);border-top:2px solid var(--stone-3);display:flex;
+    justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;color:var(--muted);font-size:var(--t-small)}
+
+  @media (max-width:920px){
+    .hero-grid,.builder,.foot{grid-template-columns:1fr}
+    .nav-toggle{display:inline-block}
+    .nav-links{display:none;width:100%;order:3;padding-bottom:var(--s-2)}
+    .nav-links[data-open="true"]{display:flex}
+  }
+  @media (max-width:600px){
+    .map{grid-template-columns:repeat(8,1fr)}
+    .changelog li{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+    .hud-bar i{animation:none;filter:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#builder">Skip to the run builder</a>
+
+<header>
+  <nav class="wrap" aria-label="Primary">
+    <div class="nav-in">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1" width="4" height="3" fill="#e3b341"/><rect x="5" y="4" width="6" height="6" fill="#465370"/><rect x="2" y="5" width="3" height="2" fill="#465370"/><rect x="11" y="5" width="3" height="2" fill="#465370"/><rect x="6" y="6" width="1" height="1" fill="#ff8a3d"/><rect x="9" y="6" width="1" height="1" fill="#ff8a3d"/><rect x="5" y="10" width="6" height="5" fill="#2b3446"/><rect x="4" y="15" width="3" height="1" fill="#5f9e70"/><rect x="9" y="15" width="3" height="1" fill="#5f9e70"/></svg>
+        Grimforge
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="nav-links" id="menu">
+        <a href="#builder">New run</a>
+        <a href="#descent">The descent</a>
+        <a href="#bestiary">Bestiary</a>
+        <a href="#devlog">Devlog</a>
+      </div>
+      <a class="btn btn--gold btn--sm" href="#builder">Descend</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="tag">v1.4 &mdash; the Salt Gallery update</span>
+        <h1 class="pixel-text" id="hero-title"><span>Grim</span><span style="color:var(--ember)">forge</span></h1>
+        <p class="h-sub">A small, mean dungeon crawler</p>
+        <p class="lede">Thirty-two floors under a dead salt mine, drawn on a 16&times;16 grid and rendered without a single smooth pixel. Every room is hand-placed. Every death is your fault. There is no procedural anything, and that is the point.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#builder">Start a run</a>
+          <a class="btn btn--ghost" href="#bestiary">See what lives down there</a>
+        </div>
+        <div class="hud" role="group" aria-label="Party status">
+          <div class="hud-row">
+            <span>HP</span>
+            <span class="hud-bar"><i></i></span>
+            <span class="num">31/50</span>
+          </div>
+          <div class="hud-row">
+            <span>MP</span>
+            <span class="hud-bar hud-bar--mp"><i style="width:78%"></i></span>
+            <span class="num">19/24</span>
+          </div>
+          <div class="hud-row">
+            <span>XP</span>
+            <span class="hud-bar hud-bar--xp"><i></i></span>
+            <span class="num">840</span>
+          </div>
+        </div>
+      </div>
+
+      <svg class="scene" viewBox="0 0 64 64" role="img" aria-label="A pixel-art dungeon corridor: a lantern, a rat, and an open chest">
+        <rect width="64" height="64" fill="#161b26"/>
+        <rect x="0" y="8" width="64" height="4" fill="#2b3446"/><rect x="0" y="52" width="64" height="4" fill="#2b3446"/>
+        <rect x="0" y="0" width="8" height="64" fill="#2b3446"/><rect x="56" y="0" width="8" height="64" fill="#2b3446"/>
+        <rect x="4" y="4" width="4" height="8" fill="#0b0d13"/><rect x="24" y="4" width="4" height="8" fill="#0b0d13"/>
+        <rect x="44" y="4" width="4" height="8" fill="#0b0d13"/><rect x="4" y="52" width="4" height="8" fill="#0b0d13"/>
+        <rect x="24" y="52" width="4" height="8" fill="#0b0d13"/><rect x="44" y="52" width="4" height="8" fill="#0b0d13"/>
+        <rect x="12" y="40" width="4" height="12" fill="#465370"/><rect x="12" y="36" width="8" height="4" fill="#e3b341"/>
+        <rect x="14" y="38" width="4" height="2" fill="#ff8a3d"/>
+        <rect x="40" y="44" width="4" height="4" fill="#8e9ab3"/><rect x="44" y="46" width="4" height="4" fill="#8e9ab3"/>
+        <rect x="38" y="46" width="2" height="2" fill="#c8383f"/>
+        <rect x="20" y="46" width="12" height="8" fill="#8a5a2a"/><rect x="20" y="44" width="12" height="4" fill="#e3b341"/>
+        <rect x="24" y="44" width="4" height="4" fill="#ff8a3d"/>
+        <rect x="52" y="24" width="4" height="4" fill="#2b3446"/><rect x="56" y="28" width="4" height="4" fill="#2b3446"/>
+        <rect x="52" y="32" width="4" height="4" fill="#2b3446"/>
+      </svg>
+    </div>
+  </section>
+
+  <section id="builder" aria-labelledby="builder-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Module 01</p>
+        <h2 id="builder-title">Build a run before you commit 40 minutes to it</h2>
+        <p>Pick a class, pick one rune, give it a name. The card tells you what you are walking into, which is the only stat screen this game has.</p>
+      </div>
+      <div class="builder">
+        <form class="panel panel--edge" id="runForm" novalidate>
+          <fieldset style="border:0;padding:0;margin:0 0 var(--s-3)">
+            <legend class="field" style="display:block;padding:0;margin-bottom:.5rem">
+              <span class="lab" style="display:block;font-size:var(--t-small);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.35rem">Class</span>
+              <span class="sr-only">Choose a class</span>
+            </legend>
+            <div class="classes">
+              <label class="class">
+                <input type="radio" name="cls" value="Delver" checked>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1" width="4" height="3" fill="#e3b341"/><rect x="5" y="4" width="6" height="5" fill="#465370"/><rect x="6" y="5" width="1" height="1" fill="#ff8a3d"/><rect x="9" y="5" width="1" height="1" fill="#ff8a3d"/><rect x="2" y="5" width="3" height="2" fill="#ff8a3d"/><rect x="11" y="5" width="3" height="2" fill="#ff8a3d"/><rect x="5" y="9" width="6" height="4" fill="#2b3446"/><rect x="4" y="13" width="3" height="2" fill="#5f9e70"/><rect x="9" y="13" width="3" height="2" fill="#5f9e70"/></svg>
+                <span><b>Delver</b><small>50 HP, 12 MP. Scans rooms, sees one extra tile.</small></span>
+              </label>
+              <label class="class">
+                <input type="radio" name="cls" value="Warden">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="2" width="6" height="4" fill="#7a6bd0"/><rect x="4" y="6" width="8" height="5" fill="#2b3446"/><rect x="6" y="7" width="4" height="2" fill="#7a6bd0"/><rect x="5" y="11" width="6" height="3" fill="#465370"/><rect x="1" y="4" width="3" height="8" fill="#e3b341"/><rect x="12" y="4" width="3" height="8" fill="#e3b341"/></svg>
+                <span><b>Warden</b><small>70 HP, 8 MP. Blocks one hit per floor, then breaks.</small></span>
+              </label>
+              <label class="class">
+                <input type="radio" name="cls" value="Emberwright">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1" width="4" height="3" fill="#ff8a3d"/><rect x="5" y="4" width="6" height="5" fill="#5f9e70"/><rect x="6" y="5" width="1" height="1" fill="#0b0d13"/><rect x="9" y="5" width="1" height="1" fill="#0b0d13"/><rect x="5" y="9" width="6" height="3" fill="#2b3446"/><rect x="3" y="10" width="2" height="2" fill="#ff8a3d"/><rect x="11" y="10" width="2" height="2" fill="#ff8a3d"/><rect x="6" y="12" width="4" height="2" fill="#e3b341"/></svg>
+                <span><b>Emberwright</b><small>38 HP, 20 MP. Burns one tile per turn, loudly.</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="field" for="rune">
+            <span class="lab">Starting rune (one only)</span>
+            <select id="rune">
+              <option>Saltbite &mdash; +6 armour, slower turns</option>
+              <option>Deepbreath &mdash; +10 MP, -4 HP</option>
+              <option>Ninekeys &mdash; opens one extra lock per floor</option>
+              <option>Grudge &mdash; +20% damage, cannot be healed</option>
+            </select>
+          </label>
+
+          <label class="field" for="cname">
+            <span class="lab">Name your delver</span>
+            <input id="cname" name="cname" type="text" autocomplete="off" maxlength="14" placeholder="MARROW" required>
+            <span class="err">Two characters or more, please. The tombstone needs a name.</span>
+          </label>
+
+          <button class="btn btn--arcane" type="submit">Descend</button>
+        </form>
+
+        <div class="card-out" id="cardOut">
+          <svg class="big-sprite" id="cardSprite" viewBox="0 0 16 16" role="img" aria-label="Delver sprite preview">
+            <rect x="6" y="1" width="4" height="3" fill="#e3b341"/><rect x="5" y="4" width="6" height="5" fill="#465370"/>
+            <rect x="6" y="5" width="1" height="1" fill="#ff8a3d"/><rect x="9" y="5" width="1" height="1" fill="#ff8a3d"/>
+            <rect x="2" y="5" width="3" height="2" fill="#ff8a3d"/><rect x="11" y="5" width="3" height="2" fill="#ff8a3d"/>
+            <rect x="5" y="9" width="6" height="4" fill="#2b3446"/><rect x="4" y="13" width="3" height="2" fill="#5f9e70"/>
+            <rect x="9" y="13" width="3" height="2" fill="#5f9e70"/>
+          </svg>
+          <dl id="cardStats">
+            <dt>Name</dt><dd id="sName">un-named</dd>
+            <dt>Class</dt><dd id="sClass">Delver</dd>
+            <dt>Rune</dt><dd id="sRune">Saltbite</dd>
+            <dt>HP</dt><dd id="sHp">50</dd>
+            <dt>MP</dt><dd id="sMp">12</dd>
+            <dt>Depth</dt><dd>Floor 1 of 32</dd>
+          </dl>
+          <p id="cardStatus" role="status" aria-live="polite" style="margin:.9rem 0 0;font-size:var(--t-small);color:var(--muted)">
+            Fill the form and press Descend. Nothing is saved anywhere.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="descent" aria-labelledby="descent-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Module 02</p>
+        <h2 id="descent-title">Floor 7, the Salt Gallery</h2>
+        <p>Twenty by sixteen tiles, hand-drawn. The chest in the east room is a decoy two thirds of the time, which is a fair warning.</p>
+      </div>
+            <div class="map" role="img" aria-label="Map of floor seven: a walled gallery with pillars either side of the entrance, a water channel down the middle, the player start in the north-west, an enemy in the middle room, a second enemy by the channel, a chest in the north-east, and the stairs in the south wall.">
+        <span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile tile--you"></span><span class="tile tile--chest"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--chest"></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--foe"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--foe"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--water"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--water"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--water"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--water"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile "></span><span class="tile tile--water"></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile "></span><span class="tile tile--wall"></span>
+        <span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile "></span><span class="tile tile--void"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span><span class="tile tile--wall"></span>
+      </div>
+      <p class="legend" aria-hidden="true">
+        <span><i style="background:var(--stone-2)"></i>floor</span>
+        <span><i style="background:var(--stone-3)"></i>wall</span>
+        <span><i style="background:var(--void)"></i>stairs down</span>
+        <span><i style="background:#264a5c"></i>water</span>
+        <span><i style="background:var(--gold)"></i>you</span>
+        <span><i style="background:var(--blood)"></i>enemy</span>
+        <span><i style="background:var(--moss)"></i>chest</span>
+      </p>
+      <div class="devlog" style="margin-top:var(--s-3)" aria-label="Coordinates of the current run">
+<span class="c">// floor 07 - salt gallery - seed 0x51A7</span>
+<span class="y">start</span>  = tile(<span class="g">01,01</span>)
+<span class="y">stairs</span> = tile(<span class="g">18,14</span>)
+<span class="y">chest</span> = tile(<span class="g">14,01</span>)  <span class="c">// decoy odds 2:1</span>
+<span class="y">foe</span>   = <span class="c">salt_rat</span> @ (12,07), <span class="c">salt_rat</span> @ (06,11)
+<span class="c">turns taken 412   damage taken 231   times nearly died 9</span>      </div>
+    </div>
+  </section>
+
+  <section id="bestiary" aria-labelledby="bestiary-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Module 03</p>
+        <h2 id="bestiary-title">Fourteen things, all of them mean</h2>
+        <p>Six of the worst, with the drop that is actually worth the fight. The rest are in the game files, waiting.</p>
+      </div>
+      <ul class="bestiary">
+        <li class="beast">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="8" width="3" height="3" fill="#8e9ab3"/><rect x="5" y="6" width="6" height="5" fill="#8e9ab3"/><rect x="11" y="8" width="3" height="3" fill="#8e9ab3"/><rect x="6" y="7" width="1" height="1" fill="#c8383f"/><rect x="9" y="7" width="1" height="1" fill="#c8383f"/><rect x="4" y="11" width="8" height="2" fill="#5f5f6b"/></svg>
+          <span><b>Salt Rat</b><small>Floors 1&ndash;8 &middot; drops 12 sp</small></span>
+        </li>
+        <li class="beast">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="8" height="8" fill="#5f9e70"/><rect x="2" y="2" width="3" height="3" fill="#5f9e70"/><rect x="11" y="2" width="3" height="3" fill="#5f9e70"/><rect x="6" y="7" width="1" height="2" fill="#0b0d13"/><rect x="9" y="7" width="1" height="2" fill="#0b0d13"/><rect x="5" y="12" width="6" height="2" fill="#3f6f4d"/></svg>
+          <span><b>Glowmoss</b><small>Floors 3&ndash;14 &middot; drops 2 ember seeds</small></span>
+        </li>
+        <li class="beast">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="5" width="10" height="6" fill="#465370"/><rect x="5" y="3" width="6" height="3" fill="#2b3446"/><rect x="5" y="7" width="2" height="2" fill="#ff8a3d"/><rect x="9" y="7" width="2" height="2" fill="#ff8a3d"/><rect x="6" y="11" width="4" height="2" fill="#2b3446"/></svg>
+          <span><b>Slag Warden</b><small>Floors 9&ndash;19 &middot; drops one rune shard</small></span>
+        </li>
+        <li class="beast">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="2" width="4" height="4" fill="#c8383f"/><rect x="4" y="6" width="8" height="6" fill="#8b2733"/><rect x="6" y="7" width="1" height="2" fill="#e9edf6"/><rect x="9" y="7" width="1" height="2" fill="#e9edf6"/><rect x="3" y="8" width="1" height="4" fill="#8b2733"/><rect x="12" y="8" width="1" height="4" fill="#8b2733"/><rect x="6" y="12" width="4" height="2" fill="#8b2733"/></svg>
+          <span><b>Red Sister</b><small>Floor 19 &middot; drops the Ninekeys rune</small></span>
+        </li>
+        <li class="beast">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="6" width="12" height="6" fill="#7a6bd0"/><rect x="4" y="4" width="8" height="2" fill="#a79ceb"/><rect x="6" y="8" width="1" height="2" fill="#0b0d13"/><rect x="9" y="8" width="1" height="2" fill="#0b0d13"/><rect x="1" y="3" width="2" height="2" fill="#a79ceb"/><rect x="13" y="3" width="2" height="2" fill="#a79ceb"/></svg>
+          <span><b>Glass Reader</b><small>Floors 21&ndash;27 &middot; drops a map fragment</small></span>
+        </li>
+        <li class="beast">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="4" width="10" height="9" fill="#e3b341"/><rect x="5" y="7" width="2" height="2" fill="#0b0d13"/><rect x="9" y="7" width="2" height="2" fill="#0b0d13"/><rect x="6" y="10" width="4" height="1" fill="#0b0d13"/><rect x="2" y="2" width="2" height="2" fill="#ff8a3d"/><rect x="12" y="2" width="2" height="2" fill="#ff8a3d"/><rect x="3" y="13" width="10" height="2" fill="#9c7a1e"/></svg>
+          <span><b>The Deep Tally</b><small>Floor 32 &middot; you will not outrun it</small></span>
+        </li>
+      </ul>
+      <ul class="changelog" style="margin-top:var(--s-4)">
+        <li><b>v1.4</b><p>Salt Gallery added: four new floors, the Ninekeys rune, and a genuinely unfair corridor on floor 11.</p></li>
+        <li><b>v1.3</b><p>Warden class added. Block now has a one-tile reach, which changes the whole Delver route.</p></li>
+        <li><b>v1.2</b><p>Fixed a bug where the Deep Tally could spawn on floor 1. It was, in fairness, funny, and we left it in as a very rare event.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="devlog" aria-labelledby="devlog-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Module 04</p>
+        <h2 id="devlog-title">Two people, one compiler, no budget</h2>
+        <p>Grimforge is made in a custom engine that draws rectangles. That constraint is the whole art direction, and it is not going away.</p>
+      </div>
+      <div class="cols-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)">
+        <div class="devlog"><span class="c">$ ./build.sh --floor 32 --tiles 16</span>
+<span class="g">ok</span>  <span class="c">rooms placed ....... 128</span>
+<span class="g">ok</span>  <span class="c">collision baked ...... 128</span>
+<span class="g">ok</span>  <span class="c">sprite atlas ........ 14 sheets, 0 filtered</span>
+<span class="y">warn</span> <span class="c">1 sprite exceeds palette (salt_rat_2)</span>
+<span class="g">ok</span>  <span class="c">elapsed ............. 0.9s</span>
+<span class="c">$ _</span></div>
+        <div>
+          <h3>What is actually custom</h3>
+          <p style="color:var(--muted);font-size:var(--t-small)">No engine, no framework, no asset pipeline. The renderer draws one rectangle at a time at integer coordinates, which is why nothing has a soft edge anywhere. The map format is a 16-column text file, so the whole of floor 7 fits in a comment in this page.</p>
+          <p style="color:var(--muted);font-size:var(--t-small)">The soundtrack is one square wave, one triangle, and a noise channel, generated at boot. It is 41 kilobytes and loops for exactly six minutes and twelve seconds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h3>Grimforge</h3>
+        <p>A fictional indie dungeon crawler, built for a style demo. 32 floors, 14 enemies, one honest tutorial room.</p>
+      </div>
+      <div>
+        <h3>Play</h3>
+        <ul>
+          <li><a href="#builder">New run</a></li>
+          <li><a href="#descent">The descent</a></li>
+          <li><a href="#bestiary">Bestiary</a></li>
+          <li><a href="#devlog">Devlog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Elsewhere</h3>
+        <ul>
+          <li><a href="#top">Changelog</a></li>
+          <li><a href="#top">Soundtrack, 41KB</a></li>
+          <li><a href="#top">Press kit</a></li>
+          <li><a href="#top">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>&copy; 2026 Grimforge. A fictional game, built for a style demo.</span>
+      <span>No smooth pixels were harmed.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  var toggle = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.getAttribute('data-open') === 'true';
+    menu.setAttribute('data-open', String(!open));
+    toggle.setAttribute('aria-expanded', String(!open));
+    toggle.textContent = open ? 'Menu' : 'Close';
+  });
+
+  // Run builder
+  var classes = {
+    Delver: { hp: '50', mp: '12', helm: '#e3b341', body: '#465370', arm: '#ff8a3d', boot: '#5f9e70' },
+    Warden: { hp: '70', mp: '8', helm: '#7a6bd0', body: '#2b3446', arm: '#e3b341', boot: '#465370' },
+    Emberwright: { hp: '38', mp: '20', helm: '#ff8a3d', body: '#5f9e70', arm: '#ff8a3d', boot: '#e3b341' }
+  };
+
+  var form = document.getElementById('runForm');
+  var status = document.getElementById('cardStatus');
+  var sprite = document.getElementById('cardSprite');
+
+  function paintSprite(c) {
+    var parts = sprite.querySelectorAll('rect');
+    parts[0].setAttribute('fill', c.helm);   // helm
+    parts[1].setAttribute('fill', c.body);   // head
+    parts[2].setAttribute('fill', c.arm);    // eyes
+    parts[3].setAttribute('fill', c.arm);    // eyes
+    parts[4].setAttribute('fill', c.arm);    // left arm
+    parts[5].setAttribute('fill', c.arm);    // right arm
+    parts[6].setAttribute('fill', c.body);   // torso
+    parts[7].setAttribute('fill', c.boot);   // left boot
+    parts[8].setAttribute('fill', c.boot);   // right boot
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var input = document.getElementById('cname');
+    var field = input.closest('.field');
+    var name = input.value.trim();
+    if (name.length < 2) {
+      field.setAttribute('data-invalid', '');
+      input.setAttribute('aria-invalid', 'true');
+      status.textContent = 'Two characters or more, please.';
+      input.focus();
+      return;
+    }
+    field.removeAttribute('data-invalid');
+    input.setAttribute('aria-invalid', 'false');
+
+    var cls = form.querySelector('input[name="cls"]:checked').value;
+    var rune = document.getElementById('rune').value;
+    var runeName = rune.split(' \u2014 ')[0];
+    var runeMod = { 'Saltbite': ['56', '12'], 'Deepbreath': ['46', '22'], 'Ninekeys': ['50', '12'], 'Grudge': ['50', '12'] }[runeName];
+
+    document.getElementById('sName').textContent = name.toUpperCase();
+    document.getElementById('sClass').textContent = cls;
+    document.getElementById('sRune').textContent = runeName + ' (' + rune.split(' \u2014 ')[1] + ')';
+    document.getElementById('sHp').textContent = runeName === 'Grudge' ? runeMod[0] + ' (unhealable)' : runeMod[0];
+    document.getElementById('sMp').textContent = runeMod[1];
+    paintSprite(classes[cls]);
+    sprite.setAttribute('aria-label', cls + ' sprite preview');
+
+    status.textContent = 'DESCENDING. ' + name.toUpperCase() + ' the ' + cls + ' steps onto floor 1 with ' + runeName + '.';
+  });
+</script>
+</body>
+</html>

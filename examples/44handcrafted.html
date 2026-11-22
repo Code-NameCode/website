@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<!-- Style: Handcrafted | 44handcrafted.html — Hollow &amp; Grain, ceramics studio -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hollow &amp; Grain — a ceramics studio in Frome</title>
+<style>
+:root{
+  /* warm, textured studio palette */
+  --paper:#f4efe4;
+  --paper-deep:#eae1d1;
+  --card:#fbf7ee;
+  --ink:#2b2620;
+  --ink-soft:#5d5449;
+  --clay:#a9613c;
+  --clay-deep:#7d4526;
+  --sage:#6f7a58;
+  --ochre:#c99a3f;
+  --line:#d8cdb8;
+  --line-ink:#b9ac93;
+
+  --font-body:"Gill Sans","Gill Sans MT","Trebuchet MS",system-ui,sans-serif;
+  --font-display:Georgia,"Iowan Old Style",serif;
+  --font-hand:"Segoe Script","Bradley Hand","Brush Script MT","Comic Sans MS",cursive;
+  --t-hero:clamp(2.5rem,6.4vw,4.6rem);
+  --t-h2:clamp(1.8rem,3.8vw,2.8rem);
+  --t-body:clamp(1rem,.97rem + .16vw,1.09rem);
+  --t-small:.92rem;
+  --lh:1.72;
+  --s-2:.5rem;
+  --s-3:.8rem;
+  --s-4:1.1rem;
+  --s-5:1.6rem;
+  --s-6:2.3rem;
+  --s-7:3.2rem;
+  --s-8:4.5rem;
+  --s-9:6rem;
+  --wrap:1150px;
+  --radius:4px;
+  --radius-card:8px;
+  --shadow-note:3px 4px 0 rgba(43,38,32,.13);
+  --shadow-lift:0 18px 34px -26px rgba(43,38,32,.6);
+  --dur:520ms;
+  --ease:cubic-bezier(.34,.78,.32,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:var(--t-body);line-height:var(--lh);
+  background:var(--paper);-webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;line-height:1.14;margin:0}
+p{margin:0}
+a{color:inherit}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:clamp(1.1rem,4vw,2.4rem)}
+:focus-visible{outline:3px dashed var(--clay-deep);outline-offset:4px}
+
+/* paper grain — a single turbulence overlay, low opacity so text stays clean */
+.grain{
+  position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.4;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
+}
+.eyebrow{
+  font-family:var(--font-hand);font-size:1.05rem;color:var(--clay-deep);
+  letter-spacing:.02em;margin-bottom:.2rem;
+}
+.lead{max-width:60ch;color:var(--ink-soft)}
+.hand{font-family:var(--font-hand);color:var(--clay-deep)}
+
+/* ---------- header ---------- */
+.head{border-bottom:1px solid var(--line);background:var(--paper);position:relative;z-index:20}
+.head-in{display:flex;align-items:center;gap:var(--s-5);padding-block:var(--s-4);flex-wrap:wrap}
+.mark{display:flex;align-items:center;gap:.7rem;text-decoration:none;font-family:var(--font-display);font-size:1.45rem;line-height:1.1}
+.mark small{display:block;font-family:var(--font-body);font-size:.7rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-soft);margin-top:.25rem}
+.nav{margin-left:auto}
+.nav ul{display:flex;gap:clamp(.7rem,1.8vw,1.7rem);list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.nav a{text-decoration:none;font-size:.95rem;padding:.7rem .1rem;display:block;min-height:44px;line-height:2.2;border-bottom:2px solid transparent}
+.nav a:hover{border-bottom-color:var(--clay);color:var(--clay-deep)}
+.nav a.press{border:1.5px solid var(--ink);border-radius:var(--radius);padding:.5rem 1.1rem;line-height:1.6;background:var(--ink);color:var(--paper)}
+.nav a.press:hover{background:var(--clay-deep);border-color:var(--clay-deep);color:#fff;transform:translateY(-2px)}
+.nav-toggle{display:none;margin-left:auto;background:none;border:1.5px solid var(--ink);border-radius:var(--radius);padding:.55rem .9rem;min-height:44px;font:inherit;cursor:pointer}
+
+/* ---------- hero: studio bench ---------- */
+.hero{padding-block:clamp(2.2rem,5vw,4rem) var(--s-8);position:relative}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(1.6rem,4vw,3.5rem);align-items:center}
+.hero h1{font-size:var(--t-hero);letter-spacing:-.02em;margin-block:.2rem 1rem}
+.hero h1 .amp{color:var(--clay);font-style:italic}
+.hero .lead{font-size:1.07em}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-5)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;
+  padding:.85rem 1.6rem;border-radius:var(--radius);font:inherit;font-size:.95rem;text-decoration:none;cursor:pointer;
+  border:1.5px solid var(--ink);background:transparent;transition:transform var(--dur) var(--ease),background var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
+}
+.btn-solid{background:var(--ink);color:var(--paper);box-shadow:var(--shadow-note)}
+.btn-solid:hover{background:var(--clay-deep);border-color:var(--clay-deep);color:#fff;transform:translate(-2px,-2px);box-shadow:5px 6px 0 rgba(43,38,32,.2)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-note)}
+.sig{margin-top:var(--s-5);font-family:var(--font-hand);font-size:1.5rem;color:var(--clay-deep);display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.sig svg{flex:none}
+.bench{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card);padding:clamp(1rem,2.5vw,1.6rem);box-shadow:var(--shadow-lift);position:relative;transform:rotate(-1deg)}
+.bench::before{content:"";position:absolute;inset:8px;border:1px dashed var(--line-ink);border-radius:4px;pointer-events:none}
+.bench figcaption{margin-top:var(--s-3);font-size:var(--t-small);color:var(--ink-soft);text-align:center}
+
+/* ---------- clay bodies: uneven shelf of tags ---------- */
+.bodies{background:var(--paper-deep);border-block:1px solid var(--line);padding-block:var(--s-8);position:relative}
+.bodies::after{content:"";position:absolute;left:0;right:0;bottom:26px;height:2px;background:var(--line-ink);opacity:.6}
+.sec-head{max-width:60ch;margin-bottom:var(--s-7)}
+.sec-head h2{font-size:var(--t-h2);margin-block:.1rem .8rem}
+.shelf{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s-4);align-items:end}
+.tag-card{
+  background:var(--card);border:1px solid var(--line-ink);border-radius:var(--radius-card);
+  padding:var(--s-4) var(--s-3);text-align:center;box-shadow:var(--shadow-note);
+  transition:transform var(--dur) var(--ease);
+}
+.tag-card:hover{transform:translateY(-6px) rotate(-1.5deg)}
+.tag-card:nth-child(2){transform:translateY(-16px) rotate(1deg)}
+.tag-card:nth-child(2):hover{transform:translateY(-22px) rotate(1.5deg)}
+.tag-card:nth-child(3){transform:translateY(-4px) rotate(-1deg)}
+.tag-card:nth-child(3):hover{transform:translateY(-10px) rotate(-1.5deg)}
+.tag-card:nth-child(5){transform:translateY(-12px) rotate(1.2deg)}
+.tag-card:nth-child(5):hover{transform:translateY(-18px) rotate(1.5deg)}
+.tag-card svg{margin:0 auto .6rem}
+.tag-card h3{font-size:1.05rem}
+.tag-card dl{margin:.5rem 0 0;font-size:.82rem;line-height:1.55}
+.tag-card dt{color:var(--ink-soft);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.tag-card dd{margin:0 0 .35rem;font-weight:600}
+.shelf-note{text-align:center;margin-top:var(--s-6);font-size:var(--t-small);color:var(--ink-soft)}
+
+/* ---------- process: accordion ---------- */
+.process{padding-block:var(--s-9)}
+.process-layout{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(1.6rem,4vw,3.5rem);align-items:start}
+.process h2{font-size:var(--t-h2);margin-block:.1rem .8rem}
+.steps{border-top:1.5px solid var(--ink)}
+.step{border-bottom:1.5px solid var(--line-ink)}
+.step-btn,.step-btn::-webkit-details-marker{list-style:none}
+.step-btn::-webkit-details-marker{display:none}
+.step-btn{
+  width:100%;display:flex;align-items:center;gap:var(--s-4);background:none;border:0;
+  font:inherit;text-align:left;cursor:pointer;padding:1.1rem .3rem;min-height:56px;color:var(--ink);
+}
+.step-btn:hover{background:rgba(169,97,60,.07)}
+.step-btn .num{font-family:var(--font-hand);font-size:1.4rem;color:var(--clay);flex:none;width:2.2rem}
+.step-btn .ttl{font-family:var(--font-display);font-size:1.2rem;flex:1}
+.step-btn .mk{flex:none;transition:transform var(--dur) var(--ease)}
+.step[open] .step-btn .mk{transform:rotate(45deg)}
+.step-body{padding:0 .3rem 1.4rem 2.5rem;font-size:var(--t-small);color:var(--ink-soft);max-width:58ch}
+.step-body p+p{margin-top:.6rem}
+
+/* ---------- kiln log: ledger table ---------- */
+.kiln{background:var(--ink);color:#efe6d6;padding-block:var(--s-8)}
+.kiln .eyebrow{color:var(--ochre)}
+.kiln h2{font-size:var(--t-h2);color:#fbf6ea}
+.kiln .lead{color:#c9bfa9;margin-bottom:var(--s-5)}
+.kiln table{width:100%;border-collapse:collapse;background:#362f27;border-radius:var(--radius-card);overflow:hidden}
+th,td{padding:.85rem 1rem;text-align:left;font-size:.94rem;border-bottom:1px solid #4a4136}
+thead th{background:var(--clay-deep);color:#fdf3e6;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#403930}
+td{color:#ded3bd}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.fire{font-family:var(--font-hand);font-size:1.05rem;color:var(--ochre)}
+
+/* ---------- maker note ---------- */
+.note{display:grid;grid-template-columns:auto 1fr;gap:clamp(1.2rem,3vw,2.5rem);align-items:start;padding-block:var(--s-8)}
+.note-card{
+  background:var(--card);border:1px solid var(--line-ink);border-radius:var(--radius-card);
+  padding:clamp(1.4rem,3vw,2.2rem);box-shadow:var(--shadow-note);position:relative;transform:rotate(-.6deg);
+}
+.note-card::before,.note-card::after{
+  content:"";position:absolute;width:74px;height:22px;background:rgba(201,154,63,.35);
+  border:1px solid rgba(169,97,60,.3);
+}
+.note-card::before{top:-11px;left:8%;transform:rotate(-6deg)}
+.note-card::after{bottom:-11px;right:10%;transform:rotate(5deg)}
+.note-card p{font-size:1.04em}
+.note-card p+p{margin-top:.9rem}
+.note-sign{margin-top:var(--s-4);font-family:var(--font-hand);font-size:1.5rem;color:var(--clay-deep)}
+.note-aside{font-size:var(--t-small);color:var(--ink-soft);align-self:center}
+.note-aside dl{margin:.6rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:.4rem 1rem}
+.note-aside dt{color:var(--clay-deep);font-family:var(--font-hand);font-size:1rem}
+.note-aside dd{margin:0}
+
+/* ---------- shop strip ---------- */
+.shop{background:var(--paper-deep);border-block:1px solid var(--line);padding-block:var(--s-8)}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.2rem,3vw,2rem);margin-top:var(--s-5)}
+.pot{background:var(--card);border:1px solid var(--line-ink);border-radius:var(--radius-card);padding:var(--s-4);box-shadow:var(--shadow-note);display:flex;flex-direction:column;gap:.4rem;transition:transform var(--dur) var(--ease)}
+.pot:nth-child(2){transform:rotate(.7deg)}
+.pot:nth-child(3){transform:rotate(-.8deg)}
+.pot:hover{transform:rotate(0) translateY(-5px)}
+.pot .art{background:#efe7d7;border-radius:4px;padding:var(--s-3);display:grid;place-items:center;border:1px dashed var(--line-ink)}
+.pot h3{font-size:1.08rem;margin-top:.4rem}
+.pot p{font-size:var(--t-small);color:var(--ink-soft);flex:1}
+.pot-foot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.6rem}
+.price{font-family:var(--font-display);font-size:1.15rem}
+.buy{min-height:44px;padding:.5rem 1rem;border:1.5px solid var(--ink);border-radius:var(--radius);background:var(--card);font:inherit;font-size:.86rem;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.buy:hover{background:var(--ink);color:var(--paper)}
+.stock{font-size:.8rem;color:var(--sage)}
+.stock.out{color:#a03a2a}
+.shop-msg{margin-top:var(--s-4);font-size:var(--t-small);color:var(--ink-soft);min-height:1.5em}
+.shop-msg b{color:var(--clay-deep)}
+
+/* ---------- commission form ---------- */
+.commission{padding-block:var(--s-9)}
+.commission-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.6rem,4vw,3.5rem);align-items:start}
+.commission h2{font-size:var(--t-h2);margin-block:.1rem .8rem}
+.form-panel{background:var(--card);border:1px solid var(--line-ink);border-radius:var(--radius-card);padding:clamp(1.3rem,3vw,2rem);box-shadow:var(--shadow-note);position:relative}
+.field{display:grid;gap:.35rem;margin-bottom:var(--s-4)}
+.field label{font-size:var(--t-small);font-weight:700;letter-spacing:.03em}
+.field input,.field select,.field textarea{
+  font:inherit;color:var(--ink);background:#fff;border:1.5px solid var(--line-ink);border-radius:var(--radius);
+  padding:.85rem 1rem;min-height:48px;width:100%;font-family:var(--font-body);
+}
+.field textarea{min-height:120px;resize:vertical;font-size:var(--t-small)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--clay-deep);box-shadow:var(--shadow-note)}
+.field .hint{font-size:.83rem;color:var(--ink-soft)}
+.field [aria-invalid="true"]{border-color:#a03a2a;background:#fdf0ee}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.form-msg{margin-top:var(--s-3);min-height:1.5em;font-family:var(--font-hand);font-size:1.1rem;color:var(--clay-deep)}
+.form-msg[data-tone="error"]{color:#9a3324}
+.form-msg[data-tone="ok"]{color:var(--sage)}
+
+/* ---------- footer ---------- */
+.foot{background:var(--ink);color:#d6ccb8;padding-block:var(--s-7) var(--s-5)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:var(--s-5)}
+.foot h2{font-family:var(--font-body);font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:var(--s-3);font-weight:700}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.4rem;font-size:var(--t-small)}
+.foot a{text-decoration:none}
+.foot a:hover{color:#fbf6ea;text-decoration:underline}
+.foot-note{margin-top:var(--s-6);padding-top:var(--s-4);border-top:1px solid #4a4136;font-size:.85rem;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between}
+
+@media (max-width:1000px){
+  .shelf{grid-template-columns:repeat(3,1fr)}
+  .tag-card:nth-child(n){transform:none}
+  .tag-card:hover{transform:translateY(-6px)}
+  .process-layout,.commission-grid{grid-template-columns:1fr}
+  .shop-grid{grid-template-columns:1fr 1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:820px){
+  .nav-toggle{display:inline-flex;align-items:center}
+  .nav{order:3;width:100%;margin-left:0;display:none}
+  .nav[data-open="true"]{display:block;padding-bottom:var(--s-3)}
+  .nav ul{flex-direction:column;gap:.15rem}
+  .nav a{border-bottom:1px solid var(--line);padding:.85rem .2rem}
+  .nav a.press{border:1.5px solid var(--ink);margin-top:.5rem;text-align:center}
+  .hero-grid{grid-template-columns:1fr}
+  .bench{transform:none}
+}
+@media (max-width:600px){
+  .shelf,.shop-grid,.two,.foot-grid{grid-template-columns:1fr}
+  .note{grid-template-columns:1fr}
+  .shelf::after{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="head">
+  <div class="wrap head-in">
+    <a class="mark" href="#top">
+      <svg width="38" height="38" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+        <path d="M14 6h12l-2 10c6 4 10 10 10 16a14 14 0 0 1-28 0c0-6 4-12 10-16Z" fill="none" stroke="#2b2620" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M8 34c8 3 16 3 24 0" fill="none" stroke="#a9613c" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <span>Hollow &amp; Grain<small>Ceramics studio · Frome</small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="#bodies">Clay bodies</a></li>
+        <li><a href="#process">How a pot is made</a></li>
+        <li><a href="#kiln">Kiln log</a></li>
+        <li><a href="#shop">Shelf</a></li>
+        <li><a class="press" href="#commission">Commission a pot</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Small studio, two wheels, one kiln</p>
+        <h1>Everything here is <span class="amp">thrown</span> by two people who signed it.</h1>
+        <p class="lead">We make about four hundred pieces a year in stoneware and speckled clay, fired in a wood kiln six times between March and October. Nothing is slip-cast, nothing is assembled from a mould, and nothing leaves that we would not eat from.</p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="#commission">Commission a piece</a>
+          <a class="btn" href="#shop">See what's on the shelf</a>
+        </div>
+        <p class="sig">
+          <svg width="118" height="34" viewBox="0 0 118 34" aria-hidden="true" focusable="false">
+            <path d="M4 24c10-16 14 4 22-8s10 12 18 2 12 8 20-4 14 4 24-6" fill="none" stroke="#a9613c" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 30c24 2 56 0 92-3" fill="none" stroke="#a9613c" stroke-width="1.4" stroke-linecap="round" opacity=".6"/>
+          </svg>
+          Nell &amp; Bo
+        </p>
+      </div>
+      <figure class="bench">
+        <svg viewBox="0 0 380 300" role="img" aria-label="Illustration of three thrown vessels on a wooden studio shelf beside a window">
+          <rect width="380" height="300" fill="#efe7d7"/>
+          <rect x="24" y="24" width="150" height="150" fill="#dbe4e6" stroke="#b9ac93" stroke-width="2"/>
+          <path d="M99 24v150M24 99h150" stroke="#b9ac93" stroke-width="2"/>
+          <rect x="196" y="200" width="160" height="10" fill="#b08a5e"/>
+          <rect x="196" y="248" width="160" height="8" fill="#b08a5e"/>
+          <g stroke="#2b2620" stroke-width="2" fill="#a9613c">
+            <path d="M240 108h30c0 14 8 20 8 34s-8 58-23 58-23-44-23-58 8-20 8-34Z"/>
+            <ellipse cx="255" cy="108" rx="15" ry="5" fill="#7d4526"/>
+          </g>
+          <g stroke="#2b2620" stroke-width="2" fill="#e6dcc6">
+            <path d="M296 128h26c0 10 6 16 6 26s-6 46-19 46-19-36-19-46 6-16 6-26Z"/>
+            <ellipse cx="309" cy="128" rx="13" ry="4" fill="#cdbfa0"/>
+          </g>
+          <g stroke="#2b2620" stroke-width="2" fill="#6f7a58">
+            <path d="M212 140h22c0 10 5 14 5 22s-5 38-16 38-16-30-16-38 5-12 5-22Z"/>
+            <ellipse cx="223" cy="140" rx="11" ry="4" fill="#57633f"/>
+          </g>
+          <path d="M196 274h160l14 26H182Z" fill="#9a7a52"/>
+          <path d="M60 268c18-10 40-12 60-4" fill="none" stroke="#a9613c" stroke-width="1.6" stroke-dasharray="4 6" stroke-linecap="round"/>
+        </svg>
+        <figcaption>Shelf three, Tuesday. Everything is photographed in the studio, badly, by us.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="bodies" id="bodies" aria-labelledby="bodies-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Clay bodies</p>
+        <h2 id="bodies-h">Five clays. We do not develop a sixth.</h2>
+        <p class="lead">Each one is mixed by hand from a published recipe, wedged by foot, and tested with a fired tile every season. If a clay misbehaves twice, it leaves the shelf.</p>
+      </div>
+      <div class="shelf">
+        <article class="tag-card">
+          <svg width="54" height="54" viewBox="0 0 60 60" aria-hidden="true" focusable="false">
+            <path d="M18 12h24c0 12 8 16 8 26s-8 16-20 16-20-6-20-16 8-14 8-26Z" fill="#b08a5e" stroke="#2b2620" stroke-width="1.6"/>
+            <ellipse cx="30" cy="12" rx="12" ry="4" fill="#8f6f47" stroke="#2b2620" stroke-width="1.4"/>
+          </svg>
+          <h3>Warm speckled</h3>
+          <dl><dt>Fires to</dt><dd>1220°C</dd><dt>Use</dt><dd>Mugs, bowls</dd></dl>
+        </article>
+        <article class="tag-card">
+          <svg width="54" height="54" viewBox="0 0 60 60" aria-hidden="true" focusable="false">
+            <path d="M20 8h20c0 10 6 14 6 22 0 12-6 22-16 22s-16-10-16-22c0-8 6-12 6-22Z" fill="#8d9a86" stroke="#2b2620" stroke-width="1.6"/>
+            <path d="M14 36c8 4 24 4 32 0" fill="none" stroke="#2b2620" stroke-width="1.4"/>
+          </svg>
+          <h3>Ash celadon</h3>
+          <dl><dt>Fires to</dt><dd>1280°C</dd><dt>Use</dt><dd>Vases, bottles</dd></dl>
+        </article>
+        <article class="tag-card">
+          <svg width="54" height="54" viewBox="0 0 60 60" aria-hidden="true" focusable="false">
+            <path d="M16 20h28c0 8 6 12 6 18s-8 14-20 14-20-8-20-14 6-10 6-18Z" fill="#e6dcc6" stroke="#2b2620" stroke-width="1.6"/>
+            <path d="M16 30h28" stroke="#2b2620" stroke-width="1.4"/>
+          </svg>
+          <h3>Bone white</h3>
+          <dl><dt>Fires to</dt><dd>1200°C</dd><dt>Use</dt><dd>Plates, serving</dd></dl>
+        </article>
+        <article class="tag-card">
+          <svg width="54" height="54" viewBox="0 0 60 60" aria-hidden="true" focusable="false">
+            <path d="M22 6h16c0 8 6 12 6 20 0 14-4 28-14 28s-14-14-14-28c0-8 6-12 6-20Z" fill="#5b5f6b" stroke="#2b2620" stroke-width="1.6"/>
+            <ellipse cx="30" cy="6" rx="8" ry="3" fill="#43464f" stroke="#2b2620" stroke-width="1.3"/>
+          </svg>
+          <h3>Slate tenmoku</h3>
+          <dl><dt>Fires to</dt><dd>1290°C</dd><dt>Use</dt><dd>Tea bowls</dd></dl>
+        </article>
+        <article class="tag-card">
+          <svg width="54" height="54" viewBox="0 0 60 60" aria-hidden="true" focusable="false">
+            <path d="M14 26c0-8 8-14 16-14s16 6 16 14-8 24-16 24-16-16-16-24Z" fill="#c99a3f" stroke="#2b2620" stroke-width="1.6"/>
+            <path d="M14 26c6 4 26 4 32 0" fill="none" stroke="#2b2620" stroke-width="1.4"/>
+          </svg>
+          <h3>Ochre satin</h3>
+          <dl><dt>Fires to</dt><dd>1240°C</dd><dt>Use</dt><dd>Jugs, planters</dd></dl>
+        </article>
+      </div>
+      <p class="shelf-note">All five are lead-free and dishwasher safe, except the tenmoku, which we ask you to hand-wash to keep the break.</p>
+    </div>
+  </section>
+
+  <section class="process" id="process" aria-labelledby="process-h">
+    <div class="wrap process-layout">
+      <div>
+        <p class="eyebrow">The process</p>
+        <h2 id="process-h">How a pot gets made here.</h2>
+        <p class="lead">Five stages, eleven days, and one firing that decides whether the piece is any good. The kiln has the final word and we have stopped arguing with it.</p>
+        <p class="hand" style="margin-top:1.4rem;font-size:1.15rem">Open the kiln on firing night if you like. It gets loud.</p>
+      </div>
+      <div>
+        <details class="step" open>
+          <summary class="step-btn">
+            <span class="num">1</span><span class="ttl">Wedging</span>
+            <svg class="mk" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M9 2v14M2 9h14" stroke="#a9613c" stroke-width="2" stroke-linecap="round"/></svg>
+          </summary>
+          <div class="step-body">
+            <p>Clay is cut from the block, wedged on a plaster bat, then wedged again the next day. This is unglamorous and it is the single thing that stops a pot from exploding in the kiln.</p>
+            <p>Twenty minutes per kilo, and we do not use a pug machine for anything on the shelf.</p>
+          </div>
+        </details>
+        <details class="step">
+          <summary class="step-btn">
+            <span class="num">2</span><span class="ttl">Throwing</span>
+            <svg class="mk" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M9 2v14M2 9h14" stroke="#a9613c" stroke-width="2" stroke-linecap="round"/></svg>
+          </summary>
+          <div class="step-body">
+            <p>Thrown on two kick wheels, trimmed the following morning when the clay is leather-hard. Every piece gets a maker's stamp pressed into the foot before it ever sees heat.</p>
+            <p>Wall thickness is judged by hand, not by callipers. This is not a mistake.</p>
+          </div>
+        </details>
+        <details class="step">
+          <summary class="step-btn">
+            <span class="num">3</span><span class="ttl">Handles and marks</span>
+            <svg class="mk" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M9 2v14M2 9h14" stroke="#a9613c" stroke-width="2" stroke-linecap="round"/></svg>
+          </summary>
+          <div class="step-body">
+            <p>Pulled handles are attached with score-and-slip and left to shrink at their own rate. Lettering is done in slip under a trailing liner, which is why a third of our marks wobble.</p>
+            <p>We stopped chasing even lettering in 2021 and have not looked back.</p>
+          </div>
+        </details>
+        <details class="step">
+          <summary class="step-btn">
+            <span class="num">4</span><span class="ttl">Bisque and glaze</span>
+            <svg class="mk" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M9 2v14M2 9h14" stroke="#a9613c" stroke-width="2" stroke-linecap="round"/></svg>
+          </summary>
+          <div class="step-body">
+            <p>Bisque at 980°C over about fourteen hours, then a single glaze or slip, applied by hand in three coats. Waxed feet mean the kiln shelf marks never touch a table.</p>
+          </div>
+        </details>
+        <details class="step">
+          <summary class="step-btn">
+            <span class="num">5</span><span class="ttl">The wood firing</span>
+            <svg class="mk" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M9 2v14M2 9h14" stroke="#a9613c" stroke-width="2" stroke-linecap="round"/></svg>
+          </summary>
+          <div class="step-body">
+            <p>Thirty-six hours of stoke-and-watch, two people alternating, ash carried up by the flame. Roughly one piece in five is lost to the fire and we do not count those as failures so much as tuition.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="kiln" id="kiln" aria-labelledby="kiln-h">
+    <div class="wrap">
+      <p class="eyebrow">Kiln log</p>
+      <h2 id="kiln-h">Every firing since 2024, written down.</h2>
+      <p class="lead">A studio that doesn't publish its failures is not being rigorous, it's being quiet. Ours is below, losses and all.</p>
+      <div class="th-scroll">
+        <table>
+          <caption style="text-align:left;color:#c9bfa9;padding-bottom:.8rem;font-size:.9rem">Firing log. "Kept" counts pieces surviving both firings.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Firing</th>
+              <th scope="col">Cone</th>
+              <th scope="col">Loaded</th>
+              <th scope="col">Kept</th>
+              <th scope="col">Hours</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>14 Mar 2025</td><td class="fire">Wood, reduction</td><td>9</td><td class="num">96</td><td class="num">81</td><td class="num">38</td></tr>
+            <tr><td>2 May 2025</td><td class="fire">Wood, reduction</td><td>10</td><td class="num">88</td><td class="num">74</td><td class="num">36</td></tr>
+            <tr><td>21 Jun 2025</td><td class="fire">Gas, oxidation</td><td>6</td><td class="num">140</td><td class="num">132</td><td class="num">11</td></tr>
+            <tr><td>9 Sep 2025</td><td class="fire">Wood, heavy reduction</td><td>11</td><td class="num">74</td><td class="num">58</td><td class="num">41</td></tr>
+            <tr><td>6 Mar 2026</td><td class="fire">Wood, reduction</td><td>9</td><td class="num">102</td><td class="num">86</td><td class="num">37</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="note">
+    <div class="note-card">
+      <p>People ask why we don't just buy blanks. It is cheaper and it is faster and it produces a better mug, in the way a photograph of a mug produces a better mug.</p>
+      <p>A thrown pot records the person who made it — the slight lean, the pulled handle, the place where the wall thins. You cannot fake that by accident, and you cannot fake it on purpose either.</p>
+      <p class="note-sign">Nell</p>
+    </div>
+    <aside class="note-aside">
+      <p>The studio, in brief:</p>
+      <dl>
+        <dt>Bo</dt><dd>Master potter, 24 years</dd>
+        <dt>Nell</dt><dd>Thrower, bookkeeper, kiln night shift</dd>
+        <dt>Made</dt><dd>Roughly 400 pieces a year</dd>
+        <dt>Open</dt><dd>Thu–Sat, 10–5, or by appointment</dd>
+        <dt>Where</dt><dd>Unit 4, Chandler's Yard, Frome</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <section class="shop" id="shop" aria-labelledby="shop-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">On the shelf</p>
+        <h2 id="shop-h">Ready now, no pre-order theatre.</h2>
+        <p class="lead">Whatever is left after a firing goes on the shelf on the Sunday. If it says one, there is one.</p>
+      </div>
+      <div class="shop-grid">
+        <article class="pot">
+          <div class="art"><svg viewBox="0 0 120 110" width="120" role="img" aria-label="Illustration of a speckled breakfast mug">
+            <ellipse cx="94" cy="56" rx="18" ry="20" fill="none" stroke="#2b2620" stroke-width="2.4"/>
+            <path d="M34 24h52c0 12 8 18 8 30s-10 32-34 32-34-20-34-32 8-18 8-30Z" fill="#b08a5e" stroke="#2b2620" stroke-width="2.4"/>
+            <ellipse cx="60" cy="24" rx="26" ry="7" fill="#8f6f47" stroke="#2b2620" stroke-width="2"/>
+            <g fill="#5b4636" opacity=".7"><circle cx="50" cy="60" r="2"/><circle cx="66" cy="70" r="1.6"/><circle cx="58" cy="50" r="1.8"/><circle cx="74" cy="58" r="1.4"/></g>
+          </svg></div>
+          <h3>Everyday mug, speckled</h3>
+          <p>340ml, thumb rest, dishwasher safe. Stacks, which most mugs refuse to do.</p>
+          <div class="pot-foot"><span class="price">£26</span><span class="stock">4 on the shelf</span><button class="buy" type="button">Add</button></div>
+        </article>
+        <article class="pot">
+          <div class="art"><svg viewBox="0 0 120 110" width="120" role="img" aria-label="Illustration of a wide breakfast bowl">
+            <path d="M14 34h92c0 30-20 52-46 52S14 64 14 34Z" fill="#e6dcc6" stroke="#2b2620" stroke-width="2.4"/>
+            <ellipse cx="60" cy="34" rx="46" ry="12" fill="#cdbfa0" stroke="#2b2620" stroke-width="2"/>
+            <path d="M26 40c22 8 46 8 68 0" fill="none" stroke="#a9613c" stroke-width="2" stroke-dasharray="3 5"/>
+          </svg></div>
+          <h3>Wide breakfast bowl</h3>
+          <p>Bone white, 240mm. Sits low so a spoon reaches the far side.</p>
+          <div class="pot-foot"><span class="price">£34</span><span class="stock">7 on the shelf</span><button class="buy" type="button">Add</button></div>
+        </article>
+        <article class="pot">
+          <div class="art"><svg viewBox="0 0 120 110" width="120" role="img" aria-label="Illustration of a tall tenmoku tea bowl">
+            <path d="M32 22h56c0 12 6 18 6 28 0 24-14 44-34 44S26 74 26 50c0-10 6-16 6-28Z" fill="#4a4e58" stroke="#2b2620" stroke-width="2.4"/>
+            <ellipse cx="60" cy="22" rx="28" ry="7" fill="#2f323a" stroke="#2b2620" stroke-width="2"/>
+            <path d="M36 60c14 8 34 8 48 0" fill="none" stroke="#c99a3f" stroke-width="2.4" opacity=".8"/>
+          </svg></div>
+          <h3>Tenmoku tea bowl</h3>
+          <p>120ml, wood-fired, unpredictable rim. Hand-wash to keep the break.</p>
+          <div class="pot-foot"><span class="price">£58</span><span class="stock out">Sold out · next firing Sep</span><button class="buy" type="button" disabled>Add</button></div>
+        </article>
+      </div>
+      <p class="shop-msg" id="shop-msg" role="status" aria-live="polite"><b>Shelf updates Sundays.</b> We post what survived the kiln, not what we hoped would.</p>
+    </div>
+  </section>
+
+  <section class="commission" id="commission" aria-labelledby="commission-h">
+    <div class="wrap commission-grid">
+      <div>
+        <p class="eyebrow">Commissions</p>
+        <h2 id="commission-h">Tell us what it is for, and how many people eat from it.</h2>
+        <p class="lead">We take roughly twelve commission pieces a year and we quote before we begin. Typical lead time is ten to sixteen weeks, longer if it wants a wood firing.</p>
+        <p class="hand" style="margin-top:1.4rem;font-size:1.15rem">Bring the drawing. Photographs of the shelf it lives on are even better.</p>
+      </div>
+      <form class="form-panel" id="commission-form" novalidate>
+        <div class="two">
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-hint" required>
+            <span class="hint" id="email-hint">We answer in a week, in sentences.</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="piece">What are you commissioning?</label>
+          <select id="piece" name="piece">
+            <option value="">Pick a shape</option>
+            <option>Dining set for six</option>
+            <option>Wedding set</option>
+            <option>Wall pieces</option>
+            <option>One large vessel</option>
+            <option>Something else entirely</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="notes">Tell us about it</label>
+          <textarea id="notes" name="notes" aria-describedby="notes-hint"></textarea>
+          <span class="hint" id="notes-hint">Number of pieces, size, deadline, budget if you have one.</span>
+        </div>
+        <button class="btn btn-solid" type="submit">Send the commission</button>
+        <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h2>Hollow &amp; Grain</h2>
+        <p style="font-size:.95rem;max-width:38ch">Thrown stoneware, fired in wood. Unit 4, Chandler's Yard, Frome, Somerset.</p>
+      </div>
+      <div><h2>Studio</h2><ul><li><a href="#bodies">Clay bodies</a></li><li><a href="#process">The process</a></li><li><a href="#kiln">Kiln log</a></li><li><a href="#shop">Shelf</a></li></ul></div>
+      <div><h2>Visit</h2><ul><li>Thursday–Saturday, 10–5</li><li>Firing nights, by invitation</li><li><a href="#commission">Studio visits</a></li></ul></div>
+      <div><h2>Care</h2><ul><li>Dishwasher guidance</li><li>Repairs and re-firing</li><li><a href="#commission">Commission terms</a></li></ul></div>
+    </div>
+    <div class="foot-note">
+      <span>© 2026 Hollow &amp; Grain Ltd.</span>
+      <span>Stamped H&amp;G in every foot. If it's not stamped, we didn't make it.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var toggle=document.querySelector('.nav-toggle');
+  var nav=document.getElementById('site-nav');
+  toggle.addEventListener('click',function(){
+    var open=nav.getAttribute('data-open')==='true';
+    nav.setAttribute('data-open',String(!open));
+    toggle.setAttribute('aria-expanded',String(!open));
+  });
+
+  /* shelf: only one accordion step open at a time */
+  var steps=Array.prototype.slice.call(document.querySelectorAll('.step'));
+  steps.forEach(function(step){
+    step.addEventListener('toggle',function(){
+      if(!step.open) return;
+      steps.forEach(function(other){ if(other!==step) other.open=false; });
+    });
+  });
+
+  /* shelf add-to-list feedback, textContent only */
+  var msg=document.getElementById('shop-msg');
+  document.querySelectorAll('.buy:not([disabled])').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var name=btn.closest('.pot').querySelector('h3').textContent;
+      msg.textContent=name+' held for you until Sunday. We do not take payment until the piece is off the shelf.';
+    });
+  });
+
+  var form=document.getElementById('commission-form');
+  var live=document.getElementById('form-msg');
+  var name=document.getElementById('name');
+  var email=document.getElementById('email');
+  var piece=document.getElementById('piece');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var missing=[];
+    if(!name.value.trim()) missing.push('your name');
+    if(!email.value.trim()) missing.push('an email address');
+    else if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) missing.push('an email that works');
+    if(!piece.value) missing.push('the shape you have in mind');
+    if(missing.length){
+      [name,email,piece].forEach(function(f){f.removeAttribute('aria-invalid')});
+      if(!name.value.trim()) name.setAttribute('aria-invalid','true');
+      if(missing.indexOf('an email address')>-1||missing.indexOf('an email that works')>-1) email.setAttribute('aria-invalid','true');
+      if(missing.some(function(m){return m.indexOf('shape')>-1})) piece.setAttribute('aria-invalid','true');
+      live.dataset.tone='error';
+      live.textContent='Nearly — we still need '+missing.join(', ')+'.';
+      (!name.value.trim()?name:email).focus();
+      return;
+    }
+    [name,email,piece].forEach(function(f){f.removeAttribute('aria-invalid')});
+    live.dataset.tone='ok';
+    live.textContent='Thank you, '+name.value.trim().split(' ')[0]+'. We read commissions on Sundays and will write back with questions and a rough price.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

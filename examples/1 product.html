@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<!-- Style: Cinematic × Industrial | 1a-product.html -->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian One — a desk DAC and headphone amplifier</title>
+<meta name="description" content="Meridian One: a 768 kHz USB-C DAC and headphone amplifier in a 4 mm aluminium unibody, with a bias switch for any headphone. Milled in Sheffield.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridian">
+<meta property="og:title" content="Meridian One — a desk DAC and headphone amplifier">
+<meta property="og:description" content="768 kHz PCM, DSD512, 0.0018 % THD+N and a bias switch that matches any headphone. Milled in Sheffield, ships March.">
+<meta property="og:url" content="https://meridian.audio/one">
+<meta property="og:image" content="https://meridian.audio/og/one.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meridian One — a desk DAC and headphone amplifier">
+<meta name="twitter:description" content="768 kHz PCM, DSD512 and a machined dial. Milled in Sheffield.">
+<link rel="canonical" href="https://meridian.audio/one">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ===================================================================
+   MERIDIAN ONE — design tokens
+   Cinematic dark, instrument-grade. One accent (amber) reserved for
+   signal: the lit dial, live values, the price. Nothing else is coloured.
+   =================================================================== */
+:root{
+  /* surfaces — near-black, four steps, no glass, no glow */
+  --ink:#08080a;
+  --ink-2:#0f0f12;
+  --ink-3:#16161b;
+  --ink-4:#1d1d23;
+  --line:#26262e;
+  --line-2:#1b1b21;
+  --line-3:#33333c;
+  /* type colour */
+  --text:#f2f0ec;
+  --muted:#9a99a2;
+  --muted-2:#82818a;
+  /* one accent + semantics */
+  --amber:#e9a13b;
+  --amber-hi:#ffc46b;
+  --amber-dim:rgba(233,161,59,.14);
+  --ok:#63c294;
+  --bad:#e0654f;
+  --paper:#f2efe9;          /* the single inverted band, for the reviews */
+  --paper-ink:#14141a;
+  /* type */
+  --sans:"Archivo","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --t-hero:clamp(3.2rem,12.5vw,10.5rem);
+  --t-h1:clamp(2.1rem,5.4vw,4.4rem);
+  --t-h2:clamp(1.5rem,2.6vw,2.3rem);
+  --t-h3:clamp(1.05rem,1.35vw,1.3rem);
+  --t-body:clamp(.95rem,1.02vw,1.03rem);
+  --t-small:.85rem;
+  --t-mono:.72rem;
+  /* space */
+  --s1:6px; --s2:12px; --s3:20px; --s4:34px; --s5:56px; --s6:92px; --s7:140px;
+  /* edges — instrument, not toy: hairlines and tiny radii */
+  --r:2px;
+  --r-lg:4px;
+  --hair:1px solid var(--line);
+  --hair-strong:1px solid var(--line-3);
+  /* motion */
+  --d1:140ms;
+  --d2:320ms;
+  --d3:760ms;
+  --ease:cubic-bezier(.2,.75,.2,1);
+  /* layout */
+  --wrap:1480px;
+  --gut:clamp(18px,4vw,54px);
+  /* finish of the product — the configurator rewrites these */
+  --body-hi:#3a3a42;
+  --body-lo:#17171c;
+  --body-edge:#55555f;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--ink);color:var(--text);
+  font-family:var(--sans);font-size:var(--t-body);line-height:1.55;
+  font-weight:400;letter-spacing:-.005em;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.035em;line-height:.98}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+svg{display:block;max-width:100%}
+table{border-collapse:collapse}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:var(--r)}
+::selection{background:var(--amber);color:var(--ink)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+/* a table ignores width:1px, so the clipping box has to be a block around it,
+   otherwise the screen-reader table widens the page on a narrow screen */
+.sr-only-box{display:block;position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);border:0}
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--amber);color:var(--ink);padding:12px 18px;font-weight:700}
+.skip:focus{left:0}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:var(--gut)}
+.mono{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2)}
+.mono--amber{color:var(--amber)}
+.rule{height:1px;background:var(--line);border:0;margin:0}
+
+/* ---------------- header ---------------- */
+.head{
+  position:sticky;top:0;z-index:60;
+  background:rgba(8,8,10,.86);backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;transition:border-color var(--d2) var(--ease),background var(--d2) var(--ease);
+}
+.head.is-stuck{border-bottom-color:var(--line);background:rgba(8,8,10,.95)}
+.head-in{display:flex;align-items:center;gap:var(--s3);min-height:64px}
+.mark{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em;font-size:.95rem}
+.mark svg{width:19px;height:19px;color:var(--amber)}
+.mark small{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;color:var(--muted-2);font-weight:500;padding-top:3px}
+.head nav{margin-left:auto;display:flex;gap:clamp(12px,2vw,30px)}
+.head nav a{font-size:.82rem;color:var(--muted);padding:8px 0;position:relative;transition:color var(--d1)}
+.head nav a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:1px;background:var(--amber);transform:scaleX(0);transform-origin:0 50%;transition:transform var(--d2) var(--ease)}
+.head nav a:hover{color:var(--text)}
+.head nav a:hover::after,.head nav a[aria-current]:hover::after{transform:scaleX(1)}
+.head nav a[aria-current]{color:var(--text)}
+.head-cta{display:flex;align-items:center;gap:var(--s2)}
+.head-price{letter-spacing:.1em}
+.sw--graphite{background:linear-gradient(150deg,#3a3a42,#17171c)}
+.sw--silver{background:linear-gradient(150deg,#d8dbe0,#7d8087)}
+.sw--copper{background:linear-gradient(150deg,#e0a273,#7a4a26)}
+.rail-note{padding:0 var(--s3) var(--s3)}
+.link-amber{color:var(--amber)}
+.foot-brand{margin-bottom:var(--s2)}
+.foot-end{margin-left:auto}
+.foot-blurb{letter-spacing:none;text-transform:none;max-width:34ch;line-height:1.7}
+.burger{display:none;width:44px;height:44px;background:none;border:var(--hair);border-radius:var(--r);cursor:pointer;place-items:center}
+.burger svg{width:20px;height:20px}
+
+/* ---------------- buttons ---------------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:48px;padding:0 22px;border:1px solid var(--amber);border-radius:var(--r);
+  background:var(--amber);color:#120c02;font-weight:700;font-size:.9rem;letter-spacing:-.01em;
+  cursor:pointer;transition:background var(--d1),border-color var(--d1),color var(--d1),transform var(--d1);
+}
+.btn:hover{background:var(--amber-hi);border-color:var(--amber-hi)}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:16px;height:16px}
+.btn--ghost{background:transparent;color:var(--text);border-color:var(--line-3)}
+.btn--ghost:hover{background:var(--ink-3);border-color:var(--text);color:var(--text)}
+.btn--sm{min-height:40px;padding:0 15px;font-size:.8rem}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn[disabled]:hover{background:var(--amber);border-color:var(--amber)}
+
+/* ---------------- hero ---------------- */
+.hero{position:relative;padding-top:clamp(38px,6vw,74px);overflow:clip}
+.hero::before{ /* a single soft key light behind the product, not a decorative blob */
+  content:"";position:absolute;left:50%;top:6%;width:min(1000px,120vw);aspect-ratio:1.6;
+  transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(closest-side,rgba(233,161,59,.10),rgba(233,161,59,0) 72%);
+}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4);position:relative}
+/* wide screens put the product next to the type instead of below it, so the
+   thing being sold is on the first screen rather than one scroll away */
+@media (min-width:1180px){
+  .hero-grid{
+    grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);
+    grid-template-areas:"eyebrow stage" "title stage" "lede stage" "actions stage";
+    align-items:end;column-gap:var(--s5);row-gap:var(--s2);
+  }
+  .hero-grid>.sec-num{grid-area:eyebrow;margin-bottom:0}
+  .hero .hero-grid>h1{grid-area:title;font-size:clamp(2.5rem,5.3vw,5.4rem);line-height:.88}
+  .hero-grid>.hero-lede{grid-area:lede;margin-top:var(--s2)}
+  .hero-grid>.hero-actions{grid-area:actions;margin-top:var(--s3)}
+  .hero-grid>.hero-stage{grid-area:stage;margin-top:0;padding-bottom:var(--s2)}
+}
+.hero h1{
+  font-size:var(--t-hero);line-height:.82;letter-spacing:-.055em;font-weight:800;
+  text-transform:uppercase;margin:0;
+}
+.hero h1 .ln{display:block}
+.hero h1 .ln>span{display:block;opacity:0;transform:translateY(.32em);animation:rise var(--d3) var(--ease) forwards}
+.hero h1 .ln:nth-child(2)>span{animation-delay:90ms}
+.hero h1 .ln:nth-child(3)>span{animation-delay:180ms;color:var(--muted-2)}
+@keyframes rise{to{opacity:1;transform:none}}
+.hero-lede{max-width:44ch;color:var(--muted);font-size:clamp(1rem,1.25vw,1.15rem);margin-top:var(--s3)}
+.hero-lede b{color:var(--text);font-weight:600}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s4);align-items:center}
+.hero-price{font-family:var(--mono);color:var(--muted);font-size:var(--t-small)}
+.hero-price b{color:var(--text);font-size:1.05rem}
+.hero-stage{position:relative;margin-top:var(--s4)}
+.hero-note{
+  display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s4);
+  padding-top:var(--s3);border-top:var(--hair);font-family:var(--mono);font-size:var(--t-mono);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)
+}
+.hero-note b{color:var(--muted);font-weight:500}
+
+/* the product itself */
+.device{
+  --body-hi:#3a3a42;--body-lo:#17171c;--body-edge:#55555f;
+  position:relative;width:min(100%,1000px);margin-inline:auto;
+}
+.device[data-finish="silver"]{--body-hi:#b9bcc2;--body-lo:#6d7076;--body-edge:#e2e5e9}
+.device[data-finish="copper"]{--body-hi:#c98a5a;--body-lo:#7a4a26;--body-edge:#e8b183}
+.device>svg{width:100%;height:auto;filter:drop-shadow(0 34px 46px rgba(0,0,0,.62))}
+.device-cap{display:flex;justify-content:space-between;gap:var(--s3);margin-top:var(--s3);font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)}
+@media (max-width:560px){.device-cap{flex-direction:column;gap:6px}}
+
+/* ---------------- spec ticker ---------------- */
+.ticker{border-block:var(--hair);background:var(--ink-2);overflow:hidden;margin-top:var(--s5)}
+.ticker-track{display:flex;width:max-content;animation:slide 46s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes slide{to{transform:translateX(-50%)}}
+.ticker ul{display:flex;align-items:center}
+.ticker li{
+  display:flex;align-items:center;gap:var(--s2);padding:15px clamp(18px,2.4vw,34px);
+  font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap
+}
+.ticker li::after{content:"";width:3px;height:3px;background:var(--amber);border-radius:50%;margin-left:clamp(18px,2.4vw,34px)}
+.ticker b{color:var(--text);font-weight:600}
+
+/* ---------------- section furniture ---------------- */
+section{position:relative}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s3);padding-block:var(--s6) var(--s4)}
+.sec-head h2{font-size:var(--t-h1);max-width:20ch}
+.sec-head p{color:var(--muted);max-width:56ch;font-size:clamp(.98rem,1.1vw,1.08rem)}
+.sec-num{display:block;margin-bottom:var(--s3)}
+
+/* ---------------- anatomy ---------------- */
+.anatomy{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:var(--s5);align-items:start}
+.anatomy-view{position:sticky;top:96px}
+.anatomy-view .device{width:100%}
+.parts .part{transition:opacity var(--d2) var(--ease)}
+.parts.has-active .part{opacity:.26}
+.parts.has-active .part.is-lit{opacity:1}
+.part-outline{fill:none;stroke:var(--amber);stroke-width:1.5;opacity:0;transition:opacity var(--d2)}
+.parts .is-lit .part-outline{opacity:1}
+.callout{opacity:0;transition:opacity var(--d2) var(--ease);pointer-events:none}
+.parts.has-active .callout{opacity:1}
+.steps{border-top:var(--hair)}
+.step{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s3);
+  width:100%;text-align:left;background:none;border:0;border-bottom:var(--hair);
+  padding:var(--s3) 0;cursor:pointer;color:inherit;
+}
+.step-n{font-family:var(--mono);font-size:var(--t-mono);color:var(--muted-2);padding-top:5px;letter-spacing:.1em}
+.step h3{font-size:var(--t-h3);letter-spacing:-.02em;line-height:1.15}
+.step p{color:var(--muted);font-size:.92rem;margin-top:6px;max-width:44ch}
+.step-spec{font-family:var(--mono);font-size:var(--t-mono);color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-top:10px;display:block}
+.step:hover .step-n,.step[aria-selected="true"] .step-n{color:var(--amber)}
+.step[aria-selected="true"] h3{color:var(--amber-hi)}
+.step[aria-selected="true"]{position:relative}
+.step[aria-selected="true"]::after{content:"";position:absolute;left:-14px;top:var(--s3);bottom:var(--s3);width:2px;background:var(--amber)}
+
+/* ---------------- measured response ---------------- */
+.measure{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:var(--s5);align-items:start}
+.plot{position:relative;background:var(--ink-2);border:var(--hair);border-radius:var(--r-lg);padding:var(--s3)}
+.plot svg{width:100%;height:auto;overflow:visible}
+.plot .grid-line{stroke:var(--line-2);stroke-width:1}
+.plot .axis{fill:var(--muted-2);font-family:var(--mono);font-size:8.5px;letter-spacing:.08em}
+.plot .curve{fill:none;stroke:var(--amber);stroke-width:2;stroke-linejoin:round}
+.plot .curve--ref{stroke:var(--line-3);stroke-width:1.5;stroke-dasharray:3 3}
+.plot .guide{stroke:var(--text);stroke-width:1;opacity:0}
+.plot.has-hover .guide{opacity:.5}
+.plot .dot{fill:var(--amber);opacity:0}
+.plot.has-hover .dot{opacity:1}
+.plot-hit{fill:transparent}
+.readout{
+  position:absolute;top:10px;right:10px;background:var(--ink-3);border:var(--hair);
+  padding:6px 10px;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.08em;
+  color:var(--text);border-radius:var(--r);opacity:0;transition:opacity var(--d1);white-space:nowrap
+}
+.plot.has-hover .readout{opacity:1}
+.legend{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s3);font-size:.8rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:16px;height:2px;background:var(--amber);display:block}
+.legend i.dash{background:repeating-linear-gradient(90deg,var(--line-3) 0 4px,transparent 4px 7px)}
+.facts{border-top:var(--hair)}
+.facts div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);padding:13px 0;border-bottom:var(--hair);align-items:baseline}
+.facts dt{color:var(--muted);font-size:.9rem}
+.facts dd{margin:0;font-family:var(--mono);font-size:.84rem;letter-spacing:.04em;text-align:right}
+
+/* ---------------- configure ---------------- */
+.config{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:var(--s5);align-items:start}
+.opts{display:grid;gap:var(--s4)}
+.opt-group{border:0;padding:0;margin:0}
+.opt-group legend{
+  display:flex;align-items:baseline;gap:var(--s2);width:100%;padding-bottom:12px;
+  font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)
+}
+.opt-group legend b{color:var(--text);font-weight:500;letter-spacing:.02em;text-transform:none;font-size:.86rem}
+.opts-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--s2)}
+.opt{
+  position:relative;display:grid;gap:4px;min-height:74px;padding:12px 13px;
+  background:var(--ink-2);border:var(--hair);border-radius:var(--r);cursor:pointer;
+  transition:border-color var(--d1),background var(--d1)
+}
+.opt:hover{border-color:var(--line-3)}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt-name{font-size:.9rem;font-weight:600}
+.opt-meta{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.08em;color:var(--muted-2)}
+.opt-add{font-family:var(--mono);font-size:var(--t-mono);color:var(--amber);letter-spacing:.08em}
+.opt:has(input:checked){border-color:var(--amber);background:var(--amber-dim)}
+.opt:has(input:focus-visible){outline:2px solid var(--amber);outline-offset:3px}
+.swatch{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.16);margin-bottom:4px}
+.opt:has(input:checked) .swatch{box-shadow:0 0 0 2px var(--amber),0 0 0 4px var(--ink)}
+
+.rail{position:sticky;top:96px;background:var(--ink-2);border:var(--hair);border-radius:var(--r-lg);overflow:hidden}
+.rail-body{padding:var(--s3)}
+.rail-price{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s2);padding-bottom:var(--s3);border-bottom:var(--hair)}
+.rail-price b{font-size:clamp(1.7rem,2.6vw,2.2rem);font-weight:700;letter-spacing:-.04em}
+.rail-price .mono{color:var(--muted-2)}
+.rail-lines{margin:0;display:grid}
+.rail-lines div{display:flex;justify-content:space-between;gap:var(--s2);padding:11px 0;border-bottom:var(--hair);font-size:.88rem}
+.rail-lines dt{color:var(--muted)}
+.rail-lines dd{margin:0;font-family:var(--mono);font-size:.82rem;letter-spacing:.04em}
+.rail-actions{display:grid;gap:var(--s2);margin-top:var(--s3)}
+.rail-fine{font-size:.76rem;color:var(--muted-2);line-height:1.5;margin-top:var(--s2)}
+.rail-stock{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ok)}
+.rail-stock::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok)}
+
+/* ---------------- compare ---------------- */
+.cmp-scroll{overflow-x:auto;border:var(--hair);border-radius:var(--r-lg);background:var(--ink-2)}
+.cmp{width:100%;min-width:660px}
+.cmp caption{text-align:left;padding:var(--s3);color:var(--muted);font-size:.9rem;border-bottom:var(--hair)}
+.cmp th,.cmp td{padding:14px var(--s3);text-align:left;border-bottom:var(--hair);font-size:.88rem;vertical-align:top}
+.cmp thead th{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);font-weight:500}
+.cmp thead th[scope="col"]:first-child{color:var(--muted-2)}
+.cmp tbody th{font-weight:500;color:var(--text);width:30%}
+.cmp td{font-family:var(--mono);font-size:.84rem;letter-spacing:.03em;color:var(--muted)}
+.cmp .is{color:var(--text)}
+.cmp .is::before{content:"";display:inline-block;width:7px;height:7px;background:var(--amber);margin-right:9px;vertical-align:1px}
+.cmp tbody tr:hover td,.cmp tbody tr:hover th{background:var(--ink-3)}
+
+/* ---------------- reviews (the one inverted band) ---------------- */
+.reviews{background:var(--paper);color:var(--paper-ink);margin-top:var(--s6)}
+.reviews .mono{color:#8b8578}
+.reviews .sec-head p{color:#5d574d}
+.rev-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:var(--s5);padding-bottom:var(--s6)}
+.rev-lead{border:0;padding:0;margin:0}
+.rev-lead blockquote{margin:0;font-size:clamp(1.25rem,2.1vw,1.75rem);line-height:1.28;letter-spacing:-.03em;font-weight:600;max-width:30ch}
+.rev-lead figcaption{margin-top:var(--s3);font-size:.85rem;color:#5d574d}
+.rev-lead figcaption b{color:var(--paper-ink);font-weight:600}
+.rev-list{display:grid;gap:0;border-top:1px solid #d8d2c6}
+.rev-list li{padding:var(--s3) 0;border-bottom:1px solid #d8d2c6}
+.rev-list q{display:block;font-size:1rem;line-height:1.45;quotes:none}
+.rev-list cite{display:block;margin-top:8px;font-style:normal;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.1em;text-transform:uppercase;color:#8b8578}
+.stars{display:flex;gap:3px;margin-bottom:10px}
+.stars svg{width:13px;height:13px;color:#14141a}
+.rating-split{display:grid;gap:8px;padding-top:var(--s3)}
+.rating-split li{display:grid;grid-template-columns:74px minmax(0,1fr) 34px;gap:10px;align-items:center;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.1em;text-transform:uppercase;color:#5d574d}
+.rating-split .bar{height:6px;background:#ddd7ca}
+.rating-split .bar i{display:block;height:100%;background:#14141a;width:var(--w)}
+.rating-split .n{text-align:right}
+
+/* ---------------- faq ---------------- */
+.faq{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:var(--s5);align-items:start;padding-bottom:var(--s6)}
+.faq-side{position:sticky;top:96px}
+.faq-side p{color:var(--muted);margin-top:var(--s2);max-width:34ch}
+.q{border-top:var(--hair)}
+.q-item{border-bottom:var(--hair)}
+.q-btn{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);align-items:center;width:100%;
+  min-height:64px;padding:var(--s2) 0;background:none;border:0;text-align:left;cursor:pointer;
+  font-size:clamp(1rem,1.35vw,1.14rem);font-weight:600;letter-spacing:-.02em;color:var(--text)
+}
+.q-btn:hover{color:var(--amber-hi)}
+.q-ico{position:relative;width:13px;height:13px;flex:none}
+.q-ico::before,.q-ico::after{content:"";position:absolute;background:var(--amber);transition:transform var(--d2) var(--ease)}
+.q-ico::before{left:0;top:6px;width:13px;height:1px}
+.q-ico::after{top:0;left:6px;width:1px;height:13px}
+.q-btn[aria-expanded="true"] .q-ico::after{transform:scaleY(0)}
+.q-panel{height:0;overflow:hidden;transition:height var(--d2) var(--ease)}
+.q-panel>div{overflow:hidden}
+.q-panel p{padding:0 0 var(--s3);color:var(--muted);max-width:62ch;font-size:.95rem}
+
+/* ---------------- pre-order ---------------- */
+.reserve{border-top:var(--hair);background:var(--ink-2)}
+.reserve-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s5);padding-block:var(--s6)}
+.reserve-copy h2{font-size:var(--t-h1);max-width:14ch}
+.reserve-copy p{color:var(--muted);margin-top:var(--s3);max-width:44ch}
+.reserve-list{margin-top:var(--s4);display:grid;gap:10px}
+.reserve-list li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;font-size:.92rem;color:var(--muted)}
+.reserve-list svg{width:15px;height:15px;color:var(--amber);margin-top:4px}
+.form{display:grid;gap:var(--s3);align-content:start}
+.field{display:grid;gap:7px}
+.field label{font-size:.82rem;font-weight:600;letter-spacing:-.01em}
+.field .hint{font-size:.76rem;color:var(--muted-2)}
+.field input,.field select{
+  min-height:48px;padding:0 14px;background:var(--ink);color:var(--text);
+  border:var(--hair);border-radius:var(--r);font-size:.95rem;width:100%
+}
+.field input::placeholder{color:var(--muted-2)}
+.field input:hover,.field select:hover{border-color:var(--line-3)}
+.field input[aria-invalid="true"],.field select[aria-invalid="true"]{border-color:var(--bad);box-shadow:0 0 0 3px rgba(224,101,79,.16)}
+.field .err{font-size:.78rem;color:var(--bad);font-weight:600;min-height:0}
+.field .err:empty{display:none}
+.check{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;font-size:.85rem;color:var(--muted);cursor:pointer}
+.check input{width:19px;height:19px;margin-top:2px;accent-color:var(--amber)}
+.check[aria-invalid="true"]{color:var(--bad)}
+.form-note{font-size:.8rem;color:var(--muted-2);min-height:1.4em}
+.form-note[data-state="ok"]{color:var(--ok)}
+.form-note[data-state="bad"]{color:var(--bad)}
+
+/* ---------------- footer ---------------- */
+.foot{border-top:var(--hair);padding-block:var(--s5) var(--s4);margin-top:var(--s6)}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:var(--s4)}
+.foot h3{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);font-weight:500;margin-bottom:var(--s2)}
+.foot ul{display:grid;gap:9px}
+.foot a{font-size:.88rem;color:var(--muted);transition:color var(--d1)}
+.foot a:hover{color:var(--text)}
+.foot-note{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s5);padding-top:var(--s3);border-top:var(--hair)}
+
+/* ---------------- cart drawer ---------------- */
+.drawer{position:fixed;inset:0;z-index:90;visibility:hidden;pointer-events:none}
+.drawer[data-open="true"]{visibility:visible;pointer-events:auto}
+.drawer-scrim{position:absolute;inset:0;background:rgba(4,4,6,.66);opacity:0;transition:opacity var(--d2) var(--ease)}
+.drawer[data-open="true"] .drawer-scrim{opacity:1}
+.drawer-panel{
+  position:absolute;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--ink-2);
+  border-left:var(--hair);display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform var(--d2) var(--ease)
+}
+.drawer[data-open="true"] .drawer-panel{transform:none}
+.drawer-head{display:flex;align-items:center;gap:var(--s2);padding:var(--s3);border-bottom:var(--hair)}
+.drawer-head h2{font-size:var(--t-h3);letter-spacing:-.02em}
+.drawer-head .mono{margin-left:auto}
+.cart{flex:1;overflow-y:auto;padding:var(--s3)}
+.cart-empty{padding:var(--s5) 0;text-align:center;color:var(--muted)}
+.cart-empty b{display:block;color:var(--text);font-size:1.05rem;margin-bottom:6px}
+.cart-line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s2);padding:var(--s3) 0;border-bottom:var(--hair)}
+.cart-line h3{font-size:.95rem;letter-spacing:-.01em}
+.cart-line .cfg{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.06em;color:var(--muted-2);margin-top:6px;line-height:1.6}
+.cart-line .price{font-family:var(--mono);font-size:.86rem;letter-spacing:.04em;text-align:right;white-space:nowrap}
+.qty{display:inline-flex;align-items:center;border:var(--hair);border-radius:var(--r);margin-top:10px}
+.qty button{width:34px;height:32px;background:none;border:0;cursor:pointer;color:var(--muted);font-size:1rem;line-height:1}
+.qty button:hover{color:var(--amber)}
+.qty span{min-width:32px;text-align:center;font-family:var(--mono);font-size:.8rem}
+.linkbtn{background:none;border:0;padding:0;margin-top:8px;font-size:.78rem;color:var(--muted-2);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.linkbtn:hover{color:var(--bad)}
+.drawer-foot{padding:var(--s3);border-top:var(--hair);display:grid;gap:var(--s2);background:var(--ink-3)}
+.totals{display:grid;gap:8px;margin-bottom:var(--s2)}
+.totals div{display:flex;justify-content:space-between;font-size:.86rem;color:var(--muted)}
+.totals .grand{color:var(--text);font-weight:700;font-size:1rem;padding-top:8px;border-top:var(--hair)}
+
+/* ---------------- reveal ---------------- */
+[data-reveal]{opacity:0;transform:translateY(18px);transition:opacity var(--d3) var(--ease),transform var(--d3) var(--ease)}
+[data-reveal].is-in{opacity:1;transform:none}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:1180px){
+  .anatomy{grid-template-columns:1fr;gap:var(--s4)}
+  .anatomy-view{position:static}
+  .measure{grid-template-columns:1fr;gap:var(--s4)}
+  .config{grid-template-columns:1fr}
+  .rail{position:static}
+  .faq{grid-template-columns:1fr;gap:var(--s4)}
+  .faq-side{position:static}
+}
+@media (max-width:980px){
+  .head nav{
+    position:fixed;inset:64px 0 auto 0;margin:0;flex-direction:column;gap:0;
+    background:var(--ink-2);border-bottom:var(--hair);
+    padding:0 var(--gut);max-height:0;overflow:hidden;transition:max-height var(--d2) var(--ease)
+  }
+  .head[data-nav="open"] nav{max-height:70vh}
+  .head nav a{padding:15px 0;border-bottom:var(--hair);font-size:1rem;color:var(--text)}
+  .head nav a::after{display:none}
+  .burger{display:grid}
+  .rev-grid{grid-template-columns:1fr;gap:var(--s4)}
+  .reserve-grid{grid-template-columns:1fr;gap:var(--s4)}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:var(--s3) var(--s4)}
+}
+@media (max-width:620px){
+  .sec-head{padding-block:var(--s5) var(--s3)}
+  .opts-row{grid-template-columns:1fr 1fr}
+  .rating-split li{grid-template-columns:64px minmax(0,1fr) 30px}
+  .foot-grid{grid-template-columns:1fr}
+  .hero-price{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .hero h1 .ln>span{transform:none}
+  [data-reveal]{opacity:1;transform:none}
+  .ticker-track{animation:none}
+  .callout{transition:none}
+}
+</style>
+</head>
+<body>
+<noscript><style>[data-reveal]{opacity:1;transform:none}.hero h1 .ln>span{opacity:1;transform:none}</style></noscript>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="head" id="head">
+  <div class="wrap head-in">
+    <a class="mark" href="#top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M4.2 7.5h15.6M4.2 16.5h15.6"/></svg>
+      Meridian <small>One</small>
+    </a>
+    <button class="burger" type="button" id="burger" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+    </button>
+    <nav id="site-nav" aria-label="Sections">
+      <a href="#anatomy">Inside</a>
+      <a href="#measure">Measurements</a>
+      <a href="#configure">Configure</a>
+      <a href="#compare">Compare</a>
+      <a href="#questions">Questions</a>
+    </nav>
+    <div class="head-cta">
+      <p class="mono head-price">£449</p>
+      <button class="btn btn--ghost btn--sm" type="button" id="cart-open">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16l-1.5 13H5.5z"/><path d="M9 6a3 3 0 0 1 6 0"/></svg>
+        <span id="cart-count">0</span>
+        <span class="sr-only">items in basket</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============ hero ============ -->
+  <section class="hero wrap" id="top">
+    <div class="hero-grid">
+      <p class="mono mono--amber sec-num">Meridian One · desk DAC and headphone amplifier</p>
+      <h1>
+        <span class="ln"><span>Silence</span></span>
+        <span class="ln"><span>is a</span></span>
+        <span class="ln"><span>component.</span></span>
+      </h1>
+      <p class="hero-lede">A 768 kHz DAC and a headphone amplifier in one 4 mm aluminium unibody. <b>No menus, no gain staging guesswork</b> — a machined dial, a bias switch that matches any impedance, and a meter that tells you the truth.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#configure">
+          Configure yours
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn--ghost" href="#anatomy">See inside</a>
+        <p class="hero-price">From <b>£449</b> · ships March</p>
+      </div>
+
+      <div class="hero-stage" data-reveal>
+      <div class="device" id="hero-device" data-finish="graphite">
+        <svg viewBox="0 0 640 380" role="img" aria-labelledby="dev-title dev-desc">
+          <title id="dev-title">Meridian One, front view</title>
+          <desc id="dev-desc">A low, wide aluminium amplifier with a walnut side cheek, a large machined volume dial on the right, a small level display on the left and three square buttons beneath it.</desc>
+          <defs>
+            <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--body-hi)"/>
+              <stop offset=".55" stop-color="var(--body-lo)"/>
+              <stop offset="1" stop-color="var(--body-hi)"/>
+            </linearGradient>
+            <linearGradient id="gWalnut" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#4a2f1c"/><stop offset=".4" stop-color="#7a4c2b"/><stop offset="1" stop-color="#3c2617"/>
+            </linearGradient>
+            <linearGradient id="gDial" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--body-edge)"/><stop offset="1" stop-color="var(--body-lo)"/>
+            </linearGradient>
+            <radialGradient id="gScreen" cx=".5" cy=".2" r="1">
+              <stop offset="0" stop-color="#1a1a20"/><stop offset="1" stop-color="#08080a"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="320" cy="322" rx="250" ry="17" fill="#000" opacity=".55"/>
+          <!-- walnut cheeks -->
+          <rect x="44" y="96" width="34" height="196" rx="4" fill="url(#gWalnut)"/>
+          <rect x="562" y="96" width="34" height="196" rx="4" fill="url(#gWalnut)"/>
+          <!-- body -->
+          <rect x="66" y="88" width="508" height="212" rx="10" fill="url(#gBody)" stroke="var(--body-edge)" stroke-opacity=".5"/>
+          <rect x="66" y="88" width="508" height="3" rx="1.5" fill="#fff" opacity=".07"/>
+          <!-- brand + model, etched -->
+          <text x="98" y="128" font-family="ui-monospace,Consolas,monospace" font-size="11" letter-spacing="3.4" fill="#e8e6e2" opacity=".82">MERIDIAN</text>
+          <text x="98" y="144" font-family="ui-monospace,Consolas,monospace" font-size="8" letter-spacing="2.6" fill="#e8e6e2" opacity=".4">ONE · 768 kHz</text>
+          <!-- display -->
+          <rect x="96" y="162" width="150" height="66" rx="4" fill="url(#gScreen)" stroke="#2c2c34"/>
+          <text x="110" y="196" font-family="ui-monospace,Consolas,monospace" font-size="26" fill="#ffc46b" letter-spacing="1">-48.0</text>
+          <text x="196" y="196" font-family="ui-monospace,Consolas,monospace" font-size="11" fill="#7d7a72">dB</text>
+          <g fill="#3a4a42">
+            <rect x="110" y="210" width="4" height="8"/><rect x="118" y="210" width="4" height="8"/><rect x="126" y="210" width="4" height="8"/>
+            <rect x="134" y="206" width="4" height="12"/><rect x="142" y="202" width="4" height="16"/>
+          </g>
+          <text x="156" y="215" font-family="ui-monospace,Consolas,monospace" font-size="8" letter-spacing="1.4" fill="#5c5952">PCM 768</text>
+          <!-- bias buttons -->
+          <g fill="#1b1b21" stroke="var(--body-edge)" stroke-opacity=".55">
+            <rect x="98" y="246" width="30" height="14" rx="3"/><rect x="136" y="246" width="30" height="14" rx="3"/><rect x="174" y="246" width="30" height="14" rx="3"/>
+          </g>
+          <text x="104" y="256" font-family="ui-monospace,Consolas,monospace" font-size="8" fill="#c9c6c0">0</text>
+          <text x="142" y="256" font-family="ui-monospace,Consolas,monospace" font-size="8" fill="#ffc46b">2</text>
+          <text x="180" y="256" font-family="ui-monospace,Consolas,monospace" font-size="8" fill="#c9c6c0">4</text>
+          <text x="98" y="278" font-family="ui-monospace,Consolas,monospace" font-size="7.5" letter-spacing="1.6" fill="#7d7a72">BIAS VOLT</text>
+          <!-- headphone jack + usb-c -->
+          <circle cx="268" cy="196" r="11" fill="#0a0a0c" stroke="var(--body-edge)" stroke-opacity=".6"/>
+          <circle cx="268" cy="196" r="4.5" fill="#000"/>
+          <text x="256" y="222" font-family="ui-monospace,Consolas,monospace" font-size="7.5" letter-spacing="1.4" fill="#7d7a72">6.35</text>
+          <rect x="300" y="190" width="30" height="12" rx="6" fill="#0a0a0c" stroke="var(--body-edge)" stroke-opacity=".5"/>
+          <text x="298" y="222" font-family="ui-monospace,Consolas,monospace" font-size="7.5" letter-spacing="1.4" fill="#7d7a72">USB-C</text>
+          <!-- vents -->
+          <g stroke="#000" stroke-opacity=".28" stroke-width="2" stroke-linecap="round">
+            <path d="M352 130h84"/><path d="M352 138h84"/><path d="M352 146h84"/>
+          </g>
+          <!-- dial -->
+          <circle cx="480" cy="194" r="66" fill="none" stroke="var(--body-edge)" stroke-opacity=".35"/>
+          <circle cx="480" cy="194" r="58" fill="url(#gDial)" stroke="var(--body-edge)" stroke-opacity=".7"/>
+          <circle cx="480" cy="194" r="58" fill="none" stroke="#0a0a0c" stroke-opacity=".55" stroke-width="7" stroke-dasharray="2.4 4.2"/>
+          <circle cx="480" cy="194" r="44" fill="var(--body-lo)"/>
+          <circle cx="480" cy="194" r="44" fill="none" stroke="#fff" stroke-opacity=".05"/>
+          <path d="M480 194 L480 152" stroke="#ffc46b" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="480" cy="194" r="3.5" fill="#ffc46b"/>
+          <!-- feet -->
+          <g fill="#0d0d10">
+            <rect x="120" y="300" width="72" height="10" rx="3"/><rect x="448" y="300" width="72" height="10" rx="3"/>
+          </g>
+        </svg>
+      </div>
+        <p class="device-cap"><span>Graphite · shown</span><span>340 × 210 × 62 mm · 1.9 kg</span></p>
+      </div>
+    </div>
+
+    <div class="hero-note">
+      <span><b>THD+N</b> 0.0018 %</span>
+      <span><b>Output</b> 4.0 W into 32 Ω</span>
+      <span><b>Noise floor</b> 118 dB</span>
+      <span><b>Bias</b> 0 / 2 / 4 V</span>
+      <span><b>Milled in</b> Sheffield</span>
+    </div>
+  </section>
+
+  <!-- ============ spec ticker ============ -->
+  <section class="ticker" aria-label="Key specifications">
+    <div class="ticker-track">
+      <ul>
+        <li><b>768 kHz</b> PCM</li><li><b>DSD512</b> native</li><li><b>0.0018 %</b> THD+N</li>
+        <li><b>118 dB</b> dynamic range</li><li><b>4.0 W</b> into 32 Ω</li><li><b>0 / 2 / 4 V</b> bias</li>
+        <li><b>4 mm</b> aluminium</li><li><b>USB-C</b> bus powered</li>
+      </ul>
+      <ul aria-hidden="true">
+        <li><b>768 kHz</b> PCM</li><li><b>DSD512</b> native</li><li><b>0.0018 %</b> THD+N</li>
+        <li><b>118 dB</b> dynamic range</li><li><b>4.0 W</b> into 32 Ω</li><li><b>0 / 2 / 4 V</b> bias</li>
+        <li><b>4 mm</b> aluminium</li><li><b>USB-C</b> bus powered</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ anatomy ============ -->
+  <section class="wrap" id="anatomy" aria-labelledby="anat-h">
+    <div class="sec-head" data-reveal>
+      <span class="mono mono--amber sec-num">01 — Inside</span>
+      <h2 id="anat-h">Six parts, and nothing you don't need.</h2>
+      <p>Most DACs hide a menu behind a button. Meridian One puts the two decisions that matter — level and output voltage — on the front panel, where you can see them.</p>
+    </div>
+
+    <div class="anatomy">
+      <div class="anatomy-view" data-reveal>
+        <div class="device" id="anat-device" data-finish="graphite">
+          <svg viewBox="0 0 640 380" role="img" aria-labelledby="anat-title">
+            <title id="anat-title">Cutaway of the Meridian One front panel; each part is described in the list beside it</title>
+            <defs>
+              <linearGradient id="aBody" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="var(--body-hi)"/><stop offset=".55" stop-color="var(--body-lo)"/><stop offset="1" stop-color="var(--body-hi)"/>
+              </linearGradient>
+              <linearGradient id="aDial" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="var(--body-edge)"/><stop offset="1" stop-color="var(--body-lo)"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="320" cy="322" rx="250" ry="17" fill="#000" opacity=".5"/>
+            <rect x="44" y="96" width="34" height="196" rx="4" fill="#5b3720"/>
+            <rect x="562" y="96" width="34" height="196" rx="4" fill="#5b3720"/>
+            <rect x="66" y="88" width="508" height="212" rx="10" fill="url(#aBody)" stroke="var(--body-edge)" stroke-opacity=".5"/>
+            <text x="98" y="128" font-family="ui-monospace,Consolas,monospace" font-size="11" letter-spacing="3.4" fill="#e8e6e2" opacity=".82">MERIDIAN</text>
+            <rect x="96" y="162" width="150" height="66" rx="4" fill="#0a0a0e" stroke="#2c2c34"/>
+            <text x="110" y="196" font-family="ui-monospace,Consolas,monospace" font-size="26" fill="#ffc46b" letter-spacing="1">-48.0</text>
+            <g fill="#1b1b21" stroke="var(--body-edge)" stroke-opacity=".55">
+              <rect x="98" y="246" width="30" height="14" rx="3"/><rect x="136" y="246" width="30" height="14" rx="3"/><rect x="174" y="246" width="30" height="14" rx="3"/>
+            </g>
+            <text x="142" y="256" font-family="ui-monospace,Consolas,monospace" font-size="8" fill="#ffc46b">2</text>
+            <circle cx="268" cy="196" r="11" fill="#0a0a0c" stroke="var(--body-edge)" stroke-opacity=".6"/>
+            <rect x="300" y="190" width="30" height="12" rx="6" fill="#0a0a0c" stroke="var(--body-edge)" stroke-opacity=".5"/>
+            <g stroke="#000" stroke-opacity=".3" stroke-width="2" stroke-linecap="round">
+              <path d="M352 130h84"/><path d="M352 138h84"/><path d="M352 146h84"/>
+            </g>
+            <circle cx="480" cy="194" r="58" fill="url(#aDial)" stroke="var(--body-edge)" stroke-opacity=".7"/>
+            <circle cx="480" cy="194" r="58" fill="none" stroke="#0a0a0c" stroke-opacity=".55" stroke-width="7" stroke-dasharray="2.4 4.2"/>
+            <circle cx="480" cy="194" r="44" fill="var(--body-lo)"/>
+            <path d="M480 194 L480 152" stroke="#ffc46b" stroke-width="2.5" stroke-linecap="round"/>
+                      <svg class="parts" id="parts" x="0" y="0" width="640" height="380" viewBox="0 0 640 380" aria-hidden="true">
+              <g class="part" data-part="dial">
+                <circle cx="480" cy="194" r="66" class="part-outline"/>
+              </g>
+              <g class="part" data-part="bias">
+                <rect x="92" y="240" width="118" height="26" rx="4" class="part-outline"/>
+              </g>
+              <g class="part" data-part="meter">
+                <rect x="90" y="156" width="162" height="78" rx="5" class="part-outline"/>
+              </g>
+              <g class="part" data-part="ports">
+                <rect x="252" y="176" width="86" height="54" rx="5" class="part-outline"/>
+              </g>
+              <g class="part" data-part="board">
+                <rect x="330" y="118" width="118" height="42" rx="4" class="part-outline"/>
+              </g>
+              <g class="part" data-part="cheek">
+                <rect x="38" y="90" width="46" height="208" rx="5" class="part-outline"/>
+              </g>
+              <g class="callout" id="callout">
+                <path id="co-path" d="" fill="none" stroke="var(--amber)" stroke-width="1"/>
+                <circle id="co-dot" r="3.5" fill="var(--amber)"/>
+                <text id="co-text" font-family="ui-monospace,Consolas,monospace" font-size="11" letter-spacing="1.4" fill="var(--amber)"></text>
+              </g>
+            </svg>
+</svg>
+        </div>
+        <p class="device-cap"><span>Cutaway · graphite</span><span id="part-count">Part 1 of 6</span></p>
+      </div>
+
+      <div class="steps" role="tablist" aria-label="Components" id="steps">
+        <button class="step" type="button" role="tab" id="tab-dial" aria-controls="panel-dial" aria-selected="true" data-part="dial" tabindex="0">
+          <span class="step-n">01</span>
+          <span>
+            <h3>The dial</h3>
+            <p>Milled from solid aluminium with a 120-step detent and a 0.5 dB vernier on the fine ring. It moves in real time — no menu, no click track, and the meter follows the same number your ears do.</p>
+            <span class="step-spec">32-bit · 0.5 dB steps · 120 detents</span>
+          </span>
+        </button>
+        <button class="step" type="button" role="tab" id="tab-bias" aria-controls="panel-bias" aria-selected="false" data-part="bias" tabindex="-1">
+          <span class="step-n">02</span>
+          <span>
+            <h3>Bias switch</h3>
+            <p>Three output voltages on the front panel. 32 Ω headphones run hot, 600 Ω planars need everything, and guessing between them is where most people lose their afternoon.</p>
+            <span class="step-spec">0 V / 2 V / 4 V · 0.8 W standby draw</span>
+          </span>
+        </button>
+        <button class="step" type="button" role="tab" id="tab-meter" aria-controls="panel-meter" aria-selected="false" data-part="meter" tabindex="-1">
+          <span class="step-n">03</span>
+          <span>
+            <h3>The meter</h3>
+            <p>A 2.8-inch OLED showing true output level, the selected bias and the incoming format. It is a meter, not a screensaver: it goes blank after four seconds of silence and wakes on signal.</p>
+            <span class="step-spec">2.8 in OLED · −96 to 0 dBFS · auto-dim</span>
+          </span>
+        </button>
+        <button class="step" type="button" role="tab" id="tab-ports" aria-controls="panel-ports" aria-selected="false" data-part="ports" tabindex="-1">
+          <span class="step-n">04</span>
+          <span>
+            <h3>Inputs</h3>
+            <p>USB-C for the computer, one balanced 4.4 mm output for the rest of your desk. Both are wired with the same topology, so the balanced path is not a compromise — it is the same amplifier with a different output stage.</p>
+            <span class="step-spec">USB-C 768 kHz · 4.4 mm balanced · 6.35 mm single</span>
+          </span>
+        </button>
+        <button class="step" type="button" role="tab" id="tab-board" aria-controls="panel-board" aria-selected="false" data-part="board" tabindex="-1">
+          <span class="step-n">05</span>
+          <span>
+            <h3>The board</h3>
+            <p>A four-layer board with a discrete output stage and an FPGA doing the filtering. There is no Bluetooth, because Bluetooth is an A2DP encoder and we are trying to avoid one.</p>
+            <span class="step-spec">XMOS + discrete FPGA · 1.4 W idle · 4-layer FR4</span>
+          </span>
+        </button>
+        <button class="step" type="button" role="tab" id="tab-cheek" aria-controls="panel-cheek" aria-selected="false" data-part="cheek" tabindex="-1">
+          <span class="step-n">06</span>
+          <span>
+            <h3>Walnut cheeks</h3>
+            <p>Solid English walnut, oiled rather than lacquered so it can be repaired at a kitchen table. They are held with two bolts each and swap in a minute if you want to change the colour of your desk.</p>
+            <span class="step-spec">English walnut · oiled · 2 bolts per side</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ measurements ============ -->
+  <section class="wrap" id="measure" aria-labelledby="meas-h">
+    <div class="sec-head" data-reveal>
+      <span class="mono mono--amber sec-num">02 — Measurements</span>
+      <h2 id="meas-h">The curve we publish is the curve we measure.</h2>
+      <p>Swept at 1 kHz against a 32 Ω reference load at 4 V bias, on the production unit in front of you. Raw CSV is on the download in the footer; the dashed line is the same run on a £180 converter.</p>
+    </div>
+    <div class="measure">
+      <div class="plot" id="plot" data-reveal>
+        <div class="readout" id="readout" aria-hidden="true">20 Hz · +0.02 dB</div>
+        <svg viewBox="0 0 460 260" role="img" aria-labelledby="plot-title" id="plot-svg">
+          <title id="plot-title">Frequency response of the Meridian One from 20 Hz to 20 kHz, within 0.15 dB of target</title>
+        </svg>
+        <p class="legend">
+          <span><i></i>Meridian One</span>
+          <span><i class="dash"></i>Ref. converter (measured)</span>
+        </p>
+        <div class="sr-only-box">
+          <table id="plot-table">
+            <caption>Measured frequency response, 1 kHz reference, 32 Ω load, 4 V bias</caption>
+            <thead><tr><th scope="col">Frequency</th><th scope="col">Meridian One</th><th scope="col">Reference converter</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <dl class="facts" data-reveal>
+        <div><dt>THD+N, 1 kHz, −10 dBFS</dt><dd>0.0018 %</dd></div>
+        <div><dt>Dynamic range, 20 Hz–20 kHz</dt><dd>118 dB</dd></div>
+        <div><dt>Output power, 32 Ω</dt><dd>4.0 W</dd></div>
+        <div><dt>Output power, 300 Ω</dt><dd>0.5 W</dd></div>
+        <div><dt>Output impedance</dt><dd>&lt; 0.3 Ω</dd></div>
+        <div><dt>Channel balance, 1 kHz</dt><dd>0.02 dB</dd></div>
+        <div><dt>Idle power</dt><dd>1.4 W</dd></div>
+        <div><dt>Weight</dt><dd>1.9 kg</dd></div>
+        <div><dt>Warranty</dt><dd>5 years</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ configure ============ -->
+  <section class="wrap" id="configure" aria-labelledby="cfg-h">
+    <div class="sec-head" data-reveal>
+      <span class="mono mono--amber sec-num">03 — Configure</span>
+      <h2 id="cfg-h">Three finishes. Three boards. One honest price.</h2>
+      <p>No configuration costs more than the parts inside it. The price updates as you choose, and what you see on the left is what arrives.</p>
+    </div>
+
+    <div class="config">
+      <form class="opts" id="config-form" data-reveal>
+        <fieldset class="opt-group">
+          <legend>Finish <b id="finish-name">Graphite</b></legend>
+          <div class="opts-row">
+            <label class="opt">
+              <span class="swatch sw--graphite"></span>
+              <input type="radio" name="finish" value="graphite" checked>
+              <span class="opt-name">Graphite</span>
+              <span class="opt-meta">Bead-blasted</span>
+              <span class="opt-add">Included</span>
+            </label>
+            <label class="opt">
+              <span class="swatch sw--silver"></span>
+              <input type="radio" name="finish" value="silver">
+              <span class="opt-name">Silver</span>
+              <span class="opt-meta">Bead-blasted</span>
+              <span class="opt-add">+£30</span>
+            </label>
+            <label class="opt">
+              <span class="swatch sw--copper"></span>
+              <input type="radio" name="finish" value="copper">
+              <span class="opt-name">Copper</span>
+              <span class="opt-meta">Anodised</span>
+              <span class="opt-add">+£60</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="opt-group">
+          <legend>Storage</legend>
+          <div class="opts-row">
+            <label class="opt">
+              <input type="radio" name="board" value="b256" checked>
+              <span class="opt-name">256 GB</span>
+              <span class="opt-meta">20,000 tracks</span>
+              <span class="opt-add">Included</span>
+            </label>
+            <label class="opt">
+              <input type="radio" name="board" value="b512">
+              <span class="opt-name">512 GB</span>
+              <span class="opt-meta">45,000 tracks</span>
+              <span class="opt-add">+£90</span>
+            </label>
+            <label class="opt">
+              <input type="radio" name="board" value="b1t">
+              <span class="opt-name">1 TB</span>
+              <span class="opt-meta">Lossless + hi-res</span>
+              <span class="opt-add">+£170</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="opt-group">
+          <legend>Cable kit</legend>
+          <div class="opts-row">
+            <label class="opt">
+              <input type="radio" name="cable" value="none" checked>
+              <span class="opt-name">No cable</span>
+              <span class="opt-meta">You have one</span>
+              <span class="opt-add">Included</span>
+            </label>
+            <label class="opt">
+              <input type="radio" name="cable" value="usb">
+              <span class="opt-name">Braided USB-C</span>
+              <span class="opt-meta">2 m, 240 W</span>
+              <span class="opt-add">+£25</span>
+            </label>
+            <label class="opt">
+              <input type="radio" name="cable" value="bal">
+              <span class="opt-name">Balanced 4.4 mm</span>
+              <span class="opt-meta">2 m + USB-C</span>
+              <span class="opt-add">+£59</span>
+            </label>
+          </div>
+        </fieldset>
+      </form>
+
+      <aside class="rail" data-reveal aria-labelledby="rail-h">
+        <div class="rail-body">
+          <h3 class="sr-only" id="rail-h">Your configuration</h3>
+          <div class="rail-price">
+            <b id="total">£449</b>
+            <span class="mono">incl. VAT</span>
+          </div>
+          <dl class="rail-lines">
+            <div><dt>Meridian One</dt><dd>£449</dd></div>
+            <div><dt id="line-finish">Graphite</dt><dd id="add-finish">£0</dd></div>
+            <div><dt id="line-board">256 GB</dt><dd id="add-board">£0</dd></div>
+            <div><dt id="line-cable">No cable</dt><dd id="add-cable">£0</dd></div>
+          </dl>
+          <div class="rail-actions">
+            <button class="btn" type="button" id="add-to-cart">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16l-1.5 13H5.5z"/><path d="M9 6a3 3 0 0 1 6 0"/></svg>
+              Add to basket
+            </button>
+            <a class="btn btn--ghost" href="#reserve">Reserve without paying</a>
+          </div>
+          <p class="rail-stock">Ships 4 March</p>
+          <p class="rail-fine">Configuration is held for 30 days. You can change any of it from the basket, and nothing is charged until the unit ships.</p>
+        </div>
+        <p class="form-note rail-note" id="cart-note" role="status" aria-live="polite"></p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ compare ============ -->
+  <section class="wrap" id="compare" aria-labelledby="cmp-h">
+    <div class="sec-head" data-reveal>
+      <span class="mono mono--amber sec-num">04 — Range</span>
+      <h2 id="cmp-h">One, Two and the passive.</h2>
+      <p>Same board, different front panel. If you already have an amplifier, the passive is the honest recommendation.</p>
+    </div>
+    <div class="cmp-scroll" data-reveal>
+      <table class="cmp">
+        <caption>Measured at 1 kHz, 32 Ω load. Prices include VAT. The amber square marks the best specification in the row.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Specification</th>
+            <th scope="col">Meridian One</th>
+            <th scope="col">Two</th>
+            <th scope="col">Passive</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Headphone output</th><td class="is">4.0 W / 32 Ω</td><td class="is">4.0 W / 32 Ω</td><td>Preamp only</td></tr>
+          <tr><th scope="row">Bias switch</th><td class="is">0 / 2 / 4 V</td><td class="is">0 / 2 / 4 V</td><td>—</td></tr>
+          <tr><th scope="row">DAC</th><td>768 kHz PCM, DSD512</td><td class="is">768 kHz PCM, DSD512</td><td class="is">768 kHz PCM, DSD512</td></tr>
+          <tr><th scope="row">Network streaming</th><td>—</td><td class="is">Roon Ready, Ethernet</td><td class="is">Roon Ready, Ethernet</td></tr>
+          <tr><th scope="row">Storage</th><td class="is">256 GB / 512 GB / 1 TB</td><td>512 GB / 1 TB</td><td>Optional</td></tr>
+          <tr><th scope="row">Outputs</th><td>6.35 mm, 4.4 mm</td><td class="is">6.35, 4.4, XLR, RCA</td><td class="is">XLR, RCA</td></tr>
+          <tr><th scope="row">Dimensions (mm)</th><td>340 × 210 × 62</td><td>340 × 210 × 78</td><td>180 × 210 × 62</td></tr>
+          <tr><th scope="row">Price</th><td>£449</td><td>£749</td><td>£599</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ reviews ============ -->
+  <section class="reviews" aria-labelledby="rev-h">
+    <div class="wrap">
+      <div class="sec-head" data-reveal>
+        <span class="mono sec-num">05 — Owners</span>
+        <h2 id="rev-h">People who listen for a living.</h2>
+        <p>Sent to reviewers and to the twenty-one people who bought the first hundred units. Two of them asked us not to use their names, so they are quoted as "Studio engineer".</p>
+      </div>
+      <div class="rev-grid">
+        <figure class="rev-lead" data-reveal>
+          <div class="stars" role="img" aria-label="Five out of five">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          </div>
+          <blockquote>“I have measured a lot of DACs that claim low distortion and then fail at 60 Hz. This one is flat to 0.05 dB and the bias switch means I have stopped guessing what my 600 Ω planar actually wants.”</blockquote>
+          <figcaption><b>Ilse Vandermeer</b> · mastering engineer, Utrecht</figcaption>
+        </figure>
+
+        <div data-reveal>
+          <ul class="rev-list">
+            <li>
+              <div class="stars" role="img" aria-label="Five out of five"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+              <q>Replaced a stack of three boxes with one. The app finds the unit on its own now, which is more than the last one ever managed.</q>
+              <cite>Rowan Adeyemi · London</cite>
+            </li>
+            <li>
+              <div class="stars" role="img" aria-label="Four out of five"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+              <q>The walnut cheeks were an indulgence. They are also the only reason the unit lives on my desk rather than in a cupboard.</q>
+              <cite>Studio engineer · anonymous, requested</cite>
+            </li>
+            <li>
+              <div class="stars" role="img" aria-label="Five out of five"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+              <q>Bias at 2 V for my 250 Ω IEMs, 4 V for the planar, and the meter means I finally know what the difference is. No app needed for the daily bit.</q>
+              <cite>Marta Kaczmarek · Gdańsk</cite>
+            </li>
+          </ul>
+          <ul class="rating-split" aria-label="Rating breakdown out of 412 reviews">
+            <li><span>5 star</span><span class="bar"><i style="--w:78%"></i></span><span class="n">78%</span></li>
+            <li><span>4 star</span><span class="bar"><i style="--w:16%"></i></span><span class="n">16%</span></li>
+            <li><span>3 star</span><span class="bar"><i style="--w:4%"></i></span><span class="n">4%</span></li>
+            <li><span>2 star</span><span class="bar"><i style="--w:1%"></i></span><span class="n">1%</span></li>
+            <li><span>1 star</span><span class="bar"><i style="--w:1%"></i></span><span class="n">1%</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ faq ============ -->
+  <section class="wrap" id="questions" aria-labelledby="faq-h">
+    <div class="faq">
+      <div class="faq-side" data-reveal>
+        <span class="mono mono--amber sec-num">06 — Questions</span>
+        <h2 id="faq-h">The things people actually ask.</h2>
+        <p>Anything not covered here goes to a human: <a class="link-amber" href="mailto:hello@meridian.audio">hello@meridian.audio</a>, answered within a working day.</p>
+      </div>
+      <div class="q" id="faq" data-reveal>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="a1" id="q1">Which bias should I use?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="a1" role="region" aria-labelledby="q1"><div><p>Headphone impedance alone does not decide it — sensitivity does. Start at 2 V for most 32–80 Ω headphones, drop to 0 V for very sensitive in-ears where the volume control has plenty of range, and use 4 V for 250 Ω planars. If you are still clipping the dial at 3 o'clock, the bias is too high; if you are past 1 o'clock, it is too low.</p></div></div>
+        </div>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="a2" id="q2">Do I need the app?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="a2" role="region" aria-labelledby="q2"><div><p>No. Volume, bias and input are all on the front panel and the unit plays music the moment it is plugged in. The app is for firmware, per-source trims, the measurement log and Roon setup — things you do twice a year, not things you do while listening.</p></div></div>
+        </div>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="a3" id="q3">What is actually in the box?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="a3" role="region" aria-labelledby="q3"><div><p>The unit, a 2 m USB-C cable, walnut cheeks pre-fitted, a 15 W USB-C power supply, four bolts and a hex key, and a printed measurement sheet for the specific unit you received. There is no CD, no Quick Start guide, and no QR code leading to a five-step onboarding.</p></div></div>
+        </div>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="a4" id="q4">How is it repaired?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="a4" role="region" aria-labelledby="q4"><div><p>The front panel, dial, cheeks and USB-C port are all replaceable with two screws. Spares are sold at cost and stay available for ten years, which is the same promise we make about firmware. The five-year warranty covers the electronics, extendable to ten when you register the unit.</p></div></div>
+        </div>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="a5" id="q5">Can I return it?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="a5" role="region" aria-labelledby="q5"><div><p>Sixty days, opened or not, with the unit in any condition. Headphones are harder to judge in a shop, so we would rather you took it home. If it is not right, we cover return postage and there is no restocking fee and no interrogation about why.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ reserve ============ -->
+  <section class="reserve" id="reserve" aria-labelledby="res-h">
+    <div class="wrap reserve-grid">
+      <div class="reserve-copy" data-reveal>
+        <span class="mono mono--amber sec-num">07 — Reserve</span>
+        <h2 id="res-h">Hold a unit without paying for it.</h2>
+        <p>Reserving costs nothing and does not charge your card. We will email you once when the batch is allocated, and once when it ships.</p>
+        <ul class="reserve-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg><span>Batch of 100 units, allocated in order of reservation</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg><span>Your configuration is locked in for 30 days</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg><span>Nothing is charged until the unit leaves Sheffield</span></li>
+        </ul>
+      </div>
+
+      <form class="form" id="reserve-form" novalidate data-reveal>
+        <div class="field">
+          <label for="r-name">Name</label>
+          <input id="r-name" name="name" type="text" autocomplete="name" placeholder="Ilse Vandermeer" required aria-describedby="r-name-err">
+          <p class="err" id="r-name-err" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="r-email">Email</label>
+          <input id="r-email" name="email" type="email" autocomplete="email" placeholder="you@studio.com" required aria-describedby="r-email-hint r-email-err">
+          <p class="hint" id="r-email-hint">Two emails per order, no newsletter unless you ask.</p>
+          <p class="err" id="r-email-err" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="r-country">Country</label>
+          <select id="r-country" name="country" required aria-describedby="r-country-err">
+            <option value="">Select a country…</option>
+            <option>United Kingdom</option><option>Ireland</option><option>Germany</option>
+            <option>Netherlands</option><option>France</option><option>United States</option>
+            <option>Japan</option><option>Australia</option>
+          </select>
+          <p class="err" id="r-country-err" role="alert"></p>
+        </div>
+        <label class="check" for="r-consent" id="r-consent-label">
+          <input id="r-consent" name="consent" type="checkbox" aria-describedby="r-consent-err">
+          <span>I would like the measurement sheet and the batch notes emailed to me. <span aria-hidden="true">(optional)</span></span>
+        </label>
+        <p class="err" id="r-consent-err" role="alert"></p>
+        <button class="btn" type="submit" id="r-submit">Reserve a unit</button>
+        <p class="form-note" id="r-note" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- ============ footer ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="mark foot-brand" href="#top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M4.2 7.5h15.6M4.2 16.5h15.6"/></svg>
+          Meridian <small>One</small>
+        </a>
+        <p class="mono foot-blurb">Milled, assembled and measured in Sheffield. Firmware and spares kept for ten years.</p>
+      </div>
+      <div>
+        <h3>Product</h3>
+        <ul>
+          <li><a href="#anatomy">Inside the One</a></li>
+          <li><a href="#measure">Measurements</a></li>
+          <li><a href="#compare">Compare the range</a></li>
+          <li><a href="#configure">Configure</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Support</h3>
+        <ul>
+          <li><a href="#questions">Questions</a></li>
+          <li><a href="#reserve">Sixty-day returns</a></li>
+          <li><a href="mailto:hello@meridian.audio">hello@meridian.audio</a></li>
+          <li><a href="#reserve">Book a listening slot</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Paperwork</h3>
+        <ul>
+          <li><a href="#measure">Measurement CSV</a></li>
+          <li><a href="#measure">Firmware 2.4 notes</a></li>
+          <li><a href="#questions">Warranty</a></li>
+          <li><a href="#reserve">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-note">
+      <span class="mono">© 2026 Meridian Audio Ltd</span>
+      <span class="mono">Registered in England 09871234</span>
+      <span class="mono">VAT GB 214 5566 09</span>
+      <span class="mono foot-end">Prices include VAT · 1a-product.html</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ basket ============ -->
+<div class="drawer" id="drawer" data-open="false" role="dialog" aria-modal="true" aria-labelledby="drawer-h">
+  <div class="drawer-scrim" id="drawer-scrim"></div>
+  <div class="drawer-panel">
+    <div class="drawer-head">
+      <h2 id="drawer-h">Your basket</h2>
+      <span class="mono" id="drawer-count">0 items</span>
+      <button class="btn btn--ghost btn--sm" type="button" id="drawer-close" aria-label="Close basket">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="cart" id="cart"></div>
+    <div class="drawer-foot">
+      <div class="totals">
+        <div><span>Subtotal</span><span id="cart-sub">£0</span></div>
+        <div><span>Delivery</span><span>Free, UK &amp; EU</span></div>
+        <div class="grand"><span>Total</span><span id="cart-total">£0</span></div>
+      </div>
+      <button class="btn" type="button" id="checkout">Checkout</button>
+      <p class="form-note" id="checkout-note" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ==================================================================
+     1. Header: condense on scroll, mobile menu
+     ================================================================== */
+  var head = $('head');
+  var onScroll = function () {
+    head.classList.toggle('is-stuck', window.scrollY > 24);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  var burger = $('burger');
+  burger.addEventListener('click', function () {
+    var open = head.getAttribute('data-nav') === 'open';
+    head.setAttribute('data-nav', open ? 'closed' : 'open');
+    burger.setAttribute('aria-expanded', String(!open));
+    burger.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+  });
+  $('site-nav').addEventListener('click', function (e) {
+    if (e.target.tagName !== 'A') return;
+    head.setAttribute('data-nav', 'closed');
+    burger.setAttribute('aria-expanded', 'false');
+  });
+
+  /* ==================================================================
+     2. Anatomy explorer — tabs drive the cutaway
+     ================================================================== */
+  var PARTS = {
+    dial:  { x: 480, y: 128, lx: 545, ly: 118, anchor: 'end' },
+    bias:  { x: 210, y: 256, lx: 250, ly: 300, anchor: 'start' },
+    meter: { x: 96,  y: 160, lx: 30,  ly: 140, anchor: 'start' },
+    ports: { x: 268, y: 184, lx: 250, ly: 96,  anchor: 'start' },
+    board: { x: 390, y: 118, lx: 430, ly: 70,  anchor: 'start' },
+    cheek: { x: 62,  y: 96,  lx: 20,  ly: 70,  anchor: 'start' }
+  };
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var partsSvg = $('parts');
+  var coPath = $('co-path'), coDot = $('co-dot'), coText = $('co-text');
+  var partCount = $('part-count');
+
+  function selectPart(key, focusTab) {
+    var geo = PARTS[key];
+    if (!geo) return;
+    steps.forEach(function (s) {
+      var on = s.dataset.part === key;
+      s.setAttribute('aria-selected', String(on));
+      s.tabIndex = on ? 0 : -1;
+      if (on && focusTab) s.focus();
+    });
+    Array.prototype.forEach.call(partsSvg.querySelectorAll('.part'), function (g) {
+      g.classList.toggle('is-lit', g.dataset.part === key);
+    });
+    partsSvg.classList.add('has-active');
+    coDot.setAttribute('cx', geo.x); coDot.setAttribute('cy', geo.y);
+    coText.setAttribute('x', geo.lx); coText.setAttribute('y', geo.ly);
+    coText.setAttribute('text-anchor', geo.anchor);
+    coText.textContent = key.toUpperCase();
+    coPath.setAttribute('d', 'M' + geo.x + ' ' + geo.y + ' L' + geo.lx + ' ' + geo.ly);
+    var idx = steps.findIndex(function (s) { return s.dataset.part === key; });
+    partCount.textContent = 'Part ' + (idx + 1) + ' of ' + steps.length;
+  }
+  steps.forEach(function (s, i) {
+    s.addEventListener('click', function () { selectPart(s.dataset.part); });
+    s.addEventListener('keydown', function (e) {
+      var next = null;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = steps[(i + 1) % steps.length];
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = steps[(i - 1 + steps.length) % steps.length];
+      if (e.key === 'Home') next = steps[0];
+      if (e.key === 'End') next = steps[steps.length - 1];
+      if (!next) return;
+      e.preventDefault();
+      selectPart(next.dataset.part, true);
+    });
+  });
+
+  selectPart(steps[0].dataset.part);
+
+  /* ==================================================================
+     3. Measured response — drawn from the published sweep
+     ================================================================== */
+  var FREQ = [20, 32, 50, 80, 125, 250, 500, 1000, 2000, 4000, 8000, 12000, 16000, 20000];
+  var MINE  = [0.02, 0.01, 0.00, -0.01, 0.00, 0.01, 0.01, 0.00, 0.00, -0.01, -0.02, -0.03, -0.05, -0.08];
+  var REF   = [0.31, 0.28, 0.22, 0.14, 0.10, 0.06, 0.04, 0.03, 0.05, 0.09, 0.18, 0.34, 0.52, 0.71];
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var plot = $('plot'), plotSvg = $('plot-svg'), readout = $('readout');
+  var PW = 460, PH = 260, PL = 34, PR = 10, PT = 14, PB = 26;
+  var plotW = PW - PL - PR, plotH = PH - PT - PB;
+  var DB = 0.8;  /* full scale is ±0.8 dB */
+
+  function xFor(f) { return PL + (Math.log(f / 20) / Math.log(1000)) * plotW; }
+  function yFor(db) { return PT + plotH / 2 - (db / DB) * (plotH / 2); }
+  function svg(tag, attrs, text) {
+    var n = document.createElementNS(SVGNS, tag);
+    Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function pathFor(data) {
+    return data.map(function (d, i) { return (i ? 'L' : 'M') + xFor(FREQ[i]).toFixed(1) + ' ' + yFor(d).toFixed(1); }).join(' ');
+  }
+  function buildPlot() {
+    while (plotSvg.firstChild) plotSvg.removeChild(plotSvg.firstChild);
+    /* gridlines: ±0.4 dB steps, zero emphasised */
+    [-0.8, -0.4, 0, 0.4, 0.8].forEach(function (db) {
+      var y = yFor(db);
+      plotSvg.appendChild(svg('line', { class: 'grid-line', x1: PL, x2: PW - PR, y1: y, y2: y }));
+      plotSvg.appendChild(svg('text', { class: 'axis', x: PL - 7, y: y + 3, 'text-anchor': 'end' }, (db > 0 ? '+' : '') + db.toFixed(1)));
+    });
+    [20, 100, 1000, 10000, 20000].forEach(function (f) {
+      var x = xFor(f);
+      plotSvg.appendChild(svg('text', { class: 'axis', x: x, y: PH - 8, 'text-anchor': f === 20 ? 'start' : (f === 20000 ? 'end' : 'middle') },
+        f >= 1000 ? (f / 1000) + 'k' : String(f)));
+    });
+    plotSvg.appendChild(svg('path', { class: 'curve curve--ref', d: pathFor(REF) }));
+    plotSvg.appendChild(svg('path', { class: 'curve', d: pathFor(MINE) }));
+    var g = svg('g', {});
+    g.appendChild(svg('line', { class: 'guide', id: 'guide', x1: 0, x2: 0, y1: PT, y2: PT + plotH }));
+    g.appendChild(svg('circle', { class: 'dot', id: 'dot', r: 3.5, cx: 0, cy: 0 }));
+    plotSvg.appendChild(g);
+
+    var tb = $('plot-table').querySelector('tbody');
+    while (tb.firstChild) tb.removeChild(tb.firstChild);
+    FREQ.forEach(function (f, i) {
+      var tr = document.createElement('tr');
+      var th = document.createElement('th');
+      th.setAttribute('scope', 'row');
+      th.textContent = f >= 1000 ? (f / 1000) + ' kHz' : f + ' Hz';
+      tr.appendChild(th);
+      [MINE[i], REF[i]].forEach(function (v) {
+        var td = document.createElement('td');
+        td.textContent = (v > 0 ? '+' : '') + v.toFixed(2) + ' dB';
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+  }
+  buildPlot();
+
+  /* the hover guide reads the same array the curve was drawn from */
+  function nearest(clientX) {
+    var box = plotSvg.getBoundingClientRect();
+    var x = (clientX - box.left) / box.width * PW;
+    var ratio = (x - PL) / plotW;
+    var f = 20 * Math.pow(1000, Math.max(0, Math.min(1, ratio)));
+    var i = 0, best = Infinity;
+    FREQ.forEach(function (v, j) {
+      var d = Math.abs(Math.log(v) - Math.log(f));
+      if (d < best) { best = d; i = j; }
+    });
+    return i;
+  }
+  function showAt(i) {
+    var x = xFor(FREQ[i]);
+    var y = yFor(MINE[i]);
+    $('guide').setAttribute('x1', x); $('guide').setAttribute('x2', x);
+    $('dot').setAttribute('cx', x); $('dot').setAttribute('cy', y);
+    readout.textContent = (FREQ[i] >= 1000 ? (FREQ[i] / 1000) + ' kHz' : FREQ[i] + ' Hz') +
+      ' · ' + (MINE[i] > 0 ? '+' : '') + MINE[i].toFixed(2) + ' dB';
+    plot.classList.add('has-hover');
+  }
+  function clearAt() { plot.classList.remove('has-hover'); }
+  plotSvg.addEventListener('mousemove', function (e) { showAt(nearest(e.clientX)); });
+  plotSvg.addEventListener('mouseleave', clearAt);
+  /* keyboard equivalent: the plot is a slider-like control over the sweep */
+  var sweepIndex = 7;
+  plotSvg.setAttribute('tabindex', '0');
+  plotSvg.setAttribute('role', 'application');
+  plotSvg.setAttribute('aria-label', 'Frequency response sweep. Use the left and right arrow keys to read each measured point.');
+  plotSvg.addEventListener('focus', function () { showAt(sweepIndex); });
+  plotSvg.addEventListener('blur', clearAt);
+  plotSvg.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    sweepIndex = Math.max(0, Math.min(FREQ.length - 1, sweepIndex + (e.key === 'ArrowRight' ? 1 : -1)));
+    showAt(sweepIndex);
+  });
+
+  /* ==================================================================
+     4. Configurator — one price, one source of truth
+     ================================================================== */
+  var money = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  var BASE = 449;
+  var FINISH = { graphite: { label: 'Graphite', add: 0 }, silver: { label: 'Silver', add: 30 }, copper: { label: 'Copper', add: 60 } };
+  var BOARD  = { b256: { label: '256 GB', add: 0 }, b512: { label: '512 GB', add: 90 }, b1t: { label: '1 TB', add: 170 } };
+  var CABLE  = { none: { label: 'No cable', add: 0 }, usb: { label: 'Braided USB-C', add: 25 }, bal: { label: 'Balanced 4.4 mm', add: 59 } };
+  var configForm = $('config-form');
+  var state = { finish: 'graphite', board: 'b256', cable: 'none' };
+
+  function price() {
+    return BASE + FINISH[state.finish].add + BOARD[state.board].add + CABLE[state.cable].add;
+  }
+  function describe() {
+    return FINISH[state.finish].label + ' · ' + BOARD[state.board].label + ' · ' + CABLE[state.cable].label;
+  }
+  function renderConfig() {
+    $('total').textContent = money.format(price());
+    $('finish-name').textContent = FINISH[state.finish].label;
+    $('line-finish').textContent = FINISH[state.finish].label;
+    $('line-board').textContent = BOARD[state.board].label;
+    $('line-cable').textContent = CABLE[state.cable].label;
+    $('add-finish').textContent = FINISH[state.finish].add ? '+' + money.format(FINISH[state.finish].add) : '£0';
+    $('add-board').textContent = BOARD[state.board].add ? '+' + money.format(BOARD[state.board].add) : '£0';
+    $('add-cable').textContent = CABLE[state.cable].add ? '+' + money.format(CABLE[state.cable].add) : '£0';
+    /* the product shot follows the chosen finish */
+    $('hero-device').dataset.finish = state.finish;
+    $('anat-device').dataset.finish = state.finish;
+  }
+  var GROUPS = { finish: FINISH, board: BOARD, cable: CABLE };
+  configForm.addEventListener('change', function (e) {
+    var group = GROUPS[e.target.name];
+    if (!group || !group[e.target.value]) return;
+    state[e.target.name] = e.target.value;
+    renderConfig();
+  });
+  renderConfig();
+
+  /* ==================================================================
+     5. Basket
+     ================================================================== */
+  var cart = [];
+  var cartEl = $('cart'), cartNote = $('cart-note');
+  var drawer = $('drawer'), drawerOpener = null;
+
+  function cartCount() { return cart.reduce(function (n, l) { return n + l.qty; }, 0); }
+  function cartTotal() { return cart.reduce(function (n, l) { return n + l.qty * l.price; }, 0); }
+  function say(msg) { cartNote.textContent = msg; window.clearTimeout(say.t); say.t = window.setTimeout(function () { cartNote.textContent = ''; }, 5000); }
+
+  function renderCart() {
+    while (cartEl.firstChild) cartEl.removeChild(cartEl.firstChild);
+    if (!cart.length) {
+      var empty = document.createElement('p');
+      empty.className = 'cart-empty';
+      empty.innerHTML = '<b>Nothing in the basket yet</b>Configure a Meridian One and it will appear here.';
+      cartEl.appendChild(empty);
+    } else {
+      cart.forEach(function (line, i) {
+        var row = document.createElement('div');
+        row.className = 'cart-line';
+        var left = document.createElement('div');
+        var h = document.createElement('h3');
+        h.textContent = 'Meridian One — ' + line.finish;
+        var cfg = document.createElement('p');
+        cfg.className = 'cfg';
+        cfg.textContent = line.board + '\n' + line.cable;
+        left.appendChild(h); left.appendChild(cfg);
+
+        var qty = document.createElement('div');
+        qty.className = 'qty';
+        var minus = document.createElement('button');
+        minus.type = 'button';
+        minus.textContent = '−';
+        minus.setAttribute('aria-label', 'Remove one ' + line.finish + ' ' + line.board);
+        minus.addEventListener('click', function () { step(i, -1); });
+        var count = document.createElement('span');
+        count.textContent = String(line.qty);
+        count.setAttribute('aria-live', 'polite');
+        var plus = document.createElement('button');
+        plus.type = 'button';
+        plus.textContent = '+';
+        plus.setAttribute('aria-label', 'Add one more ' + line.finish + ' ' + line.board);
+        plus.addEventListener('click', function () { step(i, 1); });
+        qty.appendChild(minus); qty.appendChild(count); qty.appendChild(plus);
+        left.appendChild(qty);
+
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'linkbtn';
+        rm.textContent = 'Remove';
+        rm.addEventListener('click', function () { cart.splice(i, 1); renderCart(); });
+        left.appendChild(rm);
+
+        var price = document.createElement('p');
+        price.className = 'price';
+        price.textContent = money.format(line.qty * line.price);
+        row.appendChild(left); row.appendChild(price);
+        cartEl.appendChild(row);
+      });
+    }
+    $('cart-count').textContent = String(cartCount());
+    $('drawer-count').textContent = cartCount() + (cartCount() === 1 ? ' item' : ' items');
+    $('cart-sub').textContent = money.format(cartTotal());
+    $('cart-total').textContent = money.format(cartTotal());
+    $('checkout').disabled = !cart.length;
+  }
+  function step(i, by) {
+    cart[i].qty += by;
+    if (cart[i].qty < 1) cart.splice(i, 1);
+    renderCart();
+  }
+
+  $('add-to-cart').addEventListener('click', function () {
+    var line = {
+      finish: FINISH[state.finish].label,
+      board: BOARD[state.board].label,
+      cable: CABLE[state.cable].label,
+      price: price(),
+      qty: 1
+    };
+    var same = cart.filter(function (l) { return l.finish === line.finish && l.board === line.board && l.cable === line.cable; })[0];
+    if (same) same.qty += 1; else cart.push(line);
+    renderCart();
+    say('Meridian One in ' + line.finish + ' added. ' + cartCount() + ' in the basket.');
+    openDrawer($('add-to-cart'));
+  });
+
+  function openDrawer(opener) {
+    drawerOpener = opener || document.activeElement;
+    drawer.dataset.open = 'true';
+    $('drawer-close').focus();
+  }
+  function closeDrawer() {
+    drawer.dataset.open = 'false';
+    if (drawerOpener && document.contains(drawerOpener)) drawerOpener.focus();
+    drawerOpener = null;
+  }
+  $('cart-open').addEventListener('click', function () { openDrawer(this); });
+  $('drawer-close').addEventListener('click', closeDrawer);
+  $('drawer-scrim').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) {
+    if (drawer.dataset.open !== 'true') return;
+    if (e.key === 'Escape') { closeDrawer(); return; }
+    if (e.key !== 'Tab') return;
+    var f = drawer.querySelectorAll('button:not([disabled]), a[href], input, select, textarea');
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  $('checkout').addEventListener('click', function () {
+    var note = $('checkout-note');
+    this.disabled = true;
+    note.dataset.state = '';
+    note.textContent = 'Reserving your configuration…';
+    window.setTimeout(function () {
+      note.dataset.state = 'ok';
+      note.textContent = cartCount() + ' unit' + (cartCount() === 1 ? '' : 's') + ' reserved. Nothing has been charged — we will email to confirm the batch date.';
+      closeDrawer();
+      say('Reserved. Check your inbox for the confirmation.');
+    }, 900);
+  });
+  renderCart();
+
+  /* ==================================================================
+     6. FAQ
+     ================================================================== */
+  Array.prototype.forEach.call(document.querySelectorAll('.q-btn'), function (btn) {
+    var item = btn.closest('.q-item');
+    var panel = item.querySelector('.q-panel');
+    var inner = panel.firstElementChild;
+    btn.addEventListener('click', function () {
+      var open = item.classList.contains('is-open');
+      btn.setAttribute('aria-expanded', String(!open));
+      item.classList.toggle('is-open', !open);
+      /* the end state is set directly rather than through a rAF double-step, so the
+         panel is correct even where the height transition is skipped */
+      panel.style.height = open ? '0px' : inner.scrollHeight + 'px';
+    });
+    /* when the height animation ends, release to auto so the panel can reflow
+       with the window instead of keeping a stale pixel height */
+    panel.addEventListener('transitionend', function () {
+      if (item.classList.contains('is-open')) panel.style.height = 'auto';
+    });
+  });
+
+  /* ==================================================================
+     7. Reserve form
+     ================================================================== */
+  var form = $('reserve-form'), note = $('r-note'), submit = $('r-submit');
+  function setErr(field, id, msg) {
+    $(id).textContent = msg || '';
+    if (msg) field.setAttribute('aria-invalid', 'true'); else field.removeAttribute('aria-invalid');
+  }
+  form.addEventListener('input', function (e) {
+    if (e.target.getAttribute('aria-invalid') === 'true') {
+      setErr($('r-name'), 'r-name-err', '');
+      setErr($('r-email'), 'r-email-err', '');
+      setErr($('r-country'), 'r-country-err', '');
+      note.textContent = '';
+    }
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var bad = false;
+    var name = $('r-name').value.trim();
+    var email = $('r-email').value.trim();
+    if (name.length < 2) { setErr($('r-name'), 'r-name-err', 'We need a name to put on the reservation.'); bad = true; }
+    else setErr($('r-name'), 'r-name-err', '');
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) { setErr($('r-email'), 'r-email-err', 'That address will not reach you — check for a typo.'); bad = true; }
+    else setErr($('r-email'), 'r-email-err', '');
+    if (!$('r-country').value) { setErr($('r-country'), 'r-country-err', 'Choose a country so we allocate the right plug and voltage.'); bad = true; }
+    else setErr($('r-country'), 'r-country-err', '');
+    if (bad) {
+      note.dataset.state = 'bad';
+      note.textContent = 'Two fields need attention before we can hold a unit.';
+      var first = form.querySelector('[aria-invalid="true"]');
+      if (first) first.focus();
+      return;
+    }
+    submit.disabled = true;
+    note.dataset.state = '';
+    note.textContent = 'Holding your place in the batch…';
+    window.setTimeout(function () {
+      submit.disabled = false;
+      note.dataset.state = 'ok';
+      note.textContent = 'Held. Batch 4 allocates on 2 March and we will email ' + email + ' twice: once then, once on dispatch.';
+      form.reset();
+      setErr($('r-name'), 'r-name-err', ''); setErr($('r-email'), 'r-email-err', ''); setErr($('r-country'), 'r-country-err', '');
+    }, 800);
+  });
+
+  /* ==================================================================
+     8. Reveal on scroll
+     ================================================================== */
+  var revealables = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  function revealAll() { revealables.forEach(function (el) { el.classList.add('is-in'); }); }
+  if (reduce || !('IntersectionObserver' in window)) {
+    revealAll();
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-in');
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+    revealables.forEach(function (el) { io.observe(el); });
+    /* safety net: if anything is already at or above the fold — a jumped-to anchor,
+       a restored scroll position — show it rather than leave it invisible */
+    window.setTimeout(function () {
+      var fold = window.innerHeight;
+      revealables.forEach(function (el) {
+        if (el.getBoundingClientRect().top < fold) el.classList.add('is-in');
+      });
+    }, 2000);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!-- Style: Motion First | 37motionfirst.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pulse — A two-minute tour</title>
+<style>
+/* ============================================================
+   MOTION SYSTEM — declared up front, used everywhere
+   ------------------------------------------------------------
+   enter-fast   180ms  state acknowledgement (press, check, bump)
+   enter-base   420ms  a component arriving in view
+   enter-slow   720ms  a scene change or panel swap
+   stage       1200ms  a whole tour step
+   stagger       80ms  per-item delay inside a stagger group
+   easing-out  cubic-bezier(.16,1,.3,1)   anything entering
+   easing-in   cubic-bezier(.5,0,.75,0)   anything leaving
+   easing-flat cubic-bezier(.65,0,.35,1)   anything moving in place
+   rule: nothing animates position that the user is reading.
+   rule: no animation may block the next task for more than 1.2s.
+   ============================================================ */
+:root{
+  /* colour */
+  --ink:#12161c;
+  --ink-2:#1c222b;
+  --ink-3:#262e3a;
+  --paper:#f7f6f3;
+  --paper-2:#ffffff;
+  --line:rgba(18,22,28,.14);
+  --line-2:rgba(18,22,28,.3);
+  --line-dark:rgba(247,246,243,.16);
+  --pulse:#ff4d3d;
+  --pulse-dim:#c9382a;
+  --signal:#0f9d8f;
+  --mute:#6d7681;
+  --ok:#0f8a5f;
+  --warn:#c07a12;
+  --focus:#0b6cdb;
+  /* type */
+  --font-ui:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --t-xs:clamp(.7rem,.68rem + .1vw,.78rem);
+  --t-sm:clamp(.83rem,.8rem + .14vw,.94rem);
+  --t-base:clamp(1rem,.96rem + .2vw,1.12rem);
+  --t-lg:clamp(1.18rem,1.08rem + .42vw,1.45rem);
+  --t-xl:clamp(1.5rem,1.2rem + 1.4vw,2.3rem);
+  --t-2xl:clamp(2rem,1.3rem + 3.2vw,3.8rem);
+  --t-hero:clamp(2.6rem,1.3rem + 6vw,6.4rem);
+  /* space */
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;
+  --s-6:2rem;--s-7:2.75rem;--s-8:4rem;--s-9:6rem;
+  --gutter:clamp(1.25rem,4.5vw,4.5rem);
+  /* edges */
+  --r-sm:4px;--r-md:8px;--r-lg:14px;
+  --sh-app:0 24px 70px -24px rgba(18,22,28,.5);
+  --tap:44px;
+  /* motion tokens */
+  --enter-fast:180ms;--enter-base:420ms;--enter-slow:720ms;--stage:1200ms;
+  --stagger:80ms;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-in:cubic-bezier(.5,0,.75,0);
+  --ease-flat:cubic-bezier(.65,0,.35,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-ui);font-size:var(--t-base);line-height:1.6}
+h1,h2,h3{line-height:1.08;letter-spacing:-.022em}
+p{margin:0 0 var(--s-4)}
+
+/* ---------- reveal: one utility, one timing ---------- */
+.rise{opacity:0;transform:translateY(18px);transition:opacity var(--enter-base) var(--ease-out),transform var(--enter-base) var(--ease-out);transition-delay:calc(var(--i,0) * var(--stagger))}
+.is-in .rise{opacity:1;transform:none}
+.d0{--i:0}.d1{--i:1}.d2{--i:2}.d3{--i:3}.d4{--i:4}.d5{--i:5}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.foot-limit{max-width:82rem;margin:0 auto}
+
+/* ---------- masthead ---------- */
+.masthead{
+  position:sticky;top:0;z-index:60;background:rgba(247,246,243,.88);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.masthead-in{max-width:82rem;margin:0 auto;padding:var(--s-3) var(--gutter);display:flex;align-items:center;gap:var(--s-4)}
+.mark{display:flex;align-items:center;gap:var(--s-2);text-decoration:none;color:var(--ink);font-weight:700;letter-spacing:-.02em}
+.mark svg{width:24px;height:24px;color:var(--pulse)}
+.masthead nav{margin-left:auto;display:flex;gap:clamp(.6rem,2vw,1.6rem)}
+.masthead nav a{
+  color:var(--mute);text-decoration:none;font-size:var(--t-sm);display:inline-flex;align-items:center;min-height:var(--tap);
+  transition:color var(--enter-fast) var(--ease-out);
+}
+.masthead nav a:hover{color:var(--ink)}
+.masthead nav a:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:var(--r-sm)}
+.masthead .btn-compact{margin-left:var(--s-3)}
+@media (max-width:760px){ .masthead nav a:nth-child(2){display:none} }
+
+/* ---------- buttons ---------- */
+.btn{
+  min-height:var(--tap);padding:0 var(--s-5);background:var(--ink);color:var(--paper);
+  border:1px solid var(--ink);border-radius:var(--r-md);cursor:pointer;
+  font-family:var(--font-ui);font-size:var(--t-sm);font-weight:600;
+  transition:background var(--enter-fast) var(--ease-out),transform var(--enter-fast) var(--ease-out),box-shadow var(--enter-fast) var(--ease-out);
+}
+.btn:hover{background:var(--ink-2);box-shadow:0 4px 14px rgba(18,22,28,.16)}
+.btn:active{transform:scale(.975)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.btn-pulse{background:var(--pulse);border-color:var(--pulse);color:#fff}
+.btn-pulse:hover{background:var(--pulse-dim);box-shadow:0 4px 18px rgba(255,77,61,.34)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn-ghost:hover{background:rgba(18,22,28,.05);box-shadow:none}
+.btn-sm{min-height:36px;padding:0 var(--s-4);font-size:var(--t-sm)}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ---------- hero: a choreographed entrance ---------- */
+.hero{padding:calc(var(--s-9)) 0 var(--s-9);overflow:hidden}
+.hero-in{max-width:82rem;margin:0 auto;padding:0 var(--gutter);display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+.kicker{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.24em;text-transform:uppercase;color:var(--pulse);margin:0 0 var(--s-4)}
+.hero h1{font-size:var(--t-hero);margin:0 0 var(--s-5);font-weight:700;max-width:12ch}
+.hero h1 em{font-style:normal;color:var(--pulse)}
+.hero .lede{font-size:var(--t-lg);color:var(--mute);max-width:44ch;margin-bottom:var(--s-6)}
+.hero-actions{display:flex;gap:var(--s-3);flex-wrap:wrap;align-items:center}
+.hero-note{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute);margin:var(--s-4) 0 0}
+
+/* the hero visual: a pulse line drawn in, then a count-up number */
+.pulse-card{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-app);padding:var(--s-5)}
+.pulse-card header{display:flex;align-items:center;gap:var(--s-3);padding-bottom:var(--s-4);border-bottom:1px solid var(--line)}
+.pulse-card .dot{width:9px;height:9px;border-radius:50%;background:var(--line-2)}
+.pulse-card .dot.on{background:var(--signal);animation:breathe 2.6s var(--ease-flat) infinite}
+@keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.pulse-card h2{font-size:var(--t-sm);margin:0;font-weight:600;letter-spacing:0}
+.pulse-card .time{margin-left:auto;font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute)}
+.pulse-card figure{margin:var(--s-4) 0}
+.pulse-card svg{display:block;width:100%;height:auto}
+.pulse-card .trace{stroke-dasharray:520;stroke-dashoffset:520;transition:stroke-dashoffset 1600ms var(--ease-out) 200ms}
+.is-in .pulse-card .trace{stroke-dashoffset:0}
+.pulse-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4);border-top:1px solid var(--line);padding-top:var(--s-4)}
+.pulse-stats div{margin:0}
+.pulse-stats dt{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:0}
+.pulse-stats dd{margin:2px 0 0;font-size:var(--t-xl);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+@media (max-width:900px){ .hero-in{grid-template-columns:1fr} }
+
+/* ---------- the tour ---------- */
+.tour{background:var(--ink);color:var(--paper);padding:var(--s-9) 0}
+.tour-in{max-width:82rem;margin:0 auto;padding:0 var(--gutter)}
+.tour-head{max-width:44rem;margin-bottom:var(--s-7)}
+.tour-head h2{font-size:var(--t-2xl);margin:0 0 var(--s-4)}
+.tour-head p{color:rgba(247,246,243,.72);margin:0}
+.tour-kicker{color:var(--pulse)}
+
+.tour-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(1.5rem,4vw,4rem);align-items:start}
+
+/* step rail */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-2)}
+.step-btn{
+  width:100%;min-height:var(--tap);display:grid;grid-template-columns:2rem 1fr;gap:var(--s-3);
+  align-items:start;text-align:left;background:transparent;border:0;border-left:2px solid var(--line-dark);
+  color:rgba(247,246,243,.6);cursor:pointer;padding:var(--s-4) 0 var(--s-4) var(--s-4);
+  font-family:var(--font-ui);transition:color var(--enter-base) var(--ease-out),border-color var(--enter-base) var(--ease-out),opacity var(--enter-base) var(--ease-out);
+}
+.step-btn:hover{color:var(--paper)}
+.step-btn:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.step-btn .idx{font-family:var(--font-mono);font-size:var(--t-sm);color:rgba(247,246,243,.4);transition:color var(--enter-base) var(--ease-out)}
+.step-btn .t{font-size:var(--t-base);font-weight:600;display:block}
+.step-btn .d{font-size:var(--t-sm);display:block;color:rgba(247,246,243,.55);margin-top:2px}
+.step-btn[aria-selected="true"]{color:var(--paper);border-left-color:var(--pulse)}
+.step-btn[aria-selected="true"] .idx{color:var(--pulse)}
+.step-btn[aria-selected="true"] .d{color:rgba(247,246,243,.8)}
+
+/* the product frame the tour is talking about */
+.stage{position:relative;background:var(--ink-2);border:1px solid var(--line-dark);border-radius:var(--r-lg);padding:var(--s-5);min-height:26rem;overflow:hidden}
+.stage-bar{display:flex;align-items:center;gap:var(--s-2);padding-bottom:var(--s-4);border-bottom:1px solid var(--line-dark)}
+.stage-bar .dot{width:8px;height:8px;border-radius:50%;background:var(--line-dark)}
+.stage-bar .title{font-family:var(--font-mono);font-size:var(--t-xs);color:rgba(247,246,243,.55);margin-left:var(--s-3);letter-spacing:.08em}
+.stage-bar .live{margin-left:auto;display:flex;align-items:center;gap:var(--s-2);font-family:var(--font-mono);font-size:var(--t-xs);color:var(--signal)}
+.stage-bar .live i{width:7px;height:7px;border-radius:50%;background:var(--signal);display:block}
+.panel{position:absolute;inset:var(--s-5);padding-top:3.25rem}
+/* panels enter and leave on the same curve; nothing overlaps for long */
+.panel{opacity:0;transform:translateX(28px);transition:opacity var(--enter-slow) var(--ease-in),transform var(--enter-slow) var(--ease-in)}
+.panel.is-active{opacity:1;transform:none;transition:opacity var(--enter-slow) var(--ease-out) 90ms,transform var(--enter-slow) var(--ease-out) 90ms}
+.panel.is-leaving{opacity:0;transform:translateX(-28px);transition:opacity var(--enter-slow) var(--ease-in),transform var(--enter-slow) var(--ease-in)}
+.panel h3{font-size:var(--t-lg);margin:0 0 var(--s-3)}
+.panel p{color:rgba(247,246,243,.72);font-size:var(--t-sm);margin:0 0 var(--s-4);max-width:40ch}
+
+/* the tour's own callout, animated in after the panel */
+.callout{
+  position:absolute;pointer-events:none;z-index:3;
+  background:var(--pulse);color:#fff;font-family:var(--font-mono);font-size:var(--t-xs);
+  letter-spacing:.06em;padding:6px 10px;border-radius:var(--r-sm);
+  opacity:0;transform:translate(-50%,-100%) scale(.94);
+  transition:opacity var(--enter-base) var(--ease-out) 520ms,transform var(--enter-base) var(--ease-out) 520ms;
+}
+.callout.on{opacity:1;transform:translate(-50%,-100%) scale(1)}
+.co-1{left:62%;top:34%}.co-2{left:70%;top:30%}.co-3{left:76%;top:36%}.co-4{left:50%;top:26%}
+.callout::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:22px;background:var(--pulse);transform:translateX(-50%)}
+
+/* the small UI the tour is describing */
+.mini{background:var(--ink-3);border:1px solid var(--line-dark);border-radius:var(--r-md);padding:var(--s-4);margin-top:var(--s-4)}
+.mini-row{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) 0;border-bottom:1px solid var(--line-dark)}
+.mini-row:last-child{border-bottom:0}
+.mini .av{width:26px;height:26px;border-radius:50%;background:var(--signal);flex:0 0 auto;display:grid;place-items:center;font-family:var(--font-mono);font-size:10px;color:#04231e}
+.mini .av.b{background:var(--pulse);color:#2b0906}
+.mini .txt{font-size:var(--t-sm)}
+.mini .txt small{display:block;color:rgba(247,246,243,.5);font-size:var(--t-xs)}
+.mini .amt{margin-left:auto;font-family:var(--font-mono);font-size:var(--t-sm);color:rgba(247,246,243,.8)}
+.mini-bars{display:flex;align-items:flex-end;gap:6px;height:88px;margin-top:var(--s-4)}
+.mini-bars i{flex:1;background:var(--signal);opacity:.55;display:block;transform-origin:bottom;transform:scaleY(0);transition:transform var(--enter-base) var(--ease-out)}
+.panel.is-active .mini-bars i{transform:scaleY(1)}
+.mini-bars i:nth-child(1){height:38%;transition-delay:80ms}
+.mini-bars i:nth-child(2){height:54%;transition-delay:140ms}
+.mini-bars i:nth-child(3){height:44%;transition-delay:200ms}
+.mini-bars i:nth-child(4){height:72%;transition-delay:260ms}
+.mini-bars i:nth-child(5){height:60%;transition-delay:320ms}
+.mini-bars i:nth-child(6){height:86%;background:var(--pulse);opacity:.9;transition-delay:380ms}
+.mini-bars i:nth-child(7){height:66%;transition-delay:440ms}
+.mini-legend{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:rgba(247,246,243,.45);margin-top:var(--s-2)}
+.checks{list-style:none;margin:var(--s-4) 0 0;padding:0;display:grid;gap:var(--s-2)}
+.checks li{display:grid;grid-template-columns:20px 1fr;gap:var(--s-3);align-items:start;font-size:var(--t-sm);color:rgba(247,246,243,.78)}
+.checks svg{width:18px;height:18px;color:var(--signal);margin-top:2px}
+
+/* stage progress bar */
+.stage-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--line-dark)}
+.stage-progress i{display:block;height:100%;background:var(--pulse);width:var(--pct,25%);transition:width var(--stage) var(--ease-flat)}
+
+.tour-foot{display:flex;align-items:center;gap:var(--s-4);flex-wrap:wrap;margin-top:var(--s-6)}
+.tour-foot .count{font-family:var(--font-mono);font-size:var(--t-sm);color:rgba(247,246,243,.6)}
+.tour-foot .count b{color:var(--paper)}
+@media (max-width:900px){ .tour-grid{grid-template-columns:1fr} .stage{min-height:24rem} }
+
+/* ---------- motion spec: this page documents its own motion ---------- */
+.spec{background:var(--paper-2);border-top:1px solid var(--line)}
+.spec-in{max-width:82rem;margin:0 auto;padding:var(--s-9) var(--gutter);display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(1.5rem,4vw,4.5rem);align-items:start}
+.spec h2{font-size:var(--t-2xl);margin:0 0 var(--s-4)}
+.spec p{color:var(--mute);max-width:40ch}
+table{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--mute);padding-bottom:var(--s-4)}
+th,td{text-align:left;padding:var(--s-3) var(--s-3) var(--s-3) 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:500}
+td code{font-family:var(--font-mono);font-size:var(--t-xs);background:var(--paper);padding:2px 5px;border-radius:var(--r-sm);white-space:nowrap}
+.dur-demo{display:flex;align-items:center;gap:var(--s-3)}
+.dur-demo b{width:64px;height:8px;background:var(--pulse);border-radius:4px;display:block;animation:demo 1.6s var(--ease-flat) infinite alternate}
+.dur-demo.d420 b{animation-duration:2.4s}
+.dur-demo.d720 b{animation-duration:3.4s}
+.dur-demo.d1200 b{animation-duration:4.6s}
+.dur-demo.d80 b{animation-duration:1.9s}
+.dur-demo span{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute)}
+@keyframes demo{from{transform:translateX(0)}to{transform:translateX(56px)}}
+.spec-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4);margin-top:var(--s-6)}
+.spec-trio div{border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s-4)}
+.spec-trio dt{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:0 0 var(--s-2)}
+.spec-trio dd{margin:0;font-size:var(--t-sm)}
+@media (max-width:900px){ .spec-in{grid-template-columns:1fr} .spec-trio{grid-template-columns:1fr} }
+
+/* ---------- quote ---------- */
+.quote{background:var(--paper);border-top:1px solid var(--line)}
+.quote-in{max-width:82rem;margin:0 auto;padding:var(--s-9) var(--gutter);display:grid;grid-template-columns:1fr auto;gap:var(--s-7);align-items:center}
+.quote blockquote{margin:0;font-size:var(--t-xl);line-height:1.24;letter-spacing:-.015em;max-width:26ch}
+.quote blockquote span{color:var(--pulse)}
+.quote figcaption{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--mute);margin-top:var(--s-3)}
+.quote .metric{text-align:right;border-left:1px solid var(--line);padding-left:var(--s-6)}
+.quote .metric b{display:block;font-size:var(--t-2xl);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.quote .metric span{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--mute);letter-spacing:.1em}
+@media (max-width:760px){ .quote-in{grid-template-columns:1fr} .quote .metric{text-align:left;border-left:0;border-top:1px solid var(--line);padding:var(--s-4) 0 0} }
+
+/* ---------- signup ---------- */
+.signup{background:var(--ink-2);color:var(--paper)}
+.signup-in{max-width:82rem;margin:0 auto;padding:var(--s-9) var(--gutter);display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(1.5rem,4vw,4.5rem);align-items:start}
+.signup h2{font-size:var(--t-2xl);margin:0 0 var(--s-4)}
+.signup p{color:rgba(247,246,243,.72);max-width:40ch}
+.f{margin-bottom:var(--s-4)}
+.f label{display:block;font-size:var(--t-sm);font-weight:600;margin-bottom:var(--s-2)}
+.f input,.f select{
+  width:100%;min-height:var(--tap);padding:var(--s-3);
+  background:var(--ink-3);color:var(--paper);border:1px solid var(--line-dark);border-radius:var(--r-md);
+  font-family:var(--font-ui);font-size:var(--t-sm);
+  transition:border-color var(--enter-fast) var(--ease-out),box-shadow var(--enter-fast) var(--ease-out);
+}
+.f select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,rgba(247,246,243,.6) 50%),linear-gradient(135deg,rgba(247,246,243,.6) 50%,transparent 50%);background-position:calc(100% - 18px) 1.25rem,calc(100% - 13px) 1.25rem;background-size:5px 5px;background-repeat:no-repeat}
+.f select option{background:var(--ink-2)}
+.f input::placeholder{color:rgba(247,246,243,.35)}
+.f input:hover,.f select:hover{border-color:rgba(247,246,243,.4)}
+.f input:focus-visible,.f select:focus-visible{outline:none;border-color:var(--pulse);box-shadow:0 0 0 3px rgba(255,77,61,.24)}
+.f input[aria-invalid="true"]{border-color:var(--warn);box-shadow:0 0 0 3px rgba(192,122,18,.24)}
+.f .msg{display:block;font-size:var(--t-xs);color:var(--mute);margin-top:var(--s-2);min-height:1.2em}
+.f .msg.error{color:#ffb1a8}
+.f .msg.ok{color:#7fe0b6}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+.form-status{margin:var(--s-4) 0 0;font-size:var(--t-sm);color:#7fe0b6;min-height:1.4em}
+.form-status.error{color:#ffb1a8}
+@media (max-width:860px){ .signup-in{grid-template-columns:1fr} }
+@media (max-width:520px){ .f-row{grid-template-columns:1fr} }
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);border-top:1px solid var(--line-dark);padding:var(--s-7) var(--gutter) var(--s-8)}
+.foot-in{max-width:82rem;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:var(--s-6)}
+.foot-in h2{font-size:var(--t-sm);letter-spacing:.2em;text-transform:uppercase;margin:0 0 var(--s-3)}
+.foot-in h3{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--pulse);margin:0 0 var(--s-3)}
+.foot-in p{color:rgba(247,246,243,.6);font-size:var(--t-sm);margin:0;max-width:36ch}
+.foot-in ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-1)}
+.foot-in a{color:rgba(247,246,243,.78);text-decoration:none;font-size:var(--t-sm);display:inline-flex;align-items:center;min-height:var(--tap)}
+.foot-in a:hover{color:var(--pulse)}
+.foot-in a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.legal{font-family:var(--font-mono);font-size:var(--t-xs);color:rgba(247,246,243,.45);margin:var(--s-6) 0 0;padding-top:var(--s-4);border-top:1px solid var(--line-dark);line-height:1.9;max-width:88ch}
+@media (max-width:760px){ .foot-in{grid-template-columns:1fr} }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .rise{opacity:1;transform:none}
+  .panel{opacity:1;transform:none;position:static}
+  .panel.is-leaving{display:none}
+  .callout{display:none}
+  .pulse-card .trace{stroke-dashoffset:0}
+  .mini-bars i{transform:scaleY(1)}
+  .dur-demo b{animation:none}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <a class="mark" href="#top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M2 12h4l3-8 4 16 3-8h6"/>
+      </svg>
+      Pulse
+    </a>
+    <nav aria-label="Sections">
+      <a href="#tour">The tour</a>
+      <a href="#spec">How it moves</a>
+      <a href="#start">Start</a>
+    </nav>
+    <a class="btn btn-sm btn-compact" href="#start">Start free</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO: seven staggered arrivals, one curve -->
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="hero-in">
+      <div>
+        <p class="kicker rise d0">Product tour · 2 minutes</p>
+        <h1 class="rise d1" id="hero-h">Everything your team says, in <em>one place</em></h1>
+        <p class="lede rise d2">Pulse collects standups, bug reports, customer quotes and roadmap votes from wherever they already happen — Slack, email, forms — and turns them into one ranked list with an owner and a date.</p>
+        <div class="hero-actions rise d3">
+          <a class="btn btn-pulse" href="#start">Start free, no card</a>
+          <a class="btn btn-ghost" href="#tour">Watch the tour</a>
+        </div>
+        <p class="hero-note rise d4">4 200 teams · set up in nine minutes · 14-day trial</p>
+      </div>
+
+      <div class="pulse-card rise d5">
+        <header>
+          <span class="dot on" aria-hidden="true"></span>
+          <h2>Feedback volume, last 8 weeks</h2>
+          <span class="time">live</span>
+        </header>
+        <figure>
+          <svg viewBox="0 0 400 130" role="img" aria-labelledby="trace-t">
+            <title id="trace-t">Feedback volume rising from 40 to 210 items a week</title>
+            <g stroke="rgba(18,22,28,.1)" stroke-width="1"><path d="M0 30H400M0 65H400M0 100H400"/></g>
+            <path class="trace" d="M0 112 L40 106 L80 108 L120 92 L160 84 L200 76 L240 58 L280 52 L320 34 L360 26 L400 14" fill="none" stroke="#ff4d3d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="trace" d="M0 118 L400 118" fill="none" stroke="#0f9d8f" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <g font-family="ui-monospace,monospace" font-size="9" fill="#6d7681">
+              <text x="0" y="127">wk 1</text><text x="360" y="127">wk 8</text>
+            </g>
+          </svg>
+        </figure>
+        <dl class="pulse-stats">
+          <div><dt>Items</dt><dd data-count="4218">0</dd></div>
+          <div><dt>Answered</dt><dd data-count="91" data-suffix="%">0</dd></div>
+          <div><dt>Median wait</dt><dd data-count="6" data-suffix=" h">0</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE TOUR: four steps, four panels, one progress bar -->
+  <section class="tour" id="tour" aria-labelledby="tour-h">
+    <div class="tour-in">
+      <div class="tour-head">
+        <p class="kicker tour-kicker">Step through it</p>
+        <h2 id="tour-h">Four things happen when you switch Pulse on</h2>
+        <p>Use the buttons, the arrow keys, or just read — the panel behind changes either way.</p>
+      </div>
+
+      <div class="tour-grid">
+        <div>
+          <div role="tablist" aria-label="Tour steps" class="steps" id="steps">
+            <button class="step-btn" type="button" role="tab" id="tab-1" aria-controls="p1" aria-selected="true" tabindex="0">
+              <span class="idx">01</span><span><span class="t">Everything gets collected</span><span class="d">Slack, email, forms, calls — five channels in</span></span>
+            </button>
+            <button class="step-btn" type="button" role="tab" id="tab-2" aria-controls="p2" aria-selected="false" tabindex="-1">
+              <span class="idx">02</span><span><span class="t">Duplicates collapse</span><span class="d">The same complaint from four sources becomes one item</span></span>
+            </button>
+            <button class="step-btn" type="button" role="tab" id="tab-3" aria-controls="p3" aria-selected="false" tabindex="-1">
+              <span class="idx">03</span><span><span class="t">It gets ranked, not voted</span><span class="d">Reach, revenue and churn, weighed — not a thumb on a scale</span></span>
+            </button>
+            <button class="step-btn" type="button" role="tab" id="tab-4" aria-controls="p4" aria-selected="false" tabindex="-1">
+              <span class="idx">04</span><span><span class="t">Owners and dates, automatically</span><span class="d">A weekly digest that says what moved and what did not</span></span>
+            </button>
+          </div>
+
+          <div class="tour-foot">
+            <button class="btn btn-pulse btn-sm" type="button" id="next-step">Next step</button>
+            <button class="btn btn-ghost btn-sm" type="button" id="replay">Replay tour</button>
+            <p class="count" role="status" aria-live="polite">Step <b id="cur">01</b> of 04 · <span id="cur-title">Everything gets collected</span></p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-bar">
+            <span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span>
+            <span class="title" id="stage-title">pulse · intake</span>
+            <span class="live"><i aria-hidden="true"></i>connected</span>
+          </div>
+
+          <div class="panel is-active" id="p1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
+            <span class="callout co-1" id="co-1">5 sources live</span>
+            <h3>Everything gets collected</h3>
+            <p>Point Pulse at the channels you already use. Nothing changes about how your team talks; Pulse just listens in the places they are already talking.</p>
+            <div class="mini">
+              <div class="mini-row"><span class="av" aria-hidden="true">S</span><span class="txt">#support<small>Slack · 3 channels</small></span><span class="amt">128</span></div>
+              <div class="mini-row"><span class="av b" aria-hidden="true">M</span><span class="txt">Form embed<small>Web · 2 forms</small></span><span class="amt">64</span></div>
+              <div class="mini-row"><span class="av" aria-hidden="true">C</span><span class="txt">sales@<small>Forwarded email</small></span><span class="amt">41</span></div>
+            </div>
+          </div>
+
+          <div class="panel" id="p2" role="tabpanel" aria-labelledby="tab-2" tabindex="0" hidden>
+            <span class="callout co-2" id="co-2">4 → 1</span>
+            <h3>Duplicates collapse</h3>
+            <p>Four people describing the same export bug become one item with four voices, four accounts and one owner. Nobody has to be the person who notices it has been reported already.</p>
+            <div class="mini">
+              <div class="mini-row"><span class="av" aria-hidden="true">E</span><span class="txt">Export to CSV times out<small>4 sources · 7 accounts · €2 100 MRR</small></span><span class="amt">merged</span></div>
+              <div class="mini-row"><span class="av b" aria-hidden="true">D</span><span class="txt">Dark mode missing<small>2 sources · 3 accounts</small></span><span class="amt">merged</span></div>
+            </div>
+          </div>
+
+          <div class="panel" id="p3" role="tabpanel" aria-labelledby="tab-3" tabindex="0" hidden>
+            <span class="callout co-3" id="co-3">+31 this week</span>
+            <h3>It gets ranked, not voted</h3>
+            <p>Every item carries a weight: accounts affected, revenue attached, and whether it appears in churn conversations. The ranking is defensible and you can see the arithmetic.</p>
+            <div class="mini">
+              <div class="mini-bars" role="img" aria-label="Bar chart of weekly item volume, rising to 210 with Friday the highest.">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+              <p class="mini-legend"><span>Mon</span><span>Fri · 210</span></p>
+            </div>
+          </div>
+
+          <div class="panel" id="p4" role="tabpanel" aria-labelledby="tab-4" tabindex="0" hidden>
+            <span class="callout co-4" id="co-4">sent 09:00</span>
+            <h3>Owners and dates, automatically</h3>
+            <p>Each item gets a team, an owner and a target. If nothing moves for two weeks, it comes back to you — not to the person who happened to report it.</p>
+            <ul class="checks">
+              <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l4 4 8-8"/></svg><span>Export to CSV — Platform, assigned to Ada, 14 Nov</span></li>
+              <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l4 4 8-8"/></svg><span>Dark mode — Design, unassigned, needs an owner</span></li>
+            </ul>
+          </div>
+
+          <div class="stage-progress" aria-hidden="true"><i id="stage-bar"></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the motion specification, written out -->
+  <section class="spec" id="spec" aria-labelledby="spec-h">
+    <div class="spec-in">
+      <div>
+        <p class="kicker">Motion system</p>
+        <h2 id="spec-h">How this page moves, and why</h2>
+        <p>Animation here is not decoration. It does three jobs: it tells you something arrived, it tells you what changed as a result of you, and it never sits between you and the task.</p>
+        <p>Every duration below is a token. Nothing on this page uses a number that is not in that list.</p>
+      </div>
+      <div>
+        <table>
+          <caption>Durations and curves</caption>
+          <thead><tr><th scope="col">Token</th><th scope="col">Duration</th><th scope="col">Used for</th><th scope="col"></th></tr></thead>
+          <tbody>
+            <tr><td><code>--enter-fast</code></td><td>180 ms</td><td>Press, check, hover, state acknowledgement</td><td><span class="dur-demo"><b></b><span>180</span></span></td></tr>
+            <tr><td><code>--enter-base</code></td><td>420 ms</td><td>Any component arriving on scroll</td><td><span class="dur-demo d420"><b></b><span>420</span></span></td></tr>
+            <tr><td><code>--enter-slow</code></td><td>720 ms</td><td>Panel enter and leave</td><td><span class="dur-demo d720"><b></b><span>720</span></span></td></tr>
+            <tr><td><code>--stage</code></td><td>1 200 ms</td><td>One full tour step, progress bar</td><td><span class="dur-demo d1200"><b></b><span>1 200</span></span></td></tr>
+            <tr><td><code>--stagger</code></td><td>80 ms</td><td>Per item inside a stagger group</td><td><span class="dur-demo d80"><b></b><span>80</span></span></td></tr>
+          </tbody>
+        </table>
+        <dl class="spec-trio">
+          <div><dt>Entering</dt><dd>cubic-bezier(.16, 1, .3, 1) — decelerates, arrives softly</dd></div>
+          <div><dt>Leaving</dt><dd>cubic-bezier(.5, 0, .75, 0) — accelerates out, never lingers</dd></div>
+          <div><dt>Reduced motion</dt><dd>All of it collapses to 0.01 ms. Panels swap in place, callouts do not appear.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- quote -->
+  <section class="quote" aria-labelledby="quote-h">
+    <div class="quote-in">
+      <figure style="margin:0">
+        <h2 class="sr-only" id="quote-h">What a customer says</h2>
+        <blockquote>“We killed a 40-item backlog in a quarter by putting <span>every channel into one list</span>.”</blockquote>
+        <figcaption>Ilse Bakker · Head of Product, Halden Freight</figcaption>
+      </figure>
+      <p class="metric"><b>−61%</b><span>median time to a decision, after 2 quarters</span></p>
+    </div>
+  </section>
+
+  <!-- signup -->
+  <section class="signup" id="start" aria-labelledby="sign-h">
+    <div class="signup-in">
+      <div>
+        <p class="kicker">Start free</p>
+        <h2 id="sign-h">Set it up in nine minutes</h2>
+        <p>Connect one channel, invite the team, and let the first digest land on Monday. No card, and if it does not work for you after 14 days we delete the data on request rather than asking you to email us.</p>
+      </div>
+
+      <form id="start-form" novalidate>
+        <div class="f-row">
+          <div class="f">
+            <label for="s-name">Name</label>
+            <input id="s-name" name="name" type="text" autocomplete="name" placeholder="Ilse Bakker" aria-describedby="s-name-msg">
+            <span class="msg" id="s-name-msg" role="alert"></span>
+          </div>
+          <div class="f">
+            <label for="s-work">Work email</label>
+            <input id="s-work" name="email" type="email" autocomplete="email" placeholder="you@company.com" aria-describedby="s-work-msg">
+            <span class="msg" id="s-work-msg" role="alert"></span>
+          </div>
+        </div>
+        <div class="f">
+          <label for="s-size">Team size</label>
+          <select id="s-size" name="size" aria-describedby="s-size-msg">
+            <option value="1-9">1 – 9</option>
+            <option value="10-49" selected>10 – 49</option>
+            <option value="50-199">50 – 199</option>
+            <option value="200+">200 or more</option>
+          </select>
+          <span class="msg" id="s-size-msg"></span>
+        </div>
+        <div class="f">
+          <label for="s-where">Where does most of your feedback arrive today?</label>
+          <select id="s-where" name="source" aria-describedby="s-where-msg">
+            <option>Slack</option>
+            <option>Email</option>
+            <option>Support desk</option>
+            <option>Calls and notes</option>
+            <option>Scattered across all four</option>
+          </select>
+          <span class="msg" id="s-where-msg"></span>
+        </div>
+        <button class="btn btn-pulse" type="submit" id="start-btn">Create the workspace</button>
+        <p class="form-status" id="start-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div>
+      <h2>Pulse</h2>
+      <p>Feedback intake, ranking and ownership for product teams who are done arguing about spreadsheets.</p>
+    </div>
+    <nav aria-label="Product">
+      <h3>Product</h3>
+      <ul>
+        <li><a href="#tour">The tour</a></li>
+        <li><a href="#spec">Motion system</a></li>
+        <li><a href="#start">Pricing</a></li>
+        <li><a href="#start">Changelog</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Company">
+      <h3>Company</h3>
+      <ul>
+        <li><a href="#start">About</a></li>
+        <li><a href="#start">Security</a></li>
+        <li><a href="#start">Status</a></li>
+        <li><a href="#start">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="foot-limit">
+    <p class="legal">Pulse is a fictional product created for this example page. All figures, customers and quotes are invented for demonstration. The only motion on this page comes from CSS transitions and one IntersectionObserver; there is no animation library, and no image, font or script is loaded from anywhere else.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- one observer reveals whatever is entering ---------- */
+  var targets = document.querySelectorAll('.hero-in, .pulse-card');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('is-in'); io.unobserve(en.target); }
+      });
+    },{threshold:.25});
+    targets.forEach(function(t){ io.observe(t); });
+  } else {
+    document.body.classList.add('is-in');
+    Array.prototype.forEach.call(targets, function(t){ t.classList.add('is-in'); });
+  }
+  document.querySelector('.hero').classList.add('is-in');
+
+  /* ---------- hero counters run once, on entry ---------- */
+  function countUp(el){
+    var target = Number(el.dataset.count);
+    var suffix = el.dataset.suffix || '';
+    if(reduced){ el.textContent = target + suffix; return; }
+    var t0 = null, dur = 1100;
+    function tick(ts){
+      if(t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString('en-GB') + suffix;
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  var counters = document.querySelectorAll('[data-count]');
+  if('IntersectionObserver' in window){
+    var io2 = new IntersectionObserver(function(es){
+      es.forEach(function(en){ if(en.isIntersecting){ countUp(en.target); io2.unobserve(en.target); } });
+    },{threshold:.6});
+    counters.forEach(function(c){ io2.observe(c); });
+  } else {
+    counters.forEach(countUp);
+  }
+
+  /* ---------- the tour: four steps, one progress bar ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.step-btn'));
+  var panels = [1,2,3,4].map(function(n){ return document.getElementById('p' + n); });
+  var callouts = [1,2,3,4].map(function(n){ return document.getElementById('co' + n); });
+  var titles = ['intake','merge','rank','own'];
+  var names = ['Everything gets collected','Duplicates collapse','It gets ranked, not voted','Owners and dates, automatically'];
+  var stageTitle = document.getElementById('stage-title');
+  var bar = document.getElementById('stage-bar');
+  var cur = document.getElementById('cur');
+  var curTitle = document.getElementById('cur-title');
+  var current = 0;
+  var lock = false;
+
+  function show(i, viaKeyboard){
+    if(i === current || lock) return;
+    var outgoing = panels[current];
+    var incoming = panels[i];
+    lock = true;
+    outgoing.classList.remove('is-active');
+    outgoing.classList.add('is-leaving');
+    callouts[current].classList.remove('on');
+    tabs[current].setAttribute('aria-selected','false');
+    tabs[current].tabIndex = -1;
+
+    window.setTimeout(function(){
+      outgoing.classList.remove('is-leaving');
+      outgoing.hidden = true;
+      incoming.hidden = false;
+      // force a frame so the incoming panel transitions rather than snaps
+      void incoming.offsetWidth;
+      incoming.classList.add('is-active');
+      callouts[i].classList.add('on');
+      current = i;
+      tabs[i].setAttribute('aria-selected','true');
+      tabs[i].tabIndex = 0;
+      stageTitle.textContent = 'pulse · ' + titles[i];
+      bar.style.setProperty('--pct', ((i + 1) / 4 * 100) + '%');
+      cur.textContent = String(i + 1).padStart(2,'0');
+      curTitle.textContent = names[i];
+      if(viaKeyboard) tabs[i].focus();
+      lock = false;
+    }, reduced ? 0 : 300);
+  }
+
+  tabs.forEach(function(t, i){
+    t.addEventListener('click', function(){ show(i); });
+    t.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowDown' || e.key === 'ArrowRight'){ e.preventDefault(); show((i + 1) % 4, true); }
+      if(e.key === 'ArrowUp' || e.key === 'ArrowLeft'){ e.preventDefault(); show((i + 3) % 4, true); }
+    });
+  });
+  document.getElementById('next-step').addEventListener('click', function(){ show((current + 1) % 4, true); });
+
+  document.getElementById('replay').addEventListener('click', function(){
+    if(lock) return;
+    // clear, hold a beat, then run the entrance again from step one
+    tabs.forEach(function(t){ t.setAttribute('aria-selected','false'); t.tabIndex = -1; });
+    panels.forEach(function(p){ p.classList.remove('is-active','is-leaving'); p.hidden = true; });
+    callouts.forEach(function(c){ c.classList.remove('on'); });
+    cur.textContent = '01';
+    bar.style.setProperty('--pct','25%');
+    stageTitle.textContent = 'pulse · intake';
+    lock = true;
+    window.setTimeout(function(){
+      panels[0].hidden = false;
+      void panels[0].offsetWidth;
+      panels[0].classList.add('is-active');
+      callouts[0].classList.add('on');
+      tabs[0].setAttribute('aria-selected','true');
+      tabs[0].tabIndex = 0;
+      current = 0;
+      lock = false;
+    }, reduced ? 0 : 260);
+  });
+
+  /* ---------- signup form ---------- */
+  var form = document.getElementById('start-form');
+  var nameI = document.getElementById('s-name'), workI = document.getElementById('s-work');
+  var nameM = document.getElementById('s-name-msg'), workM = document.getElementById('s-work-msg');
+  var status = document.getElementById('start-status');
+  var btn = document.getElementById('start-btn');
+  var size = document.getElementById('s-size'), where = document.getElementById('s-where');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var bad = false;
+    if(nameI.value.trim().length < 2){
+      nameM.textContent = 'We need a name for the workspace owner.'; nameM.className = 'msg error';
+      nameI.setAttribute('aria-invalid','true'); bad = true;
+    } else { nameM.textContent = 'Accepted.'; nameM.className = 'msg ok'; nameI.removeAttribute('aria-invalid'); }
+    var w = workI.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(w)){
+      workM.textContent = 'That address will not work — check for a missing @ or domain.'; workM.className = 'msg error';
+      workI.setAttribute('aria-invalid','true'); bad = true;
+    } else if(/\.(gmail|yahoo|hotmail|outlook)\./i.test(w)){
+      workM.textContent = 'We need a work address for the trial invite.'; workM.className = 'msg error';
+      workI.setAttribute('aria-invalid','true'); bad = true;
+    } else { workM.textContent = 'Accepted.'; workM.className = 'msg ok'; workI.removeAttribute('aria-invalid'); }
+    if(bad){
+      status.className = 'form-status error';
+      status.textContent = 'Two fields need attention. Nothing has been created.';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Creating…';
+    status.className = 'form-status';
+    status.textContent = 'Workspace created for ' + nameI.value.trim() + '. Trial invite sent to ' + w +
+      '. We will pre-connect ' + where.value.toLowerCase() + ' for a team of ' +
+      size.options[size.selectedIndex].text + ' and leave everything switched off until you confirm.';
+  });
+})();
+</script>
+</body>
+</html>

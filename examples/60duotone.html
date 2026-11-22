@@ -1,0 +1,603 @@
+<!-- Style: Duotone | 60duotone.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo Field - records pressed in two colours</title>
+<style>
+  /* Two colours do the work. Everything else is a neutral derived from one of them. */
+  :root{
+    --duo-1:#10233f;   /* deep ink blue */
+    --duo-2:#ff4f1f;   /* hot orange */
+    --paper:#f5efe6;
+    --white:#ffffff;
+    --ink:var(--duo-1);
+    --on-ink:#eef2f8;
+    --ink-60:color-mix(in srgb, var(--duo-1) 62%, var(--paper));
+    --ink-25:color-mix(in srgb, var(--duo-1) 22%, var(--paper));
+    --ink-12:color-mix(in srgb, var(--duo-1) 10%, var(--paper));
+    --on-ink-60:color-mix(in srgb, var(--on-ink) 66%, var(--duo-1));
+
+    --font:"Helvetica Neue",Helvetica,Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    --t-hero:clamp(2.4rem,7.6vw,6.2rem);
+    --t-h2:clamp(1.6rem,3.4vw,2.6rem);
+    --t-h3:clamp(1.1rem,1.7vw,1.3rem);
+    --t-body:clamp(.96rem,1.04vw,1.04rem);
+    --t-small:.84rem;
+
+    --r:2px;
+    --s-1:.4rem; --s-2:.8rem; --s-3:1.3rem; --s-4:2.1rem; --s-5:3.2rem; --s-6:4.6rem;
+    --gutter:clamp(1.1rem,3.5vw,2.6rem);
+    --wrap:1220px;
+    --hair:1px;
+    --duo-filter:grayscale(1) contrast(1.15) brightness(1.04);
+    --motion:180ms;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:var(--t-body);line-height:1.6;
+    -webkit-font-smoothing:antialiased}
+  h1,h2,h3{margin:0;font-weight:700;line-height:1.02;letter-spacing:-.025em}
+  h1{font-size:var(--t-hero);letter-spacing:-.04em;line-height:.92}
+  h2{font-size:var(--t-h2)}
+  h3{font-size:var(--t-h3);font-weight:650}
+  p{margin:0 0 1.05em}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  button{font:inherit}
+  svg{display:block;max-width:100%}
+  :focus-visible{outline:3px solid var(--duo-2);outline-offset:3px}
+  .wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+  .skip{position:absolute;left:-999px;background:var(--duo-2);color:var(--duo-1);padding:.7rem 1rem;font-weight:700}
+  .skip:focus{left:.5rem;top:.5rem;z-index:60}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--t-small);letter-spacing:.1em;text-transform:uppercase}
+  .rule{border:0;border-top:var(--hair) solid var(--ink-25);margin:0}
+  .orange{color:var(--duo-2)}
+
+  /* duotone plate: greyscale artwork, one colour multiplied over it */
+  .plate{position:relative;overflow:hidden;background:var(--ink-12)}
+  .plate svg{position:absolute;inset:0;width:100%;height:100%;filter:var(--duo-filter)}
+  .plate::after{content:"";position:absolute;inset:0;background:var(--duo-2);mix-blend-mode:multiply;opacity:.62}
+  .plate--flip::after{background:var(--duo-1);opacity:.7}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:50px;padding:.8rem 1.5rem;
+    font-weight:700;letter-spacing:.02em;text-decoration:none;cursor:pointer;border:var(--hair) solid var(--duo-1);
+    border-radius:var(--r);background:var(--duo-1);color:var(--on-ink);
+    transition:background var(--motion) ease,color var(--motion) ease}
+  .btn:hover{background:var(--duo-2);border-color:var(--duo-2);color:var(--duo-1)}
+  .btn--alt{background:var(--duo-2);border-color:var(--duo-2);color:var(--duo-1)}
+  .btn--alt:hover{background:var(--duo-1);border-color:var(--duo-1);color:var(--on-ink)}
+  .btn--ghost{background:transparent;color:var(--duo-1)}
+  .btn--ghost:hover{background:var(--duo-1);color:var(--on-ink)}
+  .btn--sm{min-height:44px;padding:.45rem 1rem;font-size:var(--t-small)}
+
+  /* nav */
+  header{border-bottom:var(--hair) solid var(--ink-25);background:var(--paper);position:relative;z-index:20}
+  .nav-in{display:flex;align-items:center;gap:var(--s-3);min-height:74px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;margin-right:auto;font-weight:800;
+    font-size:1.2rem;letter-spacing:-.02em}
+  .brand .sq{width:34px;height:34px;background:var(--duo-1);position:relative;flex:none}
+  .brand .sq::after{content:"";position:absolute;right:-8px;bottom:-8px;width:20px;height:20px;background:var(--duo-2)}
+  .nav-links{display:flex;gap:.2rem;flex-wrap:wrap;align-items:center}
+  .nav-links a{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .9rem;text-decoration:none;
+    font-size:var(--t-small);font-weight:650;color:var(--ink-60)}
+  .nav-links a:hover{color:var(--duo-1);box-shadow:inset 0 -2px 0 var(--duo-2)}
+  .nav-toggle{display:none;background:var(--duo-1);color:var(--on-ink);border:var(--hair) solid var(--duo-1);
+    min-height:44px;padding:.5rem .95rem;font-weight:700;cursor:pointer}
+
+  /* hero band */
+  .hero{background:var(--duo-1);color:var(--on-ink);overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;min-height:min(80vh,620px)}
+  .hero-copy{padding-block:var(--s-5);display:flex;flex-direction:column;justify-content:center;padding-right:var(--gutter)}
+  .hero-copy h1{color:var(--on-ink)}
+  .hero-copy h1 em{font-style:normal;color:var(--duo-2)}
+  .hero-copy .lede{color:var(--on-ink-60);max-width:44ch}
+  .hero-cta{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3)}
+  .hero-copy .btn--ghost{color:var(--on-ink);border-color:var(--on-ink-60)}
+  .hero-copy .btn--ghost:hover{background:var(--on-ink);color:var(--duo-1);border-color:var(--on-ink)}
+  .hero-art{position:relative;min-height:280px}
+  .hero-art .plate{position:absolute;inset:0}
+  .hero-art figcaption{position:absolute;left:0;bottom:0;right:0;background:var(--duo-2);color:var(--duo-1);
+    padding:.5rem var(--gutter);font-family:ui-monospace,Menlo,monospace;font-size:var(--t-small);letter-spacing:.08em}
+
+  section{padding-block:var(--s-5)}
+  .sec-head{display:grid;grid-template-columns:1fr auto;gap:var(--s-2);align-items:end;
+    border-bottom:2px solid var(--duo-1);padding-bottom:var(--s-2);margin-bottom:var(--s-4)}
+  .sec-head p{color:var(--ink-60);margin:0;max-width:52ch;font-size:.96rem}
+
+  /* releases */
+  .releases{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4) var(--s-3)}
+  .release{display:flex;flex-direction:column;gap:.6rem}
+  .release .sleeve{aspect-ratio:1;position:relative;display:grid;place-items:end start;padding:var(--s-2)}
+  .release .sleeve .title{font-size:clamp(1.1rem,2.2vw,1.5rem);font-weight:800;letter-spacing:-.02em;line-height:1.05;
+    color:var(--duo-1);position:relative;z-index:2}
+  .release .sleeve .cat{position:absolute;top:var(--s-2);left:var(--s-2);z-index:2;font-family:ui-monospace,Menlo,monospace;
+    font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--duo-1);opacity:.75}
+  .release h3{font-size:1.1rem}
+  .release p{margin:0;color:var(--ink-60);font-size:.93rem;flex:1}
+  .buy{display:flex;align-items:center;justify-content:space-between;gap:.6rem;border-top:var(--hair) solid var(--ink-25);padding-top:.6rem}
+  .price{font-weight:800;font-size:1.08rem}
+  .formats{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-60)}
+
+  /* roster */
+  .roster{border-top:var(--hair) solid var(--ink-25)}
+  .roster li{display:grid;grid-template-columns:74px 1fr auto auto;gap:var(--s-3);align-items:center;
+    padding:var(--s-2) 0;border-bottom:var(--hair) solid var(--ink-25)}
+  .roster .thumb{width:74px;height:74px;position:relative;overflow:hidden}
+  .roster .thumb svg{position:absolute;inset:0;width:100%;height:100%;filter:var(--duo-filter)}
+  .roster .thumb::after{content:"";position:absolute;inset:0;background:var(--duo-2);mix-blend-mode:multiply;opacity:.6}
+  .roster li:nth-child(even) .thumb::after{background:var(--duo-1);opacity:.68}
+  .roster b{font-size:1.05rem;letter-spacing:-.015em}
+  .roster .genre{color:var(--ink-60);font-size:.9rem}
+  .roster .since{font-family:ui-monospace,Menlo,monospace;font-size:var(--t-small);color:var(--ink-60);white-space:nowrap}
+
+  /* the room */
+  .room{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:start}
+  .room-art{aspect-ratio:5/4}
+  .gear{display:grid;grid-template-columns:1fr auto;gap:.1rem var(--s-3);border-top:var(--hair) solid var(--ink-25)}
+  .gear dt{padding:.6rem 0;border-bottom:var(--hair) solid var(--ink-25)}
+  .gear dd{margin:0;padding:.6rem 0;border-bottom:var(--hair) solid var(--ink-25);text-align:right;
+    font-family:ui-monospace,Menlo,monospace;font-size:var(--t-small);color:var(--ink-60)}
+
+  /* tour */
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:.75rem .6rem;border-bottom:var(--hair) solid var(--ink-25);font-size:.95rem}
+  th{font-family:ui-monospace,Menlo,monospace;font-size:var(--t-small);font-weight:500;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-60)}
+  td.dt{font-family:ui-monospace,Menlo,monospace;white-space:nowrap;font-size:var(--t-small)}
+  .sold{color:var(--duo-2);font-weight:700}
+  tr:hover td{background:var(--ink-12)}
+
+  /* numbers */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ink-25);border:var(--hair) solid var(--ink-25)}
+  .stat{background:var(--paper);padding:var(--s-3)}
+  .stat b{display:block;font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:1;letter-spacing:-.03em}
+  .stat:nth-child(odd) b{color:var(--duo-1)}
+  .stat:nth-child(even) b{color:var(--duo-2)}
+  .stat span{font-family:ui-monospace,Menlo,monospace;font-size:var(--t-small);letter-spacing:.08em;color:var(--ink-60)}
+
+  /* subscribe */
+  .subscribe{background:var(--duo-1);color:var(--on-ink);padding:var(--s-4);display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:center}
+  .subscribe p{color:var(--on-ink-60)}
+  .field{display:block;margin-bottom:var(--s-2)}
+  .field .lab{display:block;font-family:ui-monospace,Menlo,monospace;font-size:var(--t-small);letter-spacing:.1em;
+    text-transform:uppercase;color:var(--on-ink-60);margin-bottom:.4rem}
+  .field input,.field select{width:100%;min-height:50px;padding:.7rem .9rem;font:inherit;background:transparent;
+    color:var(--on-ink);border:var(--hair) solid var(--on-ink-60);border-radius:var(--r)}
+  .field select option{color:var(--duo-1)}
+  .field input::placeholder{color:var(--on-ink-60)}
+  .field input:focus,.field select:focus{border-color:var(--duo-2);outline-offset:2px}
+  .field .err{display:none;font-size:var(--t-small);color:var(--duo-2);margin-top:.35rem}
+  .field[data-invalid] .err{display:block}
+  .field[data-invalid] input{border-color:var(--duo-2)}
+  .sub-status{min-height:1.6em;font-size:var(--t-small);margin-top:.6rem}
+  .sub-status[data-state="ok"]{color:var(--duo-2);font-weight:700}
+  .subscribe .btn{background:var(--duo-2);border-color:var(--duo-2);color:var(--duo-1)}
+  .subscribe .btn:hover{background:var(--on-ink);border-color:var(--on-ink)}
+
+  footer{background:var(--duo-1);color:var(--on-ink-60);padding-block:var(--s-4) var(--s-3);margin-top:var(--s-5)}
+  .foot{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:var(--s-4)}
+  footer h3{color:var(--on-ink);font-size:var(--t-small);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem}
+  footer li{margin-bottom:.35rem}
+  footer a{text-decoration:none;font-size:.94rem}
+  footer a:hover{color:var(--duo-2)}
+  .fine{margin-top:var(--s-3);padding-top:var(--s-2);border-top:1px solid rgba(238,242,248,.22);display:flex;
+    justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;font-size:var(--t-small)}
+
+  @media (max-width:980px){
+    .hero-grid{grid-template-columns:1fr;min-height:auto}
+    .hero-copy{padding-right:0;padding-bottom:var(--s-4)}
+    .hero-art{min-height:260px}
+    .releases{grid-template-columns:1fr 1fr}
+    .room,.subscribe,.foot{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+    .nav-toggle{display:inline-block}
+    .nav-links{display:none;width:100%;order:3;padding-bottom:var(--s-2)}
+    .nav-links[data-open="true"]{display:flex}
+  }
+  @media (max-width:620px){
+    .releases{grid-template-columns:1fr}
+    .roster li{grid-template-columns:60px 1fr;row-gap:.2rem}
+    .roster .thumb{width:60px;height:60px}
+    .roster .since{grid-column:2}
+    .sec-head{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#releases">Skip to the releases</a>
+
+<header>
+  <nav class="wrap" aria-label="Primary">
+    <div class="nav-in">
+      <a class="brand" href="#top"><span class="sq" aria-hidden="true"></span> Echo Field</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="nav-links" id="menu">
+        <a href="#releases">Releases</a>
+        <a href="#roster">Roster</a>
+        <a href="#room">The room</a>
+        <a href="#tour">Tour</a>
+      </div>
+      <a class="btn btn--sm" href="#subscribe">Subscribe</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="mono" style="color:var(--duo-2);margin-bottom:var(--s-2)">EF&mdash;014 &middot; out now</p>
+        <h1 id="hero-title">Two colours.<br><em>No third one.</em></h1>
+        <p class="lede">Echo Field press everything in two colours, on two-colour sleeves, with two-colour photography. It is not a limitation we work around. It is the reason the label sounds the way it does and looks like nothing else in the box.</p>
+        <div class="hero-cta">
+          <a class="btn btn--alt" href="#releases">Buy the catalogue</a>
+          <a class="btn btn--ghost" href="#room">Inside the room</a>
+        </div>
+      </div>
+      <figure class="hero-art" style="margin:0">
+        <div class="plate plate--flip">
+          <svg viewBox="0 0 400 500" role="img" aria-label="Duotone treatment of a control room: a mixing desk, a window into a live room, and a single chair, in deep blue and hot orange.">
+            <rect width="400" height="500" fill="#c9c9c9"/>
+            <rect x="0" y="0" width="400" height="200" fill="#6e6e6e"/>
+            <rect x="30" y="30" width="180" height="120" fill="#e8e8e8"/>
+            <rect x="46" y="46" width="148" height="88" fill="#8f8f8f"/>
+            <circle cx="88" cy="90" r="22" fill="#c4c4c4"/>
+            <rect x="240" y="40" width="130" height="16" fill="#9a9a9a"/>
+            <rect x="240" y="70" width="130" height="16" fill="#9a9a9a"/>
+            <rect x="240" y="100" width="130" height="16" fill="#9a9a9a"/>
+            <rect x="0" y="200" width="400" height="200" fill="#8a8a8a"/>
+            <path d="M40 250h320l-30 130H70z" fill="#dedede"/>
+            <g fill="#4a4a4a">
+              <rect x="70" y="268" width="12" height="26"/><rect x="100" y="268" width="12" height="26"/>
+              <rect x="130" y="268" width="12" height="26"/><rect x="160" y="268" width="12" height="26"/>
+              <rect x="200" y="268" width="12" height="26"/><rect x="230" y="268" width="12" height="26"/>
+              <rect x="260" y="268" width="12" height="26"/><rect x="290" y="268" width="12" height="26"/>
+            </g>
+            <rect x="80" y="316" width="240" height="40" fill="#3d3d3d"/>
+            <rect x="100" y="400" width="200" height="100" fill="#5f5f5f"/>
+            <rect x="150" y="330" width="100" height="16" fill="#f2f2f2"/>
+            <circle cx="200" cy="180" r="26" fill="#b5b5b5"/>
+          </svg>
+        </div>
+        <figcaption>Room 2, the control room, February &mdash; duotone master</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap" aria-label="Label figures">
+    <div class="stats">
+      <div class="stat"><b>31</b><span>Releases since 2016</span></div>
+      <div class="stat"><b>2</b><span>Colours, no exceptions</span></div>
+      <div class="stat"><b>9</b><span>Artists on the roster</span></div>
+      <div class="stat"><b>100%</b><span>Sleeves printed in-house</span></div>
+    </div>
+  </section>
+
+  <section class="wrap" id="releases" aria-labelledby="releases-title">
+    <div class="sec-head">
+      <h2 id="releases-title">The catalogue</h2>
+      <p>Six of thirty-one. The rest are in the archive, and two of those are only available as the original test pressings.</p>
+    </div>
+    <ul class="releases">
+      <li class="release">
+        <div class="sleeve plate" style="aspect-ratio:1">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Sleeve artwork: three horizontal bands of sea fog over a harbour wall." preserveAspectRatio="xMidYMid slice"><rect width="300" height="300" fill="#c6c6c6"/><rect y="0" width="300" height="96" fill="#7a7a7a"/><rect y="96" width="300" height="12" fill="#f0f0f0"/><rect y="108" width="300" height="92" fill="#a2a2a2"/><rect y="200" width="300" height="8" fill="#f0f0f0"/><rect y="208" width="300" height="92" fill="#5f5f5f"/><rect x="228" y="120" width="18" height="86" fill="#454545"/></svg>
+          <span class="cat">EF&mdash;031</span>
+          <span class="title">Low Tide<br>Weather</span>
+        </div>
+        <h3>Low Tide Weather</h3>
+        <p>Hanne Vinter, recorded live to tape in a harbour office over one November weekend.</p>
+        <div class="buy">
+          <span><span class="price">&euro;14</span> <span class="formats">LP / digital</span></span>
+          <button class="btn btn--sm" type="button" data-item="Low Tide Weather">Add to basket</button>
+        </div>
+      </li>
+      <li class="release">
+        <div class="sleeve plate plate--flip" style="aspect-ratio:1">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Sleeve artwork: four empty rooms drawn as nested rectangles with no windows." preserveAspectRatio="xMidYMid slice"><rect width="300" height="300" fill="#9a9a9a"/><rect x="18" y="18" width="264" height="264" fill="none" stroke="#e8e8e8" stroke-width="3"/><rect x="66" y="66" width="168" height="168" fill="none" stroke="#dcdcdc" stroke-width="3"/><rect x="114" y="114" width="72" height="72" fill="none" stroke="#cfcfcf" stroke-width="3"/><rect x="150" y="150" width="0" height="0" fill="#4c4c4c"/></svg>
+          <span class="cat">EF&mdash;030</span>
+          <span class="title">Four Rooms<br>No Windows</span>
+        </div>
+        <h3>Four Rooms No Windows</h3>
+        <p>Piotr Laski's second solo. Bass, room tone, and a door that does not close properly.</p>
+        <div class="buy">
+          <span><span class="price">&euro;11</span> <span class="formats">Cassette</span></span>
+          <button class="btn btn--sm" type="button" data-item="Four Rooms No Windows">Add to basket</button>
+        </div>
+      </li>
+      <li class="release">
+        <div class="sleeve plate" style="aspect-ratio:1">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Sleeve artwork: a mountain ridgeline with a repeater mast and radiating signal lines." preserveAspectRatio="xMidYMid slice"><rect width="300" height="300" fill="#b2b2b2"/><path d="M0 300 70 150l46 82 44-64 60 96 80-118v154z" fill="#5b5b5b"/><rect x="196" y="60" width="6" height="140" fill="#3d3d3d"/><g stroke="#ececec" stroke-width="3" fill="none"><path d="M150 96a60 60 0 0 1 52 30"/><path d="M150 96a90 90 0 0 1 78 45"/><path d="M150 96a30 30 0 0 1 26 15"/></g></svg>
+          <span class="cat">EF&mdash;029</span>
+          <span class="title">Ridgeline<br>Signal</span>
+        </div>
+        <h3>Ridgeline Signal</h3>
+        <p>A field recording of a mountain repeater station, unprocessed, forty-one minutes.</p>
+        <div class="buy">
+          <span><span class="price">&euro;9</span> <span class="formats">Cassette / digital</span></span>
+          <button class="btn btn--sm" type="button" data-item="Ridgeline Signal">Add to basket</button>
+        </div>
+      </li>
+      <li class="release">
+        <div class="sleeve plate plate--flip" style="aspect-ratio:1">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Sleeve artwork: poured concrete slabs stacked as offset rectangles." preserveAspectRatio="xMidYMid slice"><rect width="300" height="300" fill="#8d8d8d"/><rect x="30" y="196" width="150" height="26" fill="#dedede"/><rect x="62" y="160" width="150" height="26" fill="#d2d2d2"/><rect x="94" y="124" width="150" height="26" fill="#c6c6c6"/><rect x="126" y="88" width="150" height="26" fill="#b4b4b4"/><rect x="30" y="196" width="150" height="6" fill="#4a4a4a"/></svg>
+          <span class="cat">EF&mdash;028</span>
+          <span class="title">Concrete<br>Answers</span>
+        </div>
+        <h3>Concrete Answers</h3>
+        <p>Beta Unit, on their only record together before the split in 2021.</p>
+        <div class="buy">
+          <span><span class="price">&euro;18</span> <span class="formats">LP</span></span>
+          <button class="btn btn--sm" type="button" data-item="Concrete Answers">Add to basket</button>
+        </div>
+      </li>
+      <li class="release">
+        <div class="sleeve plate" style="aspect-ratio:1">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Sleeve artwork: a salt crystal lattice growing from a flat horizon line." preserveAspectRatio="xMidYMid slice"><rect width="300" height="300" fill="#bfbfbf"/><rect y="212" width="300" height="10" fill="#565656"/><g stroke="#efefef" stroke-width="3" fill="none"><path d="M150 212V80M150 150 90 110M150 150l60-40M150 120 108 92M150 120l42-28M90 110 66 150M210 110l24 40"/></g><circle cx="150" cy="80" r="10" fill="#e8e8e8"/></svg>
+          <span class="cat">EF&mdash;027</span>
+          <span class="title">Salt &amp;<br>Speaker</span>
+        </div>
+        <h3>Salt &amp; Speaker</h3>
+        <p>The debut. Recorded in nine hours, mixed in one, and largely unchanged since.</p>
+        <div class="buy">
+          <span><span class="price">&euro;16</span> <span class="formats">LP / CD</span></span>
+          <button class="btn btn--sm" type="button" data-item="Salt &amp; Speaker">Add to basket</button>
+        </div>
+      </li>
+      <li class="release">
+        <div class="sleeve plate plate--flip" style="aspect-ratio:1">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Sleeve artwork: concentric radio waves radiating from a mast against a night grid." preserveAspectRatio="xMidYMid slice"><rect width="300" height="300" fill="#6f6f6f"/><g stroke="#3c3c3c" stroke-width="2"><path d="M0 60h300M0 100h300M0 140h300M0 180h300M0 220h300"/><path d="M60 0v300M120 0v300M180 0v300M240 0v300"/></g><g fill="none" stroke="#ededed" stroke-width="4"><path d="M150 150a40 40 0 0 1 0 80 40 40 0 0 1 0-80"/><path d="M150 110a80 80 0 0 1 0 160 80 80 0 0 1 0-160"/></g><rect x="144" y="60" width="12" height="90" fill="#e2e2e2"/><circle cx="150" cy="56" r="9" fill="#e2e2e2"/></svg>
+          <span class="cat">EF&mdash;026</span>
+          <span class="title">Night<br>Frequency</span>
+        </div>
+        <h3>Night Frequency</h3>
+        <p>A shortwave radio piece. Half of it is numbers, half of it is a voice reading a shipping forecast.</p>
+        <div class="buy">
+          <span><span class="price">&euro;7</span> <span class="formats">Cassette</span></span>
+          <button class="btn btn--sm" type="button" data-item="Night Frequency">Add to basket</button>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="wrap" id="roster" aria-labelledby="roster-title">
+    <div class="sec-head">
+      <h2 id="roster-title">Roster</h2>
+      <p>Nine artists, no contracts, own masters, and a standing invitation to record anything at all.</p>
+    </div>
+    <ul class="roster">
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#b4b4b4"/><circle cx="40" cy="32" r="20" fill="#6b6b6b"/><path d="M14 78c0-16 12-26 26-26s26 10 26 26z" fill="#dedede"/></svg></span>
+        <span><b>Hanne Vinter</b><span class="genre">Tape, voice, harbour rooms</span></span>
+        <span class="since">2016&ndash;</span>
+      </li>
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#7d7d7d"/><rect x="10" y="24" width="60" height="34" fill="#cfcfcf"/><circle cx="30" cy="41" r="9" fill="#4d4d4d"/><circle cx="52" cy="41" r="9" fill="#4d4d4d"/></svg></span>
+        <span><b>Piotr Laski</b><span class="genre">Solo bass, long durations</span></span>
+        <span class="since">2017&ndash;</span>
+      </li>
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#9c9c9c"/><path d="M8 70 30 20l12 30 12-22 18 42z" fill="#e2e2e2"/></svg></span>
+        <span><b>Beta Unit</b><span class="genre">Split 2021, unreleased archive</span></span>
+        <span class="since">2018&ndash;21</span>
+      </li>
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#c2c2c2"/><rect x="12" y="10" width="56" height="60" fill="#767676"/><path d="M12 30h56M12 50h56" stroke="#dedede" stroke-width="4"/></svg></span>
+        <span><b>Marta Ellingsen</b><span class="genre">Field recordings, Nordic</span></span>
+        <span class="since">2019&ndash;</span>
+      </li>
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#8d8d8d"/><circle cx="40" cy="40" r="24" fill="none" stroke="#e6e6e6" stroke-width="5"/><circle cx="40" cy="40" r="6" fill="#3f3f3f"/></svg></span>
+        <span><b>Radio Ridge</b><span class="genre">Shortwave, numbers, voices</span></span>
+        <span class="since">2020&ndash;</span>
+      </li>
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#a5a5a5"/><path d="M20 60V26l20-12 20 12v34z" fill="#e9e9e9"/><rect x="32" y="42" width="16" height="18" fill="#6a6a6a"/></svg></span>
+        <span><b>Tomas Rieu</b><span class="genre">Modular, one take, no edits</span></span>
+        <span class="since">2021&ndash;</span>
+      </li>
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#969696"/><path d="M10 24h60M10 40h60M10 56h60" stroke="#ededed" stroke-width="6"/></svg></span>
+        <span><b>The Quiet Committee</b><span class="genre">Chamber pieces, small rooms</span></span>
+        <span class="since">2022&ndash;</span>
+      </li>
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#bcbcbc"/><rect x="24" y="24" width="32" height="32" fill="#5f5f5f"/><circle cx="40" cy="40" r="7" fill="#e0e0e0"/></svg></span>
+        <span><b>Junk Orchestra</b><span class="genre">Found metal, no tuning</span></span>
+        <span class="since">2023&ndash;</span>
+      </li>
+      <li>
+        <span class="thumb" aria-hidden="true"><svg viewBox="0 0 80 80"><rect width="80" height="80" fill="#848484"/><path d="M16 64c8-30 16-30 24 0s16 30 24 0" fill="none" stroke="#e8e8e8" stroke-width="5"/></svg></span>
+        <span><b>Ada Okonkwo</b><span class="genre">Voice, tape loops, no drummer</span></span>
+        <span class="since">2024&ndash;</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="wrap" id="room" aria-labelledby="room-title">
+    <div class="sec-head">
+      <h2 id="room-title">The room</h2>
+      <p>One converted grain store, one live room, one control room, and a colour separation bench that nobody is allowed to touch.</p>
+    </div>
+    <div class="room">
+      <figure class="room-art plate" style="margin:0">
+        <svg viewBox="0 0 500 400" role="img" aria-label="Duotone photograph of the grain store studio: a live room with acoustic panels, a control room window, and a tape machine on a stand.">
+          <rect width="500" height="400" fill="#bdbdbd"/>
+          <rect x="0" y="0" width="500" height="250" fill="#8a8a8a"/>
+          <g fill="#6e6e6e">
+            <rect x="30" y="40" width="60" height="60"/><rect x="110" y="40" width="60" height="60"/>
+            <rect x="190" y="40" width="60" height="60"/><rect x="30" y="120" width="60" height="60"/>
+            <rect x="110" y="120" width="60" height="60"/><rect x="190" y="120" width="60" height="60"/>
+          </g>
+          <rect x="300" y="50" width="170" height="110" fill="#dcdcdc"/>
+          <rect x="316" y="66" width="138" height="78" fill="#5c5c5c"/>
+          <rect x="0" y="250" width="500" height="150" fill="#9a9a9a"/>
+          <rect x="40" y="300" width="180" height="70" fill="#d4d4d4"/>
+          <circle cx="86" cy="335" r="20" fill="#545454"/><circle cx="130" cy="335" r="20" fill="#545454"/>
+          <rect x="180" y="286" width="120" height="18" fill="#454545"/>
+          <rect x="230" y="304" width="16" height="60" fill="#454545"/>
+          <rect x="360" y="270" width="120" height="100" fill="#e6e6e6"/>
+          <rect x="380" y="290" width="80" height="10" fill="#5a5a5a"/>
+          <rect x="380" y="312" width="80" height="10" fill="#5a5a5a"/>
+          <circle cx="420" cy="345" r="14" fill="#5a5a5a"/>
+        </svg>
+      </figure>
+      <div>
+        <p>Everything is printed here, on a two-colour Heidelberg that has not been serviced since 2019 and refuses to die. We mix in mono, master in mono, and cut the lacquer knowing it will be pressed in two colours anyway, which means we mix for contrast rather than for detail. It is a different discipline, and it is why the records sound the way they do.</p>
+        <h3 style="margin-top:var(--s-3)">What is in the room</h3>
+        <dl class="gear" style="margin-top:var(--s-2)">
+          <dt>Live room</dt><dd>42 m&sup2;, 11 m ceiling, floated</dd>
+          <dt>Console</dt><dd>8 channel, 1974, serviced 2023</dd>
+          <dt>Tape</dt><dd>2 &times; half-inch, one Studer, one Akai</dd>
+          <dt>Press</dt><dd>Heidelberg 2-colour GTO</dd>
+          <dt>Sleeves</dt><dd>340gsm duplex, 2 inks</dd>
+          <dt>Lathe</dt><dd>Cut by hand, one engineer</dd>
+          <dt>Room rate</dt><dd>&euro;380 per day, includes engineer</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="tour" aria-labelledby="tour-title">
+    <div class="sec-head">
+      <h2 id="tour-title">Listening room dates</h2>
+      <p>One per month, in the room, for the artists. No stage, no support, no amplification above conversation level.</p>
+    </div>
+    <table>
+      <caption class="sr-only">Upcoming listening room dates</caption>
+      <thead>
+        <tr><th scope="col">Date</th><th scope="col">Artist</th><th scope="col">City</th><th scope="col">Room</th><th scope="col">Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="dt">19 Jun 2026</td><td>Ada Okonkwo</td><td>Rotterdam</td><td>Grain store, 20:00</td><td>On sale</td></tr>
+        <tr><td class="dt">24 Jul 2026</td><td>Tomas Rieu</td><td>Basel</td><td>Kornhaus, 20:00</td><td class="sold">Sold out</td></tr>
+        <tr><td class="dt">21 Aug 2026</td><td>Marta Ellingsen</td><td>Bergen</td><td>Studio 3, 20:00</td><td>12 left</td></tr>
+        <tr><td class="dt">18 Sep 2026</td><td>The Quiet Committee</td><td>Gouda</td><td>Launderette, 20:00</td><td>On sale</td></tr>
+        <tr><td class="dt">16 Oct 2026</td><td>Radio Ridge</td><td>Rotterdam</td><td>Grain store, 21:00</td><td>On sale</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="wrap" id="subscribe" aria-labelledby="subscribe-title">
+    <div class="subscribe">
+      <div>
+        <h2 id="subscribe-title">Four letters a year</h2>
+        <p>One per release, one in December. We tell you what we pressed, what it cost, and which mix we got wrong. Unsubscribe in one click and we will be slightly sad but entirely fine about it.</p>
+      </div>
+      <form id="subForm" novalidate>
+        <label class="field" for="sname">
+          <span class="lab">Name</span>
+          <input id="sname" name="sname" type="text" autocomplete="name" required>
+          <span class="err">Required. We write to people, not to lists.</span>
+        </label>
+        <label class="field" for="semail">
+          <span class="lab">Email</span>
+          <input id="semail" name="semail" type="email" autocomplete="email" required>
+          <span class="err">That address does not look right.</span>
+        </label>
+        <label class="field" for="sformat">
+          <span class="lab">Preferred format</span>
+          <select id="sformat">
+            <option>Cassette</option>
+            <option>Vinyl</option>
+            <option>CD</option>
+            <option>Digital</option>
+            <option>All of them, in that order</option>
+          </select>
+        </label>
+        <button class="btn" type="submit">Subscribe</button>
+        <p class="sub-status" id="subStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h3>Echo Field</h3>
+        <p>A fictional record label, built for a style demo. Two colours, one press, one hand-cut lacquer, 31 releases since 2016.</p>
+      </div>
+      <div>
+        <h3>Catalogue</h3>
+        <ul>
+          <li><a href="#releases">All releases</a></li>
+          <li><a href="#roster">Roster</a></li>
+          <li><a href="#tour">Listening rooms</a></li>
+          <li><a href="#subscribe">Letters</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Label</h3>
+        <ul>
+          <li><a href="#room">The room</a></li>
+          <li><a href="#room">Rates</a></li>
+          <li><a href="#subscribe">Demos</a></li>
+          <li><a href="#top">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>&copy; 2026 Echo Field. A fictional brand, built for a style demo.</span>
+      <span>All sleeves printed in two inks. No exceptions since 2016.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  var toggle = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.getAttribute('data-open') === 'true';
+    menu.setAttribute('data-open', String(!open));
+    toggle.setAttribute('aria-expanded', String(!open));
+    toggle.textContent = open ? 'Menu' : 'Close';
+  });
+
+  // Basket count
+  var basketLink = document.querySelector('.nav-in .btn');
+  var count = 0;
+  document.querySelectorAll('[data-item]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      count += 1;
+      basketLink.textContent = 'Basket \u2014 ' + count;
+      var was = btn.textContent;
+      btn.textContent = 'Added';
+      setTimeout(function () { btn.textContent = was; }, 1300);
+    });
+  });
+
+  // Subscribe
+  var form = document.getElementById('subForm');
+  var status = document.getElementById('subStatus');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = document.getElementById('sname');
+    var email = document.getElementById('semail');
+    var nameOk = name.value.trim().length >= 2;
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+    name.closest('.field').toggleAttribute('data-invalid', !nameOk);
+    email.closest('.field').toggleAttribute('data-invalid', !emailOk);
+    name.setAttribute('aria-invalid', String(!nameOk));
+    email.setAttribute('aria-invalid', String(!emailOk));
+    if (!nameOk || !emailOk) {
+      status.removeAttribute('data-state');
+      status.textContent = 'A name and a working address, then we are done.';
+      (nameOk ? email : name).focus();
+      return;
+    }
+    status.setAttribute('data-state', 'ok');
+    status.textContent = 'Subscribed, ' + name.value.trim() + '. Four letters, one December, no more.';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+{
+  "business": {
+    "name": "Goodstuff Designs",
+    "location": "Heidelberg, Gauteng, South Africa",
+    "areaServed": [
+      "South Africa",
+      "International - remote"
+    ],
+    "email": "admin@goodstuffdesigns.co.za",
+    "telephone": "+27 79 937 4801"
+  },
+  "services": [
+    {
+      "id": "managed-it-support",
+      "name": "Managed IT support",
+      "url": "/services#it-support",
+      "summary": "Responsive support for devices, users, email, networks, backups, access, and supplier coordination."
+    },
+    {
+      "id": "it-and-networks",
+      "name": "IT and network services",
+      "url": "/it-and-networks",
+      "summary": "Network administration (routers, switches, WiFi, VLANs, firewalls), IT support (Windows, hardware, software, drivers, remote support), cybersecurity (vulnerability assessments, audits, endpoint protection, incident response), network monitoring (open source tools, uptime checks, traffic analysis, automated alerts), AI for IT operations, IT infrastructure (servers, backups, cloud, disaster recovery) and managed business IT services (audits, managed services, maintenance plans, technical proposals)."
+    },
+    {
+      "id": "business-networks",
+      "name": "Business networks and fibre",
+      "url": "/it-and-networks#network-administration",
+      "summary": "Network architecture, Wi-Fi, routing, firewall coordination, access controls, monitoring, and Vox ISP connectivity from coverage check to installed line. Home Fibre is advertised from R349 per month.",
+      "pricingNote": "Coverage, network operator, speed, equipment and contract terms determine final pricing."
+    },
+    {
+      "id": "kaspersky-protection",
+      "name": "Kaspersky antivirus setup and support",
+      "url": "/services#security",
+      "summary": "Kaspersky licence selection, endpoint onboarding, policy setup, updates, alert review, and support.",
+      "pricing": {
+        "currency": "ZAR",
+        "term": "1 year",
+        "checked": "2026-08-30",
+        "standard": {
+          "1": 278,
+          "3": 318,
+          "5": 370,
+          "10": 462
+        },
+        "plus": {
+          "1": 399,
+          "3": 438,
+          "5": 479,
+          "10": 699
+        },
+        "premium": {
+          "1": 438,
+          "3": 478,
+          "5": 509,
+          "10": 769,
+          "20": 999
+        }
+      }
+    },
+    {
+      "id": "websites-and-hosting",
+      "name": "Web design, development and managed hosting",
+      "url": "/websites-and-hosting",
+      "summary": "Business websites from R5,000 once-off, e-commerce from R8,500 once-off, custom web apps scoped and quoted, and managed Linux hosting from R100 per month - built, hosted and supported by one team. Every build includes Google Analytics 4 and Google Search Console setup.",
+      "pricing": {
+        "currency": "ZAR",
+        "checked": "2026-08-30",
+        "businessWebsiteFrom": 5000,
+        "ecommerceFrom": 8500,
+        "customWebApps": "quoted",
+        "hostingPlans": [
+          {
+            "name": "Novice",
+            "price": 100,
+            "storage": "10GB"
+          },
+          {
+            "name": "Business",
+            "price": 200,
+            "storage": "150GB"
+          },
+          {
+            "name": "Pro",
+            "price": 600,
+            "storage": "Unlimited"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ai-workflows-integrations",
+      "name": "AI workflows, integrations and consulting",
+      "url": "/ai",
+      "summary": "AI experts designing human-controlled workflows, business integrations across communication, CRM and operations systems, AI-assisted support, and AI-powered marketing. Every system is explainable, permissioned and audited; pricing is quoted per workflow."
+    },
+    {
+      "id": "digital-marketing",
+      "name": "Digital marketing",
+      "url": "/digital-marketing",
+      "summary": "Measurement and tracking (GA4, Search Console, Tag Manager, conversion tracking); social media marketing (content planning, post creation, audience targeting, performance analysis); Google Ads management (campaign strategy, keyword targeting, optimisation, budget management); and reporting and ROI (lead tracking, conversion analysis, cost per lead, campaign return on investment)."
+    }
+  ]
+}

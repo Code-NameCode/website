@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<!-- Style: Developer Focused | 25developerfocused.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel API — payments infrastructure for developers</title>
+<meta name="description" content="Kestrel is a payments API: one charge call, idempotency built in, webhooks that replay, and a sandbox that behaves like production.">
+<style>
+:root{
+  /* high-contrast neutral, one accent per semantic role */
+  --ink:#101317;
+  --ink-2:#171b21;
+  --ink-3:#21262e;
+  --paper:#ffffff;
+  --surface:#f7f8f9;
+  --surface-2:#eef0f2;
+  --line:#dfe3e6;
+  --line-strong:#c3c9cf;
+  --line-dark:#2c333c;
+  --text:#12161a;
+  --muted:#5b646d;
+  --muted-dark:#9aa5b0;
+  --accent:#1f5eff;
+  --accent-ink:#12307f;
+  /* syntax colours — purposeful, four roles only */
+  --syn-key:#8a3ffc;
+  --syn-str:#0a7d55;
+  --syn-num:#b4531a;
+  --syn-fn:#1f5eff;
+  --syn-com:#6b7681;
+  /* type */
+  --sans:"Inter","Helvetica Neue",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Consolas,"Roboto Mono",Menlo,monospace;
+  --t-hero:clamp(2rem,4.4vw,3.4rem);
+  --t-h1:clamp(1.6rem,2.6vw,2.3rem);
+  --t-h2:clamp(1.15rem,1.5vw,1.4rem);
+  --t-body:clamp(0.97rem,1vw,1.02rem);
+  --t-code:clamp(0.8rem,0.92vw,0.9rem);
+  --t-label:.72rem;
+  /* space */
+  --s1:4px;--s2:10px;--s3:18px;--s4:30px;--s5:48px;--s6:76px;
+  /* edges */
+  --r:6px;
+  --r-sm:4px;
+  --border:1px solid var(--line);
+  --shadow:0 1px 2px rgba(16,24,32,.05);
+  --shadow-lg:0 12px 32px -18px rgba(16,24,32,.35);
+  /* motion */
+  --d-fast:120ms;--d-base:220ms;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --topbar:60px;
+  --side:264px;
+  --toc:214px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--text);font-family:var(--sans);font-size:var(--t-body);line-height:1.6}
+h1,h2,h3,h4{margin:0;line-height:1.15;letter-spacing:-.022em;font-weight:640}
+p{margin:0}
+a{color:var(--accent-ink)}
+svg{display:block;max-width:100%}
+ul,ol{margin:0;padding:0;list-style:none}
+code,pre{font-family:var(--mono);font-size:var(--t-code)}
+::selection{background:#d7e2ff;color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+.mono{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:80;background:var(--ink);color:#e9edf1;border-bottom:1px solid var(--ink-3)}
+.topbar .wrap{display:flex;align-items:center;gap:var(--s3);min-height:var(--topbar)}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:#fff;font-weight:660;letter-spacing:-.02em;font-size:1.02rem}
+.brand svg{width:22px;height:22px;color:#7ea6ff}
+.brand .env{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#0b1220;background:#7ea6ff;padding:2px 6px;border-radius:3px;font-weight:700}
+.topnav{display:flex;gap:var(--s1);margin-left:var(--s2)}
+.topnav a{color:var(--muted-dark);text-decoration:none;font-size:.9rem;padding:9px 11px;min-height:44px;display:inline-flex;align-items:center;border-radius:var(--r-sm)}
+.topnav a:hover{color:#fff;background:var(--ink-3)}
+.topnav a[aria-current]{color:#fff}
+.install-chip{
+  margin-left:auto;display:flex;align-items:center;gap:10px;background:var(--ink-2);border:1px solid var(--ink-3);
+  border-radius:var(--r);padding:6px 6px 6px 12px;
+}
+.install-chip code{color:#c8d3de;font-size:.8rem;white-space:nowrap}
+.topbar-actions{display:flex;gap:8px}
+.tb-btn{display:inline-flex;align-items:center;min-height:38px;padding:0 13px;border-radius:var(--r-sm);font-size:.85rem;font-weight:560;text-decoration:none;cursor:pointer;border:1px solid var(--ink-3);background:var(--ink-2);color:#e9edf1;font-family:inherit}
+.tb-btn:hover{border-color:#3d4753}
+.tb-btn.solid{background:#fff;color:var(--ink);border-color:#fff}
+.tb-btn.solid:hover{background:#e6ebf2}
+
+/* ---------- layout ---------- */
+.shell{display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:0}
+.side{position:sticky;top:var(--topbar);align-self:start;height:calc(100vh - var(--topbar));overflow-y:auto;border-right:1px solid var(--line);background:var(--surface);padding:var(--s3) 0 var(--s5)}
+.side h2{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:14px 20px 6px;font-weight:600}
+.side a{display:flex;align-items:center;gap:8px;padding:8px 20px;min-height:40px;font-size:.9rem;color:var(--muted);text-decoration:none;border-left:2px solid transparent}
+.side a:hover{color:var(--text);background:var(--surface-2)}
+.side a[aria-current]{color:var(--accent-ink);border-left-color:var(--accent);background:#eaf0ff;font-weight:560}
+.side .badge{margin-left:auto;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:1px 5px}
+.side-foot{padding:16px 20px 0;margin-top:8px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted)}
+.content{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) var(--toc);gap:clamp(20px,3vw,44px);align-items:start}
+.article{padding:var(--s4) 0 var(--s6);min-width:0}
+.toc{position:sticky;top:calc(var(--topbar) + 24px);padding:var(--s4) 0;font-size:.85rem}
+.toc h2{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:600}
+.toc a{display:block;padding:5px 0;color:var(--muted);text-decoration:none;border-left:2px solid var(--line);padding-left:12px;margin-left:-2px}
+.toc a:hover{color:var(--text)}
+.toc a[aria-current]{color:var(--accent-ink);border-left-color:var(--accent);font-weight:560}
+
+/* ---------- article typography ---------- */
+.article section{padding-block:var(--s4);border-bottom:1px solid var(--line);scroll-margin-top:calc(var(--topbar) + 20px)}
+.article section:last-child{border-bottom:0}
+.article p{margin-top:var(--s2);color:var(--muted);max-width:70ch}
+.article ul.bul{margin-top:var(--s2);display:grid;gap:8px;max-width:70ch}
+.bul li{position:relative;padding-left:22px;color:var(--muted);font-size:.97rem}
+.bul li::before{content:"";position:absolute;left:4px;top:.6em;width:6px;height:6px;background:var(--line);border-radius:1px}
+.bul li code{background:var(--surface-2);border:1px solid var(--line);border-radius:3px;padding:1px 5px;color:var(--text)}
+.lede{font-size:clamp(1.05rem,1.3vw,1.2rem);color:var(--text)!important}
+
+/* ---------- hero / quickstart ---------- */
+.hero{padding-top:var(--s5)}
+.hero h1{font-size:var(--t-hero);max-width:20ch}
+.hero .lede{margin-top:var(--s2);max-width:58ch}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:var(--s3)}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:99px;padding:6px 13px;font-size:.83rem;color:var(--muted);text-decoration:none;background:var(--surface)}
+.pill:hover{border-color:var(--accent);color:var(--accent-ink)}
+.pill .status{width:7px;height:7px;border-radius:50%;background:#0a7d55}
+.pill .status.warn{background:#b4531a}
+
+.tabs{display:flex;gap:2px;margin-top:var(--s4);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tab{
+  min-height:44px;padding:0 16px;background:transparent;border:0;border-bottom:2px solid transparent;
+  font:inherit;font-size:.88rem;font-weight:560;color:var(--muted);cursor:pointer;
+}
+.tab:hover{color:var(--text)}
+.tab[aria-selected="true"]{color:var(--accent-ink);border-bottom-color:var(--accent)}
+.tabpanel[hidden]{display:none}
+.tabpanel{margin-top:var(--s3)}
+
+/* ---------- code blocks ---------- */
+.code{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.code-head{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.code-head .file{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.code-head .lang{margin-left:auto;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.copy{
+  display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 10px;cursor:pointer;
+  font:inherit;font-size:.74rem;font-weight:560;background:var(--paper);color:var(--muted);
+  border:1px solid var(--line);border-radius:var(--r-sm);
+}
+.copy:hover{border-color:var(--accent);color:var(--accent-ink)}
+.copy svg{width:13px;height:13px}
+.code pre{margin:0;padding:16px;overflow-x:auto;line-height:1.65;background:var(--ink);color:#d6dde5;font-size:var(--t-code)}
+.code .k{color:#c9a6ff}
+.code .s{color:#7ee0b0}
+.code .n{color:#ffb37a}
+.code .f{color:#7ea6ff}
+.code .c{color:#7c8794;font-style:italic}
+.code .p{color:#98a3ae}
+
+/* ---------- request/response pair ---------- */
+.req{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s2);margin-top:var(--s3)}
+.req .code pre{background:var(--ink-2)}
+.resp-line{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:center;font-family:var(--mono);font-size:.76rem;color:var(--muted);padding:8px 14px;background:var(--ink);border-top:1px solid var(--ink-3)}
+.method{display:inline-block;font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:3px}
+.m-post{background:#e6f0ff;color:#12307f}
+.m-get{background:#e6f6ee;color:#0a6b48}
+.m-web{background:#f3ecff;color:#5b21b6}
+.status-code{color:#7ee0b0}
+
+/* ---------- endpoint cards ---------- */
+.endpoints{display:grid;gap:var(--s2);margin-top:var(--s3)}
+.endpoint{border:1px solid var(--line);border-radius:var(--r);background:var(--paper);overflow:hidden}
+.endpoint summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:52px}
+.endpoint summary::-webkit-details-marker{display:none}
+.endpoint summary:hover{background:var(--surface)}
+.endpoint .path{font-family:var(--mono);font-size:.9rem;font-weight:600}
+.endpoint .desc{margin-left:auto;color:var(--muted);font-size:.86rem;text-align:right}
+.endpoint .plus{color:var(--muted);font-size:1.2rem;flex:none}
+.endpoint[open] .plus{color:var(--accent)}
+.endpoint .body{padding:0 16px 16px;border-top:1px solid var(--line);padding-top:var(--s2)}
+.params{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:var(--s2)}
+.params th,.params td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.params th{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.params td code{background:var(--surface-2);border-radius:3px;padding:1px 5px}
+.params td:first-child{white-space:nowrap}
+.req-opt{color:var(--muted);font-family:var(--mono);font-size:.72rem}
+
+/* ---------- events table ---------- */
+.tablewrap{margin-top:var(--s3);overflow-x:auto;border:1px solid var(--line);border-radius:var(--r)}
+.events{width:100%;min-width:620px;border-collapse:collapse;font-size:.9rem}
+.events th,.events td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+.events thead th{background:var(--surface-2);font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.events td:first-child code{color:var(--accent-ink);white-space:nowrap}
+.events tbody tr:last-child td{border-bottom:0}
+.events td{color:var(--muted)}
+
+/* ---------- changelog ---------- */
+.logs{display:grid;gap:0;margin-top:var(--s3)}
+.log{display:grid;grid-template-columns:120px minmax(0,1fr);gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.log time{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.log h3{font-size:1rem}
+.log p{margin-top:6px;font-size:.93rem}
+.tag-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:3px;padding:2px 6px;color:var(--muted)}
+.tag.add{color:#0a6b48;border-color:#b7dfcc}
+.tag.chg{color:#12307f;border-color:#c2d2f7}
+.tag.fix{color:#8a3a12;border-color:#f0cfbb}
+.tag.brk{color:#a3281a;border-color:#f2c2bb;background:#fff4f2}
+
+/* ---------- key request form ---------- */
+.keybox{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--r);background:var(--surface);padding:var(--s3);margin-top:var(--s3)}
+.field{display:grid;gap:6px;margin-bottom:var(--s2)}
+.field label{font-size:.84rem;font-weight:560}
+.field .req{color:#a3281a}
+.field input,.field select{
+  font:inherit;font-size:.95rem;color:var(--text);background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 13px;min-height:48px;width:100%;
+}
+.field input:focus-visible,.field select:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(31,94,255,.2)}
+.field input[aria-invalid="true"]{border-color:#a3281a;box-shadow:0 0 0 3px rgba(163,40,26,.15)}
+.field .help{font-size:.8rem;color:var(--muted)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.checkline{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted);min-height:44px;cursor:pointer;padding-top:11px}
+.checkline input{width:18px;height:18px;margin-top:1px;accent-color:var(--accent)}
+.btnrow{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;
+  font:inherit;font-size:.92rem;font-weight:560;text-decoration:none;cursor:pointer;
+  border-radius:var(--r);border:1px solid var(--ink);background:var(--ink);color:#fff;
+  transition:background var(--d-fast) var(--ease),border-color var(--d-fast) var(--ease);
+}
+.btn:hover{background:#000}
+.btn-line{background:var(--paper);color:var(--text);border-color:var(--line-strong)}
+.btn-line:hover{background:var(--surface-2);border-color:var(--muted)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn svg{width:15px;height:15px}
+.form-status{font-size:.9rem;min-height:1.5em;margin-top:var(--s2);color:#0a6b48;font-weight:520}
+.form-status[data-state="error"]{color:#a3281a}
+.form-status[data-state="busy"]{color:var(--muted)}
+.copy-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+/* ---------- docs footer ---------- */
+.docfoot{background:var(--ink-2);color:var(--muted-dark);border-top:1px solid var(--ink-3)}
+.docfoot .wrap{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s5);align-items:center;padding-block:var(--s3)}
+.docfoot nav ul{display:flex;flex-wrap:wrap;gap:var(--s3)}
+.docfoot nav a{color:var(--muted-dark);text-decoration:none;font-size:.85rem}
+.docfoot nav a:hover{color:#fff}
+.docfoot .spacer{margin-left:auto}
+.docfoot .meta{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.1em;color:#7c8794}
+
+/* ---------- mobile ---------- */
+.side-toggle{display:none}
+@media (max-width:1180px){
+  .content{grid-template-columns:minmax(0,1fr)}
+  .toc{display:none}
+}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{display:none}
+  .side.open{display:block;position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .side-toggle{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 13px;background:var(--ink-2);border:1px solid var(--ink-3);border-radius:var(--r-sm);color:#e9edf1;font:inherit;font-size:.85rem;cursor:pointer}
+  .topnav{display:none}
+  .install-chip{display:none}
+  .article{padding-top:var(--s3)}
+}
+@media (max-width:620px){
+  .field-row{grid-template-columns:1fr}
+  .log{grid-template-columns:1fr;gap:6px}
+  .topbar .wrap{gap:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 20V8l8-4 8 4v12"/><path d="M9 20v-6h6v6"/><path d="M4 12h16"/></svg>
+      Kestrel
+    </a>
+    <nav aria-label="Primary" class="topnav">
+      <a href="#quickstart" aria-current="page">Docs</a>
+      <a href="#api">API</a>
+      <a href="#events">Webhooks</a>
+      <a href="#changelog">Changelog</a>
+    </nav>
+    <button class="side-toggle" type="button" id="side-toggle" aria-expanded="false" aria-controls="side">Contents</button>
+    <div class="install-chip">
+      <code id="install-cmd">npm i @kestrel/node</code>
+      <button class="copy" type="button" data-copy-target="install-cmd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a1 1 0 0 0-1 1v9"/></svg>
+        Copy
+      </button>
+    </div>
+    <div class="topbar-actions">
+      <a class="tb-btn" href="#keys">Sign in</a>
+      <a class="tb-btn solid" href="#keys">Get a test key</a>
+    </div>
+  </div>
+</header>
+<p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+
+<div class="shell">
+  <aside class="side" id="side" aria-label="Documentation contents">
+    <h2>Get started</h2>
+    <ul>
+      <li><a href="#quickstart" aria-current="page">Quickstart</a></li>
+      <li><a href="#keys">Get a test key</a></li>
+      <li><a href="#errors">Errors</a></li>
+    </ul>
+    <h2>Payments API</h2>
+    <ul>
+      <li><a href="#api">Charges</a><span class="badge">v1</span></li>
+      <li><a href="#api">Refunds</a><span class="badge">v1</span></li>
+      <li><a href="#api">Customers</a><span class="badge">v1</span></li>
+      <li><a href="#api">Disputes</a><span class="badge">beta</span></li>
+    </ul>
+    <h2>Platform</h2>
+    <ul>
+      <li><a href="#events">Webhooks</a></li>
+      <li><a href="#idempotency">Idempotency</a></li>
+      <li><a href="#changelog">Changelog</a></li>
+    </ul>
+    <div class="side-foot">
+      <p>API status: <strong>all regions operational</strong></p>
+      <p>Median API latency, 90 days: <strong>74 ms</strong></p>
+    </div>
+  </aside>
+
+  <div class="content">
+    <main class="article" id="top">
+
+      <section class="hero" id="quickstart" aria-labelledby="qs-h">
+        <h1 id="qs-h">One call to take a payment. Everything else is a detail.</h1>
+        <p class="lede">Kestrel is a payments API in the shape of the language you already write. A charge is one request and one response; refunds, disputes and payouts are the same shape again.</p>
+        <ul class="pill-row">
+          <li><a class="pill" href="#events"><span class="status"></span>All systems operational</a></li>
+          <li><a class="pill" href="#api">v1 · 2024-06-11</a></li>
+          <li><a class="pill" href="#idempotency">Idempotency on by default</a></li>
+        </ul>
+
+        <div class="tabs" role="tablist" aria-label="Install Kestrel by language">
+          <button class="tab" role="tab" id="tab-node" aria-selected="true" aria-controls="panel-node">Node</button>
+          <button class="tab" role="tab" id="tab-python" aria-selected="false" aria-controls="panel-python" tabindex="-1">Python</button>
+          <button class="tab" role="tab" id="tab-go" aria-selected="false" aria-controls="panel-go" tabindex="-1">Go</button>
+          <button class="tab" role="tab" id="tab-curl" aria-selected="false" aria-controls="panel-curl" tabindex="-1">curl</button>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="panel-node" aria-labelledby="tab-node">
+          <div class="code">
+            <div class="code-head"><span class="file">server.js</span><span class="lang">JavaScript</span>
+              <button class="copy" type="button" data-copy-target="code-node"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a1 1 0 0 0-1 1v9"/></svg>Copy</button>
+            </div>
+            <pre id="code-node"><code><span class="k">import</span> { Kestrel } <span class="k">from</span> <span class="s">"@kestrel/node"</span>;
+
+<span class="k">const</span> kestrel = <span class="k">new</span> <span class="f">Kestrel</span>(process.env.<span class="n">KESTREL_KEY</span>);
+
+<span class="k">const</span> charge = <span class="k">await</span> kestrel.charges.<span class="f">create</span>({
+  amount: <span class="n">24800</span>,              <span class="c">// minor units, always</span>
+  currency: <span class="s">"eur"</span>,
+  customer: <span class="s">"cus_8Hk2m"</span>,
+  source: <span class="s">"tok_visa"</span>,
+  description: <span class="s">"Order 8QK2"</span>,
+  idempotency_key: order.id,   <span class="c">// your key, your retry safety</span>
+});
+
+<span class="f">console.log</span>(charge.status);   <span class="c">// "succeeded"</span></code></pre>
+          </div>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="panel-python" aria-labelledby="tab-python" hidden>
+          <div class="code">
+            <div class="code-head"><span class="file">app.py</span><span class="lang">Python</span>
+              <button class="copy" type="button" data-copy-target="code-python"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a1 1 0 0 0-1 1v9"/></svg>Copy</button>
+            </div>
+            <pre id="code-python"><code><span class="k">from</span> kestrel <span class="k">import</span> Kestrel
+
+kestrel = Kestrel(os.environ[<span class="s">"KESTREL_KEY"</span>])
+
+charge = kestrel.charges.<span class="f">create</span>(
+    amount=<span class="n">24800</span>,              <span class="c"># minor units, always</span>
+    currency=<span class="s">"eur"</span>,
+    customer=<span class="s">"cus_8Hk2m"</span>,
+    source=<span class="s">"tok_visa"</span>,
+    idempotency_key=order.id,
+)
+
+<span class="f">print</span>(charge.status)          <span class="c"># "succeeded"</span></code></pre>
+          </div>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="panel-go" aria-labelledby="tab-go" hidden>
+          <div class="code">
+            <div class="code-head"><span class="file">main.go</span><span class="lang">Go</span>
+              <button class="copy" type="button" data-copy-target="code-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a1 1 0 0 0-1 1v9"/></svg>Copy</button>
+            </div>
+            <pre id="code-go"><code>kestrel <span class="k">:=</span> kestrel.<span class="f">New</span>(os.<span class="f">Getenv</span>(<span class="s">"KESTREL_KEY"</span>))
+
+charge, err <span class="k">:=</span> kestrel.Charges.<span class="f">Create</span>(&amp;kestrel.ChargeParams{
+    Amount:        <span class="n">24800</span>,   <span class="c">// minor units, always</span>
+    Currency:      <span class="s">"eur"</span>,
+    Customer:      <span class="s">"cus_8Hk2m"</span>,
+    Source:        <span class="s">"tok_visa"</span>,
+    IdempotencyKey: order.ID,
+})
+
+<span class="k">if</span> err != <span class="k">nil</span> { <span class="f">panic</span>(err) }</code></pre>
+          </div>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="panel-curl" aria-labelledby="tab-curl" hidden>
+          <div class="code">
+            <div class="code-head"><span class="file">POST /v1/charges</span><span class="lang">HTTP</span>
+              <button class="copy" type="button" data-copy-target="code-curl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a1 1 0 0 0-1 1v9"/></svg>Copy</button>
+            </div>
+            <pre id="code-curl"><code>curl https://api.kestrel.dev/v1/charges \
+  -u <span class="n">$KESTREL_KEY</span>: \
+  -H <span class="s">"Idempotency-Key: ord_8QK2"</span> \
+  -d amount=<span class="n">24800</span> \
+  -d currency=<span class="s">"eur"</span> \
+  -d customer=<span class="s">"cus_8Hk2m"</span> \
+  -d source=<span class="s">"tok_visa"</span> \
+  -d description=<span class="s">"Order 8QK2"</span></code></pre>
+          </div>
+        </div>
+
+        <div class="req">
+          <div class="code">
+            <div class="code-head"><span class="file">Response · 201 Created</span><span class="lang">JSON</span></div>
+            <pre><code>{
+  <span class="f">"id"</span>: <span class="s">"ch_9Pq2v"</span>,
+  <span class="f">"status"</span>: <span class="s">"succeeded"</span>,
+  <span class="f">"amount"</span>: <span class="n">24800</span>,
+  <span class="f">"currency"</span>: <span class="s">"eur"</span>,
+  <span class="f">"livemode"</span>: <span class="k">false</span>,
+  <span class="f">"created"</span>: <span class="n">1758912000</span>,
+  <span class="f">"payment_method"</span>: { <span class="f">"brand"</span>: <span class="s">"visa"</span>, <span class="f">"last4"</span>: <span class="s">"4242"</span> },
+  <span class="f">"fees"</span>: <span class="n">676</span>
+}</code></pre>
+            <p class="resp-line">
+              <span class="method m-post">POST</span>
+              <span class="status-code">201</span>
+              <span>74 ms · eu-west · request id req_7Kd1</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="api" aria-labelledby="api-h">
+        <h2 id="api-h" style="font-size:var(--t-h1)">API reference</h2>
+        <p>Four resources cover 90% of integrations. Every response carries a request id; quote it in support and we can find the exact trace.</p>
+
+        <div class="endpoints">
+          <details class="endpoint" open>
+            <summary>
+              <span class="method m-post">POST</span>
+              <span class="path">/v1/charges</span>
+              <span class="desc">Take a payment. Idempotent per key.</span>
+              <span class="plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="body">
+              <table class="params">
+                <caption class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Parameters for creating a charge</caption>
+                <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+                <tbody>
+                  <tr><td><code>amount</code></td><td>integer</td><td>Minor units. 24800 is €248.00. Zero is rejected.</td></tr>
+                  <tr><td><code>currency</code></td><td>string</td><td>ISO 4217, lowercase. 39 currencies supported.</td></tr>
+                  <tr><td><code>customer</code> <span class="req-opt">optional</span></td><td>string</td><td>Omit for a one-off; the charge is still queryable by id.</td></tr>
+                  <tr><td><code>source</code></td><td>string</td><td>Token from the client SDK. Raw card numbers are never accepted.</td></tr>
+                  <tr><td><code>metadata</code> <span class="req-opt">optional</span></td><td>object</td><td>Up to 20 keys, 500 characters each. Returns on every read.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="endpoint">
+            <summary>
+              <span class="method m-post">POST</span>
+              <span class="path">/v1/refunds</span>
+              <span class="desc">Full or partial, against a charge id.</span>
+              <span class="plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="body">
+              <table class="params">
+                <caption class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Parameters for creating a refund</caption>
+                <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+                <tbody>
+                  <tr><td><code>charge</code></td><td>string</td><td>The charge to refund. Required.</td></tr>
+                  <tr><td><code>amount</code> <span class="req-opt">optional</span></td><td>integer</td><td>Omit to refund the full remaining amount.</td></tr>
+                  <tr><td><code>reason</code> <span class="req-opt">optional</span></td><td>string</td><td><code>requested_by_customer</code> or <code>fraudulent</code>.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="endpoint">
+            <summary>
+              <span class="method m-post">POST</span>
+              <span class="path">/v1/customers</span>
+              <span class="desc">Create a customer and attach methods.</span>
+              <span class="plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="body">
+              <table class="params">
+                <caption class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Parameters for creating a customer</caption>
+                <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+                <tbody>
+                  <tr><td><code>email</code></td><td>string</td><td>Used for receipts and disputes evidence.</td></tr>
+                  <tr><td><code>source</code> <span class="req-opt">optional</span></td><td>string</td><td>Attaches and pre-authorises a payment method.</td></tr>
+                  <tr><td><code>metadata</code> <span class="req-opt">optional</span></td><td>object</td><td>Same 20-key limit as charges.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="endpoint">
+            <summary>
+              <span class="method m-get">GET</span>
+              <span class="path">/v1/charges/{id}</span>
+              <span class="desc">Read a charge. Never expires.</span>
+              <span class="plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="body">
+              <p style="margin-top:0">Charges are immutable. If something needs to change, refund it and create a new charge — the audit trail stays readable.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="idempotency" aria-labelledby="idem-h">
+        <h2 id="idem-h" style="font-size:var(--t-h1)">Idempotency</h2>
+        <p>Send <code>Idempotency-Key</code> with every write. If we have seen the key before, we return the original response — no second charge, no reconciliation work on Monday.</p>
+        <ul class="bul">
+          <li>Keys are scoped to your account and retained for <b>30 days</b>.</li>
+          <li>Reusing a key with different parameters returns <code>409 idempotency_conflict</code>.</li>
+          <li>If two identical requests race, the loser is held until the winner finishes, then receives the same body.</li>
+        </ul>
+      </section>
+
+      <section id="events" aria-labelledby="events-h">
+        <h2 id="events-h" style="font-size:var(--t-h1)">Webhooks</h2>
+        <p>Delivered at least once, in order per object, with the object id in the <code>object</code> field. Verify the signature, fetch the object, do not act on the payload alone.</p>
+        <div class="code" style="margin-top:var(--s3)">
+          <div class="code-head"><span class="file">verify.js</span><span class="lang">JavaScript</span>
+            <button class="copy" type="button" data-copy-target="code-webhook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a1 1 0 0 0-1 1v9"/></svg>Copy</button>
+          </div>
+          <pre id="code-webhook"><code><span class="k">import</span> { Kestrel } <span class="k">from</span> <span class="s">"@kestrel/node"</span>;
+
+app.<span class="f">post</span>(<span class="s">"/webhooks/kestrel"</span>, kestrel.webhooks.<span class="f">verify</span>({
+  secret: process.env.<span class="n">KESTREL_WEBHOOK_SECRET</span>,
+  handler(req, res) {
+    <span class="k">const</span> event = req.body;        <span class="c">// already verified</span>
+    <span class="f">enqueue</span>(event.type, event.data.object.id);
+    res.<span class="f">sendStatus</span>(<span class="n">200</span>);          <span class="c">// fast, then work</span>
+  },
+}));</code></pre>
+        </div>
+        <div class="tablewrap">
+          <table class="events">
+            <caption class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Webhook event types</caption>
+            <thead><tr><th scope="col">Event</th><th scope="col">Sent when</th><th scope="col">Retry window</th></tr></thead>
+            <tbody>
+              <tr><td><code>charge.succeeded</code></td><td>Funds are captured and the charge is final.</td><td>72 hours</td></tr>
+              <tr><td><code>charge.failed</code></td><td>The issuer declined, or the source was invalid.</td><td>72 hours</td></tr>
+              <tr><td><code>charge.refunded</code></td><td>A refund settles, including partial ones.</td><td>72 hours</td></tr>
+              <tr><td><code>dispute.created</code></td><td>A cardholder opens a chargeback. Act quickly — the window is 20 days.</td><td>30 days</td></tr>
+              <tr><td><code>payout.paid</code></td><td>A scheduled payout reaches your bank account.</td><td>30 days</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="errors" aria-labelledby="err-h">
+        <h2 id="err-h" style="font-size:var(--t-h1)">Errors</h2>
+        <p>One shape, always. Branch on <code>error.type</code>, never on the message, and log <code>error.request_id</code>.</p>
+        <div class="code" style="margin-top:var(--s3)">
+          <div class="code-head"><span class="file">Error response · 402 Payment Required</span><span class="lang">JSON</span></div>
+          <pre><code>{
+  <span class="f">"error"</span>: {
+    <span class="f">"type"</span>: <span class="s">"card_declined"</span>,
+    <span class="f">"code"</span>: <span class="s">"do_not_honor"</span>,
+    <span class="f">"message"</span>: <span class="s">"The issuer declined this charge."</span>,
+    <span class="f">"decline_code"</span>: <span class="s">"generic_decline"</span>,
+    <span class="f">"request_id"</span>: <span class="s">"req_7Kd1"</span>,
+    <span class="f">"retryable"</span>: <span class="k">false</span>
+  }
+}</code></pre>
+        </div>
+        <ul class="bul">
+          <li><b>4xx</b> means the request is wrong — fix the call, do not retry it.</li>
+          <li><b>409</b> is an idempotency conflict — check whether the first attempt actually landed.</li>
+          <li><b>429</b> carries <code>Retry-After</code> in seconds. Honour it; the limit is per token, not per account.</li>
+          <li><b>5xx</b> is safe to retry with the same idempotency key.</li>
+        </ul>
+      </section>
+
+      <section id="changelog" aria-labelledby="log-h">
+        <h2 id="log-h" style="font-size:var(--t-h1)">Changelog</h2>
+        <p>We publish every behaviour change here before it ships, with a migration note where one is needed.</p>
+        <div class="logs">
+          <article class="log">
+            <time datetime="2026-09-18">18 Sep 2026</time>
+            <div>
+              <h3>Partial refunds can be issued against a disputed charge</h3>
+              <p>Previously rejected with <code>charge_disputed</code>. The undisputed remainder is now refundable; the disputed amount is still held by the issuer.</p>
+              <div class="tag-row"><span class="tag add">add</span><span class="tag chg">behaviour</span></div>
+            </div>
+          </article>
+          <article class="log">
+            <time datetime="2026-09-02">02 Sep 2026</time>
+            <div>
+              <h3>Idempotency keys now scoped per account</h3>
+              <p>Keys written under a previous scope stop matching. Nothing breaks, but replaying an old request will create a new charge. We recommend a namespaced key such as <code>order:{id}</code>.</p>
+              <div class="tag-row"><span class="tag brk">breaking</span><span class="tag chg">migration note</span></div>
+            </div>
+          </article>
+          <article class="log">
+            <time datetime="2026-08-21">21 Aug 2026</time>
+            <div>
+              <h3>New endpoint: disputes evidence upload</h3>
+              <p>Attach receipts, delivery proof and correspondence to a dispute before the response deadline. Accepts PDF, PNG and JPEG up to 12 MB per file.</p>
+              <div class="tag-row"><span class="tag add">add</span></div>
+            </div>
+          </article>
+          <article class="log">
+            <time datetime="2026-08-05">05 Aug 2026</time>
+            <div>
+              <h3>Sandbox now mirrors production decline codes</h3>
+              <p>Test cards return the same <code>decline_code</code> values as live issuers, so error handling can be written before go-live.</p>
+              <div class="tag-row"><span class="tag fix">fix</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="keys" aria-labelledby="keys-h">
+        <h2 id="keys-h" style="font-size:var(--t-h1)">Get a test key</h2>
+        <p>Keys are issued per environment. A test key cannot move money; a live key requires an approved account and an explicit activation call.</p>
+        <div class="keybox">
+          <form id="key-form" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label for="k-email">Work email <span class="req" aria-hidden="true">*</span></label>
+                <input id="k-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+              </div>
+              <div class="field">
+                <label for="k-stack">Primary stack</label>
+                <select id="k-stack" name="stack">
+                  <option>Node</option>
+                  <option>Python</option>
+                  <option>Go</option>
+                  <option>Ruby</option>
+                  <option>Java / Kotlin</option>
+                  <option>.NET</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="k-use">What are you building?</label>
+              <input id="k-use" name="use" type="text" placeholder="Marketplace payouts, subscription billing, one-off checkout…">
+              <p class="help">One line. It decides which sandbox fixtures we enable for you.</p>
+            </div>
+            <label class="checkline"><input type="checkbox" name="terms" value="yes" required> I accept the test data policy: sandbox keys must not be used in production traffic.</label>
+            <div class="btnrow">
+              <button class="btn" type="submit" id="key-submit">Issue test key
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5"/></svg>
+              </button>
+              <button class="btn btn-line" type="reset">Clear</button>
+            </div>
+            <p class="form-status" id="key-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <ul>
+        <li><a href="#quickstart">Quickstart</a></li>
+        <li><a href="#api">API reference</a></li>
+        <li><a href="#idempotency">Idempotency</a></li>
+        <li><a href="#events">Webhooks</a></li>
+        <li><a href="#errors">Errors</a></li>
+        <li><a href="#changelog">Changelog</a></li>
+        <li><a href="#keys">Get a test key</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<footer class="docfoot">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="#quickstart">Quickstart</a></li>
+        <li><a href="#api">API reference</a></li>
+        <li><a href="#events">Webhooks</a></li>
+        <li><a href="#changelog">Changelog</a></li>
+        <li><a href="#keys">Get a key</a></li>
+      </ul>
+    </nav>
+    <p class="spacer meta">v1 · 2024-06-11 · all regions operational</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* tabs */
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function selectTab(tab){
+    tabs.forEach(function(t){
+      var on=t===tab;
+      t.setAttribute('aria-selected',String(on));
+      t.tabIndex=on?0:-1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden=!on;
+    });
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){selectTab(t);});
+    t.addEventListener('keydown',function(e){
+      var n=null;
+      if(e.key==='ArrowRight') n=tabs[(i+1)%tabs.length];
+      if(e.key==='ArrowLeft') n=tabs[(i-1+tabs.length)%tabs.length];
+      if(e.key==='Home') n=tabs[0];
+      if(e.key==='End') n=tabs[tabs.length-1];
+      if(n){e.preventDefault();selectTab(n);n.focus();}
+    });
+  });
+
+  /* copy buttons */
+  var status=document.getElementById('copy-status');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy-target]'),function(btn){
+    btn.addEventListener('click',function(){
+      var el=document.getElementById(btn.getAttribute('data-copy-target'));
+      if(!el) return;
+      var text=el.tagName==='PRE'?el.innerText:el.textContent;
+      var original=btn.textContent.trim();
+      function done(){
+        btn.textContent='Copied';
+        status.textContent='Copied '+original.toLowerCase()+' to the clipboard.';
+        setTimeout(function(){ btn.textContent=original; status.textContent=''; },2000);
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done,function(){ status.textContent='Copy failed — select the text manually.'; });
+      }else{
+        var sel=window.getSelection(); var range=document.createRange(); range.selectNodeContents(el);
+        sel.removeAllRanges(); sel.addRange(range);
+        try{ document.execCommand('copy'); done(); }
+        catch(err){ status.textContent='Copy is unavailable in this browser — select the text manually.'; }
+      }
+    });
+  });
+
+  /* mobile contents */
+  var st=document.getElementById('side-toggle');
+  st.addEventListener('click',function(){
+    var open=st.getAttribute('aria-expanded')==='true';
+    st.setAttribute('aria-expanded',String(!open));
+    document.getElementById('side').classList.toggle('open',!open);
+  });
+
+  /* on-this-page highlight */
+  var tocLinks=Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var secs=tocLinks.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        tocLinks.forEach(function(a){a.removeAttribute('aria-current');});
+        var i=secs.indexOf(e.target);
+        if(i>-1) tocLinks[i].setAttribute('aria-current','true');
+      });
+    },{rootMargin:'-20% 0px -70% 0px'});
+    secs.forEach(function(s){if(s) io.observe(s);});
+  }
+
+  /* key request form */
+  var form=document.getElementById('key-form');
+  var fstatus=document.getElementById('key-status');
+  var submit=document.getElementById('key-submit');
+  form.addEventListener('input',function(e){ if(e.target.hasAttribute('aria-invalid')) e.target.removeAttribute('aria-invalid'); });
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var email=document.getElementById('k-email');
+    var terms=form.querySelector('[name="terms"]');
+    var bad=false;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){ email.setAttribute('aria-invalid','true'); bad=true; }
+    if(!terms.checked){ bad=true; }
+    if(bad){
+      fstatus.dataset.state='error';
+      fstatus.textContent=terms.checked?'Check the email address above.':'Accept the test data policy and use a valid work email.';
+      if(email.getAttribute('aria-invalid')) email.focus(); else terms.focus();
+      return;
+    }
+    submit.disabled=true; submit.textContent='Issuing…'; fstatus.dataset.state='busy'; fstatus.textContent='Creating your sandbox account.';
+    setTimeout(function(){
+      submit.disabled=false; submit.textContent='Issue test key';
+      fstatus.dataset.state='ok';
+      fstatus.textContent='Key issued. It is in your inbox now, and it starts with kst_test_ — it cannot move money.';
+      form.reset();
+    },700);
+  });
+})();
+</script>
+</body>
+</html>

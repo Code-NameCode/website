@@ -1,0 +1,725 @@
+<!-- Style: Scrollytelling | 35scrollytelling.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deepwater — The Cold Column</title>
+<style>
+:root{
+  /* deep ocean grade: abyssal blue, instrument grey, a single data orange */
+  --abyss:#050c16;
+  --deep:#0a1826;
+  --mid:#123047;
+  --shelf:#1c4763;
+  --kelp:#2d6a7a;
+  --foam:#e7eef2;
+  --grey:#8ea4b3;
+  --grey-dim:#5c7488;
+  --data:#ff8a3d;
+  --data-dim:#b45d26;
+  --alert:#ff5f56;
+  --line:rgba(231,238,242,.14);
+  --line-2:rgba(231,238,242,.3);
+  --ok:#5fd6a0;
+  --focus:#6fb7ff;
+  /* type */
+  --font-ui:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --t-xs:clamp(.68rem,.66rem + .1vw,.76rem);
+  --t-sm:clamp(.82rem,.79rem + .14vw,.93rem);
+  --t-base:clamp(1rem,.96rem + .2vw,1.12rem);
+  --t-lg:clamp(1.18rem,1.08rem + .42vw,1.45rem);
+  --t-xl:clamp(1.5rem,1.2rem + 1.4vw,2.3rem);
+  --t-2xl:clamp(2rem,1.3rem + 3.2vw,3.8rem);
+  --t-hero:clamp(2.6rem,1.3rem + 6.4vw,7rem);
+  /* space */
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;
+  --s-6:2rem;--s-7:2.75rem;--s-8:4rem;--s-9:6rem;
+  --gutter:clamp(1.25rem,4.5vw,4.5rem);
+  /* edges */
+  --tap:44px;
+  /* motion */
+  --d-slow:820ms;--d-base:300ms;--d-fast:150ms;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--abyss);color:var(--foam);font-family:var(--font-ui);font-size:var(--t-base);line-height:1.6}
+h1,h2,h3{line-height:1.08;letter-spacing:-.02em}
+
+/* ---------- masthead: thin, fixed, never hidden ---------- */
+.masthead{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;gap:var(--s-4);
+  padding:var(--s-3) var(--gutter);
+  background:rgba(5,12,22,.82);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.masthead .mark{display:flex;align-items:center;gap:var(--s-2);text-decoration:none;color:var(--foam)}
+.masthead .mark svg{width:22px;height:22px;color:var(--data)}
+.masthead .mark b{font-size:var(--t-sm);letter-spacing:.24em;text-transform:uppercase;font-weight:600}
+.masthead .issue{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--grey-dim);letter-spacing:.12em}
+.masthead nav{margin-left:auto;display:flex;gap:clamp(.6rem,2vw,1.75rem)}
+.masthead nav a{
+  color:var(--grey);text-decoration:none;font-family:var(--font-mono);font-size:var(--t-xs);
+  letter-spacing:.16em;text-transform:uppercase;display:inline-flex;align-items:center;min-height:var(--tap);
+  transition:color var(--d-fast) var(--ease);
+}
+.masthead nav a:hover{color:var(--data)}
+.masthead nav a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.masthead .depth{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--data);letter-spacing:.1em;white-space:nowrap}
+@media (max-width:700px){ .masthead .issue,.masthead .depth{display:none} .masthead nav a:nth-child(2){display:none} }
+
+/* ---------- hero ---------- */
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:100svh;display:flex;align-items:flex-end;padding-top:var(--s-9)}
+.hero-media{position:absolute;inset:0;z-index:-2}
+.hero-media svg{width:100%;height:100%;display:block}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(5,12,22,.7) 0%,rgba(5,12,22,.2) 38%,rgba(5,12,22,.95) 100%)}
+.hero-inner{padding:var(--s-8) var(--gutter);max-width:74rem;width:100%}
+.kicker{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.28em;text-transform:uppercase;color:var(--data);margin:0 0 var(--s-4)}
+.hero h1{font-size:var(--t-hero);margin:0 0 var(--s-5);max-width:14ch;font-weight:600}
+.hero p.standfirst{font-size:var(--t-lg);max-width:44ch;color:rgba(231,238,242,.84);margin:0 0 var(--s-6)}
+.scroll-cue{display:flex;align-items:center;gap:var(--s-3);font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+.scroll-cue i{display:block;width:1px;height:34px;background:linear-gradient(180deg,var(--data),transparent);animation:cue 2.4s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleY(.2);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(.2);transform-origin:bottom}}
+
+/* ---------- section framing ---------- */
+.wrap{max-width:80rem;margin:0 auto;padding:var(--s-9) var(--gutter)}
+.section-head{max-width:46rem;margin-bottom:var(--s-7)}
+.section-head h2{font-size:var(--t-2xl);margin:0 0 var(--s-4)}
+.section-head p{color:var(--grey);margin:0 0 var(--s-3);max-width:48ch}
+.provenance{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--grey-dim);letter-spacing:.06em}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.f-label{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--grey);padding:0;margin-bottom:var(--s-2)}
+.fieldset{border:0;padding:0;margin:0 0 var(--s-4)}
+
+/* ---------- SCROLLYTELLING: sticky panel + steps ---------- */
+.scrolly{position:relative;border-top:1px solid var(--line);background:var(--deep)}
+.scrolly-inner{max-width:80rem;margin:0 auto;padding:0 var(--gutter)}
+.scrolly-visuals{
+  position:sticky;top:0;height:100svh;
+  display:grid;grid-template-columns:1fr;align-items:center;
+}
+.scrolly-visuals .panel{
+  position:relative;width:100%;aspect-ratio:4/3;max-height:74svh;margin:0 auto;
+  border:1px solid var(--line-2);background:var(--mid);overflow:hidden;
+}
+.panel svg{display:block;width:100%;height:100%}
+.panel .layer{transition:opacity var(--d-slow) var(--ease),transform var(--d-slow) var(--ease)}
+.panel .readout{
+  position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);
+  background:rgba(5,12,22,.88);border-top:1px solid var(--line-2);
+}
+.panel .readout div{padding:var(--s-3) var(--s-4)}
+.panel .readout dt{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--grey-dim);margin:0}
+.panel .readout dd{margin:2px 0 0;font-family:var(--font-mono);font-size:var(--t-lg);color:var(--foam);font-variant-numeric:tabular-nums}
+.panel .readout dd.hot{color:var(--data)}
+.panel .panel-title{
+  position:absolute;top:0;left:0;right:0;padding:var(--s-3) var(--s-4);
+  font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--grey);background:linear-gradient(180deg,rgba(5,12,22,.9),rgba(5,12,22,0));
+  display:flex;justify-content:space-between;gap:var(--s-3);
+}
+.steps{position:relative;z-index:2;max-width:36rem;margin-left:auto;padding-right:var(--gutter)}
+.step{min-height:82svh;display:flex;align-items:center;padding:var(--s-7) 0}
+.step-body{max-width:34rem;opacity:.28;transition:opacity var(--d-slow) var(--ease)}
+.step.is-active .step-body{opacity:1}
+.step .num{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.24em;color:var(--data);margin:0 0 var(--s-3)}
+.step h3{font-size:var(--t-xl);margin:0 0 var(--s-3);font-weight:600}
+.step p{margin:0 0 var(--s-3);color:rgba(231,238,242,.8);font-size:var(--t-sm)}
+.step .datum{font-family:var(--font-mono);font-size:var(--t-sm);color:var(--data);letter-spacing:.04em;display:block;padding-top:var(--s-3);border-top:1px solid var(--line)}
+/* mobile fallback figure: the same drawing, per step, in flow */
+.step-figure{display:none;margin:var(--s-4) 0 0;border:1px solid var(--line-2)}
+.step-figure svg{display:block;width:100%;height:auto}
+@media (max-width:960px){
+  .scrolly-visuals{display:none}
+  .steps{max-width:none;margin-left:0;padding:0}
+  .step{min-height:auto;padding:var(--s-6) 0;border-bottom:1px solid var(--line)}
+  .step-body{opacity:1}
+  .step-figure{display:block}
+  .scrolly-inner{padding-top:var(--s-8)}
+}
+
+/* ---------- bathymetry: a profile that draws itself ---------- */
+.bathy{border-top:1px solid var(--line);background:var(--abyss)}
+.bathy-wrap{max-width:80rem;margin:0 auto;padding:var(--s-9) var(--gutter);display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(1.5rem,4vw,4rem);align-items:center}
+.bathy h2{font-size:var(--t-2xl);margin:0 0 var(--s-4)}
+.bathy p{color:var(--grey);margin:0 0 var(--s-4);max-width:38ch}
+.bathy-fig{margin:0;border:1px solid var(--line-2);background:var(--deep)}
+.bathy-fig svg{display:block;width:100%;height:auto}
+.bathy-fig path.draw{stroke-dasharray:var(--len,1200);stroke-dashoffset:var(--off,1200);transition:stroke-dashoffset 1600ms var(--ease)}
+.bathy-fig.is-lit path.draw{stroke-dashoffset:0}
+.bathy-legend{display:flex;gap:var(--s-5);flex-wrap:wrap;margin-top:var(--s-3);font-family:var(--font-mono);font-size:var(--t-xs);color:var(--grey-dim)}
+.bathy-legend span{display:flex;align-items:center;gap:var(--s-2)}
+.bathy-legend i{width:14px;height:2px;display:block}
+@media (max-width:860px){ .bathy-wrap{grid-template-columns:1fr} }
+
+/* ---------- data table: the numbers behind the story ---------- */
+.data{background:var(--deep);border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--data);padding-bottom:var(--s-4)}
+th,td{text-align:right;padding:var(--s-3) var(--s-3) var(--s-3) 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:500}
+tbody td:first-child{font-family:var(--font-mono);color:var(--foam)}
+tbody tr:hover{background:rgba(45,106,122,.22)}
+td.record{color:var(--data);font-weight:600}
+.table-scroll{overflow-x:auto}
+
+/* ---------- what we still cannot see ---------- */
+.unknown{border-top:1px solid var(--line);background:var(--abyss)}
+.gap-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:var(--s-7)}
+.gap-grid article{background:var(--abyss);padding:var(--s-5)}
+.gap-grid .lead-cell{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between}
+.gap-grid h3{font-size:var(--t-lg);margin:0 0 var(--s-3);font-weight:600}
+.gap-grid p{color:var(--grey);margin:0;font-size:var(--t-sm);max-width:34ch}
+.gap-grid .pct{font-family:var(--font-mono);font-size:clamp(2rem,1.3rem + 2.4vw,3.4rem);color:var(--data);line-height:1}
+@media (max-width:820px){ .gap-grid{grid-template-columns:1fr 1fr} .gap-grid .lead-cell{grid-row:auto;grid-column:span 2} }
+@media (max-width:560px){ .gap-grid{grid-template-columns:1fr} .gap-grid .lead-cell{grid-column:auto} }
+
+/* ---------- subscribe ---------- */
+.subscribe{border-top:1px solid var(--line);background:var(--mid)}
+.sub-wrap{max-width:80rem;margin:0 auto;padding:var(--s-9) var(--gutter);display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(1.5rem,4vw,4.5rem);align-items:center}
+.subscribe h2{font-size:var(--t-2xl);margin:0 0 var(--s-4)}
+.subscribe p{color:rgba(231,238,242,.8);margin:0 0 var(--s-4);max-width:40ch}
+.f{margin-bottom:var(--s-4)}
+.f label{display:block;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:var(--s-2)}
+.f input,.f select{
+  width:100%;min-height:var(--tap);padding:var(--s-3);background:rgba(5,12,22,.7);color:var(--foam);
+  border:1px solid var(--line-2);border-radius:0;font-family:var(--font-ui);font-size:var(--t-sm);
+  transition:border-color var(--d-fast) var(--ease),box-shadow var(--d-fast) var(--ease);
+}
+.f select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--grey) 50%),linear-gradient(135deg,var(--grey) 50%,transparent 50%);background-position:calc(100% - 18px) 1.2rem,calc(100% - 13px) 1.2rem;background-size:5px 5px;background-repeat:no-repeat}
+.f select option{background:var(--deep)}
+.f input::placeholder{color:var(--grey-dim)}
+.f input:hover,.f select:hover{border-color:var(--data)}
+.f input:focus-visible,.f select:focus-visible{outline:none;border-color:var(--data);box-shadow:0 0 0 1px var(--data)}
+.f input[aria-invalid="true"]{border-color:var(--alert);box-shadow:0 0 0 1px var(--alert)}
+.f .msg{display:block;font-family:var(--font-mono);font-size:var(--t-xs);color:var(--alert);margin-top:var(--s-2);min-height:1.2em}
+.f .msg.ok{color:var(--ok)}
+.form-status{font-family:var(--font-mono);font-size:var(--t-sm);color:var(--ok);margin:var(--s-3) 0 0;min-height:1.4em}
+.form-status.error{color:var(--alert)}
+.btn{
+  min-height:var(--tap);padding:0 var(--s-6);background:var(--data);color:#1a0b02;border:0;border-radius:0;cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--t-sm);font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  transition:background var(--d-fast) var(--ease),transform var(--d-fast) var(--ease);
+}
+.btn:hover{background:var(--foam)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.freq{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3)}
+.freq label{
+  font-family:var(--font-ui);font-size:var(--t-sm);color:var(--grey);cursor:pointer;
+  border:1px solid var(--line-2);padding:0 var(--s-4);display:inline-flex;align-items:center;min-height:var(--tap);
+  transition:border-color var(--d-fast) var(--ease),color var(--d-fast) var(--ease),background var(--d-fast) var(--ease);
+}
+.freq input{position:absolute;opacity:0;width:1px;height:1px}
+.freq label:hover{border-color:var(--data);color:var(--foam)}
+.freq label:has(input:checked){background:var(--data);border-color:var(--data);color:#1a0b02;font-weight:600}
+.freq label:has(input:focus-visible){outline:2px solid var(--focus);outline-offset:2px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);background:var(--deep);padding:var(--s-7) var(--gutter) var(--s-8)}
+.foot-inner{max-width:80rem;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:var(--s-6)}
+.foot-inner h2{font-size:var(--t-sm);letter-spacing:.24em;text-transform:uppercase;margin:0 0 var(--s-3)}
+.foot-inner h3{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--data);margin:0 0 var(--s-3)}
+.foot-inner p{color:var(--grey);font-size:var(--t-sm);margin:0;max-width:38ch}
+.foot-inner ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-1)}
+.foot-inner a{color:var(--grey);text-decoration:none;font-size:var(--t-sm);display:inline-flex;align-items:center;min-height:var(--tap)}
+.foot-inner a:hover{color:var(--data)}
+.foot-inner a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.disclaimer{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--grey-dim);margin-top:var(--s-6);padding-top:var(--s-4);border-top:1px solid var(--line);line-height:1.9}
+.wrap-flush{padding-top:0}
+@media (max-width:760px){ .foot-inner{grid-template-columns:1fr} .sub-wrap{grid-template-columns:1fr} }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .scroll-cue i{animation:none}
+  .bathy-fig path.draw{stroke-dashoffset:0}
+  .step-body{opacity:1}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <a class="mark" href="#top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+      <path d="M2 8c3-2 5 2 8 0s5 2 8 0 4 0 4 0M2 14c3-2 5 2 8 0s5 2 8 0 4 0 4 0M2 20c3-2 5 2 8 0"/>
+    </svg>
+    <b>Deepwater</b>
+  </a>
+  <span class="issue">Data story 04 / The Cold Column</span>
+  <nav aria-label="Sections">
+    <a href="#column">The column</a>
+    <a href="#profile">Profile</a>
+    <a href="#table">Data</a>
+    <a href="#bulletin">Bulletin</a>
+  </nav>
+  <span class="depth" id="depth-readout">0 m</span>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="hero-media" aria-hidden="true">
+      <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+        <defs><linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2d6a7a"/><stop offset="34%" stop-color="#123047"/>
+          <stop offset="72%" stop-color="#0a1826"/><stop offset="100%" stop-color="#050c16"/>
+        </linearGradient></defs>
+        <rect width="1600" height="900" fill="url(#sea)"/>
+        <g stroke="#e7eef2" stroke-opacity=".2" fill="none" stroke-width="1.5">
+          <path d="M0 70c200-30 340 26 540-4s360 30 560-6 340 20 500-10"/>
+          <path d="M0 110c220-34 350 30 540 0s370 34 560-4 320 22 500-12"/>
+        </g>
+        <g fill="#ff8a3d" opacity=".9">
+          <path d="M1200 130l-40 18 40 18z"/><path d="M1330 210l-40 18 40 18z"/><path d="M1100 300l-40 18 40 18z"/>
+        </g>
+        <g fill="#2d6a7a" opacity=".6">
+          <path d="M980 900V520c0-40 30-72 68-72s68 32 68 72v380z"/>
+          <path d="M1300 900V600c0-30 22-54 50-54s50 24 50 54v300z"/>
+        </g>
+        <g fill="#050c16" opacity=".8">
+          <path d="M0 900V740c180-20 320 30 480 10s340 26 520 0 360 24 600-14v164z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="hero-inner">
+      <p class="kicker">Station MERIDIAN-9 · 41° N, 2° W · data story 04</p>
+      <h1 id="hero-h">Below 400 metres, the ocean is holding a record nobody wrote down</h1>
+      <p class="standfirst">We dropped a profiling float through 2 800 metres of water for eleven months. This is what the temperature column did while nobody was looking — read by scrolling.</p>
+      <div class="scroll-cue"><i></i> Scroll to descend</div>
+    </div>
+  </section>
+
+  <!-- SCROLLYTELLING SEQUENCE -->
+  <section class="scrolly" id="column" aria-labelledby="col-h">
+    <h2 class="sr-only" id="col-h">The temperature column, depth by depth</h2>
+    <div class="scrolly-inner">
+
+      <div class="scrolly-visuals" aria-hidden="true">
+        <div class="panel" id="panel">
+          <p class="panel-title"><span>MERIDIAN-9 · cast 47</span><span id="panel-stage">SURFACE</span></p>
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="col" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ff8a3d"/><stop offset="18%" stop-color="#2d6a7a"/>
+                <stop offset="55%" stop-color="#1c4763"/><stop offset="100%" stop-color="#0a1826"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="300" fill="url(#col)"/>
+            <!-- isotherms -->
+            <g class="layer" id="lay-iso" stroke="#e7eef2" stroke-opacity=".35" stroke-width="1" fill="none">
+              <path d="M-10 60 C 120 50, 200 70, 410 54"/>
+              <path d="M-10 100 C 140 90, 210 110, 410 94"/>
+              <path d="M-10 140 C 150 132, 220 150, 410 134"/>
+              <path d="M-10 180 C 160 172, 230 190, 410 174"/>
+            </g>
+            <!-- warm cap -->
+            <rect class="layer" id="lay-cap" x="0" y="0" width="400" height="26" fill="#ff8a3d" opacity=".85"/>
+            <!-- mixed layer marker -->
+            <g class="layer" id="lay-mld" stroke="#ff8a3d" stroke-width="2" stroke-dasharray="6 5" fill="none">
+              <path d="M0 40H400"/>
+            </g>
+            <!-- profiler float -->
+            <g class="layer" id="lay-float" transform="translate(200,14)">
+              <path d="M0 -13 L11 0 L0 13 L-11 0 Z" fill="#e7eef2"/>
+              <path d="M-11 0h-22" stroke="#e7eef2" stroke-width="2"/>
+            </g>
+            <!-- deep signal anomaly -->
+            <circle class="layer" id="lay-anom" cx="286" cy="238" r="30" fill="#ff8a3d" opacity="0"/>
+            <circle class="layer" id="lay-anom-ring" cx="286" cy="238" r="30" fill="none" stroke="#ff8a3d" stroke-width="1.5" opacity="0"/>
+            <!-- marine snow -->
+            <g class="layer" id="lay-snow" fill="#e7eef2" opacity="0">
+              <circle cx="60" cy="200" r="2"/><circle cx="120" cy="240" r="1.5"/><circle cx="200" cy="215" r="2"/>
+              <circle cx="260" cy="260" r="1.5"/><circle cx="330" cy="205" r="2"/><circle cx="90" cy="270" r="1.5"/>
+              <circle cx="360" cy="262" r="1.5"/><circle cx="160" cy="180" r="1"/>
+            </g>
+            <!-- axes -->
+            <g stroke="#e7eef2" stroke-opacity=".3" stroke-width="1">
+              <path d="M36 0V300"/>
+            </g>
+            <g class="layer" id="lay-axis-labels" font-family="ui-monospace,monospace" font-size="9" fill="#8ea4b3">
+              <text x="6" y="16">0 m</text><text x="6" y="70">200</text><text x="6" y="140">600</text>
+              <text x="6" y="210">1 400</text><text x="6" y="290">2 800</text>
+            </g>
+          </svg>
+          <dl class="readout">
+            <div><dt>Depth</dt><dd id="r-depth">0 m</dd></div>
+            <div><dt>Temp</dt><dd id="r-temp" class="hot">18.4 °C</dd></div>
+            <div><dt>Salinity</dt><dd id="r-sal">35.2 psu</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step" data-step="0" data-stage="SURFACE" data-depth="0 m" data-temp="18.4 °C" data-sal="35.2 psu" data-y="14" data-cap=".85" data-iso=".35" data-mld="1" data-float="1" data-anom="0" data-snow="0">
+          <div class="step-body">
+            <p class="num">01 — 0 m</p>
+            <h3>The surface is a skin, and it is the part we ruined</h3>
+            <p>The top 26 metres warmed 1.9 °C above the pre-1990 average this summer. It is thin — a rounding error against 2 800 metres — and it is the only part anyone argued about.</p>
+            <span class="datum">18.4 °C · the warmest surface reading at this station since 1997</span>
+            <figure class="step-figure">
+              <svg viewBox="0 0 400 140" role="img" aria-label="Surface layer 0 to 26 metres, 18.4 degrees Celsius.">
+                <rect width="400" height="140" fill="#1c4763"/><rect width="400" height="14" fill="#ff8a3d"/>
+                <g font-family="ui-monospace,monospace" font-size="9" fill="#8ea4b3"><text x="6" y="34">0 m 18.4 °C</text><text x="6" y="70">26 m 16.1 °C</text><text x="6" y="130">60 m 11.2 °C</text></g>
+              </svg>
+            </figure>
+          </div>
+        </div>
+
+        <div class="step" data-step="1" data-stage="MIXED LAYER" data-depth="40 m" data-temp="16.1 °C" data-sal="35.4 psu" data-y="52" data-cap=".35" data-iso=".55" data-mld="1" data-float="1" data-anom="0" data-snow="0">
+          <div class="step-body">
+            <p class="num">02 — 40 m</p>
+            <h3>The mixed layer is the engine, and it is running late</h3>
+            <p>Wind stirs the top 40 metres into one uniform slab. This year the slab formed 19 days later than the 1981–2010 mean, so the whole heat season went into that thinner skin rather than being spread down.</p>
+            <span class="datum">16.1 °C · mixed layer 19 days late · 3.4 °C below the seasonal mean at 60 m</span>
+            <figure class="step-figure">
+              <svg viewBox="0 0 400 140" role="img" aria-label="Mixed layer to 40 metres with the thermocline beginning beneath it.">
+                <rect width="400" height="140" fill="#2d6a7a"/><rect width="400" height="26" fill="#1c4763"/>
+                <path d="M0 26H400" stroke="#ff8a3d" stroke-width="2" stroke-dasharray="6 5"/>
+                <path d="M0 26 L400 26" stroke="#e7eef2" stroke-opacity=".4" fill="none"/>
+                <g font-family="ui-monospace,monospace" font-size="9" fill="#8ea4b3"><text x="6" y="44">40 m ML base</text><text x="6" y="80">200 m 9.4 °C</text><text x="6" y="130">600 m 5.1 °C</text></g>
+              </svg>
+            </figure>
+          </div>
+        </div>
+
+        <div class="step" data-step="2" data-stage="THERMOCLINE" data-depth="1 400 m" data-temp="4.1 °C" data-sal="34.9 psu" data-y="170" data-cap="0" data-iso=".7" data-mld="0" data-float="0" data-anom="0" data-snow=".5">
+          <div class="step-body">
+            <p class="num">03 — 1 400 m</p>
+            <h3>Below here the water has not been to the surface in centuries</h3>
+            <p>The thermocline is a lid, 800 metres thick, and it is the reason the surface can change without the rest of the ocean caring. Below it, temperature falls at roughly one degree per thousand metres — the oldest water in the Atlantic basin, formed in the far north.</p>
+            <span class="datum">4.1 °C · no direct observation of this layer since the 2019 cast</span>
+            <figure class="step-figure">
+              <svg viewBox="0 0 400 140" role="img" aria-label="Thermocline between 200 and 1 000 metres.">
+                <rect width="400" height="140" fill="#0a1826"/>
+                <path d="M0 30 L400 96" stroke="#2d6a7a" stroke-width="26" stroke-opacity=".8" fill="none"/>
+                <g font-family="ui-monospace,monospace" font-size="9" fill="#8ea4b3"><text x="6" y="20">200 m 9.4 °C</text><text x="6" y="72">600 m 5.1 °C</text><text x="6" y="130">1 000 m 3.6 °C</text></g>
+              </svg>
+            </figure>
+          </div>
+        </div>
+
+        <div class="step" data-step="3" data-stage="THE ANOMALY" data-depth="2 400 m" data-temp="2.3 °C" data-sal="34.8 psu" data-y="252" data-cap="0" data-iso=".25" data-mld="0" data-float="0" data-anom="1" data-snow="1">
+          <div class="step-body">
+            <p class="num">04 — 2 400 m</p>
+            <h3>Something is releasing heat in the deep, and it is not us</h3>
+            <p>At 2 400 metres the float logged 0.31 °C above the modelled value for this depth — outside the range of any previous cast. We do not yet have a cause. Hydrothermal seep from the fracture zone 30 km north is the working theory.</p>
+            <span class="datum">0.31 °C above model · flagged 3 November · still unexplained</span>
+            <figure class="step-figure">
+              <svg viewBox="0 0 400 140" role="img" aria-label="Deep anomaly at 2 400 metres, 0.31 degrees above the modelled value.">
+                <rect width="400" height="140" fill="#050c16"/>
+                <circle cx="250" cy="86" r="38" fill="#ff8a3d" opacity=".18"/>
+                <circle cx="250" cy="86" r="38" fill="none" stroke="#ff8a3d" stroke-width="1.5"/>
+                <g font-family="ui-monospace,monospace" font-size="9" fill="#8ea4b3"><text x="6" y="24">1 400 m 4.1 °C</text><text x="6" y="86" fill="#ff8a3d">2 400 m +0.31 °C</text><text x="6" y="132">2 800 m 2.1 °C</text></g>
+              </svg>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BATHYMETRY -->
+  <section class="bathy" id="profile" aria-labelledby="bathy-h">
+    <div class="bathy-wrap">
+      <div>
+        <p class="kicker">Station geometry</p>
+        <h2 id="bathy-h">Why the float had to go down at all</h2>
+        <p>Satellites see the surface. Buoys see the top few hundred metres. Everything below that has been guesswork built on 1970s-era hydrographic survey lines.</p>
+        <p>The profile below is the actual bottom under the station, from the 2019 multibeam survey. The float's parking depth sits 340 metres off the shelf break, which is why the cable stayed quiet for so long.</p>
+        <div class="bathy-legend">
+          <span><i style="background:#ff8a3d"></i> Float track</span>
+          <span><i style="background:#2d6a7a"></i> Seafloor</span>
+          <span><i style="background:#e7eef2"></i> Station MERIDIAN-9</span>
+        </div>
+      </div>
+      <figure class="bathy-fig" id="bathy-fig">
+        <svg viewBox="0 0 600 320" role="img" aria-labelledby="bathy-t bathy-d">
+          <title id="bathy-t">Cross-section of the seabed under station MERIDIAN-9</title>
+          <desc id="bathy-d">The seabed drops from 90 metres at the shelf to 2 800 metres at the plain, with the float track descending from the surface to a parking depth of 2 460 metres.</desc>
+          <g stroke="#123047" stroke-width="1">
+            <path d="M0 60H600M0 120H600M0 180H600M0 240H600M0 300H600"/>
+          </g>
+          <g font-family="ui-monospace,monospace" font-size="9" fill="#5c7488">
+            <text x="4" y="18">0 m</text><text x="4" y="72">500</text><text x="4" y="132">1 500</text>
+            <text x="4" y="192">2 500</text><text x="4" y="292">2 800</text>
+          </g>
+          <path d="M0 78 L60 84 L120 96 L180 128 L230 176 L280 224 L340 262 L420 282 L520 290 L600 292 L600 320 L0 320 Z" fill="#1c4763" stroke="#2d6a7a" stroke-width="2"/>
+          <path class="draw" d="M150 30 C 160 90, 190 150, 236 200 S 300 258, 356 262" fill="none" stroke="#ff8a3d" stroke-width="2.5" stroke-dasharray="3 4"/>
+          <g>
+            <circle cx="150" cy="30" r="5" fill="#e7eef2"/>
+            <path d="M356 256 L356 268" stroke="#e7eef2" stroke-width="1.5"/>
+            <path d="M348 262 h16" stroke="#e7eef2" stroke-width="1.5"/>
+          </g>
+          <g font-family="ui-monospace,monospace" font-size="10" fill="#e7eef2">
+            <text x="160" y="24">surface launch</text>
+            <text x="366" y="266" fill="#ff8a3d">park 2 460 m</text>
+          </g>
+        </svg>
+      </figure>
+    </div>
+  </section>
+
+  <!-- DATA TABLE -->
+  <section class="data" id="table" aria-labelledby="data-h">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Raw casts</p>
+        <h2 id="data-h">Every cast, no smoothing</h2>
+        <p>Eleven profiling casts from the same 2.8 km of wire. We publish the raw numbers because the interesting things are in the gaps.</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <caption>MERIDIAN-9 · temperature by depth, °C</caption>
+          <thead>
+            <tr>
+              <th scope="col">Cast date</th>
+              <th scope="col">0 m</th>
+              <th scope="col">40 m</th>
+              <th scope="col">200 m</th>
+              <th scope="col">1 000 m</th>
+              <th scope="col">2 400 m</th>
+              <th scope="col">Salinity, 0 m</th>
+              <th scope="col">Flag</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>12 Jan 2025</td><td>14.1</td><td>14.0</td><td>12.6</td><td>4.9</td><td>2.2</td><td>35.4</td><td>—</td></tr>
+            <tr><td>2 Feb 2025</td><td>14.0</td><td>13.9</td><td>12.4</td><td>4.8</td><td>2.2</td><td>35.4</td><td>—</td></tr>
+            <tr><td>21 Feb 2025</td><td>14.3</td><td>14.2</td><td>12.2</td><td>4.8</td><td>2.3</td><td>35.3</td><td>—</td></tr>
+            <tr><td>14 Mar 2025</td><td>14.8</td><td>14.6</td><td>11.8</td><td>4.7</td><td>2.3</td><td>35.2</td><td>—</td></tr>
+            <tr><td>2 Apr 2025</td><td>15.6</td><td>15.4</td><td>11.4</td><td>4.7</td><td>2.3</td><td>35.1</td><td>—</td></tr>
+            <tr><td>28 Apr 2025</td><td>16.4</td><td>16.1</td><td>11.0</td><td>4.6</td><td>2.4</td><td>35.0</td><td>—</td></tr>
+            <tr><td>19 May 2025</td><td>17.1</td><td>16.8</td><td>10.6</td><td>4.6</td><td>2.4</td><td>34.9</td><td>—</td></tr>
+            <tr><td>8 Jun 2025</td><td>17.8</td><td>17.3</td><td>10.2</td><td>4.5</td><td>2.4</td><td>34.8</td><td>—</td></tr>
+            <tr><td>3 Jul 2025</td><td>18.1</td><td>17.7</td><td>9.9</td><td>4.4</td><td>2.3</td><td>34.8</td><td>warm</td></tr>
+            <tr><td>24 Jul 2025</td><td>18.4</td><td>17.9</td><td>9.6</td><td>4.3</td><td>2.3</td><td>34.7</td><td>warm</td></tr>
+            <tr><td>3 Nov 2025</td><td>16.2</td><td>15.9</td><td>9.9</td><td>4.3</td><td class="record">2.6</td><td>34.8</td><td class="record">+0.31 anomaly</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="provenance" style="margin-top:var(--s-4)">Provenance · MERIDIAN-9 CTD casts, downloaded from the Deepwater open archive on 4 November 2025. The 3 November cast is the one we are still arguing about.</p>
+    </div>
+  </section>
+
+  <!-- GAPS -->
+  <section class="unknown" aria-labelledby="gap-h">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Honest limits</p>
+        <h2 id="gap-h">Three things we still cannot see</h2>
+        <p>This story is eleven casts from one place. Here is what that does and does not mean.</p>
+      </div>
+      <div class="gap-grid">
+        <article class="lead-cell">
+          <div>
+            <p class="pct">0.7%</p>
+            <h3>Of the global ocean has ever been sampled by a profiling float on the same schedule as this one.</h3>
+          </div>
+          <p>One station is a story about a place. It is a good place — a shelf edge with a real signal — but the 3 November anomaly might be a local seep or it might be nothing. We will not know until the March cast.</p>
+        </article>
+        <article><p class="pct">0</p><h3>Continuous records below 1 000 m before 2010.</h3><p>Everything deeper than a kilometre in this dataset is younger than the smartphones in the room.</p></article>
+        <article><p class="pct">1</p><h3>Station, still running.</h3><p>It surfaces to transmit on the first Tuesday of every month, whether or not anyone is reading.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUBSCRIBE -->
+  <section class="subscribe" id="bulletin" aria-labelledby="sub-h">
+    <div class="sub-wrap">
+      <div>
+        <p class="kicker">The monthly bulletin</p>
+        <h2 id="sub-h">Get the next cast, raw, on the first Tuesday</h2>
+        <p>One email a month: the cast table, anything we flagged, and a plain note about what we got wrong last time. No newsletter formatting, no tracking pixels.</p>
+        <p>121 400 people already read it, which is more than we expected and more than we can answer individually.</p>
+      </div>
+
+      <form id="sub-form" novalidate>
+        <div class="f">
+          <label for="s-email">Email</label>
+          <input id="s-email" name="email" type="email" autocomplete="email" placeholder="you@example.org" aria-describedby="s-email-msg">
+          <span class="msg" id="s-email-msg" role="alert"></span>
+        </div>
+        <fieldset class="fieldset">
+          <legend class="f-label">Which stations</legend>
+          <div class="freq">
+            <label><input type="checkbox" name="stations" value="MERIDIAN-9" checked> MERIDIAN-9</label>
+            <label><input type="checkbox" name="stations" value="CAPE-2"> CAPE-2</label>
+            <label><input type="checkbox" name="stations" value="FARAWAY-1"> FARAWAY-1</label>
+          </div>
+        </fieldset>
+        <div class="f">
+          <label for="s-format">Preferred format</label>
+          <select id="s-format" name="format" aria-describedby="s-format-msg">
+            <option value="csv" selected>CSV, one row per cast</option>
+            <option value="netcdf">NetCDF, full profile</option>
+            <option value="both">Both</option>
+          </select>
+          <span class="msg" id="s-format-msg"></span>
+        </div>
+        <button class="btn" type="submit" id="sub-btn">Subscribe to the bulletin</button>
+        <p class="form-status" id="sub-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <h2>Deepwater</h2>
+      <p>An open ocean data project. Floats, casts and the code that turns them into these pages are published under a permissive licence.</p>
+    </div>
+    <nav aria-label="Data">
+      <h3>Data</h3>
+      <ul>
+        <li><a href="#table">Raw casts</a></li>
+        <li><a href="#profile">Station geometry</a></li>
+        <li><a href="#column">Data story 04</a></li>
+        <li><a href="#bulletin">Download archive</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Project">
+      <h3>Project</h3>
+      <ul>
+        <li><a href="#top">About Deepwater</a></li>
+        <li><a href="#bulletin">Method</a></li>
+        <li><a href="#table">Licence and citation</a></li>
+        <li><a href="#bulletin">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap wrap-flush">
+    <p class="disclaimer">Deepwater is a fictional project created for this example page. Station MERIDIAN-9, all cast values, and the 3 November anomaly are invented for demonstration and must not be cited as measurements. Figures render as inline SVG; no images, scripts or styles are loaded from anywhere else.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- scrollytelling: each step drives the sticky panel ---- */
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var panel = document.getElementById('panel');
+  var lay = {
+    cap: document.getElementById('lay-cap'),
+    iso: document.getElementById('lay-iso'),
+    mld: document.getElementById('lay-mld'),
+    flt: document.getElementById('lay-float'),
+    anom: document.getElementById('lay-anom'),
+    ring: document.getElementById('lay-anom-ring'),
+    snow: document.getElementById('lay-snow')
+  };
+  var out = {
+    stage: document.getElementById('panel-stage'),
+    depth: document.getElementById('r-depth'),
+    temp: document.getElementById('r-temp'),
+    sal: document.getElementById('r-sal')
+  };
+  var bar = document.getElementById('depth-readout');
+  var lastStep = -1;
+
+  function applyStep(el){
+    var d = el.dataset;
+    steps.forEach(function(s){ s.classList.toggle('is-active', s === el); });
+    if(reduced){ el.setAttribute('data-applied','1'); }
+    lay.cap.setAttribute('opacity', d.cap);
+    lay.iso.setAttribute('stroke-opacity', d.iso);
+    lay.mld.setAttribute('opacity', d.mld);
+    lay.flt.setAttribute('opacity', d.float);
+    lay.flt.setAttribute('transform', 'translate(200,' + d.y + ')');
+    lay.anom.setAttribute('opacity', d.anom);
+    lay.ring.setAttribute('opacity', d.anom);
+    lay.snow.setAttribute('opacity', d.snow);
+    out.stage.textContent = d.stage;
+    out.depth.textContent = d.depth;
+    out.temp.textContent = d.temp;
+    out.sal.textContent = d.sal;
+    bar.textContent = d.depth;
+  }
+
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        var i = steps.indexOf(en.target);
+        if(i === lastStep) return;
+        lastStep = i;
+        applyStep(en.target);
+      });
+    },{rootMargin:'-42% 0px -42% 0px', threshold:0});
+    steps.forEach(function(s){ io.observe(s); });
+    applyStep(steps[0]);
+    lastStep = 0;
+  } else {
+    applyStep(steps[0]);
+    steps.forEach(function(s){
+      s.addEventListener('focusin', function(){ applyStep(s); });
+    });
+  }
+
+  /* ---- bathymetry line draws itself once, when it arrives ---- */
+  var bathyFig = document.getElementById('bathy-fig');
+  var drawPath = bathyFig.querySelector('path.draw');
+  var LEN = 520;
+  drawPath.style.setProperty('--len', LEN);
+  drawPath.style.setProperty('--off', LEN);
+  if('IntersectionObserver' in window){
+    var io2 = new IntersectionObserver(function(en){
+      if(en[0].isIntersecting){ bathyFig.classList.add('is-lit'); io2.disconnect(); }
+    },{threshold:.4});
+    io2.observe(bathyFig);
+  } else {
+    bathyFig.classList.add('is-lit');
+  }
+
+  /* ---- subscribe form ---- */
+  var form = document.getElementById('sub-form');
+  var emailI = document.getElementById('s-email');
+  var emailM = document.getElementById('s-email-msg');
+  var status = document.getElementById('sub-status');
+  var btn = document.getElementById('sub-btn');
+  var fmt = document.getElementById('s-format');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = emailI.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){
+      emailM.textContent = 'We need a working address — the cast table goes out by email only.';
+      emailM.classList.remove('ok');
+      emailI.setAttribute('aria-invalid','true');
+      status.className = 'form-status error';
+      status.textContent = 'Nothing has been subscribed. Fix the address and try again.';
+      emailI.focus();
+      return;
+    }
+    emailM.textContent = 'Address accepted.';
+    emailM.classList.add('ok');
+    emailI.removeAttribute('aria-invalid');
+    var chosen = Array.prototype.slice.call(document.querySelectorAll('input[name="stations"]:checked'))
+      .map(function(c){ return c.value; });
+    if(!chosen.length) chosen = ['none selected — all stations'];
+    status.className = 'form-status';
+    status.textContent = 'Subscribed ' + v + ' to ' + chosen.join(', ') + ' in ' + fmt.options[fmt.selectedIndex].text + ' format. First cast goes out on the first Tuesday.';
+    btn.disabled = true;
+    btn.textContent = 'Subscribed';
+  });
+
+  emailI.addEventListener('input', function(){
+    if(emailI.getAttribute('aria-invalid') === 'true'){
+      emailI.removeAttribute('aria-invalid');
+      emailM.textContent = '';
+      status.className = 'form-status';
+      status.textContent = '';
+    }
+  });
+})();
+</script>
+</body>
+</html>

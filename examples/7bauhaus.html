@@ -1,0 +1,629 @@
+<!-- Style: Bauhaus | 7bauhaus.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Werkstatt 28 — Werkstattlehre für Gestaltung, Dessau</title>
+<meta name="description" content="Werkstatt 28 in Dessau: Formlehre, Farblehre, Typografie, Material und Druck. Werkstattlehre in kleinen Gruppen, Aufnahme zum Wintersemester 2026/27.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* colour — primaries, plus paper and ink */
+    --paper:#EFE8DA;
+    --paper-2:#E5DCC9;
+    --white:#FFFFFF;
+    --ink:#1B1A17;
+    --ink-2:#4A463C;
+    --red:#C8402B;
+    --blue:#1E4C96;
+    --yellow:#EFAE12;
+    --green:#3F6B3A;
+    --grey:#8B8574;
+    --error:#A52814;
+    --ok:#2C5A2A;
+    /* type */
+    --geo:"Poppins","Futura","Avenir Next","Century Gothic","Trebuchet MS",system-ui,sans-serif;
+    --fs-display:clamp(2.5rem,6.4vw,5rem);
+    --fs-h2:clamp(1.9rem,4vw,3.2rem);
+    --fs-h3:clamp(1.15rem,1.7vw,1.4rem);
+    --fs-body:clamp(1rem,1.08vw,1.06rem);
+    --fs-sm:.9rem;
+    --fs-xs:.75rem;
+    --lh:1.55;
+    --lh-flat:1.02;
+    /* space */
+    --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2.25rem;--s7:3.5rem;--s8:5rem;--s9:7rem;
+    --pad:clamp(1.1rem,3.5vw,2.5rem);
+    --sec:clamp(3.5rem,8vw,6.5rem);
+    --page:76rem;
+    /* edges */
+    --r-none:0;
+    --r-pill:999px;
+    /* motion */
+    --dur:260ms;
+    --ease:cubic-bezier(.34,1.3,.5,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--geo);font-size:var(--fs-body);line-height:var(--lh);
+    -webkit-font-smoothing:antialiased
+  }
+  h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+  .page{max-width:var(--page);margin-inline:auto;padding-inline:var(--pad)}
+  .sec-title{font-size:var(--fs-h2);line-height:var(--lh-flat);letter-spacing:-.02em;font-weight:800}
+  .eyebrow{font-size:var(--fs-xs);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+  .mt4{margin-top:var(--s4)}
+  .mt6{margin-top:var(--s6)}
+  .measure{max-width:44ch}
+
+  /* ---------- header ---------- */
+  .head{background:var(--paper);border-bottom:4px solid var(--ink);position:sticky;top:0;z-index:40}
+  .head-in{display:flex;align-items:center;justify-content:space-between;gap:var(--s5);min-height:78px}
+  .brand{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+  .brand-circle{width:34px;height:34px;border-radius:50%;background:var(--red);flex:none}
+  .brand-name{font-size:1.2rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  .brand-sub{display:block;font-size:var(--fs-xs);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+  .nav ul{display:flex;align-items:center;gap:clamp(.6rem,1.6vw,1.5rem)}
+  .nav a{
+    text-decoration:none;font-size:var(--fs-sm);font-weight:600;padding-block:.55rem;
+    display:inline-flex;align-items:center;gap:.45rem;transition:color var(--dur) var(--ease)
+  }
+  .nav a::before{content:"";width:9px;height:9px;background:var(--ink);border-radius:50%;transition:background var(--dur) var(--ease),transform var(--dur) var(--ease)}
+  .nav a:hover{color:var(--red)}
+  .nav a:hover::before{background:var(--red);transform:scale(1.3)}
+  .nav a[aria-current="page"]::before{background:var(--red)}
+  .head-cta{
+    display:inline-flex;align-items:center;min-height:48px;padding:0 var(--s5);background:var(--blue);color:var(--white);
+    border:0;border-radius:var(--r-pill);font:inherit;font-size:var(--fs-sm);font-weight:600;text-decoration:none;cursor:pointer;
+    transition:background var(--dur) var(--ease)
+  }
+  .head-cta:hover{background:var(--ink)}
+  .burger{
+    display:none;min-height:44px;padding:0 var(--s4);background:var(--white);border:3px solid var(--ink);
+    border-radius:var(--r-pill);font:inherit;font-size:var(--fs-sm);font-weight:600;cursor:pointer
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding-block:clamp(2.5rem,6vw,4.5rem) var(--s7);position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(1.5rem,4vw,3.5rem);align-items:center}
+  .hero h1{font-size:var(--fs-display);line-height:var(--lh-flat);letter-spacing:-.035em;font-weight:800;margin-block:var(--s4) var(--s5)}
+  .hero h1 .shape{position:relative;display:inline-block;padding:0 .12em}
+  .hero h1 .shape::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.24em;background:var(--yellow);z-index:-1}
+  .hero-geom{position:relative;aspect-ratio:1/1;width:100%;max-width:30rem;justify-self:end}
+  .geo-circle{position:absolute;right:0;top:0;width:56%;aspect-ratio:1;border-radius:50%;background:var(--red)}
+  .geo-quarter{position:absolute;left:0;bottom:6%;width:52%;aspect-ratio:1;border-radius:50% 0 0 0;background:var(--blue)}
+  .geo-triangle{position:absolute;left:16%;top:12%;width:0;height:0;border-left:52px solid transparent;border-right:52px solid transparent;border-bottom:90px solid var(--ink)}
+  .geo-square{position:absolute;right:12%;bottom:0;width:26%;aspect-ratio:1;background:var(--yellow)}
+  .geo-bar{position:absolute;left:2%;top:44%;width:34%;height:12px;background:var(--ink)}
+  .hero-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4);margin-top:var(--s7);border-top:3px solid var(--ink);padding-top:var(--s4);max-width:44rem}
+  .hero-facts b{display:block;font-size:1.5rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  .hero-facts span{font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s6)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 var(--s6);
+    font:inherit;font-size:var(--fs-body);font-weight:600;text-decoration:none;cursor:pointer;
+    border:3px solid var(--ink);background:var(--yellow);color:var(--ink);border-radius:var(--r-pill);
+    transition:transform var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease)
+  }
+  .btn:hover{transform:translateY(-3px);background:var(--ink);color:var(--yellow)}
+  .btn--blue{background:var(--blue);color:var(--white)}
+  .btn--blue:hover{background:var(--ink);color:var(--white)}
+  .btn--out{background:transparent}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+  /* ---------- geometric divider ---------- */
+  .divider{display:block;width:100%;height:clamp(28px,4vw,54px)}
+
+  /* ---------- programme planes ---------- */
+  .programme{padding-block:var(--sec)}
+  .sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,22rem);gap:var(--s5);align-items:end;margin-bottom:var(--s7)}
+  .sec-head .measure{font-size:var(--fs-sm);color:var(--ink-2)}
+  .planes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--s4)}
+  .plane{padding:var(--s5);display:flex;flex-direction:column;gap:var(--s3);min-height:16rem;border:3px solid var(--ink)}
+  .plane h3{font-size:var(--fs-h3);font-weight:800;letter-spacing:-.015em;line-height:1.15}
+  .plane p{font-size:var(--fs-sm)}
+  .plane .num{font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-.04em}
+  .plane .foot{margin-top:auto;padding-top:var(--s3);border-top:2px solid currentColor;font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase}
+  .plane--red{grid-column:span 3;background:var(--red);color:var(--white)}
+  .plane--blue{grid-column:span 3;background:var(--blue);color:var(--white)}
+  .plane--yellow{grid-column:span 2;background:var(--yellow);color:var(--ink);border-radius:50% 50% 0 0 / 18% 18% 0 0}
+  .plane--green{grid-column:span 2;background:var(--green);color:var(--white)}
+  .plane--ink{grid-column:span 2;background:var(--ink);color:var(--paper);border-radius:var(--r-pill);padding-inline:var(--s5)}
+  .plane a{font-size:var(--fs-sm);font-weight:600;text-decoration:underline;text-underline-offset:4px}
+
+  /* ---------- workshops list ---------- */
+  .workshops{background:var(--paper-2);padding-block:var(--sec);border-block:3px solid var(--ink)}
+  .ws-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(2rem,5vw,4rem)}
+  .ws-item{display:grid;grid-template-columns:4.5rem minmax(0,1fr);gap:var(--s4);padding-block:var(--s5);border-top:2px solid var(--ink)}
+  .ws-item:nth-child(-n+2){border-top:0}
+  .ws-num{font-size:2rem;font-weight:800;line-height:1;letter-spacing:-.04em;color:var(--red)}
+  .ws-item h3{font-size:1.15rem;font-weight:800;letter-spacing:-.01em;margin-bottom:var(--s2)}
+  .ws-item p{font-size:var(--fs-sm);color:var(--ink-2)}
+  .ws-meta{display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:var(--s3);font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+  .ws-meta b{background:var(--white);border:2px solid var(--ink);border-radius:var(--r-pill);padding:.15rem .6rem;font-weight:600}
+
+  /* ---------- team tiles ---------- */
+  .team{padding-block:var(--sec)}
+  .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s4)}
+  .tile{aspect-ratio:1/1.12;border:3px solid var(--ink);padding:var(--s4);display:flex;flex-direction:column;justify-content:space-between}
+  .tile:nth-child(1){background:var(--red);color:var(--white)}
+  .tile:nth-child(2){background:var(--yellow);color:var(--ink);border-radius:50% 50% 4% 4% / 26% 26% 4% 4%}
+  .tile:nth-child(3){background:var(--blue);color:var(--white)}
+  .tile:nth-child(4){background:var(--ink);color:var(--paper)}
+  .tile .name{font-size:1.05rem;font-weight:800;line-height:1.2;letter-spacing:-.01em}
+  .tile .role{font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase;opacity:.9;margin-top:.35rem}
+  .tile .shape{width:34px;height:34px;border:3px solid currentColor;display:block}
+  .tile .shape--circle{border-radius:50%}
+  .tile .shape--tri{border:0;width:0;height:0;border-left:17px solid transparent;border-right:17px solid transparent;border-bottom:29px solid currentColor}
+
+  /* ---------- application ---------- */
+  .apply{background:var(--blue);color:var(--white);padding-block:var(--sec);position:relative;overflow:hidden}
+  .apply .eyebrow{color:#cfe0f5}
+  .apply-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(2rem,5vw,4rem);align-items:start;margin-top:var(--s6)}
+  .apply h2{font-size:var(--fs-h2);line-height:var(--lh-flat);letter-spacing:-.025em;font-weight:800}
+  .apply .measure{color:#dbe6f5}
+  .apply-list{margin-top:var(--s6);display:grid;gap:var(--s3)}
+  .apply-list li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:var(--s3);font-size:var(--fs-sm);color:#e6eefb}
+  .apply-list .mark{width:22px;height:22px;border-radius:50%;background:var(--yellow);color:var(--ink);font-weight:800;font-size:.75rem;display:grid;place-items:center;margin-top:1px}
+  .form-card{background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:var(--r-pill);padding:clamp(1.5rem,3.5vw,2.75rem);position:relative}
+  .field{margin-bottom:var(--s4)}
+  .field label{display:block;font-size:var(--fs-sm);font-weight:600;margin-bottom:var(--s2)}
+  .field input,.field select,.field textarea{
+    width:100%;min-height:50px;padding:.6rem .9rem;background:var(--white);color:var(--ink);
+    border:3px solid var(--ink);border-radius:var(--r-pill);font:inherit;font-size:var(--fs-sm)
+  }
+  .field textarea{min-height:7rem;border-radius:1.5rem;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:3px solid var(--red);outline-offset:2px}
+  .field[data-invalid="true"] input,.field[data-invalid="true"] select,.field[data-invalid="true"] textarea{border-color:var(--error);background:#FCEFEB}
+  .field .hint{display:block;font-size:var(--fs-xs);color:var(--ink-2);margin-top:var(--s2)}
+  .field .err{display:block;font-size:var(--fs-sm);font-weight:600;color:var(--error);margin-top:var(--s2);min-height:1.1em}
+  .choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin-top:var(--s2)}
+  .choice{position:relative}
+  .choice input{position:absolute;opacity:0;width:1px;height:1px}
+  .choice span{
+    display:flex;align-items:center;justify-content:center;min-height:48px;padding:.4rem .8rem;text-align:center;
+    border:3px solid var(--ink);border-radius:var(--r-pill);font-size:var(--fs-sm);font-weight:600;cursor:pointer;
+    transition:background var(--dur) var(--ease),color var(--dur) var(--ease)
+  }
+  .choice input:checked + span{background:var(--ink);color:var(--yellow)}
+  .choice input:focus-visible + span{outline:3px solid var(--red);outline-offset:3px}
+  .apply .btn{width:100%;background:var(--yellow);color:var(--ink);border-color:var(--ink)}
+  .apply .btn:hover{background:var(--red);color:var(--white)}
+  .field--group{border:0;padding:0;margin-inline:0}
+  .group-legend{font-size:var(--fs-sm);font-weight:600;margin-bottom:var(--s2);padding:0}
+  .form-status{margin-top:var(--s3);font-size:var(--fs-sm);font-weight:600;min-height:1.3em;color:var(--ink)}
+  .form-status[data-state="ok"]{color:var(--ok)}
+  .form-status[data-state="error"]{color:var(--error)}
+
+  /* ---------- footer ---------- */
+  .foot{background:var(--ink);color:var(--paper);padding-block:var(--s7) var(--s5)}
+  .foot-grid{display:grid;grid-template-columns:1.5fr repeat(3,minmax(0,1fr));gap:var(--s5)}
+  .foot h3{font-size:var(--fs-xs);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow);margin-bottom:var(--s3)}
+  .foot p,.foot a{font-size:var(--fs-sm);color:#cdc7b8}
+  .foot a{display:inline-block;min-height:34px;padding-block:.1rem}
+  .foot a:hover{color:var(--yellow)}
+  .shapes{display:flex;gap:10px;margin-top:var(--s4)}
+  .shapes i{display:block;width:26px;height:26px}
+  .sh-circle{background:var(--red);border-radius:50%}
+  .sh-square{background:var(--yellow)}
+  .sh-tri{width:0!important;height:0!important;border-left:13px solid transparent;border-right:13px solid transparent;border-bottom:22px solid var(--blue)}
+  .sh-half{background:var(--paper);border-radius:0 50% 50% 0/0 50% 50% 0}
+  .foot-base{margin-top:var(--s6);padding-top:var(--s4);border-top:2px solid #3b3830;display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);font-size:var(--fs-xs);color:#8f8a7c}
+
+  @media (max-width:980px){
+    .hero-grid{grid-template-columns:1fr}
+    .hero-geom{justify-self:start;max-width:22rem;margin-inline:auto}
+    .sec-head{grid-template-columns:1fr}
+    .plane--red,.plane--blue{grid-column:span 3}
+    .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .apply-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:820px){
+    .plane--red,.plane--blue,.plane--yellow,.plane--green,.plane--ink{grid-column:span 3}
+    .plane--yellow{border-radius:4px}
+    .ws-grid{grid-template-columns:1fr}
+    .ws-item:nth-child(2){border-top:2px solid var(--ink)}
+  }
+  @media (max-width:740px){
+    .burger{display:inline-flex;align-items:center}
+    .head-cta{display:none}
+    .head-in{position:relative;flex-wrap:wrap;padding-block:var(--s2)}
+    .nav{width:100%}
+    .nav ul{display:none;flex-direction:column;align-items:flex-start;gap:0;padding-block:var(--s2) var(--s3)}
+    .nav ul[data-open="true"]{display:flex}
+    .nav a{width:100%;padding-block:.75rem}
+    .hero-facts{grid-template-columns:1fr;gap:var(--s3)}
+    .choices{grid-template-columns:1fr}
+    .tiles{grid-template-columns:1fr}
+    .tile{border-radius:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    .btn:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="page head-in">
+    <a class="brand" href="#top">
+      <span class="brand-circle" aria-hidden="true"></span>
+      <span class="brand-name">Werkstatt 28<span class="brand-sub">Dessau · Formlehre</span></span>
+    </a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav">Menü</button>
+    <nav class="nav" aria-label="Hauptnavigation">
+      <ul id="nav">
+        <li><a href="#programm" aria-current="page">Lehre</a></li>
+        <li><a href="#werkstaetten">Werkstätten</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#bewerbung">Bewerbung</a></li>
+      </ul>
+    </nav>
+    <a class="head-cta" href="#bewerbung">Aufnahme 2027</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero page" aria-labelledby="hero-title">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Werkstattlehre · vier Formen, kein Ornament</p>
+        <h1 id="hero-title">Gestalten heisst: <span class="shape">Ordnung herstellen</span> und dann aufhören.</h1>
+        <p class="measure">Seit 1978 unterrichten wir an der Ecke Hauptstrasse 28. 24 Studierende pro Jahrgang, vier Grundlehren, eine Werkstatt je Semester. Alles Übrige ist Konferenz.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#bewerbung">Aufnahme anfragen</a>
+          <a class="btn btn--out" href="#programm">Lehrplan ansehen</a>
+        </div>
+        <div class="hero-facts">
+          <div><b>24</b><span>Studierende / Jahrgang</span></div>
+          <div><b>4</b><span>Grundlehren</span></div>
+          <div><b>1 : 8</b><span>Betreuungsverhältnis</span></div>
+        </div>
+      </div>
+      <div class="hero-geom" role="img" aria-label="Geometrische Komposition aus Kreis, Viertelkreis, Dreieck und Quadrat in den Grundfarben Rot, Blau, Gelb und Schwarz">
+        <span class="geo-circle"></span>
+        <span class="geo-quarter"></span>
+        <span class="geo-triangle"></span>
+        <span class="geo-square"></span>
+        <span class="geo-bar"></span>
+      </div>
+    </div>
+  </section>
+
+  <svg class="divider" viewBox="0 0 1200 54" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M0 54h150L300 0l150 54h150l150-54 150 54h150L1050 0l150 54z" fill="#1B1A17"/>
+  </svg>
+
+  <section class="programme page" id="programm" aria-labelledby="programm-title">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">01 — Lehrplan</p>
+        <h2 id="programm-title" class="sec-title mt4">Vier Grundlehren. Danach wird es eng und interessant.</h2>
+      </div>
+      <p class="measure">Jede Grundlehre dauert ein Semester, ist obligatorisch und wird von zwei Lehrenden gemeinsam geführt. Danach wählen die Studierenden aus dem Vertiefungsangebot.</p>
+    </div>
+
+    <div class="planes">
+      <article class="plane plane--red">
+        <span class="num" aria-hidden="true">01</span>
+        <h3>Formlehre</h3>
+        <p>Punkt, Linie, Fläche, Körper. Konstruktion mit Zirkel und Lineal, dann am Zeichenbrett. Am Ende des Semesters steht ein Modell, das ohne Erklärung funktioniert.</p>
+        <p class="foot">6 Std / Woche · Pflicht · 1. Semester</p>
+      </article>
+      <article class="plane plane--blue">
+        <span class="num" aria-hidden="true">02</span>
+        <h3>Farblehre</h3>
+        <p>Die elf Farben des Kreises, geordnet nach Helligkeit und Fläche, nicht nach Mode. Mischversuche auf Papier, jedes Semester eine neue Papierfirma.</p>
+        <p class="foot">4 Std / Woche · Pflicht · 1. Semester</p>
+      </article>
+      <article class="plane plane--yellow">
+        <span class="num" aria-hidden="true">03</span>
+        <h3>Typografie</h3>
+        <p>Schrift als Fläche. Vom gesetzten Bleisatz zur Rasterschrift, mit Druckversuch in der hauseigenen Werkstatt.</p>
+        <p class="foot">4 Std / Woche · ab 2. Semester</p>
+      </article>
+      <article class="plane plane--green">
+        <span class="num" aria-hidden="true">04</span>
+        <h3>Materiallehre</h3>
+        <p>Papier, Blech, Holz, Filz, Gips. Wir arbeiten mit Restposten, weil wir Material nicht wegwerfen.</p>
+        <p class="foot">6 Std / Woche · ab 2. Semester</p>
+      </article>
+      <article class="plane plane--ink">
+        <span class="num" aria-hidden="true">05</span>
+        <h3>Werkstatt Druck</h3>
+        <p>Offset, Sieb, Tiefdruck, LETTERpresse. Wir haben eine Letterpresse von 1961 und benutzen sie jede Woche.</p>
+        <p class="foot">8 Std / Woche · ab 3. Semester</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="workshops" id="werkstaetten" aria-labelledby="ws-title">
+    <div class="page">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">02 — Werkstätten</p>
+          <h2 id="ws-title" class="sec-title mt4">Wöchentlich stattfindend, kostenlos, ohne Anmeldung</h2>
+        </div>
+        <p class="measure">Die Werkstätten stehen allen offen, auch ohne Immatrikulation. Anwesenheitsliste am Brett, Werkzeug zurück in die Schublade, das ist der ganze Ablauf.</p>
+      </div>
+
+      <ol class="ws-grid">
+        <li class="ws-item">
+          <span class="ws-num" aria-hidden="true">01</span>
+          <div>
+            <h3>Tisch &amp; Bank</h3>
+            <p>Flächige Werkarbeiten in Holz und Sperrholz. Zeichnung wird vor dem Schnitt geprüft. Werkzeug wird gestellt.</p>
+            <p class="ws-meta"><b>Di 14–18 Uhr</b><span>Werkstattgebäude</span><span>8 Plätze</span></p>
+          </div>
+        </li>
+        <li class="ws-item">
+          <span class="ws-num" aria-hidden="true">02</span>
+          <div>
+            <h3>Siebdruck</h3>
+            <p>Schablonen, Farbe, Presse. Wir drucken alles, was die Studierenden mitbringen, inklusive Dinge, die nicht gelungen sind.</p>
+            <p class="ws-meta"><b>Mi 10–13 Uhr</b><span>Waschhalle</span><span>10 Plätze</span></p>
+          </div>
+        </li>
+        <li class="ws-item">
+          <span class="ws-num" aria-hidden="true">03</span>
+          <div>
+            <h3>Metall &amp; Blech</h3>
+            <p>Kaltverformung, Löten, Schweißen mit Schutzausrüstung. Ab 18 Jahren, mit Einweisung am Vortag.</p>
+            <p class="ws-meta"><b>Do 15–19 Uhr</b><span>Halle B</span><span>6 Plätze</span></p>
+          </div>
+        </li>
+        <li class="ws-item">
+          <span class="ws-num" aria-hidden="true">04</span>
+          <div>
+            <h3>Fotogruppe</h3>
+            <p>Kein Kameratraining. Wir fotografieren eine Sache zwölfmal und reden über die Unterschiede.</p>
+            <p class="ws-meta"><b>Fr 9–12 Uhr</b><span>Dunkelkammer</span><span>12 Plätze</span></p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="team page" id="team" aria-labelledby="team-title">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">03 — Lehrende</p>
+        <h2 id="team-title" class="sec-title mt4">Vier feste, der Rest wechselt</h2>
+      </div>
+      <p class="measure">Dauerhafte Stelle sind vier. Gastdozenturen kommen für ein Semester und verschwinden wieder, was den Ruf der Schule nicht beschädigt.</p>
+    </div>
+
+    <div class="tiles">
+      <article class="tile">
+        <span class="shape shape--circle" aria-hidden="true"></span>
+        <div>
+          <p class="name">Margit Hallmann</p>
+          <p class="role">Formlehre · seit 1998</p>
+        </div>
+      </article>
+      <article class="tile">
+        <span class="shape" aria-hidden="true"></span>
+        <div>
+          <p class="name">Tobias Renn</p>
+          <p class="role">Siebdruck &amp; Offset · seit 2011</p>
+        </div>
+      </article>
+      <article class="tile">
+        <span class="shape shape--tri" aria-hidden="true"></span>
+        <div>
+          <p class="name">Aylin Kaya</p>
+          <p class="role">Farblehre · seit 2019</p>
+        </div>
+      </article>
+      <article class="tile">
+        <span class="shape shape--half" aria-hidden="true"></span>
+        <div>
+          <p class="name">Ruben Ostermann</p>
+          <p class="role">Werkstattleitung · seit 2006</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="apply" id="bewerbung" aria-labelledby="apply-title">
+    <div class="page">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">04 — Aufnahme</p>
+          <h2 id="apply-title" class="sec-title mt4">Eine Mappe, kein Portfolio-Schauspiel</h2>
+        </div>
+      </div>
+
+      <div class="apply-grid">
+        <div>
+          <p class="measure">Wir lesen alles, was hereinkommt, und antworten innerhalb von drei Wochen. Was wir sehen wollen: zehn Arbeiten, nicht tausend, und darunter mindestens eine, die Sie gemacht haben, weil es Sie interessiert hat, nicht weil es eine Mappe verlangt.</p>
+          <ul class="apply-list">
+            <li><span class="mark" aria-hidden="true">1</span><span>Online-Bewerbung bis 15. Februar 2027, ohne Studiengebühr</span></li>
+            <li><span class="mark" aria-hidden="true">2</span><span>Mappe: 10 Blätter, A3 oder A4, per Post oder in der Box vor dem Haus</span></li>
+            <li><span class="mark" aria-hidden="true">3</span><span>Gespräch von zwanzig Minuten hier im Haus, Termin nach Vereinbarung</span></li>
+            <li><span class="mark" aria-hidden="true">4</span><span>Ausbildungsförderung der Stadt Dessau, Antrag im Februar</span></li>
+          </ul>
+        </div>
+
+        <form class="form-card" id="applyForm" novalidate>
+          <div class="field">
+            <label for="b-name">Name</label>
+            <input id="b-name" name="name" type="text" autocomplete="name" required aria-describedby="b-name-err">
+            <span class="err" id="b-name-err"></span>
+          </div>
+          <div class="field">
+            <label for="b-mail">E-Mail</label>
+            <input id="b-mail" name="mail" type="email" autocomplete="email" required aria-describedby="b-mail-err">
+            <span class="err" id="b-mail-err"></span>
+          </div>
+          <div class="field">
+            <label for="b-city">Ort</label>
+            <input id="b-city" name="city" type="text" autocomplete="address-level2" required aria-describedby="b-city-err">
+            <span class="err" id="b-city-err"></span>
+          </div>
+          <fieldset class="field field--group">
+            <legend class="group-legend">Angestrebtes Fach</legend>
+            <div class="choices">
+              <label class="choice" for="b-f1">
+                <input id="b-f1" name="fach" type="radio" value="Formlehre" checked>
+                <span>Formlehre</span>
+              </label>
+              <label class="choice" for="b-f2">
+                <input id="b-f2" name="fach" type="radio" value="Farblehre">
+                <span>Farblehre</span>
+              </label>
+              <label class="choice" for="b-f3">
+                <input id="b-f3" name="fach" type="radio" value="Typografie">
+                <span>Typografie</span>
+              </label>
+              <label class="choice" for="b-f4">
+                <input id="b-f4" name="fach" type="radio" value="Materiallehre">
+                <span>Materiallehre</span>
+              </label>
+            </div>
+          </fieldset>
+          <div class="field">
+            <label for="b-note">Ein Satz zu Ihrer Mappe</label>
+            <textarea id="b-note" name="note" required aria-describedby="b-note-help b-note-err"></textarea>
+            <span class="hint" id="b-note-help">Nicht länger als 300 Zeichen. Der Rest darf warten.</span>
+            <span class="err" id="b-note-err"></span>
+          </div>
+          <button class="btn" type="submit" id="b-submit">Bewerbung absenden</button>
+          <p class="form-status" id="b-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="page">
+    <div class="foot-grid">
+      <div>
+        <h3>Werkstatt 28</h3>
+        <p>Werkstattlehre für Gestaltung, gegründet 1978 im ehemaligen Baugesellschaftshaus. Träger ist der Verein Werkstatt 28 e. V.</p>
+        <div class="shapes" aria-hidden="true">
+          <i class="sh-circle"></i><i class="sh-square"></i><i class="sh-tri"></i><i class="sh-half"></i>
+        </div>
+      </div>
+      <div>
+        <h3>Haus</h3>
+        <ul>
+          <li>Hauptstrasse 28</li>
+          <li>06842 Dessau-Roßlau</li>
+          <li>+49 0341 662 28 0</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Öffnungszeiten</h3>
+        <ul>
+          <li>Mo – Do 9 – 18 Uhr</li>
+          <li>Fr 9 – 13 Uhr</li>
+          <li>Werkstätten auch samstags</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Dokumente</h3>
+        <ul>
+          <li><a href="#bewerbung">Studienordnung</a></li>
+          <li><a href="#bewerbung">Förderung</a></li>
+          <li><a href="#bewerbung">Barrierefreiheit</a></li>
+          <li><a href="#bewerbung">Impressum</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="foot-base">
+      <span>© 2026 Werkstatt 28 e. V. · Vereinsregister VR 4118 Amtsgericht Dessau</span>
+      <span>Kreis · Quadrat · Dreieck</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var burger = document.getElementById("burger");
+  var nav = document.getElementById("nav");
+  burger.addEventListener("click", function(){
+    var open = nav.getAttribute("data-open") === "true";
+    nav.setAttribute("data-open", String(!open));
+    burger.setAttribute("aria-expanded", String(!open));
+  });
+  nav.addEventListener("click", function(e){
+    if(e.target.tagName === "A" && window.matchMedia("(max-width:740px)").matches){
+      nav.setAttribute("data-open","false");
+      burger.setAttribute("aria-expanded","false");
+    }
+  });
+
+  var form = document.getElementById("applyForm");
+  var status = document.getElementById("b-status");
+  var btn = document.getElementById("b-submit");
+
+  var rules = {
+    "b-name": function(v){ return v.trim().length >= 2 ? "" : "Bitte Namen angeben."; },
+    "b-mail": function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "Gültige E-Mail-Adresse erforderlich."; },
+    "b-city": function(v){ return v.trim().length >= 2 ? "" : "Von wo kommen Sie?"; },
+    "b-note": function(v){
+      if(v.trim().length < 10) return "Ein Satz, mindestens — schreiben Sie etwas.";
+      if(v.trim().length > 300) return "Bitte kürzen: maximal 300 Zeichen.";
+      return "";
+    }
+  };
+  function check(id){
+    var input = document.getElementById(id);
+    var msg = rules[id](input.value);
+    input.closest(".field").setAttribute("data-invalid", msg ? "true" : "false");
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+    document.getElementById(id + "-err").textContent = msg;
+    return !msg;
+  }
+  Object.keys(rules).forEach(function(id){
+    var input = document.getElementById(id);
+    input.addEventListener("blur", function(){ check(id); });
+    input.addEventListener("input", function(){
+      if(input.closest(".field").getAttribute("data-invalid") === "true") check(id);
+    });
+  });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function(id){
+      if(!check(id) && !firstBad) firstBad = document.getElementById(id);
+    });
+    if(firstBad){
+      status.setAttribute("data-state","error");
+      status.textContent = "Noch nicht abgeschickt — bitte die markierten Felder prüfen.";
+      firstBad.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "Wird gesendet …";
+    status.removeAttribute("data-state");
+    status.textContent = "Bewerbung wird übertragen …";
+    window.setTimeout(function(){
+      btn.disabled = false;
+      btn.textContent = "Bewerbung absenden";
+      status.setAttribute("data-state","ok");
+      status.textContent = "Danke. Ihre Mappe können Sie bis zum 15. Februar einreichen; Sie erhalten eine Bestätigung und einen Termin für das Gespräch.";
+      form.reset();
+    }, 900);
+  });
+})();
+</script>
+</body>
+</html>

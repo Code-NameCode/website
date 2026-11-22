@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<!-- Style: Memphis | 50memphis.html — Bounce Lab, youth sports programme -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bounce Lab — sport, but louder, for 5 to 12 year olds</title>
+<style>
+:root{
+  /* bright contrasts with black and white anchors */
+  --black:#111111;
+  --white:#ffffff;
+  --yellow:#ffd23f;
+  --pink:#ff6b9d;
+  --blue:#2ec4f2;
+  --green:#5ad46a;
+  --purple:#9b6bff;
+  --orange:#ff8a3d;
+  --ink:#111111;
+  --ink-soft:#4a4a4a;
+
+  --font-body:"Trebuchet MS",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --font-display:"Arial Black","Helvetica Neue",Impact,var(--font-body);
+  --t-mega:clamp(2.8rem,9vw,6.5rem);
+  --t-h2:clamp(1.8rem,4.4vw,3rem);
+  --t-h3:clamp(1.15rem,1.9vw,1.45rem);
+  --t-body:clamp(1rem,.98rem + .14vw,1.08rem);
+  --t-small:.9rem;
+  --lh:1.65;
+  --s-2:.5rem;
+  --s-3:.8rem;
+  --s-4:1.1rem;
+  --s-5:1.6rem;
+  --s-6:2.2rem;
+  --s-7:3rem;
+  --s-8:4.2rem;
+  --s-9:5.5rem;
+  --wrap:1220px;
+  --edge:3px;
+  --hard:5px 5px 0 var(--black);
+  --hard-sm:3px 3px 0 var(--black);
+  --dur:420ms;
+  --ease:cubic-bezier(.2,.9,.3,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--white);color:var(--ink);font-family:var(--font-body);
+  font-size:var(--t-body);line-height:var(--lh);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img,svg{display:block;max-width:100%}
+h1,h2,h3{margin:0;font-family:var(--font-display);font-weight:900;text-transform:uppercase;line-height:1;letter-spacing:-.015em}
+p{margin:0}
+a{color:inherit}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:clamp(1.1rem,4vw,2.4rem)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+:focus-visible{outline:4px solid var(--purple);outline-offset:3px}
+
+/* shared pattern language: dots, zigzags, confetti, terrazzo */
+.dots{background-image:radial-gradient(var(--black) 2.4px,transparent 2.4px);background-size:22px 22px}
+.zig{background-image:
+  linear-gradient(135deg,var(--black) 25%,transparent 25%) 0 0/20px 20px,
+  linear-gradient(225deg,var(--black) 25%,transparent 25%) 0 0/20px 20px}
+.stripe{background-image:repeating-linear-gradient(90deg,var(--black) 0 10px,transparent 10px 24px)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:var(--edge) solid var(--black)}
+.nav-in{display:flex;align-items:center;gap:var(--s-4);padding-block:.7rem;flex-wrap:wrap}
+.mark{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-family:var(--font-display);font-size:1.5rem;text-transform:uppercase}
+.mark span:last-child{color:var(--pink)}
+.nav ul{display:flex;gap:clamp(.5rem,1.6vw,1.4rem);list-style:none;margin:0;padding:0;margin-left:auto;flex-wrap:wrap;align-items:center}
+.nav a{
+  display:inline-flex;align-items:center;min-height:44px;padding:.6rem 1rem;text-decoration:none;
+  font-weight:800;font-size:.92rem;border:var(--edge) solid transparent;transform:rotate(-.6deg);
+  transition:transform var(--dur) var(--ease),background var(--dur) var(--ease);
+}
+.nav li:nth-child(even) a{transform:rotate(.8deg)}
+.nav a:hover{background:var(--yellow);border-color:var(--black);transform:rotate(-2deg) translateY(-2px)}
+.nav a.enrol{background:var(--green);border-color:var(--black);box-shadow:var(--hard-sm)}
+.nav a.enrol:hover{background:var(--blue);transform:rotate(-1deg) translate(-2px,-2px);box-shadow:var(--hard)}
+.nav-toggle{display:none;margin-left:auto;background:var(--yellow);border:var(--edge) solid var(--black);padding:.55rem .9rem;min-height:44px;font:inherit;font-weight:800;cursor:pointer}
+
+/* ---------- hero: shape-filled, asymmetric ---------- */
+.hero{position:relative;padding-block:var(--s-6) var(--s-8);overflow:hidden;border-bottom:var(--edge) solid var(--black)}
+.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1.4rem,4vw,3rem);align-items:center}
+.hero h1{font-size:var(--t-mega);line-height:.9}
+.hero h1 .two{color:var(--blue);display:inline-block;transform:rotate(-2.5deg)}
+.hero h1 .three{color:var(--pink);display:inline-block;transform:rotate(1.5deg) translateY(-.06em)}
+.hero p.lead{margin-top:var(--s-4);max-width:44ch;font-size:1.08em}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-5)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:.85rem 1.7rem;
+  font-family:var(--font-display);font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;
+  text-decoration:none;cursor:pointer;background:var(--white);color:var(--black);
+  border:var(--edge) solid var(--black);box-shadow:var(--hard);
+  transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background var(--dur) var(--ease);
+}
+.btn:hover{transform:translate(-3px,-3px) rotate(-1.2deg);box-shadow:8px 8px 0 var(--black);background:var(--yellow)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--black)}
+.btn-primary{background:var(--pink)}
+.btn-primary:hover{background:var(--blue);color:var(--black)}
+.btn-blue{background:var(--blue)}
+/* the decorative shapes are in a named layer so they never cover text */
+.shape{position:absolute;z-index:1;pointer-events:none}
+.shape.circle{width:clamp(60px,9vw,120px);aspect-ratio:1;border-radius:50%;background:var(--yellow);border:var(--edge) solid var(--black)}
+.shape.tri{width:0;height:0;border-left:clamp(34px,5vw,64px) solid transparent;border-right:clamp(34px,5vw,64px) solid transparent;border-bottom:clamp(60px,9vw,110px) solid var(--green);filter:drop-shadow(4px 4px 0 var(--black))}
+.shape.sq{width:clamp(46px,7vw,88px);aspect-ratio:1;background:var(--purple);border:var(--edge) solid var(--black);transform:rotate(14deg)}
+.shape.sq.hollow{background:transparent;border:var(--edge) dashed var(--black);transform:rotate(-9deg)}
+.shape.wave{width:clamp(80px,12vw,150px);height:clamp(30px,4vw,50px);border-top:10px solid var(--orange);border-bottom:10px solid var(--orange);border-radius:50%;transform:rotate(-8deg)}
+.shape .s1{top:6%;left:-2%}
+.shape .s2{top:16%;right:3%;transform:rotate(18deg)}
+.shape .s3{bottom:12%;left:44%}
+.shape .s4{bottom:4%;right:12%;transform:rotate(-6deg)}
+.hero-art{position:relative}
+.hero-art .plate{border:var(--edge) solid var(--black);background:var(--yellow)}
+.hero-art .plate svg{border:var(--edge) solid var(--black)}
+
+/* ---------- programmes: pattern accents, varied cards ---------- */
+.progs{padding-block:var(--s-8);background:var(--white)}
+.sec-head{max-width:64ch;margin-bottom:var(--s-7)}
+.sec-head h2{font-size:var(--t-h2);margin-block:.5rem .7rem}
+.sec-head p{color:var(--ink-soft)}
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.1rem,2.6vw,1.9rem)}
+.prog{position:relative;border:var(--edge) solid var(--black);padding:0;background:var(--white);box-shadow:var(--hard);transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.prog:hover{transform:translate(-3px,-3px) rotate(-1deg);box-shadow:9px 9px 0 var(--black)}
+.prog:nth-child(2){transform:rotate(1.4deg)}
+.prog:nth-child(2):hover{transform:translate(-3px,-3px) rotate(1deg)}
+.prog:nth-child(3){transform:rotate(-1.2deg)}
+.prog:nth-child(3):hover{transform:translate(-3px,-3px) rotate(-1deg)}
+.prog .band{height:64px;border-bottom:var(--edge) solid var(--black);position:relative;overflow:hidden}
+.prog .band.one{background:var(--blue)}
+.prog .band.two{background:var(--pink)}
+.prog .band.three{background:var(--green)}
+.prog .band span{position:absolute;left:12px;bottom:6px;font-family:var(--font-display);font-size:1.5rem;text-transform:uppercase;color:var(--black)}
+.prog .body{padding:var(--s-4)}
+.prog h3{font-size:var(--t-h3);margin-bottom:.4rem}
+.prog p{font-size:var(--t-small);color:var(--ink-soft)}
+.prog dl{margin:var(--s-4) 0 0;display:grid;gap:.35rem;font-size:var(--t-small)}
+.prog dt{font-weight:800;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.prog dd{margin:0 0 .3rem;color:var(--ink-soft)}
+.prog .badge{
+  position:absolute;top:-14px;right:14px;background:var(--yellow);border:var(--edge) solid var(--black);
+  padding:.2rem .6rem;font-size:.76rem;font-weight:800;text-transform:uppercase;transform:rotate(6deg);
+}
+
+/* ---------- how a session works: a zig-zag timeline ---------- */
+.session{padding-block:var(--s-8);background:var(--yellow);border-block:var(--edge) solid var(--black);position:relative;overflow:hidden}
+.session::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(17,17,17,.14) 2.4px,transparent 2.4px);background-size:24px 24px;pointer-events:none}
+.session .wrap{position:relative;z-index:1}
+.session h2{font-size:var(--t-h2);max-width:16ch}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:var(--s-6);border:var(--edge) solid var(--black);background:var(--white)}
+.step{padding:var(--s-4);position:relative;border-right:var(--edge) solid var(--black)}
+.step:last-child{border-right:0}
+.step::after{
+  content:"";position:absolute;top:50%;right:-14px;width:26px;height:26px;background:var(--white);
+  border:var(--edge) solid var(--black);transform:translateY(-50%) rotate(45deg);z-index:2;
+}
+.step:last-child::after{display:none}
+.step .n{
+  display:grid;place-items:center;width:42px;height:42px;background:var(--black);color:var(--white);
+  font-family:var(--font-display);font-size:1.1rem;margin-bottom:var(--s-3);transform:rotate(-6deg);
+}
+.step h3{font-size:1.05rem;margin-bottom:.35rem}
+.step p{font-size:var(--t-small);color:var(--ink-soft)}
+.step .mins{font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.6rem;display:inline-block;background:var(--blue);padding:.15rem .5rem;border:2px solid var(--black)}
+
+/* ---------- timetable: asymmetric table ---------- */
+.timetable{padding-block:var(--s-8)}
+.tt-head{display:flex;flex-wrap:wrap;gap:var(--s-4);align-items:center;justify-content:space-between;margin-bottom:var(--s-5)}
+.tt-head h2{font-size:var(--t-h2)}
+.tt-wrap{border:var(--edge) solid var(--black);box-shadow:var(--hard);overflow-x:auto;background:var(--white)}
+.tt{width:100%;border-collapse:collapse;min-width:640px}
+.tt caption{text-align:left;padding:var(--s-4) var(--s-4) 0;font-weight:800;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}
+.tt th,.tt td{padding:.85rem 1rem;text-align:left;border-bottom:2px solid var(--black);font-size:.94rem}
+.tt thead th{background:var(--black);color:var(--white);font-family:var(--font-display);font-size:.9rem;text-transform:uppercase;letter-spacing:.02em}
+.tt tbody tr:nth-child(odd) td{background:#f6f6f2}
+.tt tbody tr:last-child td{border-bottom:0}
+.tt td.day{font-weight:800}
+.tt td .pill{display:inline-block;font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:.15rem .55rem;border:2px solid var(--black)}
+.tt .p-green{background:var(--green)}
+.tt .p-blue{background:var(--blue)}
+.tt .p-pink{background:var(--pink)}
+.tt .p-grey{background:#e4e4df;color:var(--ink-soft)}
+.tt .spots{font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap}
+.tt-note{margin-top:var(--s-3);font-size:var(--t-small);color:var(--ink-soft);max-width:70ch}
+
+/* ---------- coaches ---------- */
+.coaches{padding-block:var(--s-8);background:var(--blue);border-block:var(--edge) solid var(--black);position:relative;overflow:hidden}
+.coaches::after{
+  content:"";position:absolute;right:-60px;top:-60px;width:280px;height:280px;border-radius:50%;
+  border:var(--edge) dashed var(--black);opacity:.35;
+}
+.coaches h2{font-size:var(--t-h2)}
+.coach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,2.4vw,1.6rem);margin-top:var(--s-6);position:relative;z-index:1}
+.coach{background:var(--white);border:var(--edge) solid var(--black);padding:var(--s-4);box-shadow:var(--hard-sm);text-align:center}
+.coach:nth-child(2){transform:rotate(1.6deg)}
+.coach:nth-child(3){transform:rotate(-1.4deg)}
+.coach .face{width:96px;height:96px;margin:0 auto var(--s-3);border:var(--edge) solid var(--black);background:var(--yellow);display:grid;place-items:center}
+.coach h3{font-size:1.05rem}
+.coach .role{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-top:.3rem}
+.coach p{font-size:var(--t-small);color:var(--ink-soft);margin-top:.6rem}
+.coach .langs{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;margin-top:.6rem}
+.coach .langs span{font-size:.72rem;font-weight:800;border:2px solid var(--black);padding:.1rem .4rem;background:var(--purple);color:#fff}
+
+/* ---------- parents / FAQ ---------- */
+.parents{padding-block:var(--s-8)}
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(1.5rem,4vw,3rem);align-items:start}
+.faq h2{font-size:var(--t-h2);margin-bottom:.7rem}
+.faq p.lead{color:var(--ink-soft)}
+.faq-list{border:var(--edge) solid var(--black);background:var(--white);box-shadow:var(--hard)}
+.faq-item{border-bottom:2px solid var(--black)}
+.faq-item:last-child{border-bottom:0}
+.faq-q{
+  width:100%;display:flex;align-items:center;gap:var(--s-3);background:none;border:0;font:inherit;
+  font-weight:800;font-size:1rem;text-align:left;padding:1.05rem .9rem;min-height:56px;cursor:pointer;color:var(--ink);
+}
+.faq-q:hover{background:var(--yellow)}
+.faq-q .mk{margin-left:auto;flex:none;font-family:var(--font-display);font-size:1.4rem;line-height:1;transition:transform var(--dur) var(--ease)}
+.faq-item[open] .faq-q{background:var(--pink)}
+.faq-item[open] .faq-q .mk{transform:rotate(45deg)}
+.faq-a{padding:0 .9rem 1.2rem;font-size:var(--t-small);color:var(--ink-soft);max-width:62ch}
+
+/* ---------- enrolment form ---------- */
+.enrol{padding-block:var(--s-8);background:var(--pink);border-top:var(--edge) solid var(--black);position:relative;overflow:hidden}
+.enrol::before{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:80px;
+  background-image:linear-gradient(135deg,var(--black) 25%,transparent 25%) 0 0/24px 24px,linear-gradient(225deg,var(--black) 25%,transparent 25%) 0 0/24px 24px;
+  opacity:.12;pointer-events:none;
+}
+.enrol-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.6rem,4vw,3.2rem);align-items:start;position:relative;z-index:1}
+.enrol h2{font-size:var(--t-h2);max-width:15ch}
+.enrol p.lead{margin-top:.8rem;max-width:44ch}
+.enrol .note{background:var(--white);border:var(--edge) solid var(--black);padding:var(--s-4);box-shadow:var(--hard-sm);margin-top:var(--s-5);font-size:var(--t-small);max-width:46ch}
+.form-card{background:var(--white);border:var(--edge) solid var(--black);padding:clamp(1.3rem,3vw,2rem);box-shadow:var(--hard)}
+.field{display:grid;gap:.35rem;margin-bottom:var(--s-4)}
+.field label{font-weight:800;font-size:.95rem}
+.field .opt{font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.field input,.field select,.field textarea{
+  font:inherit;color:var(--ink);background:var(--white);border:var(--edge) solid var(--black);
+  padding:.85rem 1rem;min-height:50px;width:100%;box-shadow:var(--hard-sm);
+}
+.field textarea{min-height:110px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{box-shadow:5px 5px 0 var(--black);outline:4px solid var(--purple);outline-offset:2px}
+.field input[aria-invalid="true"],.field select[aria-invalid="true"]{background:#ffe0e8}
+.field .hint{font-size:.83rem;color:var(--ink-soft)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.form-card .btn{width:100%}
+.form-msg{margin-top:var(--s-3);min-height:2.4em;font-weight:800;display:flex;align-items:center;gap:.5rem}
+.form-msg[data-tone="error"]{color:#a3002b}
+.form-msg[data-tone="ok"]{color:#0a6b1f}
+
+/* ---------- footer ---------- */
+.foot{background:var(--black);color:var(--white);padding-block:var(--s-6) var(--s-4)}
+.foot-top{display:flex;flex-wrap:wrap;gap:var(--s-5);align-items:center;justify-content:space-between;padding-bottom:var(--s-4);border-bottom:2px solid #3a3a3a}
+.foot-top p{font-family:var(--font-display);font-size:clamp(1.3rem,3.4vw,2.2rem);text-transform:uppercase;max-width:22ch;line-height:1.05}
+.foot-top .mark span:last-child{color:var(--green)}
+.foot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-5);padding-top:var(--s-4)}
+.foot h2{font-family:var(--font-body);font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;color:var(--yellow);margin-bottom:var(--s-3);font-weight:800}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.4rem;font-size:var(--t-small)}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--green);text-decoration:underline}
+.foot-note{margin-top:var(--s-5);font-size:.8rem;color:#a8a8a0;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between}
+
+@media (max-width:1060px){
+  .prog-grid{grid-template-columns:1fr 1fr}
+  .coach-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .step{border-right:var(--edge) solid var(--black);border-bottom:var(--edge) solid var(--black)}
+  .step:nth-child(2n){border-right:0}
+  .step:nth-child(n+3){border-bottom:0}
+  .step::after{display:none}
+  .faq-grid,.enrol-grid{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:820px){
+  .nav-toggle{display:inline-flex;align-items:center}
+  .nav ul{order:3;width:100%;margin-left:0;flex-direction:column;align-items:stretch;gap:.3rem;display:none;padding-bottom:.6rem}
+  .nav ul[data-open="true"]{display:flex}
+  .nav a,.nav li:nth-child(even) a{border:var(--edge) solid var(--black);transform:none;justify-content:center;box-shadow:var(--hard-sm)}
+  .hero-in{grid-template-columns:1fr}
+  .shape .s2,.shape .s4{display:none}
+  .shape .s3{left:auto;right:6%;bottom:6%}
+  .hero-art{max-width:440px}
+}
+@media (max-width:620px){
+  .prog-grid,.coach-grid,.steps,.two,.foot-grid{grid-template-columns:1fr}
+  .step{border-right:0;border-bottom:var(--edge) solid var(--black)!important}
+  .step:last-child{border-bottom:0!important}
+  .btn{width:100%}
+  .hero-actions{flex-direction:column}
+  .shape .s1{width:54px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="mark" href="#top">
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+        <rect x="3" y="3" width="17" height="17" fill="#ff6b9d" stroke="#111" stroke-width="2.4" transform="rotate(-8 11 11)"/>
+        <circle cx="28" cy="11" r="8" fill="#2ec4f2" stroke="#111" stroke-width="2.4"/>
+        <path d="M6 30h28" stroke="#111" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M11 22l9 16 9-16Z" fill="#5ad46a" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
+      </svg>
+      <span>Bounce<span>Lab</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav aria-label="Main">
+    <ul id="site-nav" data-open="true">
+      <li><a href="#programmes">Programmes</a></li>
+      <li><a href="#session">A session</a></li>
+      <li><a href="#timetable">Timetable</a></li>
+      <li><a href="#coaches">Coaches</a></li>
+      <li><a href="#parents">Parents</a></li>
+      <li><a class="enrol" href="#enrol">Enrol</a></li>
+    </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero" aria-labelledby="hero-h">
+    <span class="shape circle s1" aria-hidden="true"></span>
+    <span class="shape sq s2" aria-hidden="true"></span>
+    <span class="shape tri s3" aria-hidden="true"></span>
+    <span class="shape wave s4" aria-hidden="true"></span>
+    <div class="wrap hero-in">
+      <div>
+        <p style="font-weight:800;letter-spacing:.1em;text-transform:uppercase;font-size:.8rem">Sport sessions for ages 5–12</p>
+        <h1 id="hero-h"><span class="one">Move.</span> <span class="two">Jump.</span><br><span class="three">Repeat.</span></h1>
+        <p class="lead">Bounce Lab runs Saturday and after-school sessions where children try eight sports in one hour, on purpose, with the rules bent just enough that everyone gets a turn. Coaches are qualified, ratios are strict, and nobody sits on the bench.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#enrol">Book a trial session</a>
+          <a class="btn btn-blue" href="#timetable">See the timetable</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="plate">
+          <svg viewBox="0 0 420 330" role="img" aria-label="Bright geometric illustration: three children leaping over shapes, with a ball, cones and a bouncing trajectory">
+            <rect width="420" height="330" fill="#ffd23f"/>
+            <path d="M0 250h420v80H0Z" fill="#2ec4f2"/>
+            <path d="M0 250c70-30 140-30 210 0s140 30 210 0" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="10 10"/>
+            <g stroke="#111" stroke-width="3">
+              <circle cx="120" cy="120" r="30" fill="#ff6b9d"/>
+              <path d="M120 150v70M120 165l-34 22M120 165l34 22M120 220l-24 44M120 220l24 44" fill="none" stroke-linecap="round" stroke-width="8"/>
+              <circle cx="220" cy="98" r="26" fill="#9b6bff"/>
+              <path d="M220 124v60M220 138l-28 20M220 138l28 20M220 184l-20 38M220 184l20 38" fill="none" stroke-linecap="round" stroke-width="8"/>
+              <circle cx="312" cy="132" r="26" fill="#5ad46a"/>
+              <path d="M312 158v56M312 170l-26 18M312 170l26 18M312 214l-18 32M312 214l18 32" fill="none" stroke-linecap="round" stroke-width="8"/>
+            </g>
+            <g stroke="#111" stroke-width="3">
+              <circle cx="252" cy="66" r="20" fill="#ffffff"/>
+              <path d="M252 46v-8M252 94v-8M232 66h-8M272 66h8" stroke-linecap="round"/>
+            </g>
+            <path d="M28 300l16-28 16 28 16-28 16 28" fill="none" stroke="#111" stroke-width="3"/>
+            <path d="M340 300l16-28 16 28 16-28 16 28" fill="none" stroke="#111" stroke-width="3"/>
+            <g fill="#ff8a3d" stroke="#111" stroke-width="3">
+              <path d="M356 200h28l-14 26Z"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="progs" id="programmes" aria-labelledby="progs-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="progs-h">Three ways in</h2>
+        <p>All sessions include the same warm-up, the same eight stations and the same huge amount of shouting about nothing in particular. Choose by age and by how much sitting-in-the-car-park energy you have.</p>
+      </div>
+      <div class="prog-grid">
+        <article class="prog">
+          <span class="badge">Ages 5–7</span>
+          <div class="band one stripe"><span>Little legs</span></div>
+          <div class="body">
+            <h3>Bounce Cubs</h3>
+            <p>Six stations, no elimination, no scoring. Everything scaled so a child who has never done sport in their life still gets to be good at something on the first go.</p>
+            <dl>
+              <dt>When</dt><dd>Saturday, 9:00–10:00</dd>
+              <dt>Where</dt><dd>Hall 2, Riverside Park</dd>
+              <dt>Ratio</dt><dd>1 coach to 6 children</dd>
+              <dt>Cost</dt><dd>£7 a session, or £54 for the term</dd>
+            </dl>
+          </div>
+        </article>
+        <article class="prog">
+          <span class="badge">Ages 8–10</span>
+          <div class="band two dots"><span>Big swings</span></div>
+          <div class="body">
+            <h3>Bounce Squad</h3>
+            <p>Eight stations with points, and a proper weekly league table on the wall that we let children write on. Rules get tighter here, but every child plays every game.</p>
+            <dl>
+              <dt>When</dt><dd>Saturday, 10:15–11:30</dd>
+              <dt>Where</dt><dd>Hall 1, Riverside Park</dd>
+              <dt>Ratio</dt><dd>1 coach to 8 children</dd>
+              <dt>Cost</dt><dd>£8 a session, or £62 for the term</dd>
+            </dl>
+          </div>
+        </article>
+        <article class="prog">
+          <span class="badge">Ages 10–12</span>
+          <div class="band three zig"><span>Nearly grown</span></div>
+          <div class="body">
+            <h3>Bounce Lab</h3>
+            <p>Less circuit, more game. Each child picks one sport to coach the group for five minutes at the end, which is where they learn more than we could teach.</p>
+            <dl>
+              <dt>When</dt><dd>Wednesday, 16:30–18:00 · Saturday, 11:45–13:00</dd>
+              <dt>Where</dt><dd>Both halls</dd>
+              <dt>Ratio</dt><dd>1 coach to 10 children</dd>
+              <dt>Cost</dt><dd>£9 a session, or £68 for the term</dd>
+            </dl>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="session" id="session" aria-labelledby="session-h">
+    <div class="wrap">
+      <h2 id="session-h">What an hour actually looks like</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="n">1</span>
+          <h3>Arrive and pick a name tag</h3>
+          <p>Name tags are mandatory, in a colour that changes weekly. It stops the same three children being picked first, every time, forever.</p>
+          <span class="mins">5 min</span>
+        </div>
+        <div class="step">
+          <span class="n">2</span>
+          <h3>Warm up as a group</h3>
+          <p>One song, eight movements, no exceptions. Coaches model every one of them badly first so nobody feels like they're bad at it.</p>
+          <span class="mins">8 min</span>
+        </div>
+        <div class="step">
+          <span class="n">3</span>
+          <h3>Eight stations, two each</h3>
+          <p>Four minutes per station, buzzer moves everyone. A coach stays at the station; nobody queues to watch.</p>
+          <span class="mins">32 min</span>
+        </div>
+        <div class="step">
+          <span class="n">4</span>
+          <h3>Cool down and say what was good</h3>
+          <p>One thing that went well, said out loud, about someone else. Then the wall chart, then parents, then home.</p>
+          <span class="mins">10 min</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="timetable" id="timetable" aria-labelledby="tt-h">
+    <div class="wrap">
+      <div class="tt-head">
+        <h2 id="tt-h">Autumn timetable</h2>
+        <p style="font-weight:800;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase">Runs from 12 September to 19 December 2026</p>
+      </div>
+      <div class="tt-wrap">
+        <table class="tt">
+          <caption>Session times, hall, and remaining spaces as of 6 September</caption>
+          <thead>
+            <tr>
+              <th scope="col">Day</th>
+              <th scope="col">Time</th>
+              <th scope="col">Group</th>
+              <th scope="col">Hall</th>
+              <th scope="col">Spaces</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="day">Saturday</td><td>09:00–10:00</td><td><span class="pill p-blue">Bounce Cubs</span></td><td>Hall 2</td><td class="spots">4</td></tr>
+            <tr><td class="day">Saturday</td><td>10:15–11:30</td><td><span class="pill p-pink">Bounce Squad</span></td><td>Hall 1</td><td class="spots">0 — waiting list</td></tr>
+            <tr><td class="day">Saturday</td><td>11:45–13:00</td><td><span class="pill p-green">Bounce Lab</span></td><td>Hall 1</td><td class="spots">7</td></tr>
+            <tr><td class="day">Wednesday</td><td>16:30–18:00</td><td><span class="pill p-green">Bounce Lab</span></td><td>Hall 1</td><td class="spots">11</td></tr>
+            <tr><td class="day">Wednesday</td><td>16:30–17:30</td><td><span class="pill p-blue">Bounce Cubs</span></td><td>Hall 2</td><td class="spots">3</td></tr>
+            <tr><td class="day">Friday</td><td>16:00–17:15</td><td><span class="pill p-pink">Bounce Squad</span></td><td>Hall 2</td><td class="spots">2</td></tr>
+            <tr><td class="day">Sunday</td><td>10:00–11:15</td><td><span class="pill p-green">Bounce Lab</span></td><td>Hall 1</td><td class="spots">9</td></tr>
+            <tr><td class="day">Sunday</td><td>10:00–11:00</td><td><span class="pill p-pink">Bounce Squad (fundamentals)</span></td><td>Hall 2</td><td class="spots">0 — full</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tt-note">Spaces update every Tuesday evening. If a session is full, join the waiting list and we text you — last term that freed up eleven places, and eleven children got in.</p>
+    </div>
+  </section>
+
+  <section class="coaches" id="coaches" aria-labelledby="coaches-h">
+    <div class="wrap">
+      <h2 id="coaches-h">The four people you'll meet</h2>
+      <div class="coach-grid">
+        <article class="coach">
+          <div class="face">
+            <svg viewBox="0 0 60 60" width="72" aria-hidden="true" focusable="false">
+              <circle cx="30" cy="24" r="13" fill="#ff8a3d" stroke="#111" stroke-width="2.6"/>
+              <path d="M12 56c0-11 8-18 18-18s18 7 18 18" fill="#2ec4f2" stroke="#111" stroke-width="2.6"/>
+            </svg>
+          </div>
+          <h3>Rosa Mendel</h3>
+          <p class="role">Head coach</p>
+          <p>Fourteen years of gymnastics, three of it with a national medal, and a rule that any child who asks "why" gets to try the thing first.</p>
+          <p class="langs"><span>EN</span><span>PT</span><span>ES</span></p>
+        </article>
+        <article class="coach">
+          <div class="face">
+            <svg viewBox="0 0 60 60" width="72" aria-hidden="true" focusable="false">
+              <circle cx="30" cy="24" r="13" fill="#9b6bff" stroke="#111" stroke-width="2.6"/>
+              <path d="M12 56c0-11 8-18 18-18s18 7 18 18" fill="#5ad46a" stroke="#111" stroke-width="2.6"/>
+            </svg>
+          </div>
+          <h3>Dev Arulanandam</h3>
+          <p class="role">Coach, Cubs &amp; Squad</p>
+          <p>Teaches the bounce drill that has become the most-requested part of the session. Patient in a way that does not require being quiet to achieve.</p>
+          <p class="langs"><span>EN</span><span>TA</span></p>
+        </article>
+        <article class="coach">
+          <div class="face">
+            <svg viewBox="0 0 60 60" width="72" aria-hidden="true" focusable="false">
+              <circle cx="30" cy="24" r="13" fill="#5ad46a" stroke="#111" stroke-width="2.6"/>
+              <path d="M12 56c0-11 8-18 18-18s18 7 18 18" fill="#ff6b9d" stroke="#111" stroke-width="2.6"/>
+            </svg>
+          </div>
+          <h3>Maeve Doherty</h3>
+          <p class="role">Coach, Lab group</p>
+          <p>Former club swimmer who runs the water station like a maths lesson. Keeps the wall chart and has never once lost it.</p>
+          <p class="langs"><span>EN</span><span>GA</span></p>
+        </article>
+        <article class="coach">
+          <div class="face">
+            <svg viewBox="0 0 60 60" width="72" aria-hidden="true" focusable="false">
+              <circle cx="30" cy="24" r="13" fill="#ffd23f" stroke="#111" stroke-width="2.6"/>
+              <path d="M12 56c0-11 8-18 18-18s18 7 18 18" fill="#ff8a3d" stroke="#111" stroke-width="2.6"/>
+            </svg>
+          </div>
+          <h3>Sam Okonjo</h3>
+          <p class="role">Coach &amp; first aider</p>
+          <p>Qualified emergency paediatric first aid, and the person who runs the coach-teach-the-coach session every January.</p>
+          <p class="langs"><span>EN</span><span>IG</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="parents" id="parents" aria-labelledby="parents-h">
+    <div class="wrap faq-grid">
+      <div class="faq">
+        <h2 id="parents-h">For parents and carers</h2>
+        <p class="lead">The questions we get asked in the car park, answered properly rather than on a leaflet nobody reads.</p>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary class="faq-q">Does my child need to be sporty?<span class="mk" aria-hidden="true">+</span></summary>
+          <p class="faq-a">No. About a third of the children who start have never done organised sport. The single rule is that you try, and we do not keep score for anyone under eight.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">What should they wear and bring?<span class="mk" aria-hidden="true">+</span></summary>
+          <p class="faq-a">Trainers with laces tied by an adult, clothes they don't mind ruining, and a water bottle we will not fill for you. We keep a small box of spare hair ties and a jumper that has been here since 2019.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">Is it safe?<span class="mk" aria-hidden="true">+</span></summary>
+          <p class="faq-a">Every coach holds a current enhanced DBS check and paediatric first aid. Ratios are 1:6 for Cubs, 1:8 for Squad and 1:10 for Lab, and those are the actual numbers, not the ones on the poster.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">What if they are neurodivergent or anxious?<span class="mk" aria-hidden="true">+</span></summary>
+          <p class="faq-a">Tell us and we will plan it. Quiet arrival at 09:05 instead of 09:00, a visual timetable emailed the night before, a coach who knows to say less. Several families do this with us and none of it is flagged to the other parents.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">Can we pause or pay monthly?<span class="mk" aria-hidden="true">+</span></summary>
+          <p class="faq-a">Yes to both, and no questions. Life moves; we would rather have you back in January than lose you permanently. Monthly is £12 a month per child and cancels with 30 days' notice.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="enrol" id="enrol" aria-labelledby="enrol-h">
+    <div class="wrap enrol-grid">
+      <div>
+        <h2 id="enrol-h">Book a free trial, no card needed</h2>
+        <p class="lead">One session, free, no obligation and no "limited spaces" countdown. Come for the hour, see whether your child enjoys it, and decide afterwards with actual information rather than a brochure.</p>
+        <div class="note">
+          <strong>Bring:</strong> trainers, water, and a child who has been told in advance what will happen. That last one matters more than the other two.
+        </div>
+      </div>
+      <form class="form-card" id="enrol-form" novalidate>
+        <div class="two">
+          <div class="field">
+            <label for="name">Parent or carer name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-hint" required>
+            <span class="hint" id="email-hint">Booking confirmation goes here.</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="child">Child's name</label>
+          <input id="child" name="child" type="text" autocomplete="off" aria-describedby="child-hint" required>
+          <span class="hint" id="child-hint">First name is plenty. We put it on the name tag.</span>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="age">Child's age</label>
+            <select id="age" name="age">
+              <option value="">Choose</option>
+              <option>5</option><option>6</option><option>7</option>
+              <option>8</option><option>9</option><option>10</option>
+              <option>11</option><option>12</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="session-choice">Preferred session</label>
+            <select id="session-choice" name="session">
+              <option value="">Choose one</option>
+              <option>Sat 09:00 — Cubs</option>
+              <option>Sat 10:15 — Squad</option>
+              <option>Sat 11:45 — Lab</option>
+              <option>Wed 16:30 — Lab</option>
+              <option>Wed 16:30 — Cubs</option>
+              <option>Fri 16:00 — Squad</option>
+              <option>Sun 10:00 — Lab</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="phone">Mobile <span class="opt">(optional, for session reminders)</span></label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="07700 900000" aria-describedby="phone-hint">
+          <span class="hint" id="phone-hint">Only used for a text if a session is cancelled.</span>
+        </div>
+        <div class="field">
+          <label for="notes">Anything we should know? <span class="opt">(optional)</span></label>
+          <textarea id="notes" name="notes" aria-describedby="notes-hint"></textarea>
+          <span class="hint" id="notes-hint">Access needs, anxieties, siblings coming along — all useful, all kept to ourselves.</span>
+        </div>
+        <button class="btn btn-primary" type="submit">Book the free trial</button>
+        <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <p>Every child plays. Every session.</p>
+      <a class="mark" href="#top">
+        <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+          <rect x="3" y="3" width="17" height="17" fill="#ff6b9d" stroke="#111" stroke-width="2.4" transform="rotate(-8 11 11)"/>
+          <circle cx="28" cy="11" r="8" fill="#2ec4f2" stroke="#111" stroke-width="2.4"/>
+        </svg>
+        <span>Bounce<span>Lab</span></span>
+      </a>
+    </div>
+    <div class="foot-grid">
+      <div><h2>Programmes</h2><ul><li><a href="#programmes">Bounce Cubs</a></li><li><a href="#programmes">Bounce Squad</a></li><li><a href="#programmes">Bounce Lab</a></li><li><a href="#timetable">Autumn timetable</a></li></ul></div>
+      <div><h2>Visit</h2><ul><li>Riverside Park, Hall 1 &amp; 2</li><li>Free parking, 40 spaces</li><li><a href="#enrol">Book a trial</a></li></ul></div>
+      <div><h2>Parents</h2><ul><li><a href="#parents">Questions</a></li><li><a href="#parents">Access and inclusion</a></li><li><a href="#parents">Fees and pausing</a></li></ul></div>
+      <div><h2>Contact</h2><ul><li>hello@bouncelab.example</li><li>01632 960 118</li><li><a href="#coaches">Meet the coaches</a></li></ul></div>
+    </div>
+    <div class="foot-note">
+      <span>© 2026 Bounce Lab. Registered charity 1188442. Company 09213377.</span>
+      <span>Hall hire available for birthday parties — ask us.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var toggle=document.querySelector('.nav-toggle');
+  var list=document.getElementById('site-nav');
+  toggle.addEventListener('click',function(){
+    var open=toggle.getAttribute('aria-expanded')==='true';
+    toggle.setAttribute('aria-expanded',String(!open));
+    list.setAttribute('data-open',String(!open));
+  });
+
+  /* one FAQ open at a time */
+  var items=Array.prototype.slice.call(document.querySelectorAll('.faq-item'));
+  items.forEach(function(item){
+    item.addEventListener('toggle',function(){
+      if(!item.open) return;
+      items.forEach(function(other){ if(other!==item) other.open=false; });
+    });
+  });
+
+  var form=document.getElementById('enrol-form');
+  var msg=document.getElementById('form-msg');
+  var name=document.getElementById('name');
+  var email=document.getElementById('email');
+  var child=document.getElementById('child');
+  var age=document.getElementById('age');
+  var sessionEl=document.getElementById('session-choice');
+  var phone=document.getElementById('phone');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var missing=[];
+    if(!name.value.trim()) missing.push('your name');
+    if(!email.value.trim()) missing.push('an email address');
+    else if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) missing.push('an email that works');
+    if(!child.value.trim()) missing.push("your child's first name");
+    if(!age.value) missing.push("your child's age");
+    if(!sessionEl.value) missing.push('a session');
+    if(phone.value.trim() && !/^[0-9 +()\-\s]{7,}$/.test(phone.value.trim())) missing.push('a mobile in digits, or leave it blank');
+    if(missing.length){
+      [name,email,child,age,sessionEl,phone].forEach(function(f){f.removeAttribute('aria-invalid')});
+      if(!name.value.trim()) name.setAttribute('aria-invalid','true');
+      if(missing.some(function(m){return m.indexOf('email')>-1})) email.setAttribute('aria-invalid','true');
+      if(!child.value.trim()) child.setAttribute('aria-invalid','true');
+      if(!age.value) age.setAttribute('aria-invalid','true');
+      if(!sessionEl.value) sessionEl.setAttribute('aria-invalid','true');
+      if(phone.value.trim() && missing.some(function(m){return m.indexOf('mobile')>-1})) phone.setAttribute('aria-invalid','true');
+      msg.dataset.tone='error';
+      msg.textContent='We just need '+missing.join(', ')+' before we can hold a space.';
+      var order=[name,email,child,age,sessionEl,phone];
+      var first=order.filter(function(f){return f.getAttribute('aria-invalid')==='true'})[0]||name;
+      first.focus();
+      return;
+    }
+    [name,email,child,age,sessionEl,phone].forEach(function(f){f.removeAttribute('aria-invalid')});
+    var firstName=child.value.trim().split(' ')[0];
+    msg.dataset.tone='ok';
+    msg.textContent='Booked. '+firstName+' has a free trial at '+sessionEl.value+'. We will email the door code and a photo of the name tags.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

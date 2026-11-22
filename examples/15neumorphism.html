@@ -1,0 +1,471 @@
+<!-- Style: Neumorphism | 15neumorphism.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidepool — sleep &amp; focus audio</title>
+<style>
+:root{
+  --surf:#e4e8ef;          /* the one surface colour everything is cut from */
+  --surf-2:#dfe4ec;
+  --ink:#39414f;
+  --ink-2:#5c6675;
+  --ink-3:#8a94a3;
+  --accent:#4a7ea8;
+  --accent-ink:#2f5a7c;
+  --warm:#b08968;
+  --line:rgba(57,65,79,.10);
+  --sh-raise:9px 9px 20px rgba(163,172,186,.60),-9px -9px 20px rgba(255,255,255,.95);
+  --sh-raise-sm:5px 5px 12px rgba(163,172,186,.58),-5px -5px 12px rgba(255,255,255,.92);
+  --sh-inset:inset 6px 6px 14px rgba(163,172,186,.55),inset -6px -6px 14px rgba(255,255,255,.95);
+  --sh-inset-sm:inset 3px 3px 8px rgba(163,172,186,.55),inset -3px -3px 8px rgba(255,255,255,.9);
+  --font:"Segoe UI",Inter,system-ui,-apple-system,sans-serif;
+  --t-xs:clamp(.76rem,.73rem + .13vw,.85rem);
+  --t-sm:clamp(.88rem,.85rem + .17vw,1rem);
+  --t-md:clamp(1.02rem,.98rem + .2vw,1.14rem);
+  --t-lg:clamp(1.3rem,1.15rem + .7vw,1.6rem);
+  --t-xl:clamp(1.7rem,1.4rem + 1.4vw,2.4rem);
+  --s-1:.25rem;--s-2:.5rem;--s-3:.9rem;--s-4:1.25rem;--s-5:1.9rem;--s-6:2.8rem;--s-7:4rem;--s-8:5.5rem;
+  --r-lg:26px;--r-md:18px;--r-pill:999px;
+  --d:260ms;--ease:cubic-bezier(.3,.8,.3,1);
+  --w:min(880px,100% - 2.5rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surf);color:var(--ink);font-family:var(--font);font-size:var(--t-md);line-height:1.65}
+h1,h2,h3{margin:0 0 var(--s-3);line-height:1.15;font-weight:600;letter-spacing:-.01em}
+p{margin:0 0 var(--s-3)}
+a{color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px;border-radius:6px}
+.wrap{width:var(--w);margin-inline:auto}
+.narrow{width:min(560px,100%)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--s-4);top:var(--s-4);z-index:60;background:var(--accent);color:#fff;padding:.7rem 1.2rem;border-radius:var(--r-pill)}
+.label{font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.muted{color:var(--ink-2)}
+hr.rule{border:0;height:1px;background:var(--line);margin:var(--s-5) 0}
+
+/* header — single quiet bar */
+header{border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:var(--s-4);min-height:76px}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--ink);font-weight:600;font-size:var(--t-lg);letter-spacing:-.02em}
+nav{display:flex;gap:var(--s-2);margin-left:auto}
+nav a{
+  text-decoration:none;color:var(--ink-2);font-size:var(--t-sm);
+  min-height:44px;display:inline-flex;align-items:center;padding:0 1rem;border-radius:var(--r-pill);
+  transition:box-shadow var(--d) var(--ease),color var(--d) var(--ease);
+}
+nav a:hover{box-shadow:var(--sh-inset-sm);color:var(--ink)}
+nav a[aria-current]{box-shadow:var(--sh-raise-sm);color:var(--ink);font-weight:600}
+.burger{display:none;background:var(--surf);border:0;box-shadow:var(--sh-raise-sm);border-radius:var(--r-pill);
+  width:46px;height:46px;color:var(--ink);cursor:pointer;margin-left:auto}
+
+/* hero — text only, generous */
+.hero{padding:var(--s-8) 0 var(--s-7);text-align:center}
+.hero h1{font-size:var(--t-xl);max-width:20ch;margin-inline:auto}
+.hero p{max-width:52ch;margin-inline:auto;color:var(--ink-2)}
+.hero .label{margin-bottom:var(--s-3);display:block}
+
+/* player card */
+.player{
+  background:var(--surf);border-radius:var(--r-lg);box-shadow:var(--sh-raise);
+  padding:var(--s-6) var(--s-5) var(--s-5);display:grid;gap:var(--s-5);justify-items:center;text-align:center;
+}
+.player h2{font-size:var(--t-lg);margin:0}
+.player__meta{font-size:var(--t-sm);color:var(--ink-3);margin:0}
+.art{width:min(280px,80%);border-radius:var(--r-lg);box-shadow:var(--sh-inset);padding:var(--s-3);background:var(--surf)}
+.art svg{width:100%;height:auto;display:block;border-radius:20px}
+
+/* recessed progress groove */
+.groove{width:100%;height:12px;border-radius:var(--r-pill);box-shadow:var(--sh-inset-sm);overflow:hidden}
+.groove span{display:block;height:100%;width:34%;border-radius:var(--r-pill);background:var(--accent)}
+.times{display:flex;justify-content:space-between;width:100%;font-size:var(--t-xs);color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+.transport{display:flex;align-items:center;gap:var(--s-4);justify-content:center}
+.sbtn{
+  width:56px;height:56px;border-radius:50%;border:0;cursor:pointer;background:var(--surf);
+  color:var(--ink-2);box-shadow:var(--sh-raise-sm);display:grid;place-items:center;
+  transition:box-shadow var(--d) var(--ease),color var(--d) var(--ease),transform var(--d) var(--ease);
+}
+.sbtn:hover{color:var(--ink)}
+.sbtn:active{box-shadow:var(--sh-inset-sm);transform:scale(.97)}
+.sbtn--main{width:76px;height:76px;color:var(--accent-ink)}
+.sbtn--main[aria-pressed="true"]{box-shadow:var(--sh-inset-sm);color:var(--accent-ink)}
+
+/* dial: raised, presses to inset */
+.dial{
+  display:grid;grid-template-columns:1fr auto;gap:var(--s-4);align-items:center;width:100%;
+  background:var(--surf);border:0;border-radius:var(--r-lg);box-shadow:var(--sh-raise);
+  padding:var(--s-4) var(--s-5);cursor:pointer;color:var(--ink);text-align:left;font-family:var(--font);
+  transition:box-shadow var(--d) var(--ease);
+}
+.dial:active{box-shadow:var(--sh-inset)}
+.dial[aria-pressed="true"]{box-shadow:var(--sh-inset)}
+.dial__face{
+  width:76px;height:76px;border-radius:50%;box-shadow:var(--sh-raise-sm);
+  display:grid;place-items:center;color:var(--ink-2);flex:none;
+  transition:box-shadow var(--d) var(--ease);
+}
+.dial[aria-pressed="true"] .dial__face{box-shadow:var(--sh-inset-sm);color:var(--accent-ink)}
+.dial__text h3{font-size:var(--t-sm);margin:0 0 .15rem}
+.dial__text p{margin:0;font-size:var(--t-xs);color:var(--ink-3)}
+
+/* toggles */
+.toggles{display:grid;gap:var(--s-3);width:100%}
+.tog{display:flex;align-items:center;gap:var(--s-4);background:var(--surf);border:0;cursor:pointer;
+  border-radius:var(--r-md);box-shadow:var(--sh-raise-sm);padding:var(--s-3) var(--s-4);
+  font-family:var(--font);font-size:var(--t-sm);color:var(--ink);text-align:left;min-height:60px;
+  transition:box-shadow var(--d) var(--ease)}
+.tog:active{box-shadow:var(--sh-inset-sm)}
+.tog__sw{margin-left:auto;width:56px;height:30px;border-radius:var(--r-pill);box-shadow:var(--sh-inset-sm);
+  position:relative;flex:none}
+.tog__sw::after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;
+  background:var(--surf);box-shadow:var(--sh-raise-sm);transition:transform var(--d) var(--ease)}
+.tog[aria-pressed="true"] .tog__sw::after{transform:translateX(26px)}
+.tog[aria-pressed="true"] .tog__sw{background:var(--accent)}
+.tog small{display:block;color:var(--ink-3);font-size:var(--t-xs)}
+
+/* timer segmented control */
+.seg{display:flex;gap:.5rem;width:100%;background:var(--surf);border-radius:var(--r-md);
+  box-shadow:var(--sh-inset-sm);padding:.5rem}
+.seg button{flex:1;border:0;background:transparent;cursor:pointer;font-family:var(--font);font-size:var(--t-sm);
+  color:var(--ink-2);min-height:48px;border-radius:14px;transition:box-shadow var(--d) var(--ease),color var(--d) var(--ease)}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{box-shadow:var(--sh-raise-sm);color:var(--ink);font-weight:600}
+
+/* library list — plain rows, not a wall of cards */
+.library{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.library li{display:flex;align-items:center;gap:var(--s-4);padding:var(--s-3) 0;border-bottom:1px solid var(--line);font-size:var(--t-sm)}
+.library .idx{width:34px;height:34px;border-radius:50%;box-shadow:var(--sh-inset-sm);display:grid;place-items:center;
+  font-size:var(--t-xs);color:var(--ink-3);flex:none;font-variant-numeric:tabular-nums}
+.library .name{flex:1}
+.library .len{color:var(--ink-3);font-variant-numeric:tabular-nums}
+.library button{background:var(--surf);border:0;box-shadow:var(--sh-raise-sm);border-radius:var(--r-pill);
+  cursor:pointer;color:var(--ink-2);min-width:44px;min-height:44px;font-size:var(--t-xs);padding:0 .9rem;font-family:var(--font)}
+.library button:hover{box-shadow:var(--sh-inset-sm);color:var(--accent-ink)}
+
+/* steps — numbered text rows, no cards */
+.stat{background:var(--surf);box-shadow:var(--sh-raise-sm);border-radius:var(--r-md);padding:var(--s-4)}
+.stat dt{color:var(--ink-3)}
+.steps{counter-reset:s;list-style:none;margin:0;padding:0;max-width:52ch}
+.steps li{counter-increment:s;display:grid;grid-template-columns:3rem 1fr;gap:var(--s-3);padding:var(--s-4) 0;border-bottom:1px solid var(--line)}
+.steps li::before{
+  content:counter(s,decimal-leading-zero);font-size:var(--t-xs);color:var(--ink-3);
+  padding-top:.35rem;font-variant-numeric:tabular-nums;letter-spacing:.1em;
+}
+.steps h3{font-size:var(--t-md);margin:0 0 .2rem}
+.steps p{color:var(--ink-2);font-size:var(--t-sm);margin:0}
+
+/* form */
+.form{background:var(--surf);border-radius:var(--r-lg);box-shadow:var(--sh-raise);padding:var(--s-5);display:grid;gap:var(--s-4)}
+.field{display:grid;gap:.45rem}
+label{font-size:var(--t-sm);font-weight:600;color:var(--ink-2)}
+input,select{
+  font-family:var(--font);font-size:var(--t-sm);color:var(--ink);background:var(--surf);border:0;
+  border-radius:var(--r-md);box-shadow:var(--sh-inset-sm);padding:.85rem 1rem;min-height:52px;width:100%;
+}
+input:focus,select:focus{outline:none;box-shadow:var(--sh-inset),0 0 0 2px var(--accent-ink)}
+input:focus-visible,select:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+.field[data-invalid="true"] input{box-shadow:var(--sh-inset-sm),0 0 0 2px #a1452f}
+.err{font-size:var(--t-xs);color:#8d3620;font-weight:600;min-height:1.2em}
+.hint{font-size:var(--t-xs);color:var(--ink-3)}
+.formmsg{font-size:var(--t-sm);color:var(--ink-2);padding:var(--s-3) var(--s-4);border-radius:var(--r-md);box-shadow:var(--sh-inset-sm);min-height:3.2em}
+.formmsg[data-tone="ok"]{color:var(--accent-ink)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;
+  font-family:var(--font);font-size:var(--t-sm);font-weight:600;min-height:52px;padding:0 var(--s-5);
+  border-radius:var(--r-pill);border:0;background:var(--surf);color:var(--ink);box-shadow:var(--sh-raise-sm);
+  transition:box-shadow var(--d) var(--ease),color var(--d) var(--ease);
+}
+.btn:hover{box-shadow:var(--sh-inset-sm)}
+.btn:active{box-shadow:var(--sh-inset-sm)}
+.btn--primary{background:var(--accent);color:#f2f7fb;box-shadow:var(--sh-raise-sm)}
+.btn--primary:hover{box-shadow:var(--sh-inset-sm)}
+
+.split{display:grid;grid-template-columns:1.25fr .75fr;gap:var(--s-5);align-items:start}
+section{padding:var(--s-6) 0}
+footer{border-top:1px solid var(--line);margin-top:var(--s-6);padding:var(--s-6) 0 var(--s-7)}
+.foot{display:flex;flex-wrap:wrap;gap:var(--s-4) var(--s-6);justify-content:space-between;align-items:center}
+.foot ul{list-style:none;display:flex;flex-wrap:wrap;gap:var(--s-4);margin:0;padding:0}
+.foot a{font-size:var(--t-sm);color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.foot a:hover{color:var(--ink)}
+
+@media (max-width:760px){
+  .split{grid-template-columns:1fr}
+  nav{display:none;position:absolute;left:var(--s-4);right:var(--s-4);top:76px;flex-direction:column;
+    background:var(--surf);border-radius:var(--r-md);box-shadow:var(--sh-raise);padding:var(--s-2);gap:.2rem;z-index:20}
+  nav[data-open="true"]{display:flex}
+  nav a{width:100%;min-height:48px}
+  .burger{display:grid;place-items:center}
+  .seg{flex-wrap:wrap}
+  .seg button{min-width:40%}
+}
+@media (max-width:520px){
+  .transport{gap:var(--s-3)}
+  .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .sbtn:active,.dial:active{transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <path d="M2 18c4-6 8 6 13 0s9 6 13 0" fill="none" stroke="#4a7ea8" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="15" cy="9" r="4" fill="#b08968"/>
+      </svg>
+      Tidepool
+    </a>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Open navigation">
+      <svg width="20" height="16" viewBox="0 0 20 16" aria-hidden="true"><path d="M0 2h20M0 8h20M0 14h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <nav id="nav" aria-label="Primary">
+      <a href="#now" aria-current="page">Now playing</a>
+      <a href="#library">Library</a>
+      <a href="#method">Method</a>
+      <a href="#remind">Reminders</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="wrap hero" id="top">
+    <span class="label">Sleep &amp; focus audio</span>
+    <h1>Sound designed to be the quietest thing in the room.</h1>
+    <p>No sudden ads, no mid-track tempo changes, no music that tries to keep you awake. Tidepool plays long, slow, deliberately uneventful audio — and then gets out of the way.</p>
+  </section>
+
+  <section class="wrap" id="now" style="padding-top:0">
+    <div class="player">
+      <h2>Harbour, 04:10</h2>
+      <p class="player__meta">Recorded off the outer mole at Oban · 42 min loop · seamless</p>
+      <div class="art">
+        <svg viewBox="0 0 300 300" role="img" aria-label="Abstract cover art of concentric rings spreading across still water">
+          <rect width="300" height="300" fill="#dfe4ec"/>
+          <g fill="none" stroke="#8aa6bb" stroke-width="1.2">
+            <circle cx="150" cy="160" r="26" opacity=".9"/><circle cx="150" cy="160" r="52" opacity=".7"/>
+            <circle cx="150" cy="160" r="80" opacity=".5"/><circle cx="150" cy="160" r="110" opacity=".32"/>
+            <circle cx="150" cy="160" r="140" opacity=".18"/>
+          </g>
+          <path d="M0 210c30-14 60 10 90 0s60-18 90-4 60 20 120 4v90H0z" fill="#4a7ea8" opacity=".16"/>
+          <circle cx="150" cy="160" r="6" fill="#b08968"/>
+        </svg>
+      </div>
+      <div class="groove" role="img" aria-label="34 percent through the track"><span></span></div>
+      <div class="times"><span>14:22</span><span>42:00</span></div>
+      <div class="transport">
+        <button class="sbtn" type="button" aria-label="Previous track">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 4v12M16 4l-9 6 9 6z" fill="currentColor"/></svg>
+        </button>
+        <button class="sbtn sbtn--main" type="button" id="play" aria-pressed="false" aria-label="Play">
+          <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true" id="playicon"><path d="M7 4l15 9-15 9z" fill="currentColor"/></svg>
+        </button>
+        <button class="sbtn" type="button" aria-label="Next track">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M15 4v12M4 4l9 6-9 6z" fill="currentColor"/></svg>
+        </button>
+      </div>
+      <p id="playstate" role="status" aria-live="polite" style="font-size:var(--t-sm);color:var(--ink-3);margin:0">Paused at 14:22</p>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-top:0">
+    <div class="split">
+      <div style="display:grid;gap:var(--s-4)">
+        <button class="dial" type="button" id="dial" aria-pressed="false">
+          <span class="dial__face">
+            <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+              <path d="M15 5a10 10 0 1 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M25 15l-3-3M25 15l-3 3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="dial__text">
+            <h3>Deepen the tide</h3>
+            <p id="dialdesc">Adds a sub-bass layer at 60 Hz. Currently off — tap to engage.</p>
+          </span>
+        </button>
+
+        <div class="toggles">
+          <button class="tog" type="button" aria-pressed="true">
+            <span>Room tone<small>Ventilation hum, held at a constant level</small></span>
+            <span class="tog__sw" aria-hidden="true"></span>
+          </button>
+          <button class="tog" type="button" aria-pressed="false">
+            <span>Occasional gull<small>One call roughly every nine minutes</small></span>
+            <span class="tog__sw" aria-hidden="true"></span>
+          </button>
+          <button class="tog" type="button" aria-pressed="false">
+            <span>Wakes you gently<small>Tapers volume across the final minute</small></span>
+            <span class="tog__sw" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div>
+          <p class="label" style="margin-bottom:var(--s-3)">Sleep timer</p>
+          <div class="seg" id="seg" role="group" aria-label="Sleep timer duration">
+            <button type="button" aria-pressed="false" data-min="15">15 min</button>
+            <button type="button" aria-pressed="true" data-min="30">30 min</button>
+            <button type="button" aria-pressed="false" data-min="60">60 min</button>
+            <button type="button" aria-pressed="false" data-min="end">End of track</button>
+          </div>
+          <p class="hint" id="segdesc" style="margin-top:var(--s-3)">Audio fades out over the last 90 seconds before the timer ends.</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="label" style="margin-bottom:var(--s-3)">This session</p>
+        <dl style="margin:0;display:grid;gap:var(--s-3)">
+          <div class="stat">
+            <dt class="label">Time to sleep</dt>
+            <dd style="margin:.2rem 0 0;font-size:var(--t-lg);font-variant-numeric:tabular-nums">21 min</dd>
+          </div>
+          <div class="stat">
+            <dt class="label">Focus blocks today</dt>
+            <dd style="margin:.2rem 0 0;font-size:var(--t-lg);font-variant-numeric:tabular-nums">3 of 4</dd>
+          </div>
+        </dl>
+        <hr class="rule">
+        <p class="muted" style="font-size:var(--t-sm)">Tidepool never asks for a subscription to fall asleep. The paid tier adds offline listening and a yearly sleep report.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="library">
+    <p class="label" style="margin-bottom:var(--s-3)">Library · Evening</p>
+    <h2 style="font-size:var(--t-lg);max-width:24ch">Six recordings, each looped without a seam</h2>
+    <ul class="library" id="tracks">
+      <li><span class="idx" aria-hidden="true">01</span><span class="name">Harbour, 04:10</span><span class="len">42:00</span><button type="button" data-track="Harbour, 04:10">Play</button></li>
+      <li><span class="idx" aria-hidden="true">02</span><span class="name">Rain on a conservatory roof</span><span class="len">58:00</span><button type="button" data-track="Rain on a conservatory roof">Play</button></li>
+      <li><span class="idx" aria-hidden="true">03</span><span class="name">Night train, two carriages</span><span class="len">75:00</span><button type="button" data-track="Night train, two carriages">Play</button></li>
+      <li><span class="idx" aria-hidden="true">04</span><span class="name">Furnace room, low fire</span><span class="len">36:00</span><button type="button" data-track="Furnace room, low fire">Play</button></li>
+      <li><span class="idx" aria-hidden="true">05</span><span class="name">Shoreline, far off</span><span class="len">64:00</span><button type="button" data-track="Shoreline, far off">Play</button></li>
+      <li><span class="idx" aria-hidden="true">06</span><span class="name">Snow settling on a roof</span><span class="len">51:00</span><button type="button" data-track="Snow settling on a roof">Play</button></li>
+    </ul>
+  </section>
+
+  <section class="wrap" id="method">
+    <p class="label" style="margin-bottom:var(--s-3)">Method</p>
+    <h2 style="font-size:var(--t-lg);max-width:26ch">Three rules we do not break</h2>
+    <ol class="steps">
+      <li><div><h3>Nothing starts suddenly</h3><p>Every recording fades in over at least forty seconds. If it made you jump once, it is out of the library.</p></div></li>
+      <li><div><h3>Nothing changes without warning</h3><p>Loop points are crossfaded and marked in the player. No sudden birds, no tempo shift at the join, no volume spike.</p></div></li>
+      <li><div><h3>Nothing tracks you for using it</h3><p>Sleep time is calculated on the device. We never receive when you fell asleep, how long it took, or whether you liked a track.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="wrap narrow" id="remind" style="padding-top:var(--s-5)">
+    <h2 style="font-size:var(--t-lg)">Set a wind-down reminder</h2>
+    <p class="muted" style="margin-bottom:var(--s-4)">Runs entirely on your device. Tidepool does not send the notification for you.</p>
+    <form class="form" id="remindform" novalidate>
+      <div class="field">
+        <label for="r-time">Wind down at</label>
+        <input id="r-time" name="time" type="time" value="22:30" required aria-describedby="e-time">
+        <p class="err" id="e-time" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="r-track">Default recording</label>
+        <select id="r-track" name="track">
+          <option>Harbour, 04:10</option>
+          <option>Rain on a conservatory roof</option>
+          <option>Night train, two carriages</option>
+          <option>Furnace room, low fire</option>
+        </select>
+        <p class="hint">Change it any time from the player.</p>
+      </div>
+      <div class="formmsg" id="r-msg" role="status" aria-live="polite">Reminder set for 22:30 using Harbour, 04:10.</div>
+      <div><button class="btn btn--primary" type="submit">Save reminder</button></div>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p class="label">Tidepool · recorded in Oban, Scotland</p>
+    <ul>
+      <li><a href="#method">Our rules</a></li>
+      <li><a href="#remind">Reminders</a></li>
+      <li><a href="#library">Offline packs</a></li>
+      <li><a href="#top">Back to player</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var burger=document.getElementById('burger'),nav=document.getElementById('nav');
+  burger.addEventListener('click',function(){
+    var open=burger.getAttribute('aria-expanded')==='true';
+    burger.setAttribute('aria-expanded',String(!open));
+    nav.setAttribute('data-open',String(!open));
+  });
+  nav.addEventListener('click',function(e){if(e.target.tagName==='A'){burger.setAttribute('aria-expanded','false');nav.setAttribute('data-open','false');}});
+
+  var play=document.getElementById('play'),state=document.getElementById('playstate'),icon=document.getElementById('playicon');
+  play.addEventListener('click',function(){
+    var on=play.getAttribute('aria-pressed')==='true';
+    play.setAttribute('aria-pressed',String(!on));
+    play.setAttribute('aria-label',on?'Play':'Pause');
+    state.textContent=on?'Paused at 14:22':'Playing — Harbour, 04:10';
+    icon.firstChild.setAttribute('d',on?'M7 4l15 9-15 9z':'M8 4h4v18H8zM16 4h4v18h-4z');
+  });
+
+  var dial=document.getElementById('dial'),dialdesc=document.getElementById('dialdesc');
+  dial.addEventListener('click',function(){
+    var on=dial.getAttribute('aria-pressed')==='true';
+    dial.setAttribute('aria-pressed',String(!on));
+    dialdesc.textContent=on?'Adds a sub-bass layer at 60 Hz. Currently off — tap to engage.':'Sub-bass layer engaged at 60 Hz. The mix is now about 4 dB lower in the mids.';
+  });
+
+  document.querySelectorAll('.tog').forEach(function(t){
+    t.addEventListener('click',function(){
+      t.setAttribute('aria-pressed',String(t.getAttribute('aria-pressed')!=='true'));
+    });
+  });
+
+  var seg=document.getElementById('seg'),segdesc=document.getElementById('segdesc');
+  seg.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    seg.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+    b.setAttribute('aria-pressed','true');
+    segdesc.textContent = b.getAttribute('data-min')==='end'
+      ? 'Audio fades out over the last 90 seconds of the track.'
+      : 'Audio fades out over the last 90 seconds before '+b.textContent.trim()+'.';
+  });
+
+  document.getElementById('tracks').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    var name=b.getAttribute('data-track');
+    document.querySelector('#now h2').textContent=name;
+    state.textContent='Playing — '+name;
+    play.setAttribute('aria-pressed','true');
+    play.setAttribute('aria-label','Pause');
+    icon.firstChild.setAttribute('d','M8 4h4v18H8zM16 4h4v18h-4z');
+  });
+
+  var form=document.getElementById('remindform'),msg=document.getElementById('r-msg');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var time=document.getElementById('r-time'),err=document.getElementById('e-time');
+    if(!time.value){
+      err.textContent='Choose a time for the reminder.';
+      time.closest('.field').setAttribute('data-invalid','true');
+      time.setAttribute('aria-invalid','true');
+      msg.removeAttribute('data-tone');
+      return;
+    }
+    err.textContent='';
+    time.closest('.field').setAttribute('data-invalid','false');
+    time.removeAttribute('aria-invalid');
+    msg.setAttribute('data-tone','ok');
+    msg.textContent='Saved. Wind-down reminder at '+time.value+' using '+document.getElementById('r-track').value+'.';
+  });
+})();
+</script>
+</body>
+</html>

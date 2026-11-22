@@ -1,0 +1,578 @@
+<!-- Style: Pastel | 62pastel.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumière — soft essentials for babies and the people who hold them</title>
+<style>
+  :root{
+    /* pastel surfaces */
+    --mint:#CFE7DE;
+    --blush:#F6D9DD;
+    --sky:#D8E7F6;
+    --butter:#FAEFD2;
+    --lilac:#E5DEF4;
+    --shell-warm:#FBF7F1;
+    /* readable ink on top of all of the above */
+    --ink:#2C3A40;
+    --ink-soft:#4E5F66;
+    --ink-faint:#5A6B72;
+    --teal:#1E6E68;      /* deep accent for buttons / links */
+    --clay:#B4553C;      /* warm secondary accent */
+    --line:#D8D2C8;
+    --ok:#1E6E68;
+    --err:#9B3226;
+
+    --font:"Nunito","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    --t-hero:clamp(2.6rem,6.4vw,5rem);
+    --t-h1:clamp(2rem,4.4vw,3.4rem);
+    --t-h2:clamp(1.6rem,3vw,2.4rem);
+    --t-h3:clamp(1.15rem,1.7vw,1.4rem);
+    --t-lead:clamp(1.05rem,1.4vw,1.22rem);
+    --t-small:.9rem;
+    --t-micro:.8rem;
+
+    --s-1:.5rem;--s-2:.8rem;--s-3:1.15rem;--s-4:1.7rem;
+    --s-5:2.4rem;--s-6:3.4rem;--s-7:4.6rem;--s-8:6rem;
+    --shell:min(1140px,100% - 2.5rem);
+
+    --r-sm:14px;--r-md:22px;--r-lg:34px;--r-xl:48px;--r-pill:999px;
+    --sh-soft:0 14px 30px rgba(74,86,80,.10);
+    --sh-lift:0 22px 48px rgba(74,86,80,.16);
+    --d-base:260ms;--d-slow:700ms;--ease:cubic-bezier(.2,.8,.2,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  body{
+    margin:0;background:var(--shell-warm);color:var(--ink);
+    font-family:var(--font);font-size:1rem;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-weight:800;line-height:1.12;letter-spacing:-.02em;margin:0;color:var(--ink)}
+  p{margin:0}
+  a{color:var(--teal)}
+  ul{margin:0;padding:0;list-style:none}
+  img,svg{display:block;max-width:100%}
+  :focus-visible{outline:3px solid var(--clay);outline-offset:3px;border-radius:var(--r-sm)}
+  .shell{width:var(--shell);margin-inline:auto}
+  .skip{position:absolute;left:var(--s-3);top:-140px;z-index:80;background:var(--ink);color:#fff;padding:.8rem 1.2rem;border-radius:var(--r-pill);font-weight:700;transition:top var(--d-base)}
+  .skip:focus{top:var(--s-3)}
+  .eyebrow{font-size:var(--t-micro);font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:var(--s-2)}
+  .lead{font-size:var(--t-lead);color:var(--ink-soft);max-width:52ch}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;
+    padding:0 1.7rem;border-radius:var(--r-pill);border:2px solid transparent;cursor:pointer;
+    font-family:inherit;font-size:1rem;font-weight:800;text-decoration:none;transition:transform var(--d-base) var(--ease),box-shadow var(--d-base),background var(--d-base)
+  }
+  .btn-primary{background:var(--teal);color:#fff;box-shadow:0 8px 0 #17544F}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 0 #17544F}
+  .btn-primary:active{transform:translateY(4px);box-shadow:0 3px 0 #17544F}
+  .btn-quiet{background:transparent;color:var(--teal);border-color:var(--teal)}
+  .btn-quiet:hover{background:var(--teal);color:#fff}
+  .btn[disabled]{opacity:.55;box-shadow:none;cursor:not-allowed;transform:none}
+
+  /* ---------- soft nav ---------- */
+  .site-head{padding-block:var(--s-3);position:sticky;top:0;z-index:70;background:rgba(251,247,241,.9);backdrop-filter:blur(10px)}
+  .head-in{display:flex;align-items:center;gap:var(--s-3)}
+  .logo{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:var(--ink);font-weight:800;font-size:1.2rem;letter-spacing:-.01em}
+  .logo-dot{width:30px;height:30px;border-radius:50% 50% 50% 8px;background:var(--lilac);border:2px solid var(--ink);flex:none}
+  .nav{margin-left:auto}
+  .nav ul{display:flex;align-items:center;gap:var(--s-1)}
+  .nav a{
+    display:inline-flex;align-items:center;min-height:44px;padding:0 1.05rem;border-radius:var(--r-pill);
+    text-decoration:none;color:var(--ink-soft);font-weight:700;font-size:var(--t-small)
+  }
+  .nav a:hover{background:var(--butter);color:var(--ink)}
+  .nav .cart{background:var(--blush);color:var(--ink);padding-inline:1.2rem}
+  .nav-toggle{display:none;margin-left:auto;min-height:44px;padding:0 1.2rem;border-radius:var(--r-pill);border:2px solid var(--ink);background:#fff;font-family:inherit;font-weight:800;cursor:pointer}
+
+  /* ---------- hero ---------- */
+  .hero{padding-block:var(--s-6) var(--s-7)}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);align-items:center}
+  .hero h1{font-size:var(--t-hero);margin-bottom:var(--s-3)}
+  .hero h1 em{font-style:normal;background:var(--butter);border-radius:var(--r-sm);padding:0 .25em;box-decoration-break:clone}
+  .hero p{margin-bottom:var(--s-4)}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:var(--s-2)}
+  .hero-art{border-radius:var(--r-xl);background:linear-gradient(160deg,var(--sky),var(--blush));padding:var(--s-4);box-shadow:var(--sh-soft)}
+  .hero-note{display:flex;align-items:center;gap:var(--s-2);margin-top:var(--s-4);font-size:var(--t-small);color:var(--ink-soft)}
+  .avatar-row{display:flex}
+  .avatar-row span{width:38px;height:38px;border-radius:50%;border:3px solid #fff;margin-left:-12px;display:block}
+  .avatar-row span:first-child{margin-left:0}
+
+  /* ---------- chip ticker ---------- */
+  .chips{background:var(--mint);border-radius:var(--r-pill);padding:.55rem var(--s-3);display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center;margin-bottom:var(--s-6)}
+  .chip{background:#fff;border-radius:var(--r-pill);padding:.45rem 1.05rem;font-size:var(--t-micro);font-weight:800;color:var(--ink-soft);letter-spacing:.04em}
+
+  /* ---------- bento range ---------- */
+  .range{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--s-3);margin-top:var(--s-5)}
+  .tile{border-radius:var(--r-lg);padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-2);box-shadow:var(--sh-soft);transition:transform var(--d-base) var(--ease),box-shadow var(--d-base)}
+  .tile:hover{transform:translateY(-4px);box-shadow:var(--sh-lift)}
+  .tile h3{font-size:var(--t-h3)}
+  .tile p{font-size:var(--t-small);color:var(--ink-soft)}
+  .tile .price{margin-top:auto;font-weight:800;font-size:1.05rem;color:var(--ink)}
+  .tile .art{height:120px;display:grid;place-items:center}
+  .t-wide{grid-column:span 4;background:var(--butter)}
+  .t-tall{grid-column:span 2;background:var(--lilac)}
+  .t-half{grid-column:span 3;background:var(--blush)}
+  .t-note{grid-column:span 6;background:var(--sky);flex-direction:row;align-items:center;gap:var(--s-4)}
+
+  /* ---------- split detail ---------- */
+  .split{display:grid;grid-template-columns:.9fr 1.1fr;gap:var(--s-6);align-items:center}
+  .swatches{display:flex;gap:.7rem;margin:var(--s-3) 0 var(--s-4)}
+  .swatches i{width:52px;height:52px;border-radius:var(--r-sm);border:2px solid rgba(44,58,64,.16);display:block}
+  .facts{border-top:1px solid var(--line)}
+  .facts div{display:grid;grid-template-columns:150px 1fr;gap:var(--s-3);padding:var(--s-3) 0;border-bottom:1px solid var(--line);font-size:var(--t-small)}
+  .facts dt{color:var(--ink-faint);font-weight:700}
+  .facts dd{margin:0}
+
+  /* ---------- quote ---------- */
+  .quote{background:var(--blush);border-radius:var(--r-xl);padding:var(--s-6) var(--s-5);text-align:left;max-width:820px;margin-inline:auto}
+  .quote blockquote{margin:0;font-size:var(--t-h2);line-height:1.3;font-weight:700;color:var(--ink)}
+  .quote figcaption{margin-top:var(--s-3);font-size:var(--t-small);color:var(--ink-soft);font-weight:700}
+  .stars{margin-bottom:var(--s-2);color:var(--clay);font-size:1.1rem;letter-spacing:.15em}
+
+  /* ---------- quiz / form ---------- */
+  .panel{background:#fff;border-radius:var(--r-xl);padding:var(--s-5);box-shadow:var(--sh-soft)}
+  .quiz-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-5);align-items:start}
+  fieldset{border:0;padding:0;margin:0 0 var(--s-4)}
+  legend{font-weight:800;font-size:var(--t-h3);padding:0;margin-bottom:var(--s-2)}
+  .opts{display:flex;flex-wrap:wrap;gap:var(--s-2)}
+  .opt{position:relative;display:inline-flex}
+  .opt input{position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;margin:0;cursor:pointer}
+  .opt span{display:inline-flex;align-items:center;min-height:46px;padding:0 1.2rem;border-radius:var(--r-pill);border:2px solid var(--line);background:var(--shell-warm);font-weight:700;font-size:var(--t-small)}
+  .opt input:checked + span{border-color:var(--teal);background:var(--mint);color:var(--ink)}
+  .opt input:focus-visible + span{outline:3px solid var(--clay);outline-offset:2px}
+  .field{display:grid;gap:.35rem;margin-bottom:var(--s-3)}
+  .field label{font-weight:800;font-size:var(--t-small)}
+  .field .hint{font-size:var(--t-micro);color:var(--ink-faint)}
+  input[type=text],input[type=email],select{
+    font-family:inherit;font-size:1rem;color:var(--ink);background:var(--shell-warm);
+    border:2px solid var(--line);border-radius:var(--r-sm);padding:.85rem 1rem;min-height:48px;width:100%
+  }
+  input:focus,select:focus{outline:3px solid var(--clay);outline-offset:2px;border-color:var(--teal);background:#fff}
+  [aria-invalid="true"]{border-color:var(--err);background:#FDF2F0}
+  .form-msg{margin-top:var(--s-2);min-height:1.6em;font-size:var(--t-small);font-weight:800}
+  .form-msg[data-state="error"]{color:var(--err)}
+  .form-msg[data-state="ok"]{color:var(--ok)}
+  .result{background:var(--mint);border-radius:var(--r-md);padding:var(--s-3);font-size:var(--t-small);color:var(--ink);margin-top:var(--s-2)}
+
+  /* ---------- accordion ---------- */
+  .faq{max-width:760px;margin-inline:auto}
+  .faq details{background:#fff;border-radius:var(--r-md);box-shadow:var(--sh-soft);margin-bottom:var(--s-2);overflow:hidden}
+  .faq summary{
+    cursor:pointer;list-style:none;min-height:52px;display:flex;align-items:center;justify-content:space-between;
+    gap:var(--s-3);padding:var(--s-3) var(--s-4);font-weight:800;font-size:var(--t-h3)
+  }
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-size:1.4rem;color:var(--teal);line-height:1}
+  .faq details[open] summary::after{content:"–"}
+  .faq details p{padding:0 var(--s-4) var(--s-4);color:var(--ink-soft);font-size:var(--t-small)}
+
+  footer{background:var(--mint);border-radius:var(--r-xl) var(--r-xl) 0 0;margin-top:var(--s-7);padding-block:var(--s-6) var(--s-4)}
+  .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:var(--s-4)}
+  footer h4{font-size:var(--t-small);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:var(--s-2);font-weight:800}
+  footer li{margin-bottom:.5rem;font-size:var(--t-small)}
+  footer a{text-decoration:none;color:var(--ink)}
+  footer a:hover{text-decoration:underline}
+  .foot-bottom{margin-top:var(--s-5);padding-top:var(--s-3);border-top:1px solid rgba(44,58,64,.14);display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:space-between;font-size:var(--t-micro);color:var(--ink-soft)}
+
+  @media (max-width:900px){
+    .range{grid-template-columns:repeat(2,1fr)}
+    .t-wide,.t-tall,.t-half,.t-note{grid-column:span 2}
+    .hero-grid,.split,.quiz-grid,.foot-grid{grid-template-columns:1fr}
+    .facts div{grid-template-columns:1fr;gap:.2rem}
+  }
+  @media (max-width:720px){
+    .nav-toggle{display:block}
+    .nav{display:none;position:absolute;left:1.25rem;right:1.25rem;top:calc(100% + .5rem);background:#fff;border-radius:var(--r-lg);padding:var(--s-2);box-shadow:var(--sh-lift)}
+    .nav.open{display:block}
+    .nav ul{flex-direction:column;align-items:stretch;gap:2px}
+    .nav a{width:100%;justify-content:space-between}
+    .range{grid-template-columns:1fr}
+    .t-wide,.t-tall,.t-half,.t-note{grid-column:1/-1}
+    .t-note{flex-direction:column;align-items:flex-start}
+    .quote{padding:var(--s-4)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="site-head">
+  <div class="head-in shell">
+    <a class="logo" href="#top"><span class="logo-dot" aria-hidden="true"></span>Lumière</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">Menu</button>
+    <nav class="nav" id="primaryNav" aria-label="Primary">
+      <ul>
+        <li><a href="#range">The range</a></li>
+        <li><a href="#materials">Materials</a></li>
+        <li><a href="#findstage">Find your stage</a></li>
+        <li><a href="#faq">Questions</a></li>
+        <li><a class="cart" href="#findstage">Cart (2)</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="shell">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Made for 0–36 months</p>
+          <h1>Soft things, <em>hard-won</em> nights.</h1>
+          <p class="lead">Every Lumière piece is tested by 40 families over nine months before it earns a colour. Machine-washable, low-allergen, and quiet enough for a 2am feed.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#range">Shop the range</a>
+            <a class="btn btn-quiet" href="#materials">How it’s made</a>
+          </div>
+          <p class="hero-note">
+            <span class="avatar-row" aria-hidden="true">
+              <span style="background:var(--mint)"></span><span style="background:var(--blush)"></span><span style="background:var(--butter)"></span><span style="background:var(--lilac)"></span>
+            </span>
+            <span>Tested by 1,240 parents. 4.8 out of 5 average.</span>
+          </p>
+        </div>
+        <div class="hero-art">
+          <svg viewBox="0 0 420 320" role="img" aria-label="Illustration: a sun, rolling hills and a simple cot with a folded blanket">
+            <rect x="0" y="0" width="420" height="320" rx="30" fill="#FBF7F1"/>
+            <circle cx="308" cy="76" r="42" fill="#FAEFD2" stroke="#2C3A40" stroke-width="3"/>
+            <path d="M0 214c60-46 108 8 168-22s92-52 152-24v152H0z" fill="#CFE7DE"/>
+            <path d="M0 258c74-32 120 16 186-6s96-38 160-16v84H0z" fill="#D8E7F6"/>
+            <g>
+              <rect x="52" y="176" width="196" height="80" rx="18" fill="#F6D9DD" stroke="#2C3A40" stroke-width="3"/>
+              <rect x="52" y="200" width="196" height="22" fill="#FAEFD2"/>
+              <path d="M78 256v34M222 256v34" stroke="#2C3A40" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="118" cy="188" r="16" fill="#E5DEF4" stroke="#2C3A40" stroke-width="3"/>
+            </g>
+            <g stroke="#2C3A40" stroke-width="3" fill="none" stroke-linecap="round">
+              <path d="M300 200c0-26 18-42 40-42s40 16 40 42"/>
+              <path d="M316 200v40M364 200v40"/>
+            </g>
+            <circle cx="340" cy="176" r="12" fill="#F6D9DD" stroke="#2C3A40" stroke-width="3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="shell">
+    <div class="chips">
+      <span class="chip">GOTS cotton</span>
+      <span class="chip">OEKO-TEX dyes</span>
+      <span class="chip">No plastic buttons</span>
+      <span class="chip">Machine wash 40°</span>
+      <span class="chip">Repair guarantee, 5 years</span>
+      <span class="chip">Plastic-free packaging</span>
+    </div>
+  </div>
+
+  <section id="range" aria-labelledby="range-h">
+    <div class="shell">
+      <p class="eyebrow">The essentials</p>
+      <h2 id="range-h" style="font-size:var(--t-h1);max-width:18ch">Four pieces. Nine months of testing each.</h2>
+      <div class="range">
+        <article class="tile t-wide">
+          <div class="art">
+            <svg viewBox="0 0 200 110" width="220" role="img" aria-label="Illustration of a folded muslin blanket">
+              <rect x="18" y="22" width="164" height="70" rx="16" fill="#FBF7F1" stroke="#2C3A40" stroke-width="3"/>
+              <path d="M18 48h164M18 70h164" stroke="#2C3A40" stroke-width="2" opacity=".45"/>
+              <path d="M46 22v70M72 22v70" stroke="#2C3A40" stroke-width="2" opacity=".25"/>
+            </svg>
+          </div>
+          <h3>The Nap Muslin — 4 pack</h3>
+          <p>Double-gauze cotton that gets softer with every wash. 120×120 cm, the only size we make.</p>
+          <p class="price">€64</p>
+        </article>
+
+        <article class="tile t-tall">
+          <div class="art">
+            <svg viewBox="0 0 120 110" width="140" role="img" aria-label="Illustration of a romper with snap closures">
+              <path d="M40 18h40l8 30 14 34-22 12-14-28v40H40V66l-14 28-22-12 14-34z" fill="#FBF7F1" stroke="#2C3A40" stroke-width="3" stroke-linejoin="round"/>
+              <circle cx="60" cy="44" r="5" fill="#2C3A40"/>
+            </svg>
+          </div>
+          <h3>Everyday Romper — 3 pack</h3>
+          <p>Shoulder snaps so you don’t wake anyone. 0–9 months.</p>
+          <p class="price">€38</p>
+        </article>
+
+        <article class="tile t-half">
+          <div class="art">
+            <svg viewBox="0 0 160 100" width="180" role="img" aria-label="Illustration of a stacking ring toy">
+              <rect x="24" y="70" width="18" height="22" rx="6" fill="#F6D9DD" stroke="#2C3A40" stroke-width="3"/>
+              <rect x="44" y="56" width="20" height="36" rx="7" fill="#CFE7DE" stroke="#2C3A40" stroke-width="3"/>
+              <rect x="66" y="42" width="22" height="50" rx="8" fill="#FAEFD2" stroke="#2C3A40" stroke-width="3"/>
+              <rect x="90" y="30" width="24" height="62" rx="9" fill="#E5DEF4" stroke="#2C3A40" stroke-width="3"/>
+            </svg>
+          </div>
+          <h3>Stack &amp; Roll</h3>
+          <p>Seven beech rings, one rounded peg. No small parts to lose, no batteries.</p>
+          <p class="price">€29</p>
+        </article>
+
+        <article class="tile t-half">
+          <div class="art">
+            <svg viewBox="0 0 160 100" width="180" role="img" aria-label="Illustration of a knitted comfort blanket">
+              <path d="M30 22h100v58H30z" fill="#FBF7F1" stroke="#2C3A40" stroke-width="3"/>
+              <path d="M30 38h100M30 52h100M30 66h100" stroke="#2C3A40" stroke-width="2" opacity=".4"/>
+              <path d="M52 22v58M74 22v58M96 22v58" stroke="#2C3A40" stroke-width="2" opacity=".4"/>
+              <circle cx="130" cy="80" r="9" fill="#F6D9DD" stroke="#2C3A40" stroke-width="3"/>
+            </svg>
+          </div>
+          <h3>First Lovey</h3>
+          <p>Crocheted cotton with a stitched-in tag. Washable, unsnappable, unsqueakable.</p>
+          <p class="price">€22</p>
+        </article>
+
+        <article class="tile t-note">
+          <div class="art" style="height:auto;flex:none">
+            <svg viewBox="0 0 90 90" width="90" role="img" aria-label="Illustration of a paper label reading repair guarantee">
+              <circle cx="45" cy="45" r="40" fill="#FAEFD2" stroke="#2C3A40" stroke-width="3"/>
+              <path d="M28 46l12 12 22-26" fill="none" stroke="#1E6E68" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Five-year repair guarantee</h3>
+            <p>Seams, snaps and elastic: send it back and we mend it. No receipt needed, no questions asked, no restocking fee. Roughly a third of our returns are repairs, which is exactly the point.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="materials" aria-labelledby="materials-h">
+    <div class="shell">
+      <div class="split">
+        <div>
+          <p class="eyebrow">Why it feels that way</p>
+          <h2 id="materials-h" style="font-size:var(--t-h1);margin-bottom:var(--s-3)">Three fabrics, and nothing else</h2>
+          <p class="lead">We don’t blend. A blend feels clever in a lab and vague on a label, so we work with single fibres and tell you exactly what each one is.</p>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#F6D9DD"></i><i style="background:#CFE7DE"></i><i style="background:#D8E7F6"></i><i style="background:#FAEFD2"></i><i style="background:#E5DEF4"></i>
+          </div>
+          <a class="btn btn-quiet" href="#faq">Read the full material notes</a>
+        </div>
+        <div>
+          <dl class="facts">
+            <div><dt>Outer layer</dt><dd>100% GOTS-certified organic cotton, 200 gsm</dd></div>
+            <div><dt>Filling</dt><dd>Recycled polyester wadding, 60 gsm, GRS chain of custody</dd></div>
+            <div><dt>Dyes</dt><dd>OEKO-TEX Standard 100, azo-free, low-impact dye house in Porto</dd></div>
+            <div><dt>Trims</dt><dd>Corozo nut buttons, cotton tape, no plastic, no metal</dd></div>
+            <div><dt>Washing</dt><dd>40° cotton cycle, tumble dry low, no fabric softener needed</dd></div>
+            <div><dt>Traceability</dt><dd>Every batch carries a QR code back to the ginning stage</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="love-h">
+    <div class="shell">
+      <figure class="quote">
+        <p class="stars" aria-label="Five out of five stars">★★★★★</p>
+        <blockquote id="love-h">“The muslin survived a year of daily washing and two new babies. It never lost its shape, never pilled, and I stopped buying replacements entirely.”</blockquote>
+        <figcaption>Ida K., Oslo · bought the 4-pack in March 2025</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="findstage" aria-labelledby="findstage-h">
+    <div class="shell">
+      <p class="eyebrow">Two minutes, not twenty</p>
+      <h2 id="findstage-h" style="font-size:var(--t-h1);margin-bottom:var(--s-4)">Find your stage</h2>
+      <div class="quiz-grid">
+        <form class="panel" id="stageForm" novalidate>
+          <fieldset>
+            <legend>How old is your smallest?</legend>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="age" value="newborn"><span>0–3 months</span></label>
+              <label class="opt"><input type="radio" name="age" value="baby"><span>3–12 months</span></label>
+              <label class="opt"><input type="radio" name="age" value="toddler"><span>1–3 years</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>What is the problem?</legend>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="goal" value="sleep"><span>Sleep</span></label>
+              <label class="opt"><input type="radio" name="goal" value="feeding"><span>Feeding</span></label>
+              <label class="opt"><input type="radio" name="goal" value="play"><span>Play</span></label>
+            </div>
+          </fieldset>
+          <div class="field">
+            <label for="stageEmail">Email for your shortlist</label>
+            <input type="email" id="stageEmail" name="email" autocomplete="email" required placeholder="you@example.com" aria-describedby="stageEmail-hint">
+            <p class="hint" id="stageEmail-hint">We’ll email three picks and nothing else.</p>
+          </div>
+          <button class="btn btn-primary" type="submit">Show my three</button>
+          <p class="form-msg" id="stageMsg" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <div class="panel" style="background:var(--lilac)">
+            <h3 style="font-size:var(--t-h2);margin-bottom:var(--s-2)">What happens next</h3>
+            <p style="color:var(--ink-soft)">We match your answers against what 1,240 families actually bought and kept, not against what sold fastest. You get three specific pieces with sizes, prices and the wash test results — in about forty seconds.</p>
+          </div>
+          <div class="panel" id="stageResult" style="margin-top:var(--s-3);background:var(--mint);display:none" aria-live="polite">
+            <h3 style="font-size:var(--t-h2);margin-bottom:var(--s-2)">Your three</h3>
+            <p class="result" id="resultText"></p>
+          </div>
+          <div class="panel" style="margin-top:var(--s-3)">
+            <h3 style="font-size:var(--t-h2);margin-bottom:var(--s-2)">Or just write to a human</h3>
+            <p style="color:var(--ink-soft);margin-bottom:var(--s-3)">Jo has answered 3,900 parent questions. Ask anything, no purchase needed.</p>
+            <a class="btn btn-quiet" href="mailto:jo@lumiere.example">jo@lumiere.example</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-h">
+    <div class="shell">
+      <p class="eyebrow" style="text-align:center">Questions parents actually ask</p>
+      <h2 id="faq-h" style="font-size:var(--t-h1);text-align:center;margin-bottom:var(--s-4)">Before you spend anything</h2>
+      <div class="faq">
+        <details open>
+          <summary>Will these shrink in the wash?</summary>
+          <p>No. We pre-shrink every fabric to 3% before cutting, which is the full amount it moves in a 40° cycle. Wash them a dozen times, measure after the third and you won’t need to measure again.</p>
+        </details>
+        <details>
+          <summary>What if my baby has sensitive skin?</summary>
+          <p>Start with the Nap Muslin and the First Lovey — single-fibre, undyed trims, nothing against the skin that isn’t cotton. If a reaction still happens, we refund everything within 60 days, keepers included.</p>
+        </details>
+        <details>
+          <summary>Is the packaging really plastic-free?</summary>
+          <p>Yes. Mailers are recycled kraft board, tape is paper, and the returns pouch is the same board again. The only plastic anywhere in the box is a thin compostable film on the muslin, which we’re removing next season.</p>
+        </details>
+        <details>
+          <summary>How long does delivery take?</summary>
+          <p>Two to four working days inside the EU, and a flat €4.90 regardless of order size. Outside the EU we use a carbon-offset road freight partner and it takes 6–10 days.</p>
+        </details>
+        <details>
+          <summary>Can I return something after two years?</summary>
+          <p>We only ask you to send it back for repairs if something actually fails. If it simply stopped being used, that’s a fine reason to keep it, and we’d rather you did.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#top" style="margin-bottom:var(--s-2)"><span class="logo-dot" aria-hidden="true"></span>Lumière</a>
+        <p style="font-size:var(--t-small);color:var(--ink-soft);max-width:32ch">A small workshop in Ghent making soft things for small people since 2019. Eleven people, one factory, no middlemen.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#range">The Nap Muslin</a></li>
+          <li><a href="#range">Everyday Romper</a></li>
+          <li><a href="#range">Stack &amp; Roll</a></li>
+          <li><a href="#range">Gift cards</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#faq">Shipping &amp; returns</a></li>
+          <li><a href="#faq">Repair guarantee</a></li>
+          <li><a href="#findstage">Size help</a></li>
+          <li><a href="#faq">Care guides</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Us</h4>
+        <ul>
+          <li><a href="#materials">Materials</a></li>
+          <li><a href="#materials">Our workshop</a></li>
+          <li><a href="#range">Stockists</a></li>
+          <li><a href="#findstage">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Lumière Atelier BV · Ghent, Belgium</span>
+      <span>Prices include VAT. Designed for small hands and tired ones.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('primaryNav');
+  toggle.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Close' : 'Menu';
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.textContent = 'Menu';
+    }
+  });
+
+  /* ---- stage finder ---- */
+  var form = document.getElementById('stageForm');
+  var msg = document.getElementById('stageMsg');
+  var email = document.getElementById('stageEmail');
+  var out = document.getElementById('stageResult');
+  var outText = document.getElementById('resultText');
+
+  var picks = {
+    newborn: { sleep: 'The Nap Muslin (4-pack) + First Lovey — nothing else. Newborns need warmth and one soft thing to hold.',
+               feeding: 'The Nap Muslin (4-pack) — it drapes over a shoulder without covering the airway, which is why we make it 120 cm.',
+               play: 'Stack & Roll — the only toy in the range with no detachable parts, for the age when everything goes in a mouth.' },
+    baby:     { sleep: 'First Lovey + The Nap Muslin (4-pack). At this age the lovey does most of the work; the muslin handles the spills.',
+               feeding: 'Everyday Romper (3-pack) — shoulder snaps mean you can change them without putting them down.',
+               play: 'Stack & Roll + First Lovey. Ring towers for the hands, one soft thing for the teeth.' },
+    toddler:  { sleep: 'The Nap Muslin (4-pack) as a light summer cover. Skip the lovey — toddlers use it as a hood and then refuse to sleep.',
+               feeding: 'Everyday Romper (3-pack) in the 1–3 year fit, with reinforced knees. Wipes clean with anything.',
+               play: 'Stack & Roll, then let them break the stacking order for a month. That is the toy working.' }
+  };
+
+  function selected(name) {
+    var n = form.querySelector('input[name="' + name + '"]:checked');
+    return n ? n.value : null;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.dataset.state = '';
+    msg.textContent = '';
+    email.removeAttribute('aria-invalid');
+    out.style.display = 'none';
+
+    var age = selected('age');
+    var goal = selected('goal');
+
+    if (!age || !goal) {
+      msg.dataset.state = 'error';
+      msg.textContent = 'Please answer both questions so we can narrow the shortlist.';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      email.setAttribute('aria-invalid', 'true');
+      email.focus();
+      msg.dataset.state = 'error';
+      msg.textContent = 'Add a valid email address and we’ll send the shortlist over.';
+      return;
+    }
+
+    outText.textContent = picks[age][goal] + ' Total: €94 including delivery.';
+    out.style.display = 'block';
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Done — that’s your shortlist, based on what families with a child the same age kept.';
+  });
+})();
+</script>
+</body>
+</html>

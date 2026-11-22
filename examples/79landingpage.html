@@ -1,0 +1,623 @@
+<!-- Style: Landing Page | 79landingpage.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tinderbox — the thing you light when everything else fails</title>
+<style>
+  :root{
+    --night:#141210;
+    --night-2:#1E1A16;
+    --night-3:#2A241E;
+    --ash:#CFC6B8;
+    --ash-dim:#8C8377;
+    --ember:#FF7A1A;
+    --ember-soft:#FFB067;
+    --spark:#FFD79A;
+    --line:rgba(255,255,255,.12);
+    --ok:#7FD4A0;
+    --warn:#FF9B7A;
+    /* type */
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --t-hero: clamp(2.5rem, 1.3rem + 5.6vw, 6rem);
+    --t-h2: clamp(1.8rem, 1.2rem + 2.8vw, 3.4rem);
+    --t-h3: clamp(1.1rem, 1rem + .6vw, 1.5rem);
+    --t-body: 1.03rem;
+    --t-small: .9rem;
+    --t-micro: .74rem;
+    --s-1:.25rem; --s-2:.5rem; --s-3:.85rem; --s-4:1.5rem; --s-5:2.4rem; --s-6:4rem; --s-7:6.5rem; --s-8:9rem;
+    --r:6px;
+    --ring:0 0 0 2px var(--night), 0 0 0 4px var(--ember);
+    --dur:200ms; --dur-slow:600ms; --ease:cubic-bezier(.2,.75,.2,1);
+    --wrap:1180px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--night);color:#F3EEE6;font-family:var(--font);font-size:var(--t-body);line-height:1.58;-webkit-font-size-adjust:100%}
+  img,svg{display:block;max-width:100%}
+  h1,h2,h3,h4,p,ul,figure,blockquote{margin:0}
+  ul{padding:0;list-style:none}
+  a{color:inherit;text-decoration:none}
+  .wrap{width:min(100% - 2.6rem, var(--wrap));margin-inline:auto}
+  .skip{position:absolute;left:-9999px;background:var(--ember);color:var(--night);padding:.7rem 1.1rem;z-index:99}
+  .skip:focus{left:0}
+  :focus-visible{outline:none;box-shadow:var(--ring)}
+
+  .h2{font-size:var(--t-h2);line-height:1.06;letter-spacing:-.03em;font-weight:750}
+  .h3{font-size:var(--t-h3);line-height:1.3;font-weight:650;letter-spacing:-.01em}
+  .muted{color:var(--ash)}
+  .small{font-size:var(--t-small)}
+  .micro{font-size:var(--t-micro);letter-spacing:.2em;text-transform:uppercase;color:var(--ash-dim)}
+  .num{font-variant-numeric:tabular-nums}
+
+  .btn{
+    --bg:var(--ember);--fg:var(--night);--bd:var(--ember);
+    display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+    min-height:54px;padding:.9rem 1.7rem;background:var(--bg);color:var(--fg);
+    border:1px solid var(--bd);border-radius:var(--r);font:inherit;font-weight:700;font-size:var(--t-small);
+    cursor:pointer;transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease),color var(--dur) var(--ease);
+  }
+  .btn:hover{--bg:var(--spark);--bd:var(--spark)}
+  .btn--ghost{--bg:transparent;--fg:#F3EEE6;--bd:rgba(255,255,255,.3)}
+  .btn--ghost:hover{--bg:rgba(255,255,255,.08);--bd:rgba(255,255,255,.55)}
+  .btn[disabled]{opacity:.6;cursor:not-allowed}
+
+  /* header */
+  .head{position:sticky;top:0;z-index:50;background:rgba(20,18,16,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .head-in{display:flex;align-items:center;gap:var(--s-4);min-height:70px}
+  .logo{display:flex;align-items:center;gap:.7rem;font-weight:750;letter-spacing:-.02em;font-size:1.15rem}
+  .logo svg{width:26px;height:26px}
+  .head nav{margin-left:auto}
+  .head nav ul{display:flex;gap:var(--s-5)}
+  .head nav a{font-size:var(--t-small);color:var(--ash);display:inline-block;padding:.5rem 0;border-bottom:1px solid transparent}
+  .head nav a:hover{color:#F3EEE6;border-bottom-color:var(--ember)}
+  .head .btn{margin-left:var(--s-3)}
+  .menu-btn{display:none;margin-left:auto;background:none;border:1px solid rgba(255,255,255,.35);color:#F3EEE6;border-radius:var(--r);min-height:44px;padding:.4rem .9rem;font:inherit;font-size:var(--t-micro);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+
+  /* hero: one objective */
+  .hero{position:relative;padding-block:var(--s-8) var(--s-7);overflow:hidden}
+  .hero-glow{position:absolute;right:-160px;top:-220px;width:640px;height:640px;pointer-events:none;z-index:0}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--s-6);align-items:center;position:relative;z-index:1}
+  .hero h1{font-size:var(--t-hero);line-height:.98;letter-spacing:-.04em;font-weight:780;margin-block:var(--s-4) var(--s-4)}
+  .hero h1 em{font-style:normal;color:var(--ember)}
+  .hero .sub{font-size:1.1rem;color:var(--ash);max-width:46ch}
+  .hero-form{margin-top:var(--s-5);display:flex;gap:var(--s-3);flex-wrap:wrap}
+  .hero-form .field{flex:1 1 260px}
+  .hero-note{margin-top:var(--s-3);font-size:var(--t-small);color:var(--ash-dim);display:flex;align-items:center;gap:.5rem}
+  .hero-note i{width:7px;height:7px;border-radius:50%;background:var(--ember);display:block;flex:none;animation:flick 3.4s ease-in-out infinite}
+  @keyframes flick{0%,100%{opacity:1}50%{opacity:.35}}
+  .waitcount{display:flex;align-items:baseline;gap:.6rem;margin-top:var(--s-4);font-size:var(--t-small);color:var(--ash)}
+  .waitcount b{font-size:1.6rem;color:var(--spark);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .form-msg{font-size:var(--t-small);font-weight:600;min-height:1.4em;margin-top:.6rem;color:var(--warn)}
+  .form-msg[data-state="ok"]{color:var(--ok)}
+
+  /* product panel */
+  .panel{background:var(--night-2);border:1px solid var(--line);border-radius:var(--r);padding:var(--s-4)}
+  .field{display:grid;gap:.4rem}
+  .field label{font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--ash-dim);font-weight:600}
+  .field input,.field select{
+    min-height:54px;padding:.8rem 1rem;border-radius:var(--r);
+    border:1px solid rgba(255,255,255,.22);background:var(--night-3);color:#F3EEE6;font:inherit;width:100%;
+  }
+  .field input::placeholder{color:#6F675E}
+  .field input:focus-visible,.field select:focus-visible{border-color:var(--ember)}
+  .field select option{background:var(--night-3);color:#F3EEE6}
+  .panel .field + .field{margin-top:var(--s-3)}
+  .panel .btn{margin-top:var(--s-4);width:100%}
+  .panel ul{margin-top:var(--s-4);padding-top:var(--s-4);border-top:1px solid var(--line);display:grid;gap:.55rem}
+  .panel li{display:flex;gap:.6rem;align-items:flex-start;font-size:var(--t-small);color:var(--ash)}
+  .panel li svg{flex:none;margin-top:3px}
+
+  /* value rows — not cards */
+  .value{border-top:1px solid var(--line);padding-block:var(--s-7)}
+  .value-head{display:grid;grid-template-columns:.8fr 1.2fr;gap:var(--s-6);align-items:start;margin-bottom:var(--s-6)}
+  .rows{list-style:none;padding:0}
+  .rows li{border-top:1px solid var(--line);padding:1.6rem 0;display:grid;grid-template-columns:4.5rem 1fr;gap:var(--s-4);align-items:start}
+  .rows li:last-child{border-bottom:1px solid var(--line)}
+  .rows .n{font-size:2rem;font-weight:750;color:var(--ember);line-height:1;letter-spacing:-.03em}
+  .rows h3{margin-bottom:.4rem}
+  .rows p{color:var(--ash);max-width:60ch}
+
+  /* how it works */
+  .how{background:var(--night-2);border-block:1px solid var(--line);padding-block:var(--s-7)}
+  .how-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);align-items:center}
+  .steps{list-style:none;padding:0;margin-top:var(--s-5);counter-reset:s}
+  .steps li{counter-increment:s;display:grid;grid-template-columns:3rem 1fr;gap:var(--s-3);padding:1.1rem 0;border-top:1px solid var(--line)}
+  .steps li::before{content:"0" counter(s);color:var(--ember);font-weight:750;font-size:var(--t-small);padding-top:3px}
+  .steps b{display:block;font-weight:650;margin-bottom:.2rem}
+  .steps span{color:var(--ash);font-size:var(--t-small)}
+
+  /* comparison */
+  .compare-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:var(--t-small);min-width:520px}
+  caption{text-align:left;padding-bottom:var(--s-3);color:var(--ash-dim);font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase}
+  th,td{padding:.9rem .8rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  thead th{font-size:var(--t-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ash-dim);font-weight:700}
+  tbody th{font-weight:600;color:#F3EEE6}
+  td.yes{color:var(--ember);font-weight:700}
+  td.no{color:var(--ash-dim)}
+
+  /* proof */
+  .proof{border-top:1px solid var(--line);padding-block:var(--s-7)}
+  .proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);align-items:start}
+  blockquote{font-size:clamp(1.2rem,1rem+1vw,1.7rem);line-height:1.4;letter-spacing:-.02em;font-weight:500}
+  .proof-by{margin-top:var(--s-4);font-size:var(--t-small);color:var(--ash);display:flex;align-items:center;gap:.8rem}
+  .proof-by i{width:40px;height:40px;border-radius:50%;background:var(--ember);display:grid;place-items:center;color:var(--night);font-weight:750;font-style:normal;flex:none}
+  .logos{display:grid;grid-template-columns:1fr 1fr;gap:.5rem var(--s-5);align-content:start}
+  .logos span{font-weight:700;font-size:1.02rem;color:var(--ash);border-bottom:1px solid var(--line);padding-bottom:.6rem}
+
+  /* faq */
+  .faq{border-top:1px solid var(--line);padding-block:var(--s-7)}
+  .faq-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:var(--s-6)}
+  .qa{border-top:1px solid var(--line)}
+  .qa:last-of-type{border-bottom:1px solid var(--line)}
+  .qa button{
+    width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;font-size:1.05rem;font-weight:600;
+    padding:1.25rem 0;min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:var(--s-4);cursor:pointer;
+  }
+  .qa button:hover{color:var(--ember-soft)}
+  .qa .mark{flex:none;width:26px;height:26px;position:relative}
+  .qa .mark::before,.qa .mark::after{content:"";position:absolute;background:var(--ember);left:50%;top:50%;transform:translate(-50%,-50%);transition:transform var(--dur) var(--ease)}
+  .qa .mark::before{width:14px;height:2px}
+  .qa .mark::after{width:2px;height:14px}
+  .qa button[aria-expanded="true"] .mark::after{transform:translate(-50%,-50%) scaleY(0)}
+  .qa .a{padding:0 0 1.3rem;color:var(--ash);max-width:64ch}
+  .qa .a[hidden]{display:none}
+
+  /* final cta */
+  .final{background:linear-gradient(180deg,var(--night) 0%,#241A12 100%);border-top:1px solid var(--line);padding-block:var(--s-8);text-align:left}
+  .final-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);align-items:center}
+  .final h2{font-size:var(--t-h2);line-height:1.05;letter-spacing:-.03em;font-weight:780;margin-block:var(--s-3) var(--s-4)}
+  .final p{color:var(--ash);max-width:42ch}
+  .final .panel{background:rgba(20,18,16,.7)}
+
+  /* footer */
+  .foot{border-top:1px solid var(--line);padding-block:var(--s-6) var(--s-5)}
+  .foot-in{display:flex;flex-wrap:wrap;gap:var(--s-4) var(--s-6);align-items:center;justify-content:space-between;font-size:var(--t-small);color:var(--ash-dim)}
+  .foot nav ul{display:flex;flex-wrap:wrap;gap:var(--s-4)}
+  .foot nav a{display:inline-block;padding:.6rem 0}
+  .foot nav a:hover{color:#F3EEE6}
+
+  /* sticky mobile CTA */
+  .sticky-cta{
+    position:fixed;left:0;right:0;bottom:0;z-index:55;display:none;align-items:center;gap:var(--s-3);
+    padding:.7rem 1.1rem calc(.7rem + env(safe-area-inset-bottom));background:rgba(20,18,16,.96);
+    border-top:1px solid var(--line);
+  }
+  .sticky-cta p{font-size:var(--t-small);line-height:1.25;flex:1}
+  .sticky-cta p b{display:block;font-size:1.1rem;color:var(--spark)}
+  .sticky-cta .btn{min-height:48px;padding:.6rem 1.1rem}
+
+  @media (max-width:1000px){
+    .hero-grid,.value-head,.how-grid,.proof-grid,.faq-grid,.final-grid{grid-template-columns:1fr}
+    .hero-glow{width:420px;height:420px;right:-180px;top:-160px;opacity:.7}
+  }
+  @media (max-width:860px){
+    .head nav{display:none}
+    .head nav[data-open="true"]{display:block;position:absolute;top:70px;left:0;right:0;background:var(--night);border-bottom:1px solid var(--line);padding:.5rem 1.3rem 1rem}
+    .head nav[data-open="true"] ul{flex-direction:column;gap:0}
+    .head nav[data-open="true"] a{display:block;padding:.9rem 0;border-bottom:1px solid var(--line)}
+    .head .btn{display:none}
+    .menu-btn{display:block}
+  }
+  @media (max-width:640px){
+    .sticky-cta{display:flex}
+    body{padding-bottom:78px}
+    .rows li{grid-template-columns:1fr;gap:.4rem}
+    .logos{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#join">Skip to the waitlist</a>
+
+<header class="head">
+  <div class="wrap head-in">
+    <a class="logo" href="#top">
+      <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <path d="M14 2 3 6.5v11L14 22l11-4.5v-11Z" fill="none" stroke="#FF7A1A" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M14 8c1.8 2.4 3.4 3.4 3.4 5.6A3.4 3.4 0 0 1 10.6 13.6C10.6 11.9 12.2 10.6 14 8Z" fill="#FF7A1A"/>
+      </svg>
+      Tinderbox
+    </a>
+    <nav id="nav" aria-label="Sections">
+      <ul>
+        <li><a href="#what">What it is</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#compare">Comparison</a></li>
+        <li><a href="#faq">Questions</a></li>
+      </ul>
+    </nav>
+    <a class="btn" href="#join">Join the waitlist</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+  </div>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <section class="hero" aria-labelledby="heroTitle">
+    <svg class="hero-glow" viewBox="0 0 640 640" aria-hidden="true" focusable="false">
+      <defs>
+        <radialGradient id="flicker" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#FF9B3A" stop-opacity=".5"/>
+          <stop offset=".45" stop-color="#FF7A1A" stop-opacity=".18"/>
+          <stop offset="1" stop-color="#FF7A1A" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="320" cy="320" r="320" fill="url(#flicker)"/>
+    </svg>
+    <div class="wrap hero-grid">
+      <div>
+        <p class="micro">Launching spring 2027 · 4,000 units</p>
+        <h1 id="heroTitle">The offline backup your <em>whole stack</em> depends on</h1>
+        <p class="sub">Tinderbox is a pocket-sized power cell that keeps your router, your door lock and your lights running for 72 hours when the grid goes down — and it recharges itself in any daylight.</p>
+        <form class="hero-form" id="joinForm" novalidate>
+          <div class="field">
+            <label for="heroEmail">Email address</label>
+            <input id="heroEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+          </div>
+          <button class="btn" type="submit">Join the waitlist</button>
+        </form>
+        <p class="form-msg" id="heroMsg" role="status" aria-live="polite"></p>
+        <p class="hero-note"><i></i> No deposit, no card, one email when it ships</p>
+        <p class="waitcount"><b id="counter" class="num">2,847</b> people are already on the list</p>
+      </div>
+
+      <div class="panel">
+        <svg viewBox="0 0 420 300" role="img" aria-label="Illustration of the Tinderbox unit: a palm-sized matte device with a solar top, three indicator lights and a carabiner loop." style="border-radius:var(--r);background:#241F1A">
+          <defs>
+            <linearGradient id="shell" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#4A423A"/><stop offset="1" stop-color="#241F1A"/>
+            </linearGradient>
+          </defs>
+          <rect x="90" y="60" width="240" height="170" rx="26" fill="url(#shell)" stroke="#5A5049"/>
+          <rect x="110" y="80" width="200" height="70" rx="12" fill="#2E3B45"/>
+          <g stroke="#5F7A88" stroke-width="1.2" opacity=".9">
+            <path d="M120 100h60M120 116h40M120 132h80"/>
+          </g>
+          <circle cx="290" cy="96" r="8" fill="#FF7A1A"/>
+          <circle cx="290" cy="122" r="8" fill="#FFD79A"/>
+          <circle cx="290" cy="148" r="8" fill="#4A5A52"/>
+          <g fill="#8C8377" font-family="system-ui" font-size="11">
+            <text x="120" y="180">72 H</text><text x="170" y="180">· 21 W SOLAR · IP67</text>
+          </g>
+          <path d="M330 120c30 0 30 34 0 34" fill="none" stroke="#8C8377" stroke-width="6"/>
+          <rect x="90" y="230" width="240" height="8" rx="4" fill="#3A342E"/>
+          <text x="210" y="272" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12" fill="#8C8377">TINDERBOX / TB-01</text>
+        </svg>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 8.4 3 3 7-7.4" stroke="#FF7A1A" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> 72 hours of 12 W output, tested at −10°C</li>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 8.4 3 3 7-7.4" stroke="#FF7A1A" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> USB-C, 12 V car socket and two 12 V accessories</li>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 8.4 3 3 7-7.4" stroke="#FF7A1A" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Charges itself in six hours of overcast daylight</li>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 8.4 3 3 7-7.4" stroke="#FF7A1A" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> £149, or £34 with a grid-tie bundle</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="value" id="what" aria-labelledby="whatTitle">
+    <div class="wrap">
+      <div class="value-head">
+        <div>
+          <p class="micro">What it is</p>
+          <h2 class="h2" id="whatTitle" style="margin-top:.6rem">Three problems, one device</h2>
+        </div>
+        <p class="muted">We did not set out to build a portable power bank. We set out to stop one specific Sunday: the one where the power goes out, the router is dead and nobody knows whether the freezer door is still closed.</p>
+      </div>
+      <ol class="rows">
+        <li>
+          <span class="n num">01</span>
+          <div>
+            <h3 class="h3">The internet stops, the bills still arrive</h3>
+            <p>A dead router means an empty till and a card machine that times out. Tinderbox runs a router, a small switch and two handsets for three days, and recharges in daylight.</p>
+          </div>
+        </li>
+        <li>
+          <span class="n num">02</span>
+          <div>
+            <h3 class="h3">A dead fridge is a food bill, not an inconvenience</h3>
+            <p>A 12 V output keeps a chest freezer, a fridge/freezer or a medical cooler within its safe range for 72 hours. It is the only thing on this list you may one day be very glad to own.</p>
+          </div>
+        </li>
+        <li>
+          <span class="n num">03</span>
+          <div>
+            <h3 class="h3">Dark hallways, in a house full of people</h3>
+            <p>Four hours of LED lighting and a 12 V pump for a flooded basement, in a pack that weighs 1.1 kg and fits the side pocket of a rucksack.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="howTitle">
+    <div class="wrap how-grid">
+      <div>
+        <p class="micro">How it works</p>
+        <h2 class="h2" id="howTitle" style="margin-block:.6rem 0">Three moving parts</h2>
+        <p class="muted">No app to install, no account, no firmware updates. It turns on when the grid stops and turns off when the grid comes back.</p>
+        <figure style="margin-top:var(--s-5)">
+          <svg viewBox="0 0 520 260" role="img" aria-label="Cutaway diagram of the Tinderbox showing the solar cell, battery, inverter and the output ports." style="border:1px solid var(--line);border-radius:var(--r);background:#191614">
+            <rect x="20" y="20" width="480" height="220" rx="10" fill="none" stroke="#3A342E"/>
+            <rect x="44" y="46" width="150" height="60" rx="6" fill="#2E3B45" stroke="#5F7A88"/>
+            <text x="56" y="72" font-family="system-ui" font-size="11" fill="#CFC6B8">SOLAR CELL 21 W</text>
+            <text x="56" y="92" font-family="ui-monospace, monospace" font-size="10" fill="#8C8377">6 H OVERCAST</text>
+            <rect x="44" y="140" width="150" height="70" rx="6" fill="#2A241E" stroke="#5A5049"/>
+            <text x="56" y="170" font-family="system-ui" font-size="11" fill="#CFC6B8">CELL 28.8 Wh</text>
+            <text x="56" y="190" font-family="ui-monospace, monospace" font-size="10" fill="#8C8377">LFP · 2000 CYCLES</text>
+            <rect x="220" y="46" width="120" height="164" rx="6" fill="#241F1A" stroke="#5A5049"/>
+            <text x="232" y="120" font-family="system-ui" font-size="11" fill="#CFC6B8">INVERTER</text>
+            <text x="232" y="140" font-family="ui-monospace, monospace" font-size="10" fill="#8C8377">12 W PURE SINE</text>
+            <rect x="366" y="46" width="110" height="164" rx="6" fill="#241F1A" stroke="#5A5049"/>
+            <g fill="#8C8377" font-family="ui-monospace, monospace" font-size="10">
+              <text x="380" y="78">USB-C 65 W</text>
+              <text x="380" y="108">12 V × 2</text>
+              <text x="380" y="138">CAR 12 V</text>
+              <text x="380" y="168">USB-A × 2</text>
+            </g>
+            <g stroke="#FF7A1A" stroke-width="1.6" fill="none" stroke-dasharray="4 4">
+              <path d="M194 76h26M194 175h26M340 128h26"/>
+            </g>
+            <g fill="#FF7A1A"><circle cx="207" cy="76" r="3"/><circle cx="207" cy="175" r="3"/><circle cx="353" cy="128" r="3"/></g>
+          </svg>
+          <figcaption class="micro" style="margin-top:.7rem">Cutaway, TB-01 · 1:1.4</figcaption>
+        </figure>
+      </div>
+      <div>
+        <ol class="steps">
+          <li><b>Charge while you can</b><span>Leave it in a window. Six hours of overcast daylight fills it; three hours of sun does it faster.</span></li>
+          <li><b>Plug in what matters</b><span>Two sockets, one USB-C and a 12 V output. It remembers the last three things you plugged in.</span></li>
+          <li><b>It takes over automatically</b><span>Mains drops, and the outputs stay live within 400 milliseconds. Nothing to switch, nothing to notice.</span></li>
+        </ol>
+        <a class="btn" href="#join" style="margin-top:var(--s-5)">Join the waitlist</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof" id="compare" aria-labelledby="compareTitle" style="padding-top:var(--s-7)">
+    <div class="wrap">
+      <p class="micro">Honest comparison</p>
+      <h2 class="h2" id="compareTitle" style="margin-block:.6rem var(--s-5)">How it sits against the alternatives</h2>
+      <div class="compare-wrap">
+        <table>
+          <caption>Prices are UK street prices, February 2026</caption>
+          <thead>
+            <tr>
+              <th scope="col">&nbsp;</th>
+              <th scope="col">Tinderbox TB-01</th>
+              <th scope="col">Power station 500 Wh</th>
+              <th scope="col">Car battery</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Price</th>
+              <td class="num">£149</td>
+              <td class="num">£420 – £640</td>
+              <td class="num">£90 (if you own a car)</td>
+            </tr>
+            <tr>
+              <th scope="row">Weight</th>
+              <td class="num">1.1 kg</td>
+              <td class="num">6.4 kg</td>
+              <td class="num">14 kg</td>
+            </tr>
+            <tr>
+              <th scope="row">Runtime, router + 2 handsets</th>
+              <td class="num">72 h</td>
+              <td class="num">16 h</td>
+              <td class="num">6 h</td>
+            </tr>
+            <tr>
+              <th scope="row">Recharges itself in daylight</th>
+              <td class="yes">Yes, 6 h</td>
+              <td class="no">No, 8 h from a socket</td>
+              <td class="no">No</td>
+            </tr>
+            <tr>
+              <th scope="row">Works at −10°C</th>
+              <td class="yes">Yes, derated to 48 h</td>
+              <td class="no">Below 0°C output halves</td>
+              <td class="no">Capacity falls sharply</td>
+            </tr>
+            <tr>
+              <th scope="row">Can be carried by one person</th>
+              <td class="yes">Yes</td>
+              <td class="no">Not comfortably</td>
+              <td class="no">Two people</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof" id="proof" aria-labelledby="proofTitle" style="border-top:0;padding-top:0">
+    <div class="wrap proof-grid">
+      <div>
+        <p class="micro">Why people are joining</p>
+        <blockquote id="proofTitle">“I bought two. One lives in the hall cupboard and one is in my partner's car, which is the version I actually needed after January.”</blockquote>
+        <p class="proof-by"><i aria-hidden="true">RM</i><span><strong style="color:#F3EEE6">Rowan Mitchell</strong><br>Waitlist #418, Glasgow</span></p>
+      </div>
+      <div>
+        <p class="micro">Already on the list</p>
+        <div class="logos">
+          <span>Northline Telecom</span>
+          <span>Fabrik Insurance</span>
+          <span>Co-op food bank, Leeds</span>
+          <span>Sheffield student union</span>
+          <span>Hartley &amp; Sons</span>
+          <span>Brighton repair café</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq" aria-labelledby="faqTitle">
+    <div class="wrap faq-grid">
+      <div>
+        <p class="micro">Objections, answered</p>
+        <h2 class="h2" id="faqTitle" style="margin-block:.6rem 0">Before you join</h2>
+        <p class="muted small">If something here is still unclear, email us and a person will answer it.</p>
+      </div>
+      <div>
+        <div class="qa">
+          <button type="button" aria-expanded="false" aria-controls="a1">
+            <span>Why not just buy a power station?</span>
+            <span class="mark" aria-hidden="true"></span>
+          </button>
+          <div class="a" id="a1" hidden>A power station is better if you have a car, a socket and 6 kg of lifting in you. It is worse if the thing you need to keep running is the thing that fails when the power goes: the router. Ours is built around that, which is why it is smaller, cheaper and recharges itself.</div>
+        </div>
+        <div class="qa">
+          <button type="button" aria-expanded="false" aria-controls="a2">
+            <span>Do I have to pay to reserve a place?</span>
+            <span class="mark" aria-hidden="true"></span>
+          </button>
+          <div class="a" id="a2" hidden>No. There is no deposit and no card. About one in ten people on the list changes their mind before launch, and we will simply contact the next person in the queue.</div>
+        </div>
+        <div class="qa">
+          <button type="button" aria-expanded="false" aria-controls="a3">
+            <span>What if the launch slips?</span>
+            <span class="mark" aria-hidden="true"></span>
+          </button>
+          <div class="a" id="a3" hidden>It has already slipped twice, because the cell supplier pushed certification back. If it slips again we will email everyone on the same day, and your place is kept either way. We would rather tell you late and honestly than on time and wrongly.</div>
+        </div>
+        <div class="qa">
+          <button type="button" aria-expanded="false" aria-controls="a4">
+            <span>Will this actually run my fridge for three days?</span>
+            <span class="mark" aria-hidden="true"></span>
+          </button>
+          <div class="a" id="a4" hidden>A 200 W chest freezer pulling 90 W average will run for roughly 48 hours on a full charge, and considerably longer if you leave the lid shut. We are conservative on purpose: the number on the box is 12 W continuous, not the 65 W peak from USB-C.</div>
+        </div>
+        <div class="qa">
+          <button type="button" aria-expanded="false" aria-controls="a5">
+            <span>What happens to my email address?</span>
+            <span class="mark" aria-hidden="true"></span>
+          </button>
+          <div class="a" id="a5" hidden>It is used for the launch email and nothing else. There is a one-click unsubscribe in that email, and removing yourself does not remove your place in the queue.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="join" aria-labelledby="finalTitle">
+    <div class="wrap final-grid">
+      <div>
+        <p class="micro">Last step</p>
+        <h2 id="finalTitle">4,000 units. 2,847 spoken for.</h2>
+        <p>Join the list and you will get one email when the first batch ships, in the order you joined. That is the entire arrangement.</p>
+        <p class="muted small" style="margin-top:var(--s-4)">We are a company of eleven in Sheffield. The product is called Tinderbox because it is the one thing you carry that is older than electricity.</p>
+      </div>
+      <div class="panel">
+        <form id="joinForm2" novalidate>
+          <div class="field">
+            <label for="finalEmail">Email address</label>
+            <input id="finalEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="finalUse">What would you run first?</label>
+            <select id="finalUse" name="use">
+              <option>Router and internet</option>
+              <option>Fridge or freezer</option>
+              <option>Lights and small devices</option>
+              <option>Medical equipment</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <button class="btn" type="submit">Reserve my place</button>
+          <p class="form-msg" id="finalMsg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>Tinderbox Devices Ltd · Unit 4, Little Kelham, Sheffield S3</span>
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="#what">What it is</a></li>
+        <li><a href="#compare">Comparison</a></li>
+        <li><a href="#faq">Questions</a></li>
+        <li><a href="#top">Privacy</a></li>
+        <li><a href="#top">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<div class="sticky-cta" aria-hidden="false">
+  <p><b id="stickyCount">2,847</b> on the waitlist</p>
+  <a class="btn" href="#join">Join</a>
+</div>
+
+<script>
+  /* Menu */
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.getElementById('nav');
+  menuBtn.addEventListener('click', function () {
+    var open = nav.getAttribute('data-open') === 'true';
+    nav.setAttribute('data-open', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(!open));
+    menuBtn.textContent = open ? 'Menu' : 'Close';
+  });
+
+  /* Both forms share the same behaviour and the same queue counter */
+  var counter = document.getElementById('counter');
+  var stickyCount = document.getElementById('stickyCount');
+  var count = parseInt(counter.textContent.replace(/[^0-9]/g, ''), 10) || 0;
+
+  function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+
+  function wireForm(formId, inputId, msgId) {
+    var form = document.getElementById(formId);
+    var input = document.getElementById(inputId);
+    var msg = document.getElementById(msgId);
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = input.value.trim();
+      if (!v) {
+        msg.removeAttribute('data-state');
+        msg.textContent = 'We need an email address to send the launch to.';
+        input.focus();
+        return;
+      }
+      if (!validEmail(v)) {
+        msg.removeAttribute('data-state');
+        msg.textContent = 'That address looks incomplete — is the domain missing?';
+        input.focus();
+        return;
+      }
+      count += 1;
+      counter.textContent = count.toLocaleString('en-GB');
+      stickyCount.textContent = count.toLocaleString('en-GB');
+      msg.dataset.state = 'ok';
+      msg.textContent = 'You are in, at position ' + count.toLocaleString('en-GB') + '. One email when the first batch ships. (This demo does not send mail.)';
+      form.querySelector('button').disabled = true;
+      input.value = '';
+    });
+    input.addEventListener('input', function () {
+      if (!msg.dataset.state) { msg.textContent = ''; }
+    });
+  }
+  wireForm('joinForm', 'heroEmail', 'heroMsg');
+  wireForm('joinForm2', 'finalEmail', 'finalMsg');
+
+  /* FAQ accordion */
+  Array.prototype.forEach.call(document.querySelectorAll('.qa'), function (qa) {
+    var btn = qa.querySelector('button');
+    var panel = qa.querySelector('.a');
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+    });
+  });
+</script>
+</body>
+</html>

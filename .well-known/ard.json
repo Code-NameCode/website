@@ -1,0 +1,145 @@
+{
+  "entries": [
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:website-home",
+      "displayName": "Goodstuff Designs homepage",
+      "type": "text/html",
+      "url": "https://goodstuffdesigns.co.za/",
+      "description": "Company homepage: managed IT support, business networks and fibre, cybersecurity, websites and managed hosting, AI services and digital marketing, with an FAQ.",
+      "representativeQueries": [
+        "what services does Goodstuff Designs offer",
+        "where is Goodstuff Designs located",
+        "does Goodstuff Designs work with international clients"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:services-overview",
+      "displayName": "Services overview",
+      "type": "text/html",
+      "url": "https://goodstuffdesigns.co.za/services",
+      "description": "Overview of all Goodstuff Designs services and how an engagement runs.",
+      "representativeQueries": [
+        "what IT services does Goodstuff Designs provide",
+        "how does an engagement with Goodstuff Designs work",
+        "who provides managed IT support in Gauteng"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:it-and-networks",
+      "displayName": "IT and networks services",
+      "type": "text/html",
+      "url": "https://goodstuffdesigns.co.za/it-and-networks",
+      "description": "Network administration, business networks and Vox ISP fibre connectivity, cybersecurity, IT infrastructure, monitoring and managed business IT services.",
+      "representativeQueries": [
+        "who can set up business fibre and network administration",
+        "what cybersecurity services are available from Goodstuff Designs",
+        "what does home fibre connectivity cost per month"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:websites-and-hosting",
+      "displayName": "Websites and hosting",
+      "type": "text/html",
+      "url": "https://goodstuffdesigns.co.za/websites-and-hosting",
+      "description": "Business website design from R5,000, e-commerce from R8,500, custom web applications and managed Linux hosting from R100 per month.",
+      "representativeQueries": [
+        "how much does a business website cost",
+        "what hosting plans are available and what do they cost",
+        "who builds e-commerce websites in South Africa"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:ai-services",
+      "displayName": "AI workflows and integrations",
+      "type": "text/html",
+      "url": "https://goodstuffdesigns.co.za/ai",
+      "description": "Human-controlled AI workflows, business integrations across communication, CRM and operations systems, AI-assisted support and AI-powered marketing.",
+      "representativeQueries": [
+        "who can build AI workflows for my business",
+        "what AI integrations does Goodstuff Designs offer",
+        "can AI be used for customer support and marketing"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:service-catalog",
+      "displayName": "Service catalogue (JSON)",
+      "type": "application/ai-catalog+json",
+      "url": "https://goodstuffdesigns.co.za/service-catalog.json",
+      "description": "Machine-readable catalogue of services with structured pricing for Kaspersky licences, websites, hosting plans and fibre connectivity (ZAR, checked 2026-08-30).",
+      "representativeQueries": [
+        "what does Kaspersky antivirus cost per device per year",
+        "list the managed Linux hosting plans and prices",
+        "what is included in managed IT support"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:legacy-ai-catalog",
+      "displayName": "AI catalog (JSON, predecessor manifest)",
+      "type": "application/ai-catalog+json",
+      "url": "https://goodstuffdesigns.co.za/ai-catalog.json",
+      "description": "Predecessor AI catalog retained for compatibility: business profile, services, pricing, pages, contact actions, WebMCP tools, redirects and agent FAQs.",
+      "representativeQueries": [
+        "what are Goodstuff Designs business hours and contact details",
+        "which legacy URLs redirect where on goodstuffdesigns.co.za",
+        "what machine-readable resources does the site publish"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:contact",
+      "displayName": "Contact page and enquiry form",
+      "type": "text/html",
+      "url": "https://goodstuffdesigns.co.za/contact",
+      "description": "Contact details (email admin@goodstuffdesigns.co.za, phone/WhatsApp +27 79 937 4801), business hours and an enquiry form exposed as the declarative WebMCP tool submit_contact_enquiry.",
+      "representativeQueries": [
+        "how do I contact Goodstuff Designs",
+        "what are the business hours for Goodstuff Designs",
+        "how can an agent submit an enquiry on my behalf"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:portfolio",
+      "displayName": "Portfolio",
+      "type": "text/html",
+      "url": "https://goodstuffdesigns.co.za/portfolio",
+      "description": "Selected websites, applications, dashboards and business tools built by Goodstuff Designs, with case notes.",
+      "representativeQueries": [
+        "show examples of websites built by Goodstuff Designs",
+        "what dashboards or business tools have they built"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:goodstuff-studio",
+      "displayName": "Goodstuff-Studio product page",
+      "type": "text/html",
+      "url": "https://goodstuffdesigns.co.za/studio",
+      "description": "Goodstuff-Studio, a desktop AI workspace for Windows with agents, projects, skills, scheduled tasks, notes and a built-in browser; opens https://studio.goodstuffdesigns.co.za/.",
+      "representativeQueries": [
+        "what is Goodstuff-Studio",
+        "where can I learn about the Goodstuff desktop AI workspace"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:llms-txt",
+      "displayName": "llms.txt site guide for AI agents",
+      "type": "text/markdown",
+      "url": "https://goodstuffdesigns.co.za/llms.txt",
+      "description": "Markdown guide to the site for AI models and agents: company profile, services, pricing summary, WebMCP tools, business hours and page directory.",
+      "representativeQueries": [
+        "give me an overview of goodstuffdesigns.co.za for AI agents",
+        "what WebMCP tools does goodstuffdesigns.co.za register",
+        "what are the response time commitments for managed support"
+      ]
+    },
+    {
+      "identifier": "urn:air:goodstuffdesigns.co.za:sitemap-xml",
+      "displayName": "XML sitemap",
+      "type": "application/xml",
+      "url": "https://goodstuffdesigns.co.za/sitemap.xml",
+      "description": "XML sitemap listing the canonical public pages of goodstuffdesigns.co.za.",
+      "representativeQueries": [
+        "list all public pages on goodstuffdesigns.co.za",
+        "where is the sitemap for goodstuffdesigns.co.za"
+      ]
+    }
+  ]
+}

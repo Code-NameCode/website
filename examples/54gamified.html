@@ -1,0 +1,501 @@
+<!-- Style: Gamified | 54gamified.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ascend - keep your French streak alive</title>
+<style>
+  :root{
+    /* status + reward palette, used for meaning rather than decoration */
+    --bg:#eef1f6;
+    --surface:#ffffff;
+    --surface-2:#f6f8fc;
+    --ink:#1b2233;
+    --ink-2:#5c6a85;
+    --line:#dde3ed;
+    --progress:#1f8a5b;
+    --progress-soft:#e2f4ea;
+    --xp:#b26a00;
+    --xp-soft:#fdf0d8;
+    --flame:#d2521a;
+    --flame-soft:#fde9df;
+    --league:#2b6cb0;
+    --league-soft:#e4eefa;
+    --gem:#8a3fa8;
+    --gem-soft:#f1e6f7;
+    --danger:#c02a2a;
+    --danger-soft:#fbe8e8;
+
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --t-display:clamp(1.35rem,2.2vw,1.75rem);
+    --t-h2:clamp(1.2rem,1.7vw,1.4rem);
+    --t-h3:clamp(1.02rem,1.3vw,1.12rem);
+    --t-body:clamp(.95rem,1vw,1rem);
+    --t-small:.85rem;
+    --t-num:clamp(1.5rem,2.6vw,2.1rem);
+
+    --r-sm:8px; --r:14px; --r-lg:20px;
+    --shadow:0 1px 2px rgba(27,34,51,.06), 0 8px 24px -16px rgba(27,34,51,.35);
+    --s-1:.35rem; --s-2:.7rem; --s-3:1.15rem; --s-4:1.8rem; --s-5:2.6rem;
+    --gutter:clamp(1rem,2.4vw,1.8rem);
+    --sidebar:250px;
+    --motion:180ms;
+    --ease:cubic-bezier(.2,.8,.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:var(--t-body);line-height:1.55}
+  h1,h2,h3{margin:0;line-height:1.25}
+  h1{font-size:var(--t-display);font-weight:800;letter-spacing:-.01em}
+  h2{font-size:var(--t-h2);font-weight:750}
+  h3{font-size:var(--t-h3);font-weight:700}
+  p{margin:0 0 .8rem}
+  ul{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  button{font:inherit}
+  svg{display:block;max-width:100%}
+  :focus-visible{outline:3px solid var(--league);outline-offset:2px;border-radius:4px}
+  .num{font-variant-numeric:tabular-nums}
+
+  .skip{position:absolute;left:-999px;background:var(--ink);color:#fff;padding:.7rem 1rem;border-radius:var(--r-sm);z-index:100}
+  .skip:focus{left:.6rem;top:.6rem}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  /* ---------- app shell ---------- */
+  .shell{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+  .side{background:var(--ink);color:#cfd8ea;padding:var(--s-4) var(--s-3);display:flex;flex-direction:column;gap:var(--s-3);position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:.55rem;color:#fff;text-decoration:none;font-weight:800;font-size:1.2rem;padding:.3rem .4rem}
+  .brand .mark{width:34px;height:34px;border-radius:10px;background:var(--progress);display:grid;place-items:center;flex:none}
+  .side nav ul{display:grid;gap:.2rem}
+  .side nav a{display:flex;align-items:center;gap:.7rem;text-decoration:none;padding:.7rem .8rem;border-radius:var(--r-sm);
+    min-height:44px;font-weight:650;color:#cfd8ea}
+  .side nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+  .side nav a[aria-current="page"]{background:var(--progress);color:#fff}
+  .side nav a svg{flex:none}
+  .side-foot{margin-top:auto;border-top:1px solid rgba(255,255,255,.14);padding-top:var(--s-3);display:flex;align-items:center;gap:.7rem}
+  .avatar{width:40px;height:40px;border-radius:50%;background:var(--gem);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+  .side-foot small{display:block;color:#93a1bd}
+  .side-foot b{color:#fff}
+  .menu-btn{display:none;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);
+    border-radius:var(--r-sm);min-height:44px;padding:.5rem .8rem;cursor:pointer;align-self:flex-start}
+
+  main{padding:var(--s-4) var(--s-4) var(--s-5);max-width:1180px;width:100%}
+  .topbar{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap;margin-bottom:var(--s-4)}
+  .topbar .who{flex:1;min-width:200px}
+  .topbar .who p{margin:0;color:var(--ink-2);font-size:var(--t-small)}
+  .pill{display:inline-flex;align-items:center;gap:.45rem;background:var(--surface);border:1px solid var(--line);
+    border-radius:999px;padding:.45rem .9rem;min-height:44px;font-weight:750;box-shadow:var(--shadow)}
+  .pill--flame{background:var(--flame-soft);border-color:#f4cdb8;color:#8a2f08}
+  .pill--xp{background:var(--xp-soft);border-color:#f0d9ac;color:var(--xp)}
+  .pill--gem{background:var(--gem-soft);border-color:#ddc3ea;color:var(--gem)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:46px;padding:.6rem 1.1rem;
+    font-weight:750;border-radius:var(--r-sm);border:1px solid transparent;cursor:pointer;text-decoration:none;
+    background:var(--progress);color:#fff;transition:background var(--motion) var(--ease),transform var(--motion) var(--ease)}
+  .btn:hover{background:#197049}
+  .btn:active{transform:translateY(1px)}
+  .btn--ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+  .btn--ghost:hover{background:var(--surface-2)}
+  .btn--xp{background:var(--xp)}
+  .btn--xp:hover{background:#965900}
+  .btn:disabled{background:#e3e8f0;color:#93a1bd;cursor:not-allowed}
+
+  /* ---------- KPI row ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3);margin-bottom:var(--s-4)}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s-3);box-shadow:var(--shadow);
+    display:flex;align-items:center;gap:var(--s-3)}
+  .kpi b{display:block;font-size:var(--t-num);line-height:1.05}
+  .kpi small{color:var(--ink-2);font-size:var(--t-small);font-weight:650}
+  .ring{flex:none}
+  .kpi--flame b{color:var(--flame)} .kpi--xp b{color:var(--xp)} .kpi--league b{color:var(--league)} .kpi--gem b{color:var(--gem)}
+
+  /* ---------- panels ---------- */
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:var(--s-4)}
+  .panel + .panel{margin-top:var(--s-3)}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;margin-bottom:var(--s-3)}
+  .panel-head small{color:var(--ink-2)}
+  .cols{display:grid;grid-template-columns:1.5fr 1fr;gap:var(--s-3);align-items:start}
+  .cols > .panel{margin-top:0}
+
+  /* ---------- missions ---------- */
+  .mission{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s-3);align-items:center;
+    padding:var(--s-3) 0;border-top:1px solid var(--line)}
+  .mission:first-of-type{border-top:0;padding-top:0}
+  .mission .m-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;border:1px solid var(--line)}
+  .mission h3{margin-bottom:.15rem}
+  .mission .meta{color:var(--ink-2);font-size:var(--t-small)}
+  .bar{height:10px;border-radius:999px;background:#e6eaf2;overflow:hidden;margin-top:.5rem}
+  .bar i{display:block;height:100%;border-radius:999px;background:var(--progress);width:0;transition:width 700ms var(--ease)}
+  .bar--xp i{background:var(--xp)}
+  .mission .reward{font-weight:800;color:var(--xp);font-size:var(--t-small);white-space:nowrap}
+
+  /* ---------- path ---------- */
+  .path{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s-2);padding-top:1.2rem}
+  .path::before{content:"";position:absolute;left:9%;right:9%;top:38px;height:6px;border-radius:999px;background:#e6eaf2}
+  .step{text-align:center;position:relative}
+  .step .node{width:58px;height:58px;margin:0 auto .5rem;border-radius:50%;display:grid;place-items:center;
+    font-weight:800;border:3px solid var(--surface);box-shadow:0 0 0 2px var(--line);background:#e6eaf2;color:#8d99b0;position:relative}
+  .step--done .node{background:var(--progress);color:#fff;box-shadow:0 0 0 2px var(--progress)}
+  .step--now .node{background:var(--surface);color:var(--progress);box-shadow:0 0 0 3px var(--progress);transform:scale(1.12)}
+  .step h3{font-size:.92rem}
+  .step small{color:var(--ink-2);font-size:.78rem}
+  .step--locked h3{color:#8d99b0}
+
+  /* ---------- league table ---------- */
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:.7rem .6rem;border-bottom:1px solid var(--line);font-size:.94rem}
+  thead th{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2)}
+  tbody tr:last-child td{border-bottom:0}
+  .me{background:var(--league-soft);font-weight:750}
+  .promote td{box-shadow:inset 3px 0 0 var(--progress)}
+
+  /* ---------- badges ---------- */
+  .badges{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)}
+  .badge{text-align:center;padding:var(--s-3) .6rem;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2)}
+  .badge .disc{width:56px;height:56px;margin:0 auto .5rem;border-radius:50%;display:grid;place-items:center;
+    background:var(--xp-soft);border:2px solid #e7c78d;color:var(--xp)}
+  .badge b{display:block;font-size:.92rem}
+  .badge small{color:var(--ink-2);font-size:.78rem}
+  .badge--locked .disc{background:#eef1f6;color:#a9b3c6;border-color:var(--line)}
+
+  /* ---------- review form ---------- */
+  fieldset{border:0;padding:0;margin:0 0 var(--s-4)}
+  legend{font-weight:750;padding:0;margin-bottom:.5rem}
+  .opts{display:flex;gap:.6rem;flex-wrap:wrap}
+  .opts label{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:.5rem .9rem;border:1px solid var(--line);
+    border-radius:999px;background:var(--surface);cursor:pointer;font-weight:650}
+  .opts label:hover{border-color:var(--league)}
+  .opts input{width:20px;height:20px;accent-color:var(--league)}
+  .field{display:block;margin-bottom:var(--s-2)}
+  .field .lab{display:block;font-weight:700;font-size:var(--t-small);margin-bottom:.3rem}
+  .field input{width:100%;min-height:48px;padding:.6rem .8rem;border:1px solid var(--line);border-radius:var(--r-sm);font:inherit}
+  .field[data-invalid] input{border-color:var(--danger);background:var(--danger-soft)}
+  .field .err{display:none;font-size:var(--t-small);color:var(--danger);font-weight:700;margin-top:.3rem}
+  .field[data-invalid] .err{display:block}
+  .review-out{margin-top:var(--s-3);border-radius:var(--r);padding:var(--s-3);font-weight:750}
+  .review-out[data-state="idle"]{background:var(--surface-2);color:var(--ink-2);font-weight:600}
+  .review-out[data-state="win"]{background:var(--progress-soft);color:#14603f}
+  .review-out[data-state="lose"]{background:var(--xp-soft);color:var(--xp)}
+
+  /* ---------- toast ---------- */
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140%);background:var(--ink);color:#fff;
+    padding:.85rem 1.2rem;border-radius:999px;font-weight:750;box-shadow:0 14px 30px -12px rgba(0,0,0,.6);
+    display:flex;align-items:center;gap:.6rem;z-index:60;transition:transform 320ms var(--ease)}
+  .toast[data-show="true"]{transform:translateX(-50%) translateY(0)}
+  .toast .dot{width:12px;height:12px;border-radius:50%;background:var(--xp);flex:none}
+
+  .foot{margin-top:var(--s-5);padding-top:var(--s-3);border-top:1px solid var(--line);color:var(--ink-2);font-size:var(--t-small);
+    display:flex;gap:var(--s-3);flex-wrap:wrap;justify-content:space-between}
+  .foot a{color:var(--ink-2)}
+
+  @media (max-width:1040px){ .cols{grid-template-columns:1fr} }
+  @media (max-width:880px){
+    .shell{grid-template-columns:1fr}
+    .side{position:relative;height:auto;flex-direction:column}
+    .menu-btn{display:inline-block}
+    .side nav,.side-foot{display:none}
+    .side[data-open="true"] nav,.side[data-open="true"] .side-foot{display:block}
+    .kpis{grid-template-columns:1fr 1fr}
+    .badges{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:560px){
+    .path{grid-template-columns:1fr 1fr}
+    .path::before{display:none}
+    .mission{grid-template-columns:auto 1fr}
+    .mission .reward{grid-column:2}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+    .bar i{transition:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#missions">Skip to today's missions</a>
+
+<div class="shell">
+  <aside class="side" id="side">
+    <a class="brand" href="#top">
+      <span class="mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 12 5l8 13z"/></svg></span>
+      Ascend
+    </a>
+    <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="sideNav">Menu</button>
+    <nav id="sideNav" aria-label="Dashboard">
+      <ul>
+        <li><a href="#top" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 11 12 4l8 7v9H4z"/></svg>Today</a></li>
+        <li><a href="#path"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6"/></svg>Learning path</a></li>
+        <li><a href="#league"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 20V10h4v10M11 20V4h4v16M17 20v-7h3v7"/></svg>Copper league</a></li>
+        <li><a href="#badges"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>Badges</a></li>
+        <li><a href="#review"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>Bedtime review</a></li>
+      </ul>
+    </nav>
+    <div class="side-foot">
+      <span class="avatar" aria-hidden="true">S</span>
+      <span><b>Sam Okafor</b><small>Day 128 &middot; French A2</small></span>
+    </div>
+  </aside>
+
+  <main id="top">
+    <header class="topbar">
+      <div class="who">
+        <h1>Bonjour, Sam</h1>
+        <p>Thursday 14 May &middot; 4 of 6 daily tasks done. Two more and the chest opens.</p>
+      </div>
+      <span class="pill pill--flame"><span aria-hidden="true">&#128293;</span> 128 day streak</span>
+      <span class="pill pill--xp"><span aria-hidden="true">&#9889;</span> 3,410 XP</span>
+      <span class="pill pill--gem"><span aria-hidden="true">&#9670;</span> 620 gems</span>
+    </header>
+
+    <div class="kpis">
+      <div class="kpi kpi--flame">
+        <svg class="ring" width="52" height="52" viewBox="0 0 52 52" role="img" aria-label="Streak goal 80 percent met">
+          <circle cx="26" cy="26" r="21" fill="none" stroke="#f4cdb8" stroke-width="6"/>
+          <circle cx="26" cy="26" r="21" fill="none" stroke="#d2521a" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="132" stroke-dashoffset="26" transform="rotate(-90 26 26)"/>
+        </svg>
+        <span><b class="num">128</b><small>day streak</small></span>
+      </div>
+      <div class="kpi kpi--xp">
+        <span aria-hidden="true" style="font-size:1.9rem">&#9889;</span>
+        <span><b class="num">40 / 60</b><small>XP today</small></span>
+      </div>
+      <div class="kpi kpi--league">
+        <span aria-hidden="true" style="font-size:1.9rem">&#127942;</span>
+        <span><b class="num">4th</b><small>of 28 in Copper</small></span>
+      </div>
+      <div class="kpi kpi--gem">
+        <span aria-hidden="true" style="font-size:1.9rem">&#9670;</span>
+        <span><b class="num">7 day</b><small>gems streak</small></span>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <section class="panel" id="missions" aria-labelledby="missions-title">
+          <div class="panel-head">
+            <h2 id="missions-title">Today's missions</h2>
+            <small>Resets at midnight, your timezone</small>
+          </div>
+
+          <div class="mission">
+            <span class="m-ico" style="background:var(--xp-soft);color:var(--xp)" aria-hidden="true">&#9733;</span>
+            <div>
+              <h3>Finish lesson 12: At the bakery</h3>
+              <p class="meta">8 minutes &middot; 20 XP &middot; Review 9 new words</p>
+              <div class="bar" role="img" aria-label="Lesson progress 60 percent"><i data-fill="60"></i></div>
+            </div>
+            <span class="reward">+20 XP</span>
+          </div>
+
+          <div class="mission">
+            <span class="m-ico" style="background:var(--progress-soft);color:var(--progress)" aria-hidden="true">&#9998;</span>
+            <div>
+              <h3>Speaking practice: order a coffee</h3>
+              <p class="meta">5 minutes &middot; 15 XP &middot; Voice, optional to replay</p>
+              <div class="bar" role="img" aria-label="Speaking practice progress 100 percent"><i data-fill="100"></i></div>
+            </div>
+            <button class="btn btn--xp" type="button" data-claim="Speaking practice: order a coffee" data-xp="15">Claim 15 XP</button>
+          </div>
+
+          <div class="mission">
+            <span class="m-ico" style="background:var(--league-soft);color:var(--league)" aria-hidden="true">&#8635;</span>
+            <div>
+              <h3>Repair 12 wrong answers from yesterday</h3>
+              <p class="meta">6 minutes &middot; 25 XP &middot; Doubles the points if you get 10 right</p>
+              <div class="bar" role="img" aria-label="Repair progress 50 percent"><i data-fill="50"></i></div>
+            </div>
+            <span class="reward">+25 XP</span>
+          </div>
+
+          <div class="mission">
+            <span class="m-ico" style="background:var(--gem-soft);color:var(--gem)" aria-hidden="true">&#9670;</span>
+            <div>
+              <h3>Keep the 128-day chain alive</h3>
+              <p class="meta">Any 10 minutes of practice counts. Streak is safe until 1am.</p>
+              <div class="bar bar--xp" role="img" aria-label="Streak chain 80 percent"><i data-fill="80"></i></div>
+            </div>
+            <span class="reward">+1 streak day</span>
+          </div>
+        </section>
+
+        <section class="panel" id="path" aria-labelledby="path-title">
+          <div class="panel-head">
+            <h2 id="path-title">A2 path &middot; Chapter 4</h2>
+            <small>18 of 26 crowns</small>
+          </div>
+          <div class="path">
+            <div class="step step--done">
+              <div class="node" aria-hidden="true">&#10003;</div>
+              <h3>Greetings</h3><small>crowned</small>
+            </div>
+            <div class="step step--done">
+              <div class="node" aria-hidden="true">&#10003;</div>
+              <h3>Shopping</h3><small>crowned</small>
+            </div>
+            <div class="step step--done">
+              <div class="node" aria-hidden="true">&#10003;</div>
+              <h3>Getting around</h3><small>crowned</small>
+            </div>
+            <div class="step step--now">
+              <div class="node" aria-hidden="true">4</div>
+              <h3>Food &amp; drink</h3><small>in progress</small>
+            </div>
+            <div class="step step--locked">
+              <div class="node" aria-hidden="true">&#128274;</div>
+              <h3>Past &amp; future</h3><small>locked</small>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div>
+        <section class="panel" id="league" aria-labelledby="league-title">
+          <div class="panel-head">
+            <h2 id="league-title">Copper league</h2>
+            <small>resets in 3d 4h</small>
+          </div>
+          <table>
+            <caption class="sr-only">Copper league standings</caption>
+            <thead><tr><th scope="col">#</th><th scope="col">Learner</th><th scope="col">XP</th></tr></thead>
+            <tbody>
+              <tr class="promote"><td>1</td><td>Marguerite F.</td><td class="num">4,120</td></tr>
+              <tr class="promote"><td>2</td><td>Dilan K.</td><td class="num">3,880</td></tr>
+              <tr class="promote"><td>3</td><td>Aoife R.</td><td class="num">3,600</td></tr>
+              <tr class="me"><td>4</td><td>Sam Okafor (you)</td><td class="num">3,410</td></tr>
+              <tr><td>5</td><td>Tobias L.</td><td class="num">3,290</td></tr>
+            </tbody>
+          </table>
+          <p style="margin:.9rem 0 0;font-size:var(--t-small);color:var(--ink-2)">Top three promote to Bronze on Sunday. Bottom three drop a league. Only first names are shown.</p>
+        </section>
+
+        <section class="panel" id="badges" aria-labelledby="badges-title">
+          <div class="panel-head"><h2 id="badges-title">Badges</h2><small>9 of 24 earned</small></div>
+          <div class="badges">
+            <div class="badge">
+              <span class="disc" aria-hidden="true">&#128293;</span>
+              <b>Chain of 100</b><small>28 days ago</small>
+            </div>
+            <div class="badge">
+              <span class="disc" aria-hidden="true">&#127968;</span>
+              <b>Perfect week</b><small>9 days ago</small>
+            </div>
+            <div class="badge">
+              <span class="disc" aria-hidden="true">&#128172;</span>
+              <b>Early bird</b><small>2 days ago</small>
+            </div>
+            <div class="badge badge--locked">
+              <span class="disc" aria-hidden="true">&#128274;</span>
+              <b>Two languages</b><small>6 XP to go</small>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="panel" id="review" aria-labelledby="review-title">
+      <div class="panel-head">
+        <h2 id="review-title">Bedtime review &middot; 3 questions</h2>
+        <small>Answer right and the streak is safe &mdash; this replaces the lesson, not adds to it</small>
+      </div>
+      <form id="reviewForm" novalidate>
+        <fieldset>
+          <legend>1. She says &ldquo;un caf&eacute; cr&egrave;me, s&rsquo;il vous pla&icirc;t&rdquo;.</legend>
+          <div class="opts">
+            <label><input type="radio" name="q1" value="a">A cold coffee, please</label>
+            <label><input type="radio" name="q1" value="b">A hot coffee, please</label>
+            <label><input type="radio" name="q1" value="c">A hot tea, please</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2. Which one is a <em>condition</em> rather than a value?</legend>
+          <div class="opts">
+            <label><input type="radio" name="q2" value="a">Forty-two</label>
+            <label><input type="radio" name="q2" value="b">if it rains</label>
+            <label><input type="radio" name="q2" value="c">Bordeaux</label>
+          </div>
+        </fieldset>
+
+        <label class="field" for="note">
+          <span class="lab">The one you keep forgetting (optional)</span>
+          <input id="note" name="note" type="text" placeholder="e.g. lePain = bread, the h is silent">
+        </label>
+
+        <button class="btn" type="submit">Submit review &middot; +10 XP</button>
+        <div class="review-out" id="reviewOut" data-state="idle" role="status" aria-live="polite">
+          Three questions, then the streak is settled for tonight.
+        </div>
+      </form>
+    </section>
+
+    <footer class="foot">
+      <span>Ascend &middot; a fictional product built for a style demo.</span>
+      <span><a href="#top">Streak freezes</a> &middot; <a href="#top">Privacy</a> &middot; <a href="#top">Sign out</a></span>
+    </footer>
+  </main>
+</div>
+
+<div class="toast" id="toast" data-show="false" role="status" aria-live="polite">
+  <span class="dot" aria-hidden="true"></span><span id="toastText"></span>
+</div>
+
+<script>
+  // Fill progress bars on load
+  document.querySelectorAll('.bar i[data-fill]').forEach(function (el) {
+    requestAnimationFrame(function () { el.style.width = el.dataset.fill + '%'; });
+  });
+
+  // Mobile sidebar
+  var menuBtn = document.getElementById('menuBtn');
+  var side = document.getElementById('side');
+  menuBtn.addEventListener('click', function () {
+    var open = side.getAttribute('data-open') === 'true';
+    side.setAttribute('data-open', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(!open));
+  });
+
+  // Toast
+  var toast = document.getElementById('toast');
+  var toastText = document.getElementById('toastText');
+  var toastTimer;
+  function showToast(msg) {
+    toastText.textContent = msg;
+    toast.setAttribute('data-show', 'true');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.setAttribute('data-show', 'false'); }, 3200);
+  }
+
+  // Claim missions
+  document.querySelectorAll('[data-claim]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      showToast(btn.dataset.claim + ' \u2014 ' + btn.dataset.xp + ' XP added. Streak safe.');
+      btn.textContent = 'Claimed';
+      btn.disabled = true;
+    });
+  });
+
+  // Bedtime review
+  var form = document.getElementById('reviewForm');
+  var out = document.getElementById('reviewOut');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var q1 = form.querySelector('input[name="q1"]:checked');
+    var q2 = form.querySelector('input[name="q2"]:checked');
+    if (!q1 || !q2) {
+      out.setAttribute('data-state', 'lose');
+      out.textContent = 'Answer both questions so we can settle tonight\'s streak.';
+      (q1 ? form.querySelector('input[name="q2"]') : form.querySelector('input[name="q1"]')).focus();
+      return;
+    }
+    var right = (q1.value === 'a' ? 1 : 0) + (q2.value === 'b' ? 1 : 0);
+    if (right === 2) {
+      out.setAttribute('data-state', 'win');
+      out.textContent = '2 out of 2. +10 XP, streak held, and tomorrow you are 129 days in.';
+    } else {
+      out.setAttribute('data-state', 'lose');
+      out.textContent = right + ' out of 2. +5 XP only \u2014 the wrong one is back in tomorrow\'s warm-up.';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,735 @@
+<!-- Style: Neo Brutalism | 6neobrutalism.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flockup — team planning that fits on one screen</title>
+<meta name="description" content="Flockup is a team planning app for groups of 3 to 30. Week grid, shared load, zero feature creep. Free for 14 days, then £6 a seat.">
+<style>
+  :root{
+    /* colour */
+    --paper:#FFFDF4;
+    --white:#ffffff;
+    --ink:#111114;
+    --ink-2:#3d3d46;
+    --grey:#6a6a76;
+    --line:#111114;
+    --yellow:#FFD93D;
+    --blue:#5B8CFF;
+    --pink:#FF6B9D;
+    --mint:#5BE3A1;
+    --ok:#0F7A45;
+    --error:#C62828;
+    /* type */
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --fs-mega:clamp(2.7rem,7.5vw,5.6rem);
+    --fs-h2:clamp(1.8rem,4vw,3rem);
+    --fs-h3:clamp(1.15rem,1.8vw,1.45rem);
+    --fs-body:clamp(1rem,1.1vw,1.075rem);
+    --fs-sm:.9rem;
+    --fs-xs:.78rem;
+    --lh:1.5;
+    --lh-tight:1.02;
+    /* space */
+    --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.5rem;--s6:2rem;--s7:2.75rem;--s8:4rem;--s9:6rem;
+    --pad:clamp(1rem,3vw,2rem);
+    --sec:clamp(3.5rem,8vw,6.5rem);
+    --page:78rem;
+    /* edges — the whole system */
+    --bw:3px;
+    --bw-thin:2px;
+    --r:14px;
+    --r-sm:9px;
+    --shadow:6px 6px 0 var(--line);
+    --shadow-sm:4px 4px 0 var(--line);
+    --shadow-lg:10px 10px 0 var(--line);
+    /* motion */
+    --dur:110ms;
+    --ease:cubic-bezier(.3,1.4,.5,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--fs-body);line-height:var(--lh);
+    -webkit-font-smoothing:antialiased
+  }
+  h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  :focus-visible{outline:4px solid var(--blue);outline-offset:2px;border-radius:4px}
+  .page{max-width:var(--page);margin-inline:auto;padding-inline:var(--pad)}
+  .kicker{
+    display:inline-block;background:var(--ink);color:var(--yellow);font-size:var(--fs-xs);font-weight:800;
+    letter-spacing:.1em;text-transform:uppercase;padding:.35rem .6rem;border-radius:var(--r-sm)
+  }
+  .mt4{margin-top:var(--s4)}
+  .mt5{margin-top:var(--s5)}
+  .section-title{font-size:var(--fs-h2);line-height:1.05;letter-spacing:-.035em;font-weight:900;margin-top:var(--s4)}
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+
+  /* ---------- nav ---------- */
+  .nav{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:var(--bw) solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);min-height:76px;padding-block:var(--s3)}
+  .logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-weight:900;font-size:1.4rem;letter-spacing:-.035em}
+  .logo-glyph{width:30px;height:30px;background:var(--blue);border:var(--bw) solid var(--line);border-radius:var(--r-sm);box-shadow:3px 3px 0 var(--line);display:grid;place-items:center;color:var(--ink);font-size:.9rem}
+  .nav ul{display:flex;align-items:center;gap:clamp(.75rem,1.8vw,1.6rem)}
+  .nav ul a{text-decoration:none;font-weight:700;font-size:var(--fs-sm);padding-block:.6rem;border-bottom:var(--bw) solid transparent}
+  .nav ul a:hover{border-bottom-color:var(--line)}
+  .nav ul a[aria-current="page"]{border-bottom-color:var(--line)}
+  .nav-cta{
+    display:inline-flex;align-items:center;min-height:46px;padding:0 var(--s5);background:var(--yellow);
+    border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);
+    font-weight:800;font-size:var(--fs-sm);text-decoration:none;cursor:pointer;font-family:var(--sans);
+    transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease)
+  }
+  .nav-cta:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--line)}
+  .nav-cta:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--line)}
+  .burger{
+    display:none;min-height:44px;padding:0 var(--s4);background:var(--white);border:var(--bw) solid var(--line);
+    border-radius:var(--r-sm);box-shadow:3px 3px 0 var(--line);font:inherit;font-size:var(--fs-sm);font-weight:800;cursor:pointer
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding-block:var(--sec) var(--sec)}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(2rem,4vw,3.5rem);align-items:start}
+  .hero h1{font-size:var(--fs-mega);line-height:var(--lh-tight);letter-spacing:-.045em;font-weight:900;margin-block:var(--s4)}
+  .hero h1 .mark{background:var(--yellow);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:0 .12em;box-shadow:4px 4px 0 var(--line)}
+  .hero p.sub{font-size:clamp(1.05rem,1.4vw,1.2rem);max-width:44ch}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s6)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:52px;padding:0 var(--s6);
+    border:var(--bw) solid var(--line);border-radius:var(--r);font:inherit;font-size:var(--fs-body);font-weight:800;
+    text-decoration:none;cursor:pointer;box-shadow:var(--shadow);
+    transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background var(--dur) var(--ease)
+  }
+  .btn:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--line)}
+  .btn:active{transform:translate(6px,6px);box-shadow:0 0 0 var(--line)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:var(--shadow)}
+  .btn--yellow{background:var(--yellow)}
+  .btn--blue{background:var(--blue);color:var(--ink)}
+  .btn--ghost{background:var(--white);box-shadow:4px 4px 0 var(--line)}
+  .hero-note{margin-top:var(--s5);font-size:var(--fs-sm);color:var(--grey);font-weight:600}
+
+  /* board illustration */
+  .board{background:var(--white);border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-lg);padding:var(--s4);transform:rotate(1.4deg)}
+  .board-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);border-bottom:var(--bw) solid var(--line);padding-bottom:var(--s3);margin-bottom:var(--s3)}
+  .board-head p{font-weight:900;font-size:.95rem}
+  .dots{display:flex;gap:6px}
+  .dots i{width:12px;height:12px;border-radius:50%;border:var(--bw-thin) solid var(--line);display:block}
+  .dots .dot--y{background:var(--yellow)}
+  .dots .dot--b{background:var(--blue)}
+  .dots .dot--p{background:var(--pink)}
+  .board-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+  .col-lbl{font-size:11px;font-weight:800;text-align:center;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);padding-bottom:2px}
+  .cell{aspect-ratio:1/.72;border:var(--bw-thin) solid var(--line);border-radius:6px;background:var(--paper);display:flex;align-items:flex-start;padding:5px}
+  .cell b{font-size:10px;font-weight:800;line-height:1.15}
+  .cell--a{background:var(--yellow)}
+  .cell--b{background:var(--blue)}
+  .cell--c{background:var(--pink)}
+  .cell--d{background:var(--mint)}
+  .cell--load{background:var(--ink);align-items:center;justify-content:center}
+  .cell--load b{color:var(--white);font-size:11px}
+  .board-foot{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:var(--s3)}
+  .chip{border:var(--bw-thin) solid var(--line);border-radius:99px;padding:.15rem .55rem;font-size:11px;font-weight:800}
+  .chip--y{background:var(--yellow)}
+  .chip--p{background:var(--pink)}
+  .chip--m{background:var(--mint)}
+  .sticker{
+    position:absolute;right:-14px;top:-22px;background:var(--pink);border:var(--bw) solid var(--line);
+    border-radius:var(--r);box-shadow:var(--shadow-sm);padding:.5rem .7rem;font-weight:900;font-size:var(--fs-sm);
+    transform:rotate(-7deg);z-index:2
+  }
+  .board-wrap{position:relative}
+
+  /* ---------- logo strip ---------- */
+  .logos{background:var(--ink);color:var(--paper);border-block:var(--bw) solid var(--line);padding-block:var(--s5)}
+  .logos p{text-align:center;font-size:var(--fs-xs);font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);margin-bottom:var(--s4)}
+  .logos-row{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s3) var(--s7)}
+  .logos-row span{font-weight:900;font-size:1.05rem;letter-spacing:-.02em}
+
+  /* ---------- steps ---------- */
+  .steps-section{padding-block:var(--sec)}
+  .section-head{max-width:56ch;margin-bottom:var(--s7)}
+  .section-head h2{font-size:var(--fs-h2);line-height:1.05;letter-spacing:-.035em;font-weight:900;margin-top:var(--s4)}
+  .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s5)}
+  .step{border:var(--bw) solid var(--line);border-radius:var(--r);padding:var(--s5);box-shadow:var(--shadow);background:var(--white);position:relative}
+  .step:nth-child(2){transform:translateY(1.5rem)}
+  .step:nth-child(3){transform:translateY(3rem)}
+  .step-num{
+    width:52px;height:52px;display:grid;place-items:center;border:var(--bw) solid var(--line);border-radius:var(--r-sm);
+    font-size:1.4rem;font-weight:900;box-shadow:3px 3px 0 var(--line);margin-bottom:var(--s4)
+  }
+  .step:nth-child(1) .step-num{background:var(--yellow)}
+  .step:nth-child(2) .step-num{background:var(--blue)}
+  .step:nth-child(3) .step-num{background:var(--pink)}
+  .step h3{font-size:var(--fs-h3);font-weight:900;letter-spacing:-.02em;margin-bottom:var(--s2)}
+  .step p{font-size:var(--fs-sm);color:var(--ink-2)}
+
+  /* ---------- feature blocks ---------- */
+  .features{padding-block:var(--sec);background:var(--blue);border-block:var(--bw) solid var(--line)}
+  .features .section-head h2{color:var(--ink)}
+  .fblock{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s5);margin-top:var(--s7)}
+  .fcard{
+    border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:var(--s6);
+    background:var(--white);display:flex;flex-direction:column;gap:var(--s3)
+  }
+  .fcard--wide{grid-column:1/-1;background:var(--yellow);display:grid;grid-template-columns:1.1fr .9fr;gap:var(--s6);align-items:center}
+  .fcard h3{font-size:var(--fs-h3);font-weight:900;letter-spacing:-.02em}
+  .fcard p{font-size:var(--fs-sm);color:var(--ink-2)}
+  .fcard--wide p{font-size:var(--fs-body)}
+  .fcard ul{list-style:none;display:grid;gap:.4rem;margin-top:var(--s2)}
+  .fcard ul li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:.5rem;font-size:var(--fs-sm);font-weight:600}
+  .fcard ul li::before{content:"✓";font-weight:900;color:var(--ok)}
+  .fcard--wide .tally{background:var(--white);border:var(--bw) solid var(--line);border-radius:var(--r);padding:var(--s5);box-shadow:var(--shadow-sm)}
+  .tally-row{display:grid;grid-template-columns:minmax(0,1fr) 3.5rem;gap:var(--s3);align-items:center;padding-block:.45rem;border-bottom:var(--bw-thin) solid var(--line)}
+  .tally-row:last-child{border-bottom:0}
+  .tally-row span{font-size:var(--fs-sm);font-weight:700}
+  .tally-row b{text-align:right;font-variant-numeric:tabular-nums;font-size:var(--fs-sm)}
+  .bar-track{height:14px;border:var(--bw-thin) solid var(--line);border-radius:99px;background:var(--paper);overflow:hidden;grid-column:1/-1;margin-bottom:.35rem}
+  .bar-fill{height:100%;border-radius:99px;display:block}
+  .fill--pink{background:var(--pink)}
+  .fill--yellow{background:var(--yellow)}
+  .fill--mint{background:var(--mint)}
+  .fill--blue{background:var(--blue)}
+
+  /* ---------- quote ---------- */
+  .quote{padding-block:var(--sec)}
+  .quote-card{
+    background:var(--pink);border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-lg);
+    padding:clamp(1.5rem,4vw,3rem);display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s5);align-items:start
+  }
+  .avatar{width:76px;height:76px;border:var(--bw) solid var(--line);border-radius:50%;box-shadow:4px 4px 0 var(--line);overflow:hidden;background:var(--white)}
+  .quote-card blockquote{font-size:clamp(1.25rem,2.4vw,1.85rem);line-height:1.2;font-weight:800;letter-spacing:-.025em}
+  .quote-card figcaption{margin-top:var(--s4);font-weight:700;font-size:var(--fs-sm)}
+  .quote-card .stars{margin-bottom:var(--s3);letter-spacing:.12em;font-size:1.1rem}
+
+  /* ---------- pricing ---------- */
+  .pricing{padding-block:var(--sec);background:var(--mint);border-block:var(--bw) solid var(--line)}
+  .bill-toggle{display:inline-flex;align-items:center;border:var(--bw) solid var(--line);border-radius:99px;background:var(--white);padding:5px;box-shadow:var(--shadow-sm);margin-top:var(--s5)}
+  .bill-toggle button{
+    min-height:44px;padding:0 var(--s5);border:0;background:transparent;border-radius:99px;font:inherit;font-weight:800;
+    font-size:var(--fs-sm);cursor:pointer;color:var(--ink)
+  }
+  .bill-toggle button[aria-pressed="true"]{background:var(--ink);color:var(--white)}
+  .bill-toggle .save{font-size:11px;font-weight:900;background:var(--yellow);color:var(--ink);border:var(--bw-thin) solid var(--line);border-radius:99px;padding:.1rem .4rem;margin-left:.4rem}
+  .plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s5);margin-top:var(--s7)}
+  .plan{background:var(--white);border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:var(--s5);display:flex;flex-direction:column;gap:var(--s3)}
+  .plan--hero{transform:translateY(-1rem)}
+  .plan-flag{align-self:flex-start;background:var(--yellow);border:var(--bw-thin) solid var(--line);border-radius:var(--r-sm);padding:.2rem .5rem;font-size:var(--fs-xs);font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+  .plan h3{font-size:1.3rem;font-weight:900;letter-spacing:-.025em}
+  .price{display:flex;align-items:baseline;gap:.35rem;margin-block:var(--s2)}
+  .price b{font-size:2.4rem;font-weight:900;letter-spacing:-.04em;line-height:1}
+  .price span{font-size:var(--fs-sm);color:var(--grey);font-weight:700}
+  .plan p{font-size:var(--fs-sm);color:var(--ink-2)}
+  .plan ul{display:grid;gap:.4rem;margin-top:var(--s3)}
+  .plan ul li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:.5rem;font-size:var(--fs-sm);font-weight:600}
+  .plan ul li::before{content:"✓";font-weight:900;color:var(--ok)}
+  .plan .btn{margin-top:auto;width:100%}
+  .plan-note{margin-top:var(--s5);text-align:center;font-size:var(--fs-sm);font-weight:700}
+
+  /* ---------- faq + signup ---------- */
+  .bottom{padding-block:var(--sec)}
+  .bottom-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem);align-items:start}
+  .faq-item{border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--white);box-shadow:var(--shadow-sm);margin-bottom:var(--s4);overflow:hidden}
+  .faq-item[open]{box-shadow:var(--shadow)}
+  .faq-item summary{
+    list-style:none;cursor:pointer;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+    padding:var(--s3) var(--s4);font-weight:800;font-size:1.02rem
+  }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:"+";font-size:1.5rem;font-weight:900;line-height:1}
+  .faq-item[open] summary::after{content:"–"}
+  .faq-item p{padding:0 var(--s4) var(--s4);font-size:var(--fs-sm);color:var(--ink-2)}
+  .signup{background:var(--yellow);border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-lg);padding:clamp(1.25rem,3vw,2.25rem)}
+  .signup h3{font-size:var(--fs-h3);font-weight:900;letter-spacing:-.02em;margin-bottom:var(--s2)}
+  .signup > p{font-size:var(--fs-sm);color:var(--ink-2);margin-bottom:var(--s5)}
+  .field{margin-bottom:var(--s4)}
+  .field label{display:block;font-weight:800;font-size:var(--fs-sm);margin-bottom:var(--s2)}
+  .field input,.field select{
+    width:100%;min-height:50px;padding:.6rem .8rem;background:var(--white);color:var(--ink);
+    border:var(--bw) solid var(--line);border-radius:var(--r-sm);font:inherit;font-size:var(--fs-sm)
+  }
+  .field input:focus,.field select:focus{outline:4px solid var(--blue);outline-offset:1px}
+  .field[data-invalid="true"] input{border-color:var(--error);background:#FFF0F0}
+  .field .err{display:block;font-size:var(--fs-sm);font-weight:800;color:var(--error);margin-top:var(--s2);min-height:1.1em}
+  .signup .btn{width:100%;background:var(--white)}
+  .signup .btn:hover{background:var(--pink)}
+  .form-status{margin-top:var(--s4);font-size:var(--fs-sm);font-weight:700;min-height:1.3em}
+  .form-status[data-state="ok"]{color:var(--ok)}
+  .form-status[data-state="error"]{color:var(--error)}
+  .fine{font-size:var(--fs-xs);color:var(--ink-2);margin-top:var(--s3)}
+
+  /* ---------- footer ---------- */
+  .foot{background:var(--ink);color:var(--paper);border-top:var(--bw) solid var(--line);padding-block:var(--s7) var(--s5)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr repeat(3,minmax(0,1fr));gap:var(--s5)}
+  .foot h3{color:var(--yellow);font-size:var(--fs-xs);letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--s3)}
+  .foot p,.foot a{font-size:var(--fs-sm);color:#c9c9d6}
+  .foot a{display:inline-block;min-height:34px;padding-block:.1rem}
+  .foot a:hover{color:var(--yellow)}
+  .swatches{display:flex;gap:8px;margin-top:var(--s4)}
+  .swatches i{width:26px;height:26px;border:var(--bw-thin) solid var(--paper);border-radius:6px;display:block}
+  .sw--y{background:var(--yellow)}
+  .sw--b{background:var(--blue)}
+  .sw--p{background:var(--pink)}
+  .sw--m{background:var(--mint)}
+  .sw--w{background:var(--paper)}
+  .foot-base{margin-top:var(--s6);padding-top:var(--s4);border-top:2px solid #3d3d46;display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);font-size:var(--fs-xs);color:#9a9aa8}
+
+  @media (max-width:1000px){
+    .steps{grid-template-columns:1fr}
+    .step:nth-child(2),.step:nth-child(3){transform:none}
+    .plans{grid-template-columns:1fr}
+    .plan--hero{transform:none}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:880px){
+    .hero-grid{grid-template-columns:1fr}
+    .board{transform:none}
+    .sticker{right:0;top:-20px}
+    .fblock{grid-template-columns:1fr}
+    .fcard--wide{grid-template-columns:1fr}
+    .bottom-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:760px){
+    .burger{display:inline-flex;align-items:center}
+    .nav ul{display:none;position:absolute;left:0;right:0;top:100%;background:var(--paper);border-bottom:var(--bw) solid var(--line);flex-direction:column;align-items:stretch;gap:0;padding:var(--s3) var(--pad) var(--s4)}
+    .nav ul[data-open="true"]{display:flex}
+    .nav ul a{display:block;padding-block:.9rem;border-bottom:var(--bw-thin) solid var(--line)}
+    .nav-cta{display:none}
+    .board-grid{gap:4px}
+    .quote-card{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    .btn:hover,.btn:active,.nav-cta:hover,.nav-cta:active,.step:nth-child(2),.step:nth-child(3),.plan--hero{transform:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="page nav-in">
+    <a class="logo" href="#top"><span class="logo-glyph" aria-hidden="true">◆</span>Flockup</a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="navList">Menu</button>
+    <nav aria-label="Main">
+      <ul id="navList">
+        <li><a href="#how" aria-current="page">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <a class="nav-cta" href="#start">Start free</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero page" aria-labelledby="hero-title">
+    <div class="hero-grid">
+      <div>
+        <p class="kicker">For teams of 3 to 30</p>
+        <h1 id="hero-title">Plan the week <span class="mark">on one screen</span></h1>
+        <p class="sub">Flockup is a week grid with a workload column. No chat threads, no gantt charts, no “quick sync” — just who is doing what, and how much of it.</p>
+        <div class="hero-actions">
+          <a class="btn btn--yellow" href="#start">Create a board</a>
+          <a class="btn btn--ghost" href="#how">Watch the 90-second tour</a>
+        </div>
+        <p class="hero-note">14 days free · No card · Cancel with one click, we will not email you about it</p>
+      </div>
+
+      <div class="board-wrap">
+        <p class="sticker" aria-hidden="true">no gantt<br>charts, promise</p>
+        <div class="board" role="img" aria-label="Illustration of the Flockup week board: a five-column grid with named cards and a workload column">
+          <div class="board-head">
+            <p>Marketing · Week 14</p>
+            <span class="dots" aria-hidden="true"><i class="dot--y"></i><i class="dot--b"></i><i class="dot--p"></i></span>
+          </div>
+          <div class="board-grid">
+            <span class="col-lbl">Mon</span><span class="col-lbl">Tue</span><span class="col-lbl">Wed</span><span class="col-lbl">Thu</span><span class="col-lbl">Load</span>
+            <span class="cell cell--a"><b>Landing copy</b></span>
+            <span class="cell cell--b"><b>Design QA</b></span>
+            <span class="cell cell--d"><b>Ship</b></span>
+            <span class="cell cell--c"><b>Customer calls</b></span>
+            <span class="cell cell--load"><b>92%</b></span>
+            <span class="cell"></span>
+            <span class="cell cell--a"><b>Pricing page</b></span>
+            <span class="cell cell--c"><b>Support rota</b></span>
+            <span class="cell cell--d"><b>Retro</b></span>
+            <span class="cell cell--load"><b>74%</b></span>
+          </div>
+          <div class="board-foot" aria-hidden="true">
+            <span class="chip chip--y">3 due today</span>
+            <span class="chip chip--p">1 over capacity</span>
+            <span class="chip chip--m">4 people in</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="logos" aria-label="Teams using Flockup">
+    <div class="page">
+      <p>Used by teams who ship on Fridays</p>
+      <div class="logos-row">
+        <span>Northgrain Studio</span>
+        <span>PEBBLE &amp; CO</span>
+        <span>Harbourlight</span>
+        <span>Fernweh Labs</span>
+        <span>Coldpress</span>
+        <span>Ostrich Club</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="page steps-section" id="how" aria-labelledby="how-title">
+    <div class="section-head">
+      <p class="kicker">How it works</p>
+      <h2 id="how-title">Three steps and one rule: if it does not fit on the board, it is not this week.</h2>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <span class="step-num" aria-hidden="true">1</span>
+        <h3>Make the grid</h3>
+        <p>Five columns, Monday to Friday, or whatever your week actually looks like. Add a sixth column for things that take all week. That is the entire data model.</p>
+      </li>
+      <li class="step">
+        <span class="step-num" aria-hidden="true">2</span>
+        <h3>Drop the work in</h3>
+        <p>Every card has an owner, a size, and a due day. The workload column updates as you drag, so overloading a person is visible before it becomes a resignation.</p>
+      </li>
+      <li class="step">
+        <span class="step-num" aria-hidden="true">3</span>
+        <h3>Close the week</h3>
+        <p>Friday afternoon, the board becomes a two-minute review: what moved, what did not, what is coming back. Old weeks stay readable, and nobody needs a status document.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="features" id="features" aria-labelledby="features-title">
+    <div class="page">
+      <div class="section-head">
+        <p class="kicker">Features</p>
+        <h2 id="features-title">Deliberately eleven things, all of which earn their place</h2>
+      </div>
+
+      <div class="fblock">
+        <article class="fcard fcard--wide">
+          <div>
+            <h3>Workload is a first-class citizen</h3>
+            <p class="mt4">Most planning tools treat capacity as a report you run after the damage. In Flockup the load column sits on the board itself, updates as you drag a card, and turns red before a week becomes impossible.</p>
+            <ul>
+              <li>Capacity set per person, per week, in hours</li>
+              <li>Live load shown on every column header</li>
+              <li>Warnings at 85% and again at 100%</li>
+            </ul>
+          </div>
+          <div class="tally" role="img" aria-label="Example workload tally for four people: Dev 92 percent, Design 74 percent, Content 48 percent, Support 31 percent">
+            <div class="bar-track"><span class="bar-fill fill--pink" style="width:92%"></span></div>
+            <div class="tally-row"><span>Dev</span><b>92%</b></div>
+            <div class="bar-track"><span class="bar-fill fill--yellow" style="width:74%"></span></div>
+            <div class="tally-row"><span>Design</span><b>74%</b></div>
+            <div class="bar-track"><span class="bar-fill fill--mint" style="width:48%"></span></div>
+            <div class="tally-row"><span>Content</span><b>48%</b></div>
+            <div class="bar-track"><span class="bar-fill fill--blue" style="width:31%"></span></div>
+            <div class="tally-row"><span>Support</span><b>31%</b></div>
+          </div>
+        </article>
+
+        <article class="fcard">
+          <h3>Card history that tells the truth</h3>
+          <p>Every move, edit and completed subtask is logged with a name and a time. Not to surveil anybody — because “who dropped this?” is a real question and guessing is worse than an answer.</p>
+        </article>
+        <article class="fcard">
+          <h3>Weekly review in two minutes</h3>
+          <p>Close the week and Flockup generates the review from what actually moved on the board. Edit it, paste it wherever your team already reads words.</p>
+        </article>
+        <article class="fcard">
+          <h3>Works offline, syncs later</h3>
+          <p>The whole app is a local database in your browser. Train, tunnel, aeroplane mode — the board keeps working and reconciles when you get signal.</p>
+        </article>
+        <article class="fcard">
+          <h3>Guest seats for clients</h3>
+          <p>Add a client to a single card or column. They see a read-only board with no account, no invitation list, and no way to view anything else you run.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote page" aria-labelledby="quote-title">
+    <h2 class="visually-hidden" id="quote-title">What a customer says</h2>
+    <figure class="quote-card">
+      <span class="avatar" aria-hidden="true">
+        <svg viewBox="0 0 76 76" width="76" height="76"><rect width="76" height="76" fill="#5B8CFF"/><circle cx="38" cy="30" r="13" fill="#111114"/><path d="M12 76c4-18 14-26 26-26s22 8 26 26z" fill="#111114"/><rect x="30" y="6" width="16" height="9" fill="#FFD93D"/></svg>
+      </span>
+      <div>
+        <p class="stars" aria-label="Five out of five">★★★★★</p>
+        <blockquote>“We cancelled three recurring meetings in the first month. The board made it obvious we were double-planning the same week, and once you can see that you cannot un-see it.”</blockquote>
+        <figcaption>Priya Raman · Operations lead, Northgrain Studio · 14 people on Flockup since February</figcaption>
+      </div>
+    </figure>
+  </section>
+
+  <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+    <div class="page">
+      <div class="section-head">
+        <p class="kicker">Pricing</p>
+        <h2 id="pricing-title">Per seat, per month. Everyone counts, guests are free.</h2>
+        <div class="bill-toggle" role="group" aria-label="Billing period">
+          <button type="button" id="btnMonthly" aria-pressed="true">Monthly</button>
+          <button type="button" id="btnYearly" aria-pressed="false">Yearly<span class="save">2 months free</span></button>
+        </div>
+      </div>
+
+      <div class="plans">
+        <article class="plan">
+          <h3>Solo</h3>
+          <p class="price"><b data-monthly="£0" data-yearly="£0">£0</b><span>forever · 1 person</span></p>
+          <p>One board, unlimited cards, no time limit. Not a trial — it stays free for one person permanently.</p>
+          <ul>
+            <li>1 board</li>
+            <li>Unlimited cards and weeks</li>
+            <li>Workload column</li>
+            <li>Export to CSV</li>
+          </ul>
+          <a class="btn btn--ghost" href="#start">Use it free</a>
+        </article>
+
+        <article class="plan plan--hero">
+          <span class="plan-flag">Most teams pick this</span>
+          <h3>Team</h3>
+          <p class="price"><b data-monthly="£6" data-yearly="£5">£6</b><span>per seat / month</span></p>
+          <p>For 3 to 30 people sharing one board. Billed monthly or yearly, cancel any time from inside the app.</p>
+          <ul>
+            <li>Everything in Solo</li>
+            <li>Unlimited boards and history</li>
+            <li>Guest seats, free</li>
+            <li>Weekly review export</li>
+            <li>Offline mode</li>
+          </ul>
+          <a class="btn btn--yellow" href="#start">Start 14-day trial</a>
+        </article>
+
+        <article class="plan">
+          <h3>Studio</h3>
+          <p class="price"><b data-monthly="£11" data-yearly="£9">£11</b><span>per seat / month</span></p>
+          <p>Everything in Team, plus a full audit log and a named human who answers within a working day.</p>
+          <ul>
+            <li>Everything in Team</li>
+            <li>Audit log with export</li>
+            <li>SSO via Google or SAML</li>
+            <li>Named support contact</li>
+          </ul>
+          <a class="btn btn--ghost" href="#start">Talk to us</a>
+        </article>
+      </div>
+      <p class="plan-note">Prices exclude VAT. Annual billing is charged once and shown up front.</p>
+    </div>
+  </section>
+
+  <section class="bottom page" id="faq" aria-labelledby="faq-title">
+    <div class="bottom-grid">
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="faq-title" class="section-title">The ones people actually ask</h2>
+
+        <details class="faq-item" open>
+          <summary>What happens to my data if I cancel?</summary>
+          <p>Nothing, and that is the point. The board is a file you export, and Flockup hands you the whole thing as JSON or CSV on the cancellation screen. There is no export fee, no retention clause and no “contact support to retrieve your work”.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is this another thing to maintain every day?</summary>
+          <p>No. The intended cadence is one board update a week, usually under ten minutes. There is no inbox, no request queue and no notification centre — if something needs you, it sits on the board in your name.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can clients see it without an account?</summary>
+          <p>Yes. A guest link opens a single card or column read-only in any browser. Guests cannot list boards, cannot search, and the link can be revoked from the same screen you created it.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Why is there no chat?</summary>
+          <p>Because a chat thread attached to a card is a planning tool with worse ergonomics. If a decision happens in a conversation, write one line on the card. The card is the record, the chat is the noise.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Do you have a plan for 200 people?</summary>
+          <p>Not really — at that size you need something with actual resource scheduling, and we would rather say so. Teams between 3 and 30 are what we are good at, and that is the entire product.</p>
+        </details>
+      </div>
+
+      <div id="start">
+        <div class="signup">
+          <h3>Create your board</h3>
+          <p>Fourteen days of Team, no card. If it is not useful by Friday, delete it and we will not ask.</p>
+          <form id="signupForm" novalidate>
+            <div class="field">
+              <label for="f-email">Work email</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-err">
+              <span class="err" id="f-email-err"></span>
+            </div>
+            <div class="field">
+              <label for="f-size">How many people?</label>
+              <select id="f-size" name="size" required aria-describedby="f-size-err">
+                <option value="">Choose one</option>
+                <option>Just me</option>
+                <option>2–5</option>
+                <option>6–15</option>
+                <option>16–30</option>
+              </select>
+              <span class="err" id="f-size-err"></span>
+            </div>
+            <button class="btn btn--yellow" type="submit" id="startBtn">Start free for 14 days</button>
+            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+            <p class="fine">By starting a trial you agree to the terms. We do not sell data, run adverts, or share anything with anyone.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="page">
+    <div class="foot-grid">
+      <div>
+        <h3>Flockup</h3>
+        <p>A week grid with a workload column. Built by six people in Sheffield and Rotterdam, 2023 to now.</p>
+        <div class="swatches" aria-hidden="true">
+          <i class="sw--y"></i><i class="sw--b"></i><i class="sw--p"></i><i class="sw--m"></i><i class="sw--w"></i>
+        </div>
+      </div>
+      <div>
+        <h3>Product</h3>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#top">About</a></li>
+          <li><a href="#top">Changelog</a></li>
+          <li><a href="#top">Careers</a></li>
+          <li><a href="#top">Press kit</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#top">Terms</a></li>
+          <li><a href="#top">Privacy</a></li>
+          <li><a href="#top">Accessibility</a></li>
+          <li><a href="#top">Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="foot-base">
+      <span>© 2026 Flockup Ltd · Reg. 14822006 · Sheffield S1 4RN</span>
+      <span>Made with a keyboard and too much coffee</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* --- menu --- */
+  var burger = document.getElementById("burger");
+  var list = document.getElementById("navList");
+  burger.addEventListener("click", function(){
+    var open = list.getAttribute("data-open") === "true";
+    list.setAttribute("data-open", String(!open));
+    burger.setAttribute("aria-expanded", String(!open));
+  });
+  list.addEventListener("click", function(e){
+    if(e.target.tagName === "A" && window.matchMedia("(max-width:760px)").matches){
+      list.setAttribute("data-open","false");
+      burger.setAttribute("aria-expanded","false");
+    }
+  });
+
+  /* --- billing period toggle --- */
+  var monthly = document.getElementById("btnMonthly");
+  var yearly = document.getElementById("btnYearly");
+  var prices = Array.prototype.slice.call(document.querySelectorAll(".price b"));
+  function setBilling(yearlyMode){
+    monthly.setAttribute("aria-pressed", String(!yearlyMode));
+    yearly.setAttribute("aria-pressed", String(yearlyMode));
+    prices.forEach(function(p){
+      p.textContent = yearlyMode ? p.getAttribute("data-yearly") : p.getAttribute("data-monthly");
+    });
+  }
+  monthly.addEventListener("click", function(){ setBilling(false); });
+  yearly.addEventListener("click", function(){ setBilling(true); });
+
+  /* --- FAQ: one open at a time --- */
+  var faqs = Array.prototype.slice.call(document.querySelectorAll(".faq-item"));
+  faqs.forEach(function(item){
+    item.addEventListener("toggle", function(){
+      if(item.open){
+        faqs.forEach(function(other){
+          if(other !== item) other.open = false;
+        });
+      }
+    });
+  });
+
+  /* --- signup validation --- */
+  var form = document.getElementById("signupForm");
+  var status = document.getElementById("formStatus");
+  var btn = document.getElementById("startBtn");
+
+  var rules = {
+    "f-email": function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "That email does not look right."; },
+    "f-size":  function(v){ return v !== "" ? "" : "Pick a team size so we can set it up."; }
+  };
+  function check(id){
+    var input = document.getElementById(id);
+    var msg = rules[id](input.value);
+    input.closest(".field").setAttribute("data-invalid", msg ? "true" : "false");
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+    document.getElementById(id + "-err").textContent = msg;
+    return !msg;
+  }
+  Object.keys(rules).forEach(function(id){
+    var input = document.getElementById(id);
+    input.addEventListener("blur", function(){ check(id); });
+    input.addEventListener("change", function(){ check(id); });
+    input.addEventListener("input", function(){
+      if(input.closest(".field").getAttribute("data-invalid") === "true") check(id);
+    });
+  });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function(id){
+      if(!check(id) && !firstBad) firstBad = document.getElementById(id);
+    });
+    if(firstBad){
+      status.setAttribute("data-state","error");
+      status.textContent = "Nearly there — fix the red field and try again.";
+      firstBad.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "Building your board …";
+    status.removeAttribute("data-state");
+    status.textContent = "Setting things up…";
+    window.setTimeout(function(){
+      btn.disabled = false;
+      btn.textContent = "Start free for 14 days";
+      status.setAttribute("data-state","ok");
+      status.textContent = "Board created. Check your inbox for the link — it is good for 14 days and you will not be charged unless you say so.";
+      form.reset();
+    }, 900);
+  });
+})();
+</script>
+</body>
+</html>

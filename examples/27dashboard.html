@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<!-- Style: Dashboard | 27dashboard.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relay Ops — control tower</title>
+<meta name="description" content="Relay Ops control tower: live exceptions, lane performance and dispatch for a 340-vehicle logistics network.">
+<style>
+:root{
+  /* neutral UI; colour is reserved for data and status, never decoration */
+  --bg:#eceff3;
+  --surface:#ffffff;
+  --surface-2:#f6f8fa;
+  --surface-3:#eef1f4;
+  --line:#d9dee5;
+  --line-2:#e9edf1;
+  --ink:#141a20;
+  --ink-2:#1e262e;
+  --text:#1b2229;
+  --muted:#5c6771;
+  --muted-2:#6b7681;
+  /* semantic */
+  --ok:#0f7a4d;      --ok-bg:#e2f3eb;
+  --warn:#8d5d00;    --warn-bg:#fcf0d8;
+  --bad:#ad2c1f;     --bad-bg:#fbeae8;
+  --info:#1c5aa8;
+  --accent:#2c5fd6;  --accent-ink:#2450ba;
+  --accent-ring:rgba(44,95,214,.18);
+  /* type */
+  --sans:"Inter","Helvetica Neue",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Consolas,Menlo,monospace;
+  --t-h1:clamp(1.2rem,1.9vw,1.6rem);
+  --t-h2:clamp(1rem,1.3vw,1.12rem);
+  --t-body:clamp(.875rem,.98vw,.95rem);
+  --t-label:.7rem;
+  --t-num:clamp(1.35rem,2.2vw,1.9rem);
+  /* space */
+  --s2:8px;--s3:14px;--s4:22px;--s5:34px;--s6:52px;
+  /* edges */
+  --r:6px;--r-lg:10px;
+  --shadow-pop:0 18px 44px -18px rgba(20,26,32,.45);
+  /* motion */
+  --d-base:200ms;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --side:236px;
+  --top:60px;
+  /* density — the only thing the comfort toggle changes */
+  --row-pad:11px;
+  --row-font:.88rem;
+}
+:root[data-density="compact"]{
+  --row-pad:6px;
+  --row-font:.82rem;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--t-body);line-height:1.5}
+h1,h2,h3{margin:0;line-height:1.2;letter-spacing:-.015em;font-weight:640}
+p{margin:0}
+a{color:var(--accent)}
+svg{display:block;max-width:100%}
+ul,ol{margin:0;padding:0;list-style:none}
+table{border-collapse:collapse}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.wrap{max-width:1560px;margin:0 auto;padding:0 clamp(14px,2.4vw,32px)}
+.label{font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.skip{position:absolute;left:-9999px;background:var(--accent);color:#fff;padding:10px 16px;z-index:100}
+.skip:focus{left:0}
+
+/* ---------- app shell ---------- */
+/* every row of the shell is placed explicitly: without this the <main> is
+   auto-placed into the 236px sidebar column, below the sidebar */
+.app{display:grid;grid-template-columns:var(--side) minmax(0,1fr);grid-template-rows:auto 1fr auto;min-height:100vh}
+.side{grid-row:1 / -1;background:var(--ink);color:#c9d2da;display:flex;flex-direction:column;border-right:1px solid #0c1116;min-height:100vh}
+.side-brand{display:flex;align-items:center;gap:10px;padding:0 18px;min-height:var(--top);border-bottom:1px solid #0c1116;text-decoration:none;color:#fff;font-weight:660;letter-spacing:-.02em}
+.side-brand svg{width:24px;height:24px;color:#7ea6ff}
+.side-nav{flex:1;padding:var(--s3) 0;overflow-y:auto}
+.side-nav h2{font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:#8a97a3;padding:14px 18px 6px;font-weight:600}
+.side-nav a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 18px;text-decoration:none;color:#c9d2da;font-size:.9rem;border-left:3px solid transparent}
+.side-nav a:hover{background:#182029;color:#fff}
+.side-nav a[aria-current]{background:#1c2530;color:#fff;border-left-color:#7ea6ff;font-weight:560}
+.side-nav a svg{width:16px;height:16px;flex:none;opacity:.8}
+.side-nav .count{margin-left:auto;font-family:var(--mono);font-size:.7rem;background:#2a3542;color:#dbe3ea;padding:1px 7px;border-radius:99px;font-variant-numeric:tabular-nums}
+.side-foot{padding:var(--s3) 18px;border-top:1px solid #0c1116;font-size:.8rem;color:#9aa5b0}
+.side-foot b{color:#fff;font-weight:600}
+.scrim{position:fixed;inset:0;background:rgba(12,17,22,.5);z-index:55;opacity:0;pointer-events:none;transition:opacity var(--d-base) var(--ease)}
+.scrim[data-open="true"]{opacity:1;pointer-events:auto}
+
+/* ---------- top bar ---------- */
+.top{grid-column:2;grid-row:1;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+.top .wrap{display:flex;align-items:center;gap:var(--s3);min-height:var(--top);flex-wrap:wrap;row-gap:8px}
+.top h1{font-size:1.1rem}
+.top .sub{font-size:.8rem;color:var(--muted-2)}
+.search{position:relative;margin-left:auto;display:flex;align-items:center;min-width:0}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted-2);pointer-events:none}
+.search input{
+  min-height:40px;min-width:0;width:clamp(150px,22vw,290px);padding:0 30px 0 34px;font:inherit;font-size:.88rem;
+  color:var(--text);background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);
+}
+.search input::placeholder{color:var(--muted-2)}
+.search input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)}
+.search kbd{
+  position:absolute;right:9px;font-family:var(--mono);font-size:.66rem;color:var(--muted-2);
+  border:1px solid var(--line);border-radius:3px;padding:1px 5px;background:var(--surface);pointer-events:none;
+}
+.search input:not(:placeholder-shown) + kbd{display:none}
+.range{display:flex;align-items:center;gap:8px}
+select.ctl,select.filter,.ctl{
+  min-height:40px;font:inherit;font-size:.85rem;color:var(--text);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:var(--r);padding:0 12px;cursor:pointer;
+}
+.ctl{min-height:40px;display:inline-flex;align-items:center;gap:8px;padding:0 14px;background:var(--accent);color:#fff;border-color:var(--accent);font-weight:560;text-decoration:none}
+.ctl:hover{background:var(--accent-ink)}
+.ctl--quiet{background:var(--surface);color:var(--text);border-color:var(--line)}
+.ctl--quiet:hover{background:var(--surface-2)}
+.ctl[aria-pressed="true"]{background:var(--ink-2);border-color:var(--ink-2);color:#fff}
+.ctl svg{width:15px;height:15px}
+.avatar{width:36px;height:36px;border-radius:50%;background:#2a3542;color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:600;flex:none}
+.side-toggle{display:none;min-height:40px;min-width:40px;place-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);color:var(--text);cursor:pointer}
+
+/* ---------- page ---------- */
+/* same gutter and measure as the top bar, so every panel edge lines up with it */
+.page{grid-column:2;grid-row:2;max-width:1560px;width:100%;margin:0 auto;padding:var(--s4) clamp(14px,2.4vw,32px) var(--s6);min-width:0}
+.page-head{display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--s3);margin-bottom:var(--s3)}
+.page-head h2{font-size:var(--t-h1)}
+.page-head p{color:var(--muted);font-size:.9rem;margin-top:4px;max-width:62ch}
+.updated{margin-left:auto;font-size:.8rem;color:var(--muted-2);display:flex;align-items:center;gap:7px;white-space:nowrap;padding-left:var(--s3)}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-bg)}
+.pulse[data-state="stale"]{background:var(--warn);box-shadow:0 0 0 3px var(--warn-bg)}
+
+/* KPI row */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s3);margin-bottom:var(--s3)}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s3) var(--s3) var(--s2)}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--s2)}
+.kpi b{display:block;font-size:var(--t-num);font-weight:660;letter-spacing:-.03em;margin-top:6px}
+.kpi .foot{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s3);margin-top:var(--s2)}
+.kpi .spark-wrap{flex:none}
+.delta{font-size:.78rem;font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.delta.good{color:var(--ok)}
+.delta.bad{color:var(--bad)}
+.delta.neutral{color:var(--muted-2)}
+
+/* ---------- toolbar: saved views + facets ---------- */
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s2) var(--s3);margin-bottom:var(--s3);
+}
+.views{display:flex;gap:6px;flex-wrap:wrap;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:3px}
+.view{
+  min-height:34px;padding:0 14px;border:0;border-radius:99px;background:transparent;font:inherit;
+  font-size:.82rem;font-weight:560;color:var(--muted);cursor:pointer;white-space:nowrap;
+}
+.view:hover{color:var(--text)}
+.view[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(20,26,32,.12)}
+.facets{display:flex;gap:6px;flex-wrap:wrap}
+.chipbtn{
+  min-height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface-2);
+  font:inherit;font-size:.82rem;font-weight:560;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+}
+.chipbtn:hover{border-color:var(--muted-2);color:var(--text)}
+.chipbtn[aria-pressed="true"]{background:var(--ink-2);border-color:var(--ink-2);color:#fff}
+.chipbtn .dot{width:7px;height:7px;border-radius:50%}
+.dot.crit{background:var(--bad)}.dot.warn{background:var(--warn)}.dot.ok{background:var(--ok)}
+.toolbar .facet-sel{min-height:36px;font-size:.82rem}
+.toolbar .filter-count{font-size:.82rem;color:var(--muted);margin-left:auto}
+.toolbar .filter-count strong{color:var(--text)}
+
+/* ---------- panels ---------- */
+.grid{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(0,1fr);gap:var(--s3);align-items:start}
+/* the queue carries nine columns including the two row actions, so it gets the
+   full width of the page and the three read-only panels sit in a row beneath it */
+.grid--queue{grid-template-columns:minmax(0,1fr)}
+.grid--queue .stack{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid + .grid{margin-top:var(--s3)}
+.stack{display:grid;gap:var(--s3);align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;min-width:0}
+.panel-head{display:flex;align-items:center;gap:var(--s3);padding:var(--s3);border-bottom:1px solid var(--line-2);flex-wrap:wrap}
+.panel-head h3{font-size:var(--t-h2)}
+.panel-head .tools{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.panel-body{padding:var(--s3)}
+.panel-body.flush{padding:0}
+/* the queue scrolls inside its own panel so the sticky column headers can stick;
+   an outer scroller would swallow the sticky context and the headers would scroll away */
+.table-scroll{overflow:auto;max-height:min(72vh,760px)}
+
+/* ---------- exception queue ---------- */
+table.exceptions{width:100%;min-width:920px;font-size:var(--row-font)}
+table.exceptions thead th{
+  text-align:left;padding:0;background:var(--surface-2);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:1;
+}
+table.exceptions thead th button{
+  min-height:44px;display:flex;align-items:center;gap:7px;background:transparent;border:0;
+  font:inherit;font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;
+  padding:0 12px;cursor:pointer;text-align:left;
+}
+table.exceptions thead th button:hover{color:var(--text);background:var(--surface-3)}
+table.exceptions thead th .arrow{opacity:0;font-size:.7rem}
+table.exceptions thead th[aria-sort="ascending"],table.exceptions thead th[aria-sort="descending"]{color:var(--ink-2)}
+table.exceptions thead th[aria-sort="ascending"] .arrow,table.exceptions thead th[aria-sort="descending"] .arrow{opacity:1}
+table.exceptions thead th.plain{color:var(--muted)}
+table.exceptions thead th.plain>span{display:flex;align-items:center;min-height:44px;padding:0 12px}
+table.exceptions td{padding:var(--row-pad) 12px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+table.exceptions td.num{white-space:nowrap}
+table.exceptions tbody tr:hover{background:var(--surface-2)}
+table.exceptions tbody tr:focus-within{background:#eef3fb}
+table.exceptions tbody tr.is-acked td:not(.col-actions){opacity:.5}
+table.exceptions tbody tr.is-selected{background:#eaf0fb}
+.cell-id{font-family:var(--mono);font-size:.95em;color:var(--muted)}
+.cell-strong{font-weight:600;color:var(--text)}
+.cell-sub{font-size:.88em;color:var(--muted-2);display:block;margin-top:2px}
+.owner{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.owner i{width:20px;height:20px;border-radius:50%;background:#dbe3ea;color:#3c4a56;font-size:.62rem;font-style:normal;display:grid;place-items:center;font-weight:700;flex:none}
+.owner.me i{background:var(--accent);color:#fff}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:.94em;font-weight:600;padding:3px 9px;border-radius:5px;white-space:nowrap}
+.tag.crit{background:var(--bad-bg);color:var(--bad)}
+.tag.warn{background:var(--warn-bg);color:var(--warn)}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.info{background:#ddeaf8;color:var(--info)}
+.col-actions{white-space:nowrap;text-align:right}
+.col-pick{width:44px;padding-right:0!important}
+.col-pick input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;margin:0;display:block}
+.col-ack{padding-right:4px!important}
+.rowbtn{
+  min-height:36px;min-width:36px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);
+  color:var(--muted);cursor:pointer;display:grid;place-items:center;font:inherit;
+}
+.rowbtn:hover{border-color:var(--accent);color:var(--accent)}
+.rowbtn[aria-pressed="true"]{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.rowbtn svg{width:15px;height:15px}
+
+/* bulk action bar — only present when something is selected */
+.bulkbar{
+  display:none;align-items:center;gap:var(--s3);flex-wrap:wrap;padding:10px var(--s3);
+  background:var(--ink-2);color:#fff;font-size:.84rem;
+}
+.bulkbar[data-open="true"]{display:flex}
+.bulkbar .btn,.bulkbar .ctl{background:transparent;border-color:rgba(255,255,255,.4);color:#fff;min-height:36px}
+.bulkbar .btn:hover,.bulkbar .ctl:hover{background:rgba(255,255,255,.12)}
+.bulkbar .spacer{flex:1}
+
+/* states: loading, empty, error */
+.state{padding:var(--s5) var(--s3);text-align:center;color:var(--muted)}
+.state svg{width:34px;height:34px;margin:0 auto var(--s2);color:var(--muted-2)}
+.state p{font-size:.9rem}
+.state p + p{margin-top:4px}
+.state .btn{margin-top:var(--s3)}
+.state[data-kind="error"]{color:var(--bad);background:var(--bad-bg)}
+.state[data-kind="error"] svg{color:var(--bad)}
+.state[data-kind="error"] p{color:#7c2b21}
+tbody[aria-busy="true"]{opacity:.45}
+.skeleton{display:flex;gap:10px;align-items:center;padding:12px;border-bottom:1px solid var(--line-2)}
+.skeleton i{display:block;height:10px;border-radius:3px;background:linear-gradient(90deg,#e6eaee 25%,#f1f4f7 37%,#e6eaee 63%);background-size:400% 100%;animation:shimmer 1.3s linear infinite}
+.skeleton i:nth-child(1){width:20px}.skeleton i:nth-child(2){width:84px}.skeleton i:nth-child(3){width:130px}
+.skeleton i:nth-child(4){width:52px}.skeleton i:nth-child(5){width:170px}
+@keyframes shimmer{from{background-position:100% 0}to{background-position:0 0}}
+.tablefoot{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line-2);background:var(--surface-2);font-size:.82rem;color:var(--muted)}
+.tablefoot .spacer{margin-left:auto}
+
+/* ---------- chart (built from the queue, not invented) ---------- */
+.chart{padding:var(--s3) var(--s3) var(--s2);position:relative}
+.chart svg{width:100%;height:auto;overflow:visible}
+.chart .grid-line{stroke:var(--line-2);stroke-width:1}
+.chart .axis-text{font-family:var(--sans);font-size:9px;fill:var(--muted-2);font-variant-numeric:tabular-nums}
+.chart .bar{fill:var(--info);transition:fill var(--d-base) var(--ease)}
+.chart .bar[data-sev-peak="1"]{fill:var(--bad)}
+.chart .bar[data-zero="true"]{fill:var(--line)}
+.chart g.col:hover .bar,.chart g.col.is-active .bar{fill:var(--ink-2)}
+.chart .hit{fill:transparent;cursor:default}
+.chart-tip{
+  position:absolute;pointer-events:none;z-index:5;background:var(--ink);color:#fff;font-size:.76rem;
+  padding:6px 9px;border-radius:var(--r);white-space:nowrap;opacity:0;transition:opacity 120ms var(--ease);
+  transform:translate(-50%,-130%);
+}
+.chart-tip[data-open="true"]{opacity:1}
+.chart-legend{display:flex;gap:var(--s3);flex-wrap:wrap;padding:0 var(--s3) var(--s3);font-size:.78rem;color:var(--muted)}
+.chart-legend span{display:inline-flex;align-items:center;gap:6px}
+.chart-legend i{width:9px;height:9px;border-radius:2px;display:block}
+
+/* ---------- map, lanes, alerts ---------- */
+.map{width:100%;height:auto;background:#e9eff5;border-bottom:1px solid var(--line-2)}
+.legend{display:flex;flex-wrap:wrap;gap:var(--s3);padding:var(--s2) var(--s3);border-bottom:1px solid var(--line-2);font-size:.8rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:9px;height:9px;border-radius:2px;display:block}
+.lane-list{list-style:none;padding:var(--s3);display:grid;gap:var(--s3)}
+.lane-list.flush{padding:0}
+.util-row{display:grid;grid-template-columns:118px minmax(0,1fr) 62px;gap:var(--s3);align-items:center;font-size:.85rem}
+.util-row .name{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar{height:9px;background:#e4e9ee;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;width:var(--w,50%);background:var(--info);border-radius:2px}
+.bar i.hot{background:var(--warn)}
+.bar i.over{background:var(--bad)}
+.util-row .val{text-align:right;font-family:var(--mono);font-size:.8rem;color:var(--text)}
+.alerts{max-height:392px;overflow-y:auto}
+.alert{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;padding:12px var(--s3);border-bottom:1px solid var(--line-2)}
+.alert:last-child{border-bottom:0}
+.alert .rail{width:3px;border-radius:2px;background:var(--info)}
+.alert.crit .rail{background:var(--bad)}
+.alert.warn .rail{background:var(--warn)}
+.alert.info .rail{background:var(--info)}
+.alert.warn .rail{background:var(--warn)}
+.alert .alert-meta{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-top:4px;font-size:.78rem;color:var(--muted-2)}
+.alert b{font-size:.88rem;font-weight:620}
+.alert p{font-size:.8rem;color:var(--muted);margin-top:3px}
+.alert time{font-family:var(--mono)}
+
+/* ---------- forms ---------- */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+.field{display:grid;gap:6px}
+.field.full{grid-column:1 / -1}
+.field label{font-size:.82rem;font-weight:560;color:var(--text)}
+.field .req{color:var(--bad)}
+.field input,.field select,.field textarea{
+  font:inherit;font-size:.9rem;color:var(--text);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;min-height:44px;width:100%;
+}
+.field textarea{min-height:82px;resize:vertical}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)}
+.field input[aria-invalid="true"],.field select[aria-invalid="true"]{border-color:var(--bad);box-shadow:0 0 0 3px rgba(173,44,31,.16)}
+.field .help{font-size:.78rem;color:var(--muted-2)}
+.field .err{font-size:.78rem;color:var(--bad);font-weight:560}
+.field .err:empty{display:none}
+.form-row{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center;margin-top:var(--s3)}
+.form-status{font-size:.86rem;min-height:1.5em;color:var(--ok);font-weight:560}
+.form-status[data-state="error"]{color:var(--bad)}
+.form-status[data-state="busy"]{color:var(--muted)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;
+  font:inherit;font-size:.88rem;font-weight:560;cursor:pointer;text-decoration:none;
+  background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:var(--r);
+}
+.btn:hover{background:var(--accent-ink)}
+.btn.secondary{background:var(--surface);color:var(--text);border-color:var(--line)}
+.btn.secondary:hover{background:var(--surface-2)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn svg{width:15px;height:15px}
+
+/* ---------- timeline / handover ---------- */
+.tl{display:grid;grid-template-columns:78px auto minmax(0,1fr);gap:var(--s3);padding:10px 0;border-bottom:1px solid var(--line-2);font-size:.85rem}
+.tl:last-child{border-bottom:0}
+.tl time{font-family:var(--mono);font-size:.76rem;color:var(--muted-2)}
+.tl .mark{width:9px;height:9px;border-radius:50%;background:var(--muted-2);margin-top:5px}
+.tl.crit .mark{background:var(--bad)}
+.tl.ok .mark{background:var(--ok)}
+.tl.warn .mark{background:var(--warn)}
+.tl .who{color:var(--muted-2);font-size:.78rem;display:block;margin-top:2px}
+.handover dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px var(--s3);margin:0 0 var(--s3);font-size:.88rem}
+.handover dt{color:var(--muted-2);white-space:nowrap}
+.handover dd{margin:0}
+.handover pre{
+  font-family:var(--mono);font-size:.78rem;line-height:1.55;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:0 0 var(--s3);
+  white-space:pre-wrap;color:var(--text);
+}
+.handover-note{color:var(--muted);margin-bottom:var(--s3);max-width:60ch}
+
+/* ---------- drawer ---------- */
+.drawer{position:fixed;inset:0;z-index:70;visibility:hidden;pointer-events:none}
+.drawer[data-open="true"]{visibility:visible;pointer-events:auto}
+.drawer-scrim{position:absolute;inset:0;background:rgba(12,17,22,.42);opacity:0;transition:opacity var(--d-base) var(--ease)}
+.drawer[data-open="true"] .drawer-scrim{opacity:1}
+.drawer-panel{
+  position:absolute;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);
+  border-left:1px solid var(--line);box-shadow:var(--shadow-pop);display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform var(--d-base) var(--ease);
+}
+.drawer[data-open="true"] .drawer-panel{transform:none}
+.drawer-head{display:flex;align-items:flex-start;gap:var(--s3);padding:var(--s3);border-bottom:1px solid var(--line)}
+.drawer-head h3{font-size:var(--t-h2);font-family:var(--mono)}
+.drawer-head .tools{margin-left:auto}
+.drawer-body{padding:var(--s3);overflow-y:auto}
+.drawer-body dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px var(--s3);margin:0 0 var(--s4);font-size:.88rem}
+.drawer-body dt{color:var(--muted-2);white-space:nowrap}
+.drawer-body dd{margin:0}
+.drawer-body h4{font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin:0 0 var(--s2)}
+.drawer-note{background:var(--surface-2);border-left:3px solid var(--accent);padding:10px 12px;font-size:.84rem;color:var(--muted);margin-bottom:var(--s4)}
+.drawer-foot{margin-top:auto;padding:var(--s3);border-top:1px solid var(--line);display:flex;gap:var(--s2);flex-wrap:wrap;background:var(--surface-2)}
+
+/* ---------- footer ---------- */
+.app-foot{grid-column:2;grid-row:3;max-width:1560px;width:100%;margin:0 auto;background:var(--surface);border-top:1px solid var(--line);padding:14px clamp(14px,2.4vw,32px);display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--muted)}
+.app-foot ul,.app-foot .keys{display:flex;flex-wrap:wrap;gap:8px 18px}
+.app-foot a{text-decoration:none;color:var(--muted)}
+.app-foot a:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.app-foot .mono,.app-foot kbd{font-family:var(--mono);color:var(--muted-2);font-size:.78rem}
+.app-foot kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;background:var(--surface-2)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1240px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .grid,.grid--queue .stack{grid-template-columns:1fr}
+}
+@media (max-width:960px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:min(80vw,290px);z-index:60;box-shadow:var(--shadow-pop);transform:translateX(-100%);transition:transform var(--d-base) var(--ease);visibility:hidden}
+  .side[data-open="true"]{transform:none;visibility:visible}
+  .top{grid-column:1}
+  .page{grid-column:1}
+  .app-foot{grid-column:1}
+  .side-toggle{display:grid;margin-left:2px}
+  /* below 960 the bar cannot hold eight controls on one row: labels collapse to
+     icons and the search takes a line of its own instead of overflowing sideways */
+  .top .lbl{display:none}
+  .top .ctl{min-width:44px;padding:0 12px;justify-content:center}
+  .search{margin-left:0;flex:1 1 100%;order:5}
+  .search input{width:100%}
+  .table-scroll{max-height:none}
+}
+@media (max-width:680px){
+  .kpis{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .toolbar .filter-count{margin-left:0;width:100%}
+  .views{width:100%;overflow-x:auto}
+  .top h1,.top .sub{display:none}
+  .range .label{display:none}
+  .range select{max-width:130px}
+  .util-row{grid-template-columns:84px minmax(0,1fr) 56px}
+  .tl{grid-template-columns:64px auto minmax(0,1fr)}
+  .handover dl{grid-template-columns:1fr}
+  .drawer-panel{width:100%;border-left:0}
+  .search kbd{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .drawer-panel{transform:none}
+  .skeleton i{background:#e6eaee}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to dashboard content</a>
+
+<div class="app" id="app">
+
+  <aside class="side" id="side" aria-label="Dashboard sections">
+    <a class="side-brand" href="#main">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 15V8l9-4 9 4v7"/><path d="M3 15h18M8 15v4M16 15v4"/><path d="M3 19h18"/></svg>
+      Relay Ops
+    </a>
+    <nav class="side-nav" aria-label="Primary">
+      <h2>Control tower</h2>
+      <ul>
+        <li><a href="#overview" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          Overview</a></li>
+        <li><a href="#queue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h.01"/></svg>
+          Exceptions <span class="count" id="nav-count">—</span></a></li>
+        <li><a href="#trend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 19V5M4 19h16"/><path d="M8 15l4-5 3 3 5-6"/></svg>
+          Trend</a></li>
+        <li><a href="#network">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="9" r="2.5"/><circle cx="9" cy="18" r="2.5"/><path d="M8 7l8 2M7 8l1 7M16 11l-5 5"/></svg>
+          Network</a></li>
+        <li><a href="#utilisation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 20V9M10 20V4M16 20v-8M22 20v-5"/></svg>
+          Utilisation</a></li>
+        <li><a href="#dispatch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>
+          Dispatch</a></li>
+      </ul>
+      <h2>Reference</h2>
+      <ul>
+        <li><a href="#timeline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l4 2"/></svg>
+          Activity</a></li>
+        <li><a href="#handover">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          Handover</a></li>
+      </ul>
+    </nav>
+    <div class="side-foot">
+      <p><b>Depot 4</b> · Sheffield</p>
+      <p>Shift B · 14:00–22:00</p>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim" data-open="false"></div>
+
+  <header class="top">
+    <div class="wrap">
+      <button class="side-toggle" type="button" id="side-toggle" aria-expanded="false" aria-controls="side" aria-label="Open navigation">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div>
+        <h1>Control tower</h1>
+        <p class="sub">Network overview · all regions</p>
+      </div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg>
+        <label for="q" class="sr-only">Search shipments, vehicles and drivers</label>
+        <input id="q" type="search" placeholder="Search shipment, plate, driver" autocomplete="off" aria-describedby="q-help">
+        <kbd aria-hidden="true">/</kbd>
+        <p class="sr-only" id="q-help">Filters the exception queue below as you type. Press the slash key from anywhere to return here.</p>
+      </div>
+      <div class="range">
+        <label for="range" class="label">Window</label>
+        <select id="range">
+          <option value="360">Last 6 hours</option>
+          <option value="1440" selected>Last 24 hours</option>
+          <option value="10080">Last 7 days</option>
+          <option value="43200">Last 30 days</option>
+        </select>
+      </div>
+      <button class="ctl ctl--quiet" type="button" id="density" aria-pressed="false"
+              aria-label="Compact rows" title="Toggle compact rows">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <span class="lbl">Compact</span>
+      </button>
+      <a class="ctl" href="#dispatch" aria-label="New dispatch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        <span class="lbl">New dispatch</span>
+      </a>
+      <div class="avatar" title="Signed in as Dana Whitcomb" aria-label="Signed in as Dana Whitcomb">DW</div>
+    </div>
+  </header>
+
+  <main class="page" id="main">
+
+    <section id="overview" aria-labelledby="ov-h">
+      <div class="page-head">
+        <div>
+          <h2 id="ov-h">Network overview</h2>
+          <p>Every figure below is derived from the same queue. Changing the window changes all of them; the saved views and search only narrow the queue itself.</p>
+        </div>
+        <p class="updated">
+          <span class="pulse" id="feedPulse" data-state="ok" aria-hidden="true"></span>
+          <span id="feedStatus" role="status">Live · last recalculation 14:06:02</span>
+        </p>
+      </div>
+
+      <div class="kpis" id="kpis">
+        <article class="kpi">
+          <div class="kpi-top"><p class="label">On-time delivery</p><span class="tag ok" id="kpi-otd-tag">healthy</span></div>
+          <b class="num" id="kpi-otd">—</b>
+          <div class="foot">
+            <span class="delta neutral" id="kpi-otd-delta">—</span>
+            <span class="spark-wrap"><svg class="spark" id="kpi-otd-spark" viewBox="0 0 74 26" aria-hidden="true"></svg></span>
+          </div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-top"><p class="label">Active vehicles</p><span class="tag info" id="kpi-veh-tag">—</span></div>
+          <b class="num" id="kpi-veh">—</b>
+          <div class="foot">
+            <span class="delta neutral" id="kpi-veh-delta">—</span>
+            <span class="spark-wrap"><svg class="spark" id="kpi-veh-spark" viewBox="0 0 74 26" aria-hidden="true"></svg></span>
+          </div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-top"><p class="label">Open exceptions</p><span class="tag crit" id="kpi-exc-tag">—</span></div>
+          <b class="num" id="kpi-exc">—</b>
+          <div class="foot">
+            <span class="delta neutral" id="kpi-exc-delta">—</span>
+            <span class="spark-wrap"><svg class="spark" id="kpi-exc-spark" viewBox="0 0 74 26" aria-hidden="true"></svg></span>
+          </div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-top"><p class="label">Cost per delivery</p><span class="tag warn" id="kpi-cost-tag">above plan</span></div>
+          <b class="num" id="kpi-cost">—</b>
+          <div class="foot">
+            <span class="delta neutral" id="kpi-cost-delta">—</span>
+            <span class="spark-wrap"><svg class="spark" id="kpi-cost-spark" viewBox="0 0 74 26" aria-hidden="true"></svg></span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Queue views and filters">
+      <div class="views" role="group" aria-label="Saved views">
+        <button class="view" type="button" data-view="all" aria-pressed="true">All open</button>
+        <button class="view" type="button" data-view="critical" aria-pressed="false">Critical only</button>
+        <button class="view" type="button" data-view="unacked" aria-pressed="false">Unacknowledged</button>
+        <button class="view" type="button" data-view="mine" aria-pressed="false">Assigned to me</button>
+      </div>
+      <div class="facets" role="group" aria-label="Filter by severity">
+        <button class="chipbtn" type="button" data-sev="all" aria-pressed="true">All</button>
+        <button class="chipbtn" type="button" data-sev="crit" aria-pressed="false"><span class="dot crit" aria-hidden="true"></span>Critical</button>
+        <button class="chipbtn" type="button" data-sev="warn" aria-pressed="false"><span class="dot warn" aria-hidden="true"></span>Warning</button>
+        <button class="chipbtn" type="button" data-sev="ok" aria-pressed="false"><span class="dot ok" aria-hidden="true"></span>Monitoring</button>
+      </div>
+      <label for="lane" class="sr-only">Filter by lane</label>
+      <select id="lane" class="filter facet-sel">
+        <option value="all">All lanes</option>
+        <option value="M1">M1 North</option>
+        <option value="A1">A1 Corridor</option>
+        <option value="M62">M62 West</option>
+      </select>
+      <p class="filter-count" id="filter-status" role="status" aria-live="polite">—</p>
+    </section>
+
+    <div class="grid grid--queue">
+      <section class="panel" id="queue" aria-labelledby="exc-h">
+        <div class="panel-head">
+          <h3 id="exc-h">Exceptions requiring a decision</h3>
+          <div class="tools">
+            <button class="ctl ctl--quiet" type="button" id="export">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+              Export CSV
+            </button>
+            <button class="ctl ctl--quiet" type="button" id="refresh">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/></svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="bulkbar" id="bulkbar">
+          <span id="bulk-count" role="status" aria-live="polite">0 selected</span>
+          <span class="spacer"></span>
+          <button class="btn" type="button" id="bulk-ack">Acknowledge</button>
+          <button class="btn" type="button" id="bulk-mine">Assign to me</button>
+          <button class="btn" type="button" id="bulk-export">Export selected</button>
+          <button class="ctl" type="button" id="bulk-clear">Clear selection</button>
+        </div>
+
+        <div class="panel-body flush table-scroll">
+          <table class="exceptions">
+            <caption class="sr-only">Open exceptions. Column headers sort the table. Use J and K to move between rows, A to acknowledge the focused row, and Space to select it.</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="col-pick">
+                  <input type="checkbox" id="select-all" aria-label="Select all visible exceptions">
+                </th>
+                <th scope="col" aria-sort="none" data-key="id"><button type="button">Shipment <span class="arrow" aria-hidden="true">▾</span></button></th>
+                <th scope="col" aria-sort="none" data-key="lane"><button type="button">Lane <span class="arrow" aria-hidden="true">▾</span></button></th>
+                <th scope="col" aria-sort="none" data-key="age"><button type="button">Age <span class="arrow" aria-hidden="true">▾</span></button></th>
+                <th scope="col" aria-sort="none" data-key="issue"><button type="button">Issue <span class="arrow" aria-hidden="true">▾</span></button></th>
+                <th scope="col" aria-sort="none" data-key="rank"><button type="button">Severity <span class="arrow" aria-hidden="true">▾</span></button></th>
+                <th scope="col" class="plain"><span>Owner</span></th>
+                <th scope="col" class="plain"><span>Ack</span></th>
+                <th scope="col" class="plain"><span>Record</span></th>
+              </tr>
+            </thead>
+            <tbody id="exc-body" aria-busy="false"></tbody>
+          </table>
+
+          <noscript>
+            <div class="state">
+              <p><strong>The exception queue needs JavaScript.</strong></p>
+              <p>Rows are filtered, sorted and rendered in the browser so the counts, chart and exports always agree with each other.</p>
+            </div>
+          </noscript>
+
+          <div id="loading" hidden>
+            <p class="sr-only" role="status">Refreshing the exception queue.</p>
+            <div class="skeleton" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="skeleton" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="skeleton" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="skeleton" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="skeleton" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="state" id="empty-state" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M8 11h6"/></svg>
+            <p><strong>Nothing matches this view.</strong></p>
+            <p>Widen the window, clear the search, or pick a different saved view.</p>
+            <button class="btn secondary" type="button" id="clear-filters">Reset the queue</button>
+          </div>
+
+          <div class="tablefoot">
+            <span id="foot-count">—</span>
+            <span id="ack-count">—</span>
+            <span class="spacer"></span>
+            <span id="foot-oldest">—</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="stack">
+
+        <section class="panel" id="trend" aria-labelledby="trend-h">
+          <div class="panel-head">
+            <h3 id="trend-h">Exceptions opened</h3>
+            <div class="tools"><span class="label" id="trend-window">Last 24 hours</span></div>
+          </div>
+          <div class="panel-body flush">
+            <div class="chart" id="chart"></div>
+            <div class="chart-legend">
+              <span><i style="background:var(--info)"></i>Exceptions</span>
+              <span><i style="background:var(--bad)"></i>Peak bucket</span>
+              <span><i style="background:var(--line)"></i>None opened</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="network" aria-labelledby="net-h">
+          <div class="panel-head">
+            <h3 id="net-h">Lane load, next 6 hours</h3>
+            <div class="tools"><span class="label">08:00–20:00</span></div>
+          </div>
+          <div class="panel-body flush">
+            <svg class="map" viewBox="0 0 420 240" role="img" aria-label="Stylised map of the UK road network with three lanes shaded by load: M1 North at 92 percent, A1 Corridor at 71 percent, M62 West at 54 percent">
+              <g stroke="#d3dbe3" fill="none" stroke-width="1">
+                <path d="M40 40 L120 70 L200 60 L280 100 L360 80"/>
+                <path d="M60 200 L140 160 L210 170 L300 140 L370 170"/>
+                <path d="M120 70 L140 160"/><path d="M200 60 L210 170"/><path d="M280 100 L300 140"/>
+              </g>
+              <g fill="none" stroke-linecap="round" stroke-width="5">
+                <path d="M120 70 L200 60" stroke="#ad2c1f" stroke-opacity=".55"/>
+                <path d="M200 60 L280 100" stroke="#ad2c1f" stroke-opacity=".55"/>
+                <path d="M140 160 L210 170" stroke="#8d5d00" stroke-opacity=".5"/>
+                <path d="M210 170 L300 140" stroke="#8d5d00" stroke-opacity=".5"/>
+                <path d="M60 200 L140 160" stroke="#1c5aa8" stroke-opacity=".5"/>
+                <path d="M300 140 L370 170" stroke="#1c5aa8" stroke-opacity=".5"/>
+              </g>
+              <g fill="#141a20">
+                <circle cx="120" cy="70" r="4.5"/><circle cx="200" cy="60" r="4.5"/><circle cx="280" cy="100" r="4.5"/>
+                <circle cx="140" cy="160" r="4.5"/><circle cx="210" cy="170" r="4.5"/><circle cx="300" cy="140" r="4.5"/>
+              </g>
+              <g text-anchor="middle" font-family="ui-monospace, Consolas, monospace" font-size="8" fill="#5c6771">
+                <text x="160" y="50">M1 N · 92%</text>
+                <text x="175" y="192">A1 · 71%</text>
+                <text x="100" y="222">M62 W · 54%</text>
+              </g>
+            </svg>
+            <div class="legend">
+              <span><i style="background:var(--bad)"></i>Over 85% capacity</span>
+              <span><i style="background:var(--warn)"></i>60–85%</span>
+              <span><i style="background:var(--info)"></i>Under 60%</span>
+            </div>
+            <ul class="lane-list">
+              <li class="util-row"><span class="name">M1 North</span><span class="bar"><i class="over" style="--w:92%"></i></span><span class="val">92%</span></li>
+              <li class="util-row"><span class="name">A1 Corridor</span><span class="bar"><i class="hot" style="--w:71%"></i></span><span class="val">71%</span></li>
+              <li class="util-row"><span class="name">M62 West</span><span class="bar"><i style="--w:54%"></i></span><span class="val">54%</span></li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="al-h">
+          <div class="panel-head">
+            <h3 id="al-h">Alerts</h3>
+            <div class="tools"><span class="tag crit" id="alerts-tag">—</span></div>
+          </div>
+          <div class="panel-body flush">
+            <!-- degraded feed: this state is real, and Retry actually recovers it -->
+            <div class="state" id="alerts-error" data-kind="error" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h.01"/></svg>
+              <p><strong>The Highways England feed is unreachable.</strong></p>
+              <p>Closure and lane-closure alerts are unavailable. The exception queue is unaffected — it comes from telematics.</p>
+              <button class="btn secondary" type="button" id="alerts-retry">Retry the feed</button>
+            </div>
+            <ul class="alerts" id="alerts-list"></ul>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <section class="panel" id="dispatch" aria-labelledby="dis-h">
+        <div class="panel-head">
+          <h3 id="dis-h">Raise a dispatch</h3>
+          <div class="tools"><span class="label">Shift B · Sheffield</span></div>
+        </div>
+        <div class="panel-body">
+          <form id="dispatch-form" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="d-ref">Shipment reference <span class="req" aria-hidden="true">*</span></label>
+                <input id="d-ref" name="ref" type="text" placeholder="SHP-88412" required aria-describedby="d-ref-help d-ref-err">
+                <p class="help" id="d-ref-help">Format SHP- plus five digits.</p>
+                <p class="err" id="d-ref-err" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="d-priority">Priority</label>
+                <select id="d-priority" name="priority">
+                  <option>Routine</option><option selected>Expedited</option><option>Critical recovery</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="d-driver">Assign driver <span class="req" aria-hidden="true">*</span></label>
+                <select id="d-driver" name="driver" required aria-describedby="d-driver-err">
+                  <option value="">Select a driver…</option>
+                  <option>Amara Osei — 6h 20m remaining</option>
+                  <option>Tomás Ferreira — 4h 05m remaining</option>
+                  <option>Priya Nandakumar — 8h 40m remaining</option>
+                  <option>Rowan Keachie — 2h 15m remaining</option>
+                </select>
+                <p class="err" id="d-driver-err" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="d-window">Collection window</label>
+                <select id="d-window" name="window">
+                  <option>Within 1 hour</option><option selected>Within 2 hours</option><option>Next scheduled run</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="d-note">Note for the depot</label>
+                <textarea id="d-note" name="note" placeholder="What the driver needs to know before leaving the dock."></textarea>
+              </div>
+            </div>
+            <div class="form-row">
+              <button class="btn" type="submit" id="d-submit">Create dispatch</button>
+              <button class="btn secondary" type="reset" id="d-reset">Clear</button>
+              <p class="form-status" id="d-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <div class="stack">
+        <section class="panel" id="utilisation" aria-labelledby="ut-h">
+          <div class="panel-head">
+            <h3 id="ut-h">Fleet utilisation</h3>
+            <div class="tools"><span class="label">Shift B</span></div>
+          </div>
+          <div class="panel-body">
+            <ul class="lane-list flush">
+              <li class="util-row"><span class="name">Class 2 · Luton</span><span class="bar"><i class="hot" style="--w:86%"></i></span><span class="val">86%</span></li>
+              <li class="util-row"><span class="name">Class 2 curtains</span><span class="bar"><i style="--w:74%"></i></span><span class="val">74%</span></li>
+              <li class="util-row"><span class="name">Reefer 12t</span><span class="bar"><i class="over" style="--w:97%"></i></span><span class="val">97%</span></li>
+              <li class="util-row"><span class="name">18t articulated</span><span class="bar"><i style="--w:61%"></i></span><span class="val">61%</span></li>
+              <li class="util-row"><span class="name">Double-deck</span><span class="bar"><i style="--w:43%"></i></span><span class="val">43%</span></li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel" id="timeline" aria-labelledby="tl-h">
+          <div class="panel-head">
+            <h3 id="tl-h">Shift activity</h3>
+            <div class="tools"><span class="label">Last 90 min</span></div>
+          </div>
+          <div class="panel-body">
+            <div class="timeline">
+              <div class="tl crit"><time>14:04</time><span class="mark" aria-hidden="true"></span><div><span>Exception raised on SHP-88412</span><span class="who">System · temperature rule TR-9</span></div></div>
+              <div class="tl warn"><time>14:01</time><span class="mark" aria-hidden="true"></span><div><span>Diversion approved for two vehicles</span><span class="who">D. Whitcomb · operator</span></div></div>
+              <div class="tl ok"><time>13:47</time><span class="mark" aria-hidden="true"></span><div><span>SHP-88321 delivered, POD captured</span><span class="who">R. Keachie · driver 214</span></div></div>
+              <div class="tl"><time>13:39</time><span class="mark" aria-hidden="true"></span><div><span>Vehicle VN-118 returned to service</span><span class="who">Workshop · defect resolved</span></div></div>
+              <div class="tl"><time>13:12</time><span class="mark" aria-hidden="true"></span><div><span>Load plan published for the night run</span><span class="who">Planning · 22 loads</span></div></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="panel" id="handover" aria-labelledby="ho-h" style="margin-top:var(--s3)">
+      <div class="panel-head">
+        <h3 id="ho-h">Shift handover</h3>
+        <div class="tools">
+          <button class="ctl ctl--quiet" type="button" id="copy-handover">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
+            Copy summary
+          </button>
+        </div>
+      </div>
+      <div class="panel-body handover">
+        <p class="handover-note">Written by the outgoing operator at 13:55. Shift C takes over at 22:00 and should read this before touching the M1 chilled runs.</p>
+        <dl>
+          <dt>Open criticals</dt><dd>4 — SHP-88412, SHP-88407, SHP-88398, SHP-88290</dd>
+          <dt>Blocked lanes</dt><dd>M62 West both directions, J24</dd>
+          <dt>Watch</dt><dd>Reefer capacity at 97%; class 2 Luton at 86%</dd>
+          <dt>Escalated to</dt><dd>Network planning, 13:50</dd>
+        </dl>
+        <pre id="handover-text">Relay Ops — Shift B handover, 13:55
+4 criticals open: SHP-88412 (reefer 9.4C), SHP-88407 (driver hours 18 min),
+SHP-88398 (J24 closure), SHP-88290 (Reading load unaccounted for).
+M62 West blocked both ways; A508 diversion approved under 7.5 t.
+Reefer 12t at 97% capacity - do not accept further chilled on this shift.
+M1 North at 92% for the 14:00-20:00 window.
+Escalated to Network planning 13:50.</pre>
+        <p class="form-status" id="copy-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-foot">
+    <p class="mono">Relay Ops · build 2026.09.14 · feed refreshes every 60 s</p>
+    <p class="keys" aria-label="Keyboard shortcuts">
+      <span><kbd>/</kbd> search</span>
+      <span><kbd>J</kbd><kbd>K</kbd> move row</span>
+      <span><kbd>A</kbd> acknowledge</span>
+      <span><kbd>Esc</kbd> close</span>
+    </p>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#timeline">Activity log</a></li>
+      <li><a href="#handover">Handover notes</a></li>
+      <li><a href="mailto:ops@relay.example">ops@relay.example</a></li>
+    </ul>
+  </footer>
+</div>
+
+<div class="drawer" id="drawer" data-open="false" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+  <div class="drawer-scrim" id="drawer-scrim"></div>
+  <div class="drawer-panel">
+    <div class="drawer-head">
+      <div>
+        <h3 id="drawer-title">SHP-00000</h3>
+        <p class="label" id="drawer-sev">Severity</p>
+      </div>
+      <div class="tools">
+        <button class="rowbtn" type="button" id="drawer-close" aria-label="Close record">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="drawer-body">
+      <dl id="drawer-facts"></dl>
+      <h4>Operator note</h4>
+      <p class="drawer-note" id="drawer-note">—</p>
+      <h4>Suggested next action</h4>
+      <p class="handover-note" id="drawer-action">—</p>
+    </div>
+    <div class="drawer-foot">
+      <button class="btn" type="button" id="drawer-ack">Acknowledge</button>
+      <button class="btn secondary" type="button" id="drawer-mine">Assign to me</button>
+      <button class="btn secondary" type="button" id="drawer-dispatch">Raise a dispatch</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var ME = 'D. Whitcomb';
+  var MOBILE = window.matchMedia('(max-width: 960px)');
+
+  /* ==================================================================
+     1. The dataset. One source of truth: KPIs, the chart, the queue,
+        the counts and the CSV are all derived from this.
+     ================================================================== */
+  var OPERATORS = ['D. Whitcomb', 'R. Okafor', 'S. Bhandari', 'unassigned'];
+
+  var QUEUE = [
+    { id:'SHP-88412', lane:'M1', laneName:'M1 North', legs:'Leeds → Newcastle', age:94,  sev:'crit', rank:1, issue:'Temperature breach',        detail:'Reefer at 9.4 °C for 22 min',            load:'Chilled · 12 pallets',   owner:'D. Whitcomb', vehicle:'VN-204 · Reefer 12t', pallets:'12 chilled',
+      note:'Set point 2 °C, reading 9.4 °C for 22 minutes. The load is dairy and ready meals; the consignee has been told and has not rejected it.',
+      action:'Swap the reefer at the next reefer-capable site (Leeds, 21 km) and re-baseline the probe before the Newcastle drop.' },
+    { id:'SHP-88407', lane:'A1', laneName:'A1 Corridor', legs:'London → Luton', age:41, sev:'crit', rank:1, issue:'Driver hours',           detail:'18 min remaining, 90 min to go',          load:'Ambient · 4 pallets',    owner:'D. Whitcomb', vehicle:'VN-118 · 18t articulated', pallets:'4 ambient',
+      note:'18 minutes of driving time left against 90 minutes of road remaining. The relief driver is confirmed at Luton but cannot take over until 15:05.',
+      action:'Book the Luton relief against 15:05 and warn the consignee of a 40-minute window slip.' },
+    { id:'SHP-88398', lane:'M62', laneName:'M62 West', legs:'Liverpool → Hull', age:63, sev:'crit', rank:1, issue:'Unplanned closure',      detail:'J24 closed, no diversion agreed',          load:'Ambient · 18 pallets',   owner:'S. Bhandari', vehicle:'VN-331 · Double-deck', pallets:'18 ambient',
+      note:'J24 closed in both directions with no agreed diversion. Four of our vehicles are within 20 km and the A508 is restricted to 7.5 t.',
+      action:'Reroute the two double-decks via the M6 and the 7.5 t units via A508. Publishing a customer ETA now beats publishing a breach at 15:00.' },
+    { id:'SHP-88431', lane:'M1', laneName:'M1 North', legs:'Sheffield → Leeds', age:505, sev:'warn', rank:2, issue:'Late departure',        detail:'Dock delay, departed 28 min late',         load:'Ambient · 9 pallets',    owner:'R. Okafor', vehicle:'VN-140 · Class 2 curtains', pallets:'9 ambient',
+      note:'Dock delay at Sheffield; departed 28 minutes behind the plan. The Leeds window is 16:00–17:00 and is still achievable.',
+      action:'No action beyond monitoring. If the delay passes 45 minutes, re-cut the Leeds slot.' },
+    { id:'SHP-88419', lane:'A1', laneName:'A1 Corridor', legs:'Luton → London', age:17, sev:'warn', rank:2, issue:'Proof of delivery missing', detail:'Consignee signature not captured',       load:'Ambient · 3 pallets',    owner:'R. Okafor', vehicle:'VN-277 · Class 2 Luton', pallets:'3 ambient',
+      note:'Delivery completed but the consignee signature was not captured; the driver photographed the doorstep and left.',
+      action:'Request a POD resend from the driver handheld. Unresolved PODs block invoicing at 18:00.' },
+    { id:'SHP-88440', lane:'M62', laneName:'M62 West', legs:'Preston → Liverpool', age:9, sev:'ok', rank:3, issue:'Trailer utilisation', detail:'38% loaded, 3 spare pallets',                load:'Ambient · 22 pallets',   owner:'unassigned', vehicle:'VN-351 · Double-deck', pallets:'22 ambient',
+      note:'The trailer is 38% loaded with three spare pallet positions. Two Liverpool consignees accept late same-day.',
+      action:'Offer the spare capacity to the Liverpool consolidator before the run loads at 15:30.' },
+    { id:'SHP-88442', lane:'A1', laneName:'A1 Corridor', legs:'Banbury → Luton', age:6, sev:'ok', rank:3, issue:'Route deviation',   detail:'1.2 km off plan, no delay impact',          load:'Ambient · 6 pallets',    owner:'unassigned', vehicle:'VN-190 · 18t articulated', pallets:'6 ambient',
+      note:'1.2 km off the planned route through an unmarked turn, no delay impact. The billed distance is unchanged.',
+      action:'No action. Logged for route-quality reporting, not for the customer.' },
+    { id:'SHP-88390', lane:'M1', laneName:'M1 North', legs:'Newcastle → Leeds', age:690, sev:'warn', rank:2, issue:'Failed delivery attempt', detail:'Consignee closed, reattempt tomorrow',     load:'Ambient · 2 pallets',    owner:'S. Bhandari', vehicle:'VN-204 · Reefer 12t', pallets:'2 ambient',
+      note:'The consignee was closed on arrival. Two pallets, reattempt booked for tomorrow morning.',
+      action:'Confirm the reattempt slot with the consignee, and decide whether the two pallets move onto tonight’s Leeds run instead.' },
+    { id:'SHP-88377', lane:'M62', laneName:'M62 West', legs:'Imported, single market', age:22, sev:'warn', rank:2, issue:'Customs hold', detail:'Awaiting commodity code confirmation',         load:'Ambient · 8 pallets',    owner:'R. Okafor', vehicle:'VN-366 · 18t articulated', pallets:'8 ambient',
+      note:'Held at the border pending confirmation of the commodity code. The broker has asked for a declared value under 2500.',
+      action:'Confirm the commodity code with the shipper and release. Do not amend the declared value without a commercial decision.' },
+    { id:'SHP-88361', lane:'A1', laneName:'A1 Corridor', legs:'Milton Keynes → London', age:820, sev:'ok', rank:3, issue:'Missed scan', detail:'Depot scan missing, location known',             load:'Ambient · 5 pallets',    owner:'unassigned', vehicle:'VN-155 · Class 2 Luton', pallets:'5 ambient',
+      note:'The Milton Keynes depot scan is missing but the location track is continuous, so the load is known to have left on time.',
+      action:'No action. The scan gap resolves itself at the London inbound scan.' },
+    { id:'SHP-88355', lane:'M1', laneName:'M1 North', legs:'Manchester → Leeds', age:48, sev:'ok', rank:3, issue:'Diversion agreed', detail:'A690 closure, ETA 41 min late',              load:'Chilled · 7 pallets',    owner:'D. Whitcomb', vehicle:'VN-188 · Reefer 12t', pallets:'7 chilled',
+      note:'Diversion agreed around the A690 closure; the revised ETA is 41 minutes late and the consignee has acknowledged it.',
+      action:'No action. The chilled set point has held throughout the diversion.' },
+    { id:'SHP-88344', lane:'M62', laneName:'M62 West', legs:'Imported, single market', age:55, sev:'warn', rank:2, issue:'Ferry slot moved', detail:'Next crossing 06:20, 11 h delay',            load:'Ambient · 14 pallets',   owner:'S. Bhandari', vehicle:'VN-372 · Double-deck', pallets:'14 ambient',
+      note:'The 15:40 ferry slot was cancelled; the next crossing is 06:20 tomorrow, an 11-hour delay on 14 pallets.',
+      action:'Approve the customer notifications — eleven of the fourteen are already queued and waiting on you.' },
+
+    /* older than the last 6 hours; these only appear as the window widens */
+    { id:'SHP-88290', lane:'A1', laneName:'A1 Corridor', legs:'London → Reading', age:1150, sev:'crit', rank:1, issue:'Load lost at hub', detail:'Not scanned out of Reading, driver unaccounted 20 min', load:'Ambient · 9 pallets', owner:'R. Okafor', vehicle:'VN-244 · 18t articulated', pallets:'9 ambient',
+      note:'The load left the Reading hub on EDI but has not been scanned onto the vehicle, and the driver has not reported for twenty minutes.',
+      action:'Call the driver directly, then trace the last telematics ping. This is the one exception from today that has not been spoken to a human.' },
+    { id:'SHP-88261', lane:'M1', laneName:'M1 North', legs:'Leeds → Carlisle', age:1880, sev:'warn', rank:2, issue:'Pallet rewrap refused', detail:'Consignee refused 2 pallets on condition',    load:'Ambient · 16 pallets',   owner:'unassigned', vehicle:'VN-298 · Class 2 curtains', pallets:'16 ambient',
+      note:'The consignee refused two pallets on condition and signed for the rest. No photograph was taken, which is why it is still open.',
+      action:'Get the driver to photograph the refused pallets on the return leg, then decide restock or credit.' },
+    { id:'SHP-88214', lane:'M62', laneName:'M62 West', legs:'Bristol → Swansea', age:3400, sev:'ok', rank:3, issue:'Detention charge risk', detail:'45 min over the agreed free time',         load:'Ambient · 11 pallets',   owner:'D. Whitcomb', vehicle:'VN-315 · Double-deck', pallets:'11 ambient',
+      note:'The driver has 45 minutes over the agreed free time at the Swansea depot. The carrier will charge detention unless the release is logged.',
+      action:'Confirm the release with the depot; the charge is roughly four times the value of the delay.' },
+    { id:'SHP-88177', lane:'A1', laneName:'A1 Corridor', legs:'Stevenage → Luton', age:5600, sev:'warn', rank:2, issue:'POD on the wrong consignment', detail:'Signature captured against SHP-88170',   load:'Ambient · 4 pallets',    owner:'R. Okafor', vehicle:'VN-262 · Class 2 Luton', pallets:'4 ambient',
+      note:'The consignee signed the tablet, but the driver filed it against SHP-88170 by mistake. The goods are delivered; the paperwork is not.',
+      action:'Ask the depot to refile the POD against SHP-88177. No customer contact needed.' },
+    { id:'SHP-88102', lane:'M1', laneName:'M1 North', legs:'Hull → York', age:7900, sev:'ok', rank:3, issue:'Trailer swap requested', detail:'Customer asked for a 13.6 m at the next depot', load:'Ambient · 20 pallets', owner:'S. Bhandari', vehicle:'VN-221 · Double-deck', pallets:'20 ambient',
+      note:'The customer asked for a larger trailer at the next depot and there is one available, but the swap costs 40 minutes.',
+      action:'Approve or decline the swap. Both answers are defensible; leaving it undecided until the last depot is not.' },
+    { id:'SHP-88044', lane:'M62', laneName:'M62 West', legs:'Exeter → Truro', age:11200, sev:'warn', rank:2, issue:'Refused by consignee', detail:'Consignee closed for the week',                load:'Chilled · 6 pallets',    owner:'unassigned', vehicle:'VN-309 · Reefer 12t', pallets:'6 chilled',
+      note:'The consignee is closed for the week. Six chilled pallets have been sitting in the carrier’s cold store since the refusal, and the storage charge accrues daily.',
+      action:'The storage cost now exceeds the margin on the load. Decide between returning to Exeter and writing the pallets off.' },
+    { id:'SHP-87990', lane:'A1', laneName:'A1 Corridor', legs:'London · Dartford', age:16800, sev:'warn', rank:2, issue:'Repeated tail-lift fault', detail:'Same defect on the third vehicle this week',  load:'Ambient · 14 pallets',   owner:'S. Bhandari', vehicle:'VN-337 · 18t articulated', pallets:'14 ambient',
+      note:'The tail-lift has failed on three vehicles in six days. Each time it is repaired and returned to service, and each time it is a different vehicle.',
+      action:'Stop treating these as breakdowns and raise it with the manufacturer. The pattern is the fault, not the hardware.' },
+    { id:'SHP-87901', lane:'M62', laneName:'M62 West', legs:'Manchester · Shrewsbury', age:21500, sev:'ok', rank:3, issue:'Pallet label unreadable', detail:'Two labels sun-bleached to nothing',          load:'Ambient · 18 pallets',   owner:'unassigned', vehicle:'VN-319 · Double-deck', pallets:'18 ambient',
+      note:'Two pallet labels are unreadable, so the driver had to open four others to find the right one. The load is correct; the paperwork took twice as long.',
+      action:'Ask the depot to re-label on the next run. Low urgency, but it is costing real minutes at every drop.' },
+    { id:'SHP-87820', lane:'M1', laneName:'M1 North', legs:'Sheffield · Preston', age:27900, sev:'crit', rank:1, issue:'Chilled load rejected', detail:'Consignee refused on temperature at arrival', load:'Chilled · 7 pallets',   owner:'R. Okafor', vehicle:'VN-290 · Reefer 12t', pallets:'7 chilled',
+      note:'Rejected on arrival at 4.2 °C against a 2 °C set point. The probe log is available and shows the unit held temperature for six hours, then stepped up sharply on the M1 northbound.',
+      action:'This is a probe fault, not a loading fault. Send the log to the reefer supplier and rebook the pallets before the shelf life runs out.' },
+    { id:'SHP-87710', lane:'A1', laneName:'A1 Corridor', legs:'Luton · Northampton', age:36400, sev:'ok', rank:3, issue:'Rate review not actioned', detail:'Contract rate lapsed 26 days ago',             load:'Ambient · 2 pallets',    owner:'D. Whitcomb', vehicle:'VN-277 · Class 2 Luton', pallets:'2 ambient',
+      note:'The lane rate lapsed four weeks ago and the carrier has been billing at the old rate. The difference is small per load and material across a year.',
+      action:'Close the rate review this week or state clearly that the old rate stands, so the carrier stops asking every invoice.' }
+  ];
+
+  var ALERTS = [
+    { sev:'crit', title:'SHP-88412 out of temperature band', body:'Reefer set point 2 °C, reading 9.4 °C. Consignee notified; replacement unit available at Leeds.', at:'14:04', tags:['Rule TR-9','Reefer 12t · VN-204'] },
+    { sev:'crit', title:'J24 closed, M62 West blocked both ways', body:'Four vehicles within 20 km. Diversion via A508 approved for vehicles under 7.5 t.', at:'14:01', tags:['Highways England feed','4 vehicles affected'] },
+    { sev:'warn', title:'Driver hours breach in 41 min', body:'SHP-88407, 18 min remaining against 90 minutes of journey. Relief driver booked at Luton.', at:'13:58', tags:['Tachograph alert','Driver 214'] },
+    { sev:'info', title:'Ferry slot moved to 06:20', body:'Eleven pallets affected. Customer notifications queued for approval.', at:'13:52', tags:['Carrier EDI'] },
+    { sev:'info', title:'Customs commodity code query', body:'Single-market load held 22 min. Broker asked for a value under 2500.', at:'13:44', tags:['Broker','SHP-88377'] }
+  ];
+
+  /* Per-window figures. Only the queue is derived from QUEUE; the rest are
+     measured network counters, which is why they are stated per window. */
+  var WINDOWS = {
+    360:   { label:'Last 6 hours',  otd:93.6, otdDelta:+0.9, vehicles:308, idle:32, cost:4.61, fleet:340,
+             otdSpark:'2,18 12,17 22,19 32,13 42,14 52,9 62,10 72,6', vehSpark:'2,12 12,11 22,12 32,10 42,11 52,9 62,10 72,9', costSpark:'2,15 12,13 22,14 32,12 42,13 52,11 62,11 72,10' },
+    1440:  { label:'Last 24 hours', otd:94.2, otdDelta:+1.8, vehicles:312, idle:28, cost:4.86, fleet:340,
+             otdSpark:'2,20 12,19 22,21 32,15 42,16 52,10 62,11 72,5', vehSpark:'2,12 12,10 22,13 32,11 42,14 52,11 62,12 72,10', costSpark:'2,14 12,12 22,13 32,11 42,13 52,10 62,11 72,9' },
+    10080: { label:'Last 7 days',   otd:92.4, otdDelta:-0.6, vehicles:301, idle:39, cost:4.92, fleet:340,
+             otdSpark:'2,8 12,10 22,9 32,13 42,12 52,16 62,15 72,18', vehSpark:'2,13 12,12 22,14 32,12 42,13 52,12 62,14 72,13', costSpark:'2,8 12,9 22,10 32,9 42,11 52,10 62,12 72,13' },
+    43200: { label:'Last 30 days',  otd:91.1, otdDelta:-1.3, vehicles:294, idle:46, cost:5.08, fleet:340,
+             otdSpark:'2,6 12,8 22,7 32,10 42,12 52,11 62,14 72,16', vehSpark:'2,9 12,11 22,10 32,12 42,11 52,13 62,12 72,14', costSpark:'2,6 12,7 22,8 32,8 42,10 52,9 62,11 72,12' }
+  };
+
+  /* runtime state */
+  var state = {
+    window: 1440,
+    view: 'all',
+    sev: 'all',
+    lane: 'all',
+    query: '',
+    sort: { key: 'rank', dir: 'ascending' },
+    acked: Object.create(null),
+    selected: Object.create(null),
+    feedDown: true
+  };
+
+  var money = new Intl.NumberFormat('en-GB', { style:'currency', currency:'GBP' });
+  var whole = new Intl.NumberFormat('en-GB');
+  var SEV_LABEL = { crit:'Critical', warn:'Warning', ok:'Monitoring' };
+
+  function initials(name) {
+    if (name === 'unassigned') return '—';
+    return name.split(/[\s.]+/).filter(Boolean).map(function (p) { return p[0]; }).join('').slice(0, 2).toUpperCase();
+  }
+  function minutesToClock(ageMinutes, windowMinutes) {
+    /* "now" is fixed at Sun 14 Sep 2026, 14:06 so the page tells a consistent story */
+    var now = new Date(2026, 8, 14, 14, 6);
+    var then = new Date(now.getTime() - ageMinutes * 60000);
+    var hh = String(then.getHours()).padStart(2, '0');
+    var mm = String(then.getMinutes()).padStart(2, '0');
+    if (windowMinutes > 1440) {
+      /* wider than a day, so the day of the week is the only useful label */
+      return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][then.getDay()] + ' ' + hh + ':' + mm;
+    }
+    return hh + ':' + mm;
+  }
+  function ageText(mins) {
+    if (mins < 60) return mins + ' min';
+    if (mins < 1440) return Math.round(mins / 60) + ' h';
+    return Math.round(mins / 1440) + ' d';
+  }
+
+  /* ---------- the one selector everything else reads from ---------- */
+  function inWindow(r) { return r.age <= state.window; }
+  function passesFacets(r) {
+    if (state.sev !== 'all' && r.sev !== state.sev) return false;
+    if (state.lane !== 'all' && r.lane !== state.lane) return false;
+    if (state.view === 'critical' && r.sev !== 'crit') return false;
+    if (state.view === 'unacked' && state.acked[r.id]) return false;
+    if (state.view === 'mine' && r.owner !== ME) return false;
+    if (state.query) {
+      var hay = (r.id + ' ' + r.laneName + ' ' + r.issue + ' ' + r.detail + ' ' + r.owner + ' ' + r.load + ' ' + r.vehicle).toLowerCase();
+      if (hay.indexOf(state.query) === -1) return false;
+    }
+    return true;
+  }
+  function sorted(list) {
+    /* ascending really is ascending, so aria-sort and the arrow always tell the truth */
+    var key = state.sort.key, dir = state.sort.dir;
+    return list.slice().sort(function (a, b) {
+      var cmp = (key === 'age' || key === 'rank')
+        ? a[key] - b[key]
+        : String(a[key]).localeCompare(String(b[key]));
+      return dir === 'ascending' ? cmp : -cmp;
+    });
+  }
+  function visibleRows() { return sorted(QUEUE.filter(function (r) { return inWindow(r) && passesFacets(r); })); }
+  function windowRows() { return QUEUE.filter(inWindow); }
+
+  /* ==================================================================
+     2. Rendering — the queue
+     ================================================================== */
+  var body = $('exc-body');
+  var emptyState = $('empty-state');
+  var selectAll = $('select-all');
+
+  function el(tag, cls, text) {
+    var node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+  /* built in the DOM rather than from a markup string */
+  function icon(path) {
+    var svg = document.createElementNS(SVGNS, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2');
+    svg.setAttribute('aria-hidden', 'true');
+    var p = document.createElementNS(SVGNS, 'path');
+    p.setAttribute('d', path);
+    svg.appendChild(p);
+    return svg;
+  }
+
+  function renderRows() {
+    var rows = visibleRows();
+    while (body.firstChild) body.removeChild(body.firstChild);
+
+    rows.forEach(function (r) {
+      var tr = el('tr');
+      tr.dataset.id = r.id;
+      if (state.acked[r.id]) tr.classList.add('is-acked');
+      if (state.selected[r.id]) tr.classList.add('is-selected');
+
+      /* select */
+      var tdPick = el('td', 'col-pick');
+      var box = document.createElement('input');
+      box.type = 'checkbox';
+      box.checked = !!state.selected[r.id];
+      box.setAttribute('aria-label', 'Select exception ' + r.id);
+      box.addEventListener('change', function () { toggleSelect(r.id); });
+      tdPick.appendChild(box);
+
+      /* shipment */
+      var tdId = el('td');
+      tdId.appendChild(el('span', 'cell-id', r.id));
+      tdId.appendChild(el('span', 'cell-sub', r.load));
+
+      /* lane */
+      var tdLane = el('td');
+      tdLane.appendChild(el('span', 'cell-strong', r.laneName));
+      tdLane.appendChild(el('span', 'cell-sub', r.legs));
+
+      /* age */
+      var tdAge = el('td', 'num', ageText(r.age));
+
+      /* issue */
+      var tdIssue = el('td');
+      tdIssue.appendChild(document.createTextNode(r.issue));
+      tdIssue.appendChild(el('span', 'cell-sub', r.detail));
+
+      /* severity */
+      var tdSev = el('td');
+      tdSev.appendChild(el('span', 'tag ' + r.sev, SEV_LABEL[r.sev]));
+
+      /* owner */
+      var tdOwner = el('td');
+      var owner = el('span', 'owner' + (r.owner === ME ? ' me' : ''));
+      owner.appendChild(el('i', null, initials(r.owner)));
+      owner.appendChild(el('span', null, r.owner === ME ? 'You' : r.owner));
+      tdOwner.appendChild(owner);
+
+      /* acknowledge */
+      var tdAck = el('td', 'col-ack');
+      var ackBtn = el('button', 'rowbtn');
+      ackBtn.type = 'button';
+      ackBtn.setAttribute('aria-pressed', String(!!state.acked[r.id]));
+      ackBtn.setAttribute('aria-label', (state.acked[r.id] ? 'Unacknowledge ' : 'Acknowledge ') + r.id);
+      ackBtn.appendChild(icon('M4 12l5 5L20 6'));
+      /* the listener lives here only — a delegated handler on <tbody> would fire this
+         twice (once here, once on the way up) and cancel the toggle out */
+      ackBtn.addEventListener('click', function () { toggleAck(r.id); });
+      tdAck.appendChild(ackBtn);
+
+      /* record */
+      var tdAct = el('td', 'col-actions');
+      var openBtn = el('button', 'rowbtn');
+      openBtn.type = 'button';
+      openBtn.setAttribute('aria-label', 'Open record for ' + r.id);
+      openBtn.appendChild(icon('M9 6l6 6-6 6'));
+      openBtn.addEventListener('click', function () { openDrawer(r.id, openBtn); });
+      tdAct.appendChild(openBtn);
+
+      [tdPick, tdId, tdLane, tdAge, tdIssue, tdSev, tdOwner, tdAck, tdAct].forEach(function (td) { tr.appendChild(td); });
+      body.appendChild(tr);
+    });
+
+    /* counts */
+    var inWin = windowRows();
+    var crit = inWin.filter(function (r) { return r.sev === 'crit'; }).length;
+    var unacked = inWin.filter(function (r) { return !state.acked[r.id]; }).length;
+
+    $('filter-status').textContent = 'Showing ' + rows.length + ' of ' + inWin.length + ' in the window';
+    $('foot-count').textContent = rows.length + ' shown · ' + inWin.length + ' in window · ' + whole.format(QUEUE.length) + ' all time';
+    $('ack-count').textContent = unacked + ' unacknowledged';
+    $('foot-oldest').textContent = inWin.length ? 'Oldest open: ' + ageText(Math.max.apply(null, inWin.map(function (r) { return r.age; }))) : 'Nothing open';
+    $('nav-count').textContent = String(inWin.length);
+
+    emptyState.hidden = rows.length !== 0;
+    document.querySelector('.exceptions').hidden = rows.length === 0;
+
+    /* select-all reflects the visible set, including the indeterminate case */
+    var visibleIds = rows.map(function (r) { return r.id; });
+    var chosen = visibleIds.filter(function (id) { return state.selected[id]; }).length;
+    selectAll.checked = visibleIds.length > 0 && chosen === visibleIds.length;
+    selectAll.indeterminate = chosen > 0 && chosen < visibleIds.length;
+    selectAll.disabled = visibleIds.length === 0;
+
+    renderBulk(rows);
+    renderKpis(inWin, crit);
+    renderChart(inWin);
+  }
+
+  /* ==================================================================
+     3. KPIs and sparklines
+     ================================================================== */
+  function sparkline(svg, points, stroke) {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    poly.setAttribute('points', points);
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', stroke);
+    poly.setAttribute('stroke-width', '1.8');
+    poly.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(poly);
+  }
+
+  function renderKpis(inWin, crit) {
+    var w = WINDOWS[state.window];
+
+    $('kpi-otd').textContent = w.otd.toFixed(1) + '%';
+    var od = $('kpi-otd-delta');
+    od.textContent = (w.otdDelta >= 0 ? '▲ ' : '▼ ') + Math.abs(w.otdDelta).toFixed(1) + ' pts vs previous';
+    od.className = 'delta ' + (w.otdDelta >= 0 ? 'good' : 'bad');
+    $('kpi-otd-tag').textContent = w.otd >= 94 ? 'healthy' : (w.otd >= 92 ? 'watch' : 'below target');
+    $('kpi-otd-tag').className = 'tag ' + (w.otd >= 94 ? 'ok' : 'warn');
+    sparkline($('kpi-otd-spark'), w.otdSpark, w.otdDelta >= 0 ? '#0f7a4d' : '#8d5d00');
+
+    $('kpi-veh').textContent = whole.format(w.vehicles);
+    $('kpi-veh-tag').textContent = whole.format(w.vehicles) + ' of ' + whole.format(w.fleet);
+    var vd = $('kpi-veh-delta');
+    vd.textContent = whole.format(w.idle) + ' idle of ' + whole.format(w.fleet);
+    vd.className = 'delta neutral';
+    sparkline($('kpi-veh-spark'), w.vehSpark, '#1c5aa8');
+
+    /* this one is genuinely derived — it must agree with the queue */
+    $('kpi-exc').textContent = whole.format(inWin.length);
+    $('kpi-exc-tag').textContent = crit + ' critical';
+    $('kpi-exc-tag').className = 'tag ' + (crit > 0 ? 'crit' : 'ok');
+    var ed = $('kpi-exc-delta');
+    var unacked = inWin.filter(function (r) { return !state.acked[r.id]; }).length;
+    ed.textContent = unacked + ' need a decision';
+    ed.className = 'delta ' + (unacked > 0 ? 'bad' : 'good');
+    sparkline($('kpi-exc-spark'), excSpark(inWin), '#ad2c1f');
+
+    $('kpi-cost').textContent = '£' + w.cost.toFixed(2);
+    var cd = $('kpi-cost-delta');
+    cd.textContent = (w.cost > 4.7 ? '▲ ' : '▼ ') + '£' + Math.abs(w.cost - 4.45).toFixed(2) + ' vs plan £4.45';
+    cd.className = 'delta ' + (w.cost > 4.7 ? 'bad' : 'good');
+    sparkline($('kpi-cost-spark'), w.costSpark, '#8d5d00');
+  }
+
+  /* a small trend for the exception count, bucketed like the main chart */
+  function excSpark(inWin) {
+    var buckets = new Array(8).fill(0);
+    var span = state.window / 8;
+    inWin.forEach(function (r) {
+      var i = 7 - Math.min(7, Math.floor(r.age / span));
+      buckets[i] += 1;
+    });
+    var max = Math.max.apply(null, buckets.concat([1]));
+    return buckets.map(function (v, i) {
+      var x = 2 + i * 10;
+      var y = 23 - (v / max) * 18;
+      return x + ',' + y.toFixed(1);
+    }).join(' ');
+  }
+
+  /* ==================================================================
+     4. The chart — real bars from the queue, with a table fallback
+     ================================================================== */
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var chartBox = $('chart');
+  var tip = el('div', 'chart-tip');
+  tip.setAttribute('aria-hidden', 'true');
+  chartBox.appendChild(tip);
+
+  function bucketsFor(inWin) {
+    var n = 12;
+    var span = state.window / n;
+    var out = [];
+    for (var i = 0; i < n; i++) out.push({ from: (n - 1 - i) * span, to: (n - i) * span, count: 0, crit: 0 });
+    inWin.forEach(function (r) {
+      var idx = n - 1 - Math.floor(r.age / span);
+      if (idx < 0) return;
+      out[idx].count += 1;
+      if (r.sev === 'crit') out[idx].crit += 1;
+    });
+    return out;
+  }
+
+  function renderChart(inWin) {
+    var data = bucketsFor(inWin);
+    var w = 420, h = 132, padL = 26, padR = 6, padT = 8, padB = 18;
+    var plotW = w - padL - padR, plotH = h - padT - padB;
+    var max = Math.max(2, Math.max.apply(null, data.map(function (d) { return d.count; })));
+    var step = Math.ceil(max / 4) || 1;
+    var top = step * 4;
+    var slot = plotW / data.length;
+    var barW = Math.max(6, slot - 8);
+
+    /* clear everything, tooltip included, then re-attach the one tooltip node.
+       Stopping at the tooltip would leave the previous chart and its table behind
+       and stack a new copy on top of them on every re-render. */
+    while (chartBox.firstChild) chartBox.removeChild(chartBox.firstChild);
+    chartBox.appendChild(tip);
+
+    var svg = document.createElementNS(SVGNS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', chartSummary(data, top));
+    svg.style.overflow = 'visible';
+
+    function add(tag, attrs, text) {
+      var n = document.createElementNS(SVGNS, tag);
+      Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+      if (text != null) n.textContent = text;
+      svg.appendChild(n);
+      return n;
+    }
+
+    /* horizontal gridlines + y labels */
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (g / 4) * plotH;
+      add('line', { class:'grid-line', x1:padL, x2:w - padR, y1:gy, y2:gy });
+      add('text', { class:'axis-text', x:padL - 6, y:gy + 3, 'text-anchor':'end' }, String(Math.round((g / 4) * top)));
+    }
+
+    var peak = Math.max.apply(null, data.map(function (d) { return d.count; }));
+
+    data.forEach(function (d, i) {
+      var x = padL + i * slot + (slot - barW) / 2;
+      var bh = d.count === 0 ? 2 : Math.max(3, (d.count / top) * plotH);
+      var y = padT + plotH - bh;
+      var g = document.createElementNS(SVGNS, 'g');
+      g.setAttribute('class', 'col');
+      var rect = document.createElementNS(SVGNS, 'rect');
+      rect.setAttribute('class', 'bar');
+      rect.setAttribute('x', x); rect.setAttribute('y', y);
+      rect.setAttribute('width', barW); rect.setAttribute('height', bh);
+      rect.setAttribute('rx', 2);
+      if (d.count === 0) rect.setAttribute('data-zero', 'true');
+      if (d.count === peak && d.count > 1) rect.setAttribute('data-sev-peak', '1');
+      var hit = document.createElementNS(SVGNS, 'rect');
+      hit.setAttribute('class', 'hit');
+      hit.setAttribute('x', padL + i * slot); hit.setAttribute('y', padT);
+      hit.setAttribute('width', slot); hit.setAttribute('height', plotH);
+      g.appendChild(rect); g.appendChild(hit);
+      svg.appendChild(g);
+
+      hit.addEventListener('mouseenter', function () {
+        g.classList.add('is-active');
+        var label = minutesToClock(d.to, state.window);
+        tip.textContent = label + ' · ' + d.count + ' opened' + (d.crit ? ' · ' + d.crit + ' critical' : '');
+        var box = svg.getBoundingClientRect();
+        var host = chartBox.getBoundingClientRect();
+        var px = (padL + i * slot + slot / 2) / w * box.width + (box.left - host.left);
+        tip.style.left = px + 'px';
+        tip.style.top = (y / h * box.height + (box.top - host.top)) + 'px';
+        tip.setAttribute('data-open', 'true');
+      });
+      hit.addEventListener('mouseleave', function () {
+        g.classList.remove('is-active');
+        tip.removeAttribute('data-open');
+      });
+
+      /* label every other bucket so they never collide */
+      if (i % 2 === 0) {
+        add('text', { class:'axis-text', x:padL + i * slot + slot / 2, y:h - 5, 'text-anchor':'middle' },
+          minutesToClock(d.to, state.window));
+      }
+    });
+
+    chartBox.appendChild(svg);
+    $('trend-window').textContent = WINDOWS[state.window].label;
+
+    /* the same numbers, for anyone not reading the picture */
+    var table = el('table', 'sr-only');
+    var cap = el('caption', null, 'Exceptions opened per bucket, ' + WINDOWS[state.window].label);
+    table.appendChild(cap);
+    var thead = el('thead');
+    var htr = el('tr');
+    ['Bucket ending', 'Opened', 'Critical'].forEach(function (h) {
+      var th = el('th', null, h); th.setAttribute('scope', 'col'); htr.appendChild(th);
+    });
+    thead.appendChild(htr); table.appendChild(thead);
+    var tb = el('tbody');
+    data.forEach(function (d) {
+      var tr = el('tr');
+      [minutesToClock(d.to, state.window), String(d.count), String(d.crit)].forEach(function (v, i) {
+        var cell = el(i === 0 ? 'th' : 'td', null, v);
+        if (i === 0) cell.setAttribute('scope', 'row');
+        tr.appendChild(cell);
+      });
+      tb.appendChild(tr);
+    });
+    table.appendChild(tb);
+    chartBox.appendChild(table);
+  }
+
+  function chartSummary(data, top) {
+    var total = data.reduce(function (a, d) { return a + d.count; }, 0);
+    var peakBucket = data.reduce(function (a, d) { return d.count > a.count ? d : a; }, data[0]);
+    return 'Bar chart of exceptions opened across ' + data.length + ' equal buckets over the ' +
+      WINDOWS[state.window].label.toLowerCase() + '. ' + total + ' opened in total, peaking at ' +
+      peakBucket.count + ' in the bucket ending ' + minutesToClock(peakBucket.to, state.window) +
+      '. The full figures are given in the table that follows.';
+  }
+
+  /* ==================================================================
+     5. Bulk actions and selection
+     ================================================================== */
+  function toggleSelect(id) {
+    if (state.selected[id]) delete state.selected[id]; else state.selected[id] = true;
+    renderRows();
+    var box = body.querySelector('tr[data-id="' + id + '"] input[type="checkbox"]');
+    if (box) box.focus();
+  }
+  function selectedIds() { return Object.keys(state.selected).filter(function (id) { return state.selected[id]; }); }
+
+  function renderBulk(rows) {
+    var ids = selectedIds();
+    var bar = $('bulkbar');
+    bar.dataset.open = String(ids.length > 0);
+    $('bulk-count').textContent = ids.length + ' selected';
+    /* only allow exporting what is on screen */
+    var visible = new Set(rows.map(function (r) { return r.id; }));
+    $('bulk-export').disabled = !ids.some(function (id) { return visible.has(id); });
+  }
+
+  selectAll.addEventListener('change', function () {
+    var rows = visibleRows();
+    if (selectAll.checked) rows.forEach(function (r) { state.selected[r.id] = true; });
+    else rows.forEach(function (r) { delete state.selected[r.id]; });
+    renderRows();
+    selectAll.focus();
+  });
+
+  function bulkAck() {
+    var ids = selectedIds();
+    if (!ids.length) return;
+    ids.forEach(function (id) { state.acked[id] = true; });
+    ids.forEach(function (id) { delete state.selected[id]; });
+    renderRows();
+    announce(ids.length + ' exception' + (ids.length === 1 ? '' : 's') + ' acknowledged.');
+  }
+  function bulkMine() {
+    var ids = selectedIds();
+    if (!ids.length) return;
+    ids.forEach(function (id) {
+      QUEUE.forEach(function (r) { if (r.id === id) r.owner = ME; });
+    });
+    ids.forEach(function (id) { delete state.selected[id]; });
+    renderRows();
+    announce(ids.length + ' exception' + (ids.length === 1 ? '' : 's') + ' assigned to you.');
+  }
+
+  $('bulk-ack').addEventListener('click', bulkAck);
+  $('bulk-mine').addEventListener('click', bulkMine);
+  $('bulk-clear').addEventListener('click', function () {
+    selectedIds().forEach(function (id) { delete state.selected[id]; });
+    renderRows();
+    $('export').focus();
+  });
+  $('bulk-export').addEventListener('click', function () { exportCsv('relay-selected.csv'); });
+
+  /* ==================================================================
+     6. CSV export — built from the rows the operator can actually see
+     ================================================================== */
+  function exportCsv(filename) {
+    var visible = new Set(visibleRows().map(function (r) { return r.id; }));
+    var rows = selectedIds().filter(function (id) { return visible.has(id); });
+    if (!rows.length) { rows = visibleRows().map(function (r) { return r.id; }); }
+    if (!rows.length) { announce('Nothing to export in the current view.'); return; }
+
+    var cols = ['Shipment','Lane','Journey','Age (min)','Issue','Detail','Severity','Owner','Acknowledged','Vehicle','Pallets'];
+    var lines = [cols.join(',')];
+    rows.forEach(function (id) {
+      QUEUE.forEach(function (r) {
+        if (r.id !== id) return;
+        lines.push([r.id, r.laneName, r.legs, r.age, r.issue, r.detail, SEV_LABEL[r.sev], r.owner,
+                    state.acked[r.id] ? 'yes' : 'no', r.vehicle, r.pallets]
+          .map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','));
+      });
+    });
+
+    var blob = new Blob([lines.join('\r\n')], { type:'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    announce('Exported ' + rows.length + ' row' + (rows.length === 1 ? '' : 's') + ' to ' + filename + '.');
+  }
+  $('export').addEventListener('click', function () { exportCsv('relay-queue.csv'); });
+
+  /* a single polite region for actions that have no natural on-screen home */
+  var announcer = el('p', 'sr-only');
+  announcer.setAttribute('role', 'status');
+  announcer.setAttribute('aria-live', 'polite');
+  document.body.appendChild(announcer);
+  var announceTimer;
+  function announce(text) {
+    announcer.textContent = '';
+    window.clearTimeout(announceTimer);
+    announceTimer = window.setTimeout(function () { announcer.textContent = text; }, 60);
+  }
+
+  /* ==================================================================
+     7. Toolbar wiring
+     ================================================================== */
+  function setPressed(selector, attr, value) {
+    Array.prototype.forEach.call(document.querySelectorAll(selector), function (b) {
+      b.setAttribute(attr, String(b.dataset[value] === state[value]));
+    });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function (btn) {
+    btn.addEventListener('click', function () {
+      state.view = btn.dataset.view;
+      setPressed('[data-view]', 'aria-pressed', 'view');
+      if (state.view === 'critical') { state.sev = 'all'; setPressed('[data-sev]', 'aria-pressed', 'sev'); }
+      renderRows();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-sev]'), function (btn) {
+    btn.addEventListener('click', function () {
+      state.sev = btn.dataset.sev;
+      setPressed('[data-sev]', 'aria-pressed', 'sev');
+      if (state.sev !== 'all' && state.view === 'critical') { state.view = 'all'; setPressed('[data-view]', 'aria-pressed', 'view'); }
+      renderRows();
+    });
+  });
+  $('lane').addEventListener('change', function () { state.lane = this.value; renderRows(); });
+  $('q').addEventListener('input', function () { state.query = this.value.trim().toLowerCase(); renderRows(); });
+
+  $('clear-filters').addEventListener('click', function () {
+    state.query = ''; state.lane = 'all'; state.sev = 'all'; state.view = 'all';
+    $('q').value = ''; $('lane').value = 'all';
+    setPressed('[data-sev]', 'aria-pressed', 'sev');
+    setPressed('[data-view]', 'aria-pressed', 'view');
+    renderRows();
+    $('q').focus();
+  });
+
+  /* the window control drives every number on the page */
+  $('range').addEventListener('change', function () {
+    state.window = +this.value;
+    renderRows();
+    /* focus stays on the select: re-rendering the table must not steal it */
+    announce(WINDOWS[state.window].label + ': ' + windowRows().length + ' exceptions in the queue.');
+  });
+
+  /* density */
+  var densityBtn = $('density');
+  densityBtn.addEventListener('click', function () {
+    var compact = document.documentElement.getAttribute('data-density') === 'compact';
+    document.documentElement.setAttribute('data-density', compact ? 'comfortable' : 'compact');
+    densityBtn.setAttribute('aria-pressed', String(!compact));
+    densityBtn.querySelector('.lbl').textContent = compact ? 'Compact' : 'Comfortable';
+  });
+
+  /* sorting — the header state is a pure function of state.sort, so the
+     default sort is marked up on load instead of only after a click */
+  var sortHeaders = Array.prototype.slice.call(document.querySelectorAll('th[data-key]'));
+  function markSortHeader() {
+    sortHeaders.forEach(function (o) {
+      var active = o.dataset.key === state.sort.key;
+      o.setAttribute('aria-sort', active ? state.sort.dir : 'none');
+      var a = o.querySelector('.arrow');
+      if (a) a.textContent = active && state.sort.dir === 'ascending' ? '▴' : '▾';
+    });
+  }
+  sortHeaders.forEach(function (th) {
+    th.querySelector('button').addEventListener('click', function () {
+      var key = th.dataset.key;
+      var dir = (state.sort.key === key && state.sort.dir === 'ascending') ? 'descending' : 'ascending';
+      state.sort = { key: key, dir: dir };
+      markSortHeader();
+      renderRows();
+      announce('Sorted by ' + th.textContent.trim().split(' ')[0].toLowerCase() + ', ' + dir + '.');
+    });
+  });
+
+  /* acknowledge */
+  function toggleAck(id) {
+    var next = !state.acked[id];
+    if (next) state.acked[id] = true; else delete state.acked[id];
+    renderRows();
+    if ($('drawer-title').textContent === id) syncDrawer(id);
+    var row = body.querySelector('tr[data-id="' + id + '"]');
+    /* while the drawer is open the row is behind a modal, so focus stays in the drawer */
+    if (drawer.dataset.open === 'true') return;
+    var btn = row && row.querySelector('.col-ack .rowbtn');
+    if (btn) btn.focus();
+    else announce((next ? 'Acknowledged ' : 'Unacknowledged ') + id + '.');
+  }
+
+  /* loading state */
+  $('refresh').addEventListener('click', function () {
+    var btn = this;
+    btn.disabled = true;
+    body.setAttribute('aria-busy', 'true');
+    document.querySelector('.exceptions').hidden = true;
+    emptyState.hidden = true;
+    $('loading').hidden = false;
+    window.setTimeout(function () {
+      var rows = visibleRows();
+      body.setAttribute('aria-busy', 'false');
+      document.querySelector('.exceptions').hidden = rows.length === 0;
+      emptyState.hidden = rows.length !== 0;
+      $('loading').hidden = true;
+      btn.disabled = false;
+      $('feedStatus').textContent = 'Live · last recalculation just now';
+      announce('Queue refreshed.');
+    }, 800);
+  });
+
+  /* ==================================================================
+     8. Alerts panel with a genuine degraded state
+     ================================================================== */
+  function renderAlerts() {
+    var list = $('alerts-list');
+    var err = $('alerts-error');
+    list.hidden = state.feedDown;
+    err.hidden = !state.feedDown;
+    if (state.feedDown) {
+      $('alerts-tag').textContent = 'feed unavailable';
+      $('alerts-tag').className = 'tag crit';
+      $('feedPulse').setAttribute('data-state', 'stale');
+      $('feedStatus').textContent = 'Degraded · telematics live, road feed stale';
+      return;
+    }
+    $('alerts-tag').textContent = '2 new';
+    $('alerts-tag').className = 'tag crit';
+    $('feedPulse').setAttribute('data-state', 'ok');
+    $('feedStatus').textContent = 'Live · last recalculation 14:06:02';
+    while (list.firstChild) list.removeChild(list.firstChild);
+    ALERTS.forEach(function (a) {
+      var li = el('li', 'alert ' + a.sev);
+      var rail = el('span', 'rail'); rail.setAttribute('aria-hidden', 'true');
+      var div = el('div');
+      div.appendChild(el('b', null, a.title));
+      div.appendChild(el('p', null, a.body));
+      var meta = el('p', 'alert-meta');
+      var t = el('time', null, a.at); t.setAttribute('datetime', '2026-09-14T' + a.at);
+      meta.appendChild(t);
+      a.tags.forEach(function (tag) { meta.appendChild(el('span', null, tag)); });
+      div.appendChild(meta);
+      li.appendChild(rail); li.appendChild(div);
+      list.appendChild(li);
+    });
+  }
+  $('alerts-retry').addEventListener('click', function () {
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Retrying…';
+    window.setTimeout(function () {
+      state.feedDown = false;
+      renderAlerts();
+      announce('Road feed restored.');
+    }, 700);
+  });
+
+  /* ==================================================================
+     9. Record drawer
+     ================================================================== */
+  var drawer = $('drawer');
+  var drawerOpener = null;
+  var currentId = null;
+  var app = $('app');
+
+  function byId(id) { return QUEUE.filter(function (r) { return r.id === id; })[0]; }
+  function pair(list, key, val) {
+    var dt = el('dt', null, key);
+    var dd = el('dd', null, val);
+    list.appendChild(dt); list.appendChild(dd);
+  }
+  function syncDrawer(id) {
+    var r = byId(id);
+    if (!r) return;
+    $('drawer-title').textContent = r.id;
+    $('drawer-sev').textContent = SEV_LABEL[r.sev];
+    var facts = $('drawer-facts');
+    while (facts.firstChild) facts.removeChild(facts.firstChild);
+    pair(facts, 'Issue', r.issue);
+    pair(facts, 'Severity', SEV_LABEL[r.sev]);
+    pair(facts, 'Lane', r.laneName + ' · ' + r.legs);
+    pair(facts, 'Open for', ageText(r.age));
+    pair(facts, 'Vehicle', r.vehicle);
+    pair(facts, 'Owner', r.owner === ME ? 'You' : r.owner);
+    pair(facts, 'Load', r.pallets);
+    pair(facts, 'Acknowledged', state.acked[r.id] ? 'Yes' : 'No');
+    $('drawer-note').textContent = r.note;
+    $('drawer-action').textContent = r.action;
+    $('drawer-ack').textContent = state.acked[r.id] ? 'Unacknowledge' : 'Acknowledge';
+    $('drawer-mine').textContent = r.owner === ME ? 'Assigned to you' : 'Assign to me';
+  }
+  function openDrawer(id, opener) {
+    currentId = id;
+    drawerOpener = opener || document.activeElement;
+    syncDrawer(id);
+    drawer.dataset.open = 'true';
+    app.setAttribute('aria-hidden', 'true');
+    $('drawer-close').focus();
+  }
+  function closeDrawer() {
+    var opener = drawerOpener;
+    var rowId = currentId;
+    drawer.dataset.open = 'false';
+    app.removeAttribute('aria-hidden');
+    /* the opener button is rebuilt on every render, so fall back to the
+       equivalent button in the current DOM when the old node is gone */
+    if (!opener || !document.contains(opener)) {
+      var row = rowId && body.querySelector('tr[data-id="' + rowId + '"]');
+      opener = row && row.querySelector('.col-actions .rowbtn');
+    }
+    if (opener && document.contains(opener)) opener.focus();
+    else if (drawerOpener && document.contains(drawerOpener)) drawerOpener.focus();
+    drawerOpener = null;
+    currentId = null;
+  }
+  $('drawer-close').addEventListener('click', closeDrawer);
+  $('drawer-scrim').addEventListener('click', closeDrawer);
+  $('drawer-ack').addEventListener('click', function () { if (currentId) toggleAck(currentId); });
+  $('drawer-mine').addEventListener('click', function () {
+    if (!currentId) return;
+    var r = byId(currentId);
+    r.owner = r.owner === ME ? r.owner : ME;
+    renderRows();
+    syncDrawer(currentId);
+    announce(r.id + ' assigned to you.');
+  });
+  $('drawer-dispatch').addEventListener('click', function () {
+    var ref = currentId || '';
+    closeDrawer();
+    $('d-ref').value = ref;
+    $('d-ref').focus();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (drawer.dataset.open !== 'true') return;
+    if (e.key === 'Escape') { closeDrawer(); return; }
+    if (e.key !== 'Tab') return;
+    var focusables = drawer.querySelectorAll('button, [href], input, select, textarea');
+    var first = focusables[0], last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  /* ==================================================================
+     10. Sidebar, keyboard shortcuts, dispatch form, handover
+     ================================================================== */
+  var side = $('side'), sideToggle = $('side-toggle'), scrim = $('scrim');
+  var sideOpener = null;
+  function setSide(open) {
+    /* fall back to the toggle itself, so Escape always has somewhere to go back to */
+    if (open) sideOpener = (document.activeElement && document.activeElement !== document.body) ? document.activeElement : sideToggle;
+    side.dataset.open = String(open);
+    scrim.dataset.open = String(open);
+    sideToggle.setAttribute('aria-expanded', String(open));
+    sideToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+    if (open) { var f = side.querySelector('a, button'); if (f) f.focus(); }
+    else if (sideOpener) { sideOpener.focus(); sideOpener = null; }
+  }
+  sideToggle.addEventListener('click', function () { setSide(side.dataset.open !== 'true'); });
+  scrim.addEventListener('click', function () { setSide(false); });
+  side.addEventListener('click', function (e) { if (e.target.closest('a') && MOBILE.matches) setSide(false); });
+  if (!MOBILE.matches) { side.dataset.open = 'false'; scrim.dataset.open = 'false'; }
+
+  /* shortcuts — only when the operator is not typing */
+  function typing(el) {
+    return el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el.isContentEditable);
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && side.dataset.open === 'true') { setSide(false); return; }
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (typing(document.activeElement)) return;
+    if (drawer.dataset.open === 'true') return;
+
+    if (e.key === '/') { e.preventDefault(); $('q').focus(); $('q').select(); return; }
+
+    if (e.key === 'j' || e.key === 'k') {
+      var rows = Array.prototype.slice.call(body.querySelectorAll('tr'));
+      if (!rows.length) return;
+      e.preventDefault();
+      var at = rows.findIndex(function (r) { return r.contains(document.activeElement); });
+      var next = e.key === 'j' ? Math.min(rows.length - 1, at + 1) : Math.max(0, at - 1);
+      var target = rows[next];
+      var control = target.querySelector('input, button');
+      if (control) control.focus();
+    }
+    if ((e.key === 'a' || e.key === 'A') && body.contains(document.activeElement)) {
+      var row = document.activeElement.closest('tr');
+      if (row) { e.preventDefault(); toggleAck(row.dataset.id); }
+    }
+  });
+
+  /* dispatch form */
+  var form = $('dispatch-form');
+  var fstatus = $('d-status');
+  var submit = $('d-submit');
+  var refField = $('d-ref'), driverField = $('d-driver');
+  var refErr = $('d-ref-err'), driverErr = $('d-driver-err');
+
+  function setErr(field, slot, message) {
+    slot.textContent = message || '';
+    if (message) field.setAttribute('aria-invalid', 'true');
+    else field.removeAttribute('aria-invalid');
+  }
+  form.addEventListener('input', function (e) {
+    if (e.target.hasAttribute('aria-invalid')) {
+      setErr(refField, refErr, ''); setErr(driverField, driverErr, '');
+      fstatus.textContent = '';
+    }
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var bad = false;
+    var ref = refField.value.trim().toUpperCase();
+    if (!/^SHP-\d{5}$/.test(ref)) { setErr(refField, refErr, 'Enter a reference like SHP-88412 — “SHP-” followed by five digits.'); bad = true; }
+    else setErr(refField, refErr, '');
+    if (!driverField.value) { setErr(driverField, driverErr, 'Choose a driver so the depot knows who is taking the load.'); bad = true; }
+    else setErr(driverField, driverErr, '');
+    if (bad) {
+      fstatus.dataset.state = 'error';
+      fstatus.textContent = 'Check the highlighted fields before this dispatch can be created.';
+      var first = form.querySelector('[aria-invalid="true"]');
+      if (first) first.focus();
+      return;
+    }
+    submit.disabled = true; submit.textContent = 'Creating…';
+    fstatus.dataset.state = 'busy'; fstatus.textContent = 'Reserving vehicle and driver.';
+    window.setTimeout(function () {
+      submit.disabled = false; submit.textContent = 'Create dispatch';
+      fstatus.dataset.state = 'ok';
+      fstatus.textContent = 'Dispatch created for ' + ref + '. The driver has it on their handheld and the depot view is already updated.';
+      form.reset();
+      setErr(refField, refErr, ''); setErr(driverField, driverErr, '');
+    }, 700);
+  });
+  $('d-reset').addEventListener('click', function () {
+    setErr(refField, refErr, ''); setErr(driverField, driverErr, ''); fstatus.textContent = '';
+  });
+
+  /* handover copy */
+  $('copy-handover').addEventListener('click', function () {
+    var btn = this;
+    var text = $('handover-text').textContent;
+    var done = function (ok) {
+      $('copy-status').dataset.state = ok ? 'ok' : 'error';
+      $('copy-status').textContent = ok
+        ? 'Handover summary copied. Paste it into the shift C channel.'
+        : 'Copying was blocked. Select the summary text above and copy it manually.';
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+    } else done(false);
+  });
+
+  /* ---------- paint everything ---------- */
+  document.documentElement.setAttribute('data-density', 'comfortable');
+  markSortHeader();
+  renderAlerts();
+  renderRows();
+})();
+</script>
+</body>
+</html>

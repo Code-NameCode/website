@@ -1,0 +1,617 @@
+<!-- Style: Split Screen | 31splitscreen.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peregrine — Flight Planning</title>
+<style>
+:root{
+  /* color */
+  --ink:#0d141c;
+  --ink-2:#151f2a;
+  --ink-line:#26333f;
+  --ink-text:#e9eff5;
+  --ink-muted:#93a4b4;
+  --paper:#f4f2ec;
+  --paper-2:#ffffff;
+  --paper-line:#ddd8cd;
+  --text:#161a1f;
+  --muted:#5c6672;
+  --accent:#e8801f;
+  --accent-ink:#1a1005;
+  --ok:#2f7d4f;
+  --warn:#b4531a;
+  --focus:#1a72e0;
+  /* type */
+  --font-ui:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --t-xs:clamp(.7rem,.68rem + .1vw,.78rem);
+  --t-sm:clamp(.84rem,.8rem + .15vw,.92rem);
+  --t-base:clamp(1rem,.96rem + .18vw,1.09rem);
+  --t-lg:clamp(1.15rem,1.05rem + .4vw,1.4rem);
+  --t-xl:clamp(1.5rem,1.3rem + .9vw,2.1rem);
+  --t-2xl:clamp(2rem,1.5rem + 2.4vw,3.4rem);
+  --t-3xl:clamp(2.6rem,1.7rem + 4.2vw,5rem);
+  /* space */
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;
+  --s-6:2rem;--s-7:2.75rem;--s-8:3.5rem;--s-9:5rem;
+  /* edges */
+  --r-sm:2px;--r-md:4px;--r-lg:8px;
+  --sh-panel:0 0 0 1px var(--ink-line);
+  --sh-soft:0 1px 2px rgba(13,20,28,.06),0 8px 24px rgba(13,20,28,.05);
+  /* layout */
+  --pane-left:minmax(20rem,38%);
+  --pane-right:1fr;
+  --tap:44px;
+  /* motion */
+  --d-fast:120ms;--d-base:220ms;--d-slow:420ms;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--text);font-family:var(--font-ui);font-size:var(--t-base);line-height:1.55;}
+
+/* ---- split frame: the whole page is the split ---- */
+.split{
+  display:grid;
+  grid-template-columns:var(--pane-left) var(--pane-right);
+  min-height:100svh;
+}
+/* left pane — controls, never scrolls away on desktop */
+.pane-left{
+  background:var(--ink);color:var(--ink-text);
+  border-right:1px solid var(--ink-line);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100svh;overflow-y:auto;
+  z-index:2;
+}
+.pane-right{background:var(--paper);min-width:0;display:flex;flex-direction:column;}
+
+/* ---- brand + nav in the dark pane ---- */
+.brand{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-5) var(--s-5) var(--s-4);border-bottom:1px solid var(--ink-line)}
+.mark{width:34px;height:34px;flex:0 0 auto;color:var(--accent)}
+.brand-name{font-size:var(--t-lg);letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.brand-sub{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--ink-muted);letter-spacing:.08em}
+
+.pane-nav{border-bottom:1px solid var(--ink-line)}
+.pane-nav ul{list-style:none;margin:0;padding:var(--s-2) var(--s-3)}
+.pane-nav a{
+  display:flex;align-items:center;gap:var(--s-3);min-height:var(--tap);
+  padding:0 var(--s-3);color:var(--ink-muted);text-decoration:none;
+  font-size:var(--t-sm);letter-spacing:.06em;text-transform:uppercase;
+  border-left:2px solid transparent;transition:color var(--d-fast) var(--ease),border-color var(--d-fast) var(--ease),background var(--d-fast) var(--ease);
+}
+.pane-nav a:hover{color:var(--ink-text);background:var(--ink-2)}
+.pane-nav a[aria-current="page"]{color:var(--ink-text);border-left-color:var(--accent);background:var(--ink-2)}
+.pane-nav a:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.nav-num{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--ink-muted);min-width:1.6em}
+
+/* ---- the form lives entirely in the left pane ---- */
+.planner{padding:var(--s-5);flex:1 0 auto}
+.planner h1{font-size:var(--t-xl);line-height:1.15;margin:0 0 var(--s-2);letter-spacing:-.01em}
+.planner .lede{color:var(--ink-muted);font-size:var(--t-sm);margin:0 0 var(--s-5);max-width:34ch}
+.field{margin-bottom:var(--s-4)}
+.field label{display:block;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:var(--s-2)}
+.field input,.field select{
+  width:100%;min-height:var(--tap);padding:0 var(--s-3);
+  background:var(--ink-2);color:var(--ink-text);
+  border:1px solid var(--ink-line);border-radius:var(--r-sm);
+  font-family:var(--font-mono);font-size:var(--t-sm);letter-spacing:.06em;
+  transition:border-color var(--d-fast) var(--ease),box-shadow var(--d-fast) var(--ease);
+}
+.field input::placeholder{color:#6d7d8c}
+.field input:hover,.field select:hover{border-color:#3a4b5c}
+.field input:focus-visible,.field select:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,128,31,.28)}
+.field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink-muted) 50%),linear-gradient(135deg,var(--ink-muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--s-2);align-items:end}
+.swap{
+  min-width:var(--tap);min-height:var(--tap);margin-bottom:2px;
+  background:transparent;border:1px solid var(--ink-line);color:var(--ink-muted);
+  border-radius:var(--r-sm);cursor:pointer;display:grid;place-items:center;
+  transition:color var(--d-fast) var(--ease),border-color var(--d-fast) var(--ease),transform var(--d-base) var(--ease);
+}
+.swap svg{width:18px;height:18px}
+.swap:hover{color:var(--accent);border-color:var(--accent)}
+.swap:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.swap.spin svg{transform:rotate(180deg)}
+.hint{font-size:var(--t-xs);color:var(--ink-muted);margin:var(--s-2) 0 0}
+.hint.error{color:#ff9a8a}
+.hint.ok{color:#7fd6a5}
+
+.btn{
+  width:100%;min-height:var(--tap);margin-top:var(--s-2);
+  background:var(--accent);color:var(--accent-ink);
+  border:1px solid var(--accent);border-radius:var(--r-sm);
+  font-family:var(--font-mono);font-size:var(--t-sm);font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  transition:background var(--d-fast) var(--ease),transform var(--d-fast) var(--ease),box-shadow var(--d-fast) var(--ease);
+}
+.btn:hover{background:#f4913a;box-shadow:0 6px 18px rgba(232,128,31,.28)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.btn[disabled]{background:var(--ink-2);color:var(--ink-muted);border-color:var(--ink-line);cursor:not-allowed;box-shadow:none}
+
+/* live readout strip — the "preview" that updates as you type */
+.readout{
+  margin:0 var(--s-5) var(--s-5);padding:var(--s-4);
+  background:var(--ink-2);border:1px solid var(--ink-line);border-left:2px solid var(--accent);
+  border-radius:var(--r-sm);display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3) var(--s-4);
+  font-family:var(--font-mono);
+}
+.readout dt{font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin:0}
+.readout dd{margin:2px 0 0;font-size:var(--t-sm);color:var(--ink-text)}
+.pane-foot{padding:var(--s-4) var(--s-5);border-top:1px solid var(--ink-line);font-family:var(--font-mono);font-size:var(--t-xs);color:var(--ink-muted);display:flex;justify-content:space-between;gap:var(--s-3)}
+
+/* ---- right pane content ---- */
+.main{min-width:0}
+.hero{padding:var(--s-9) var(--s-7) var(--s-7);border-bottom:1px solid var(--paper-line);background:var(--paper-2)}
+.eyebrow{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin:0 0 var(--s-3)}
+.hero h2{font-size:var(--t-3xl);line-height:.98;letter-spacing:-.03em;margin:0 0 var(--s-4);max-width:16ch;font-weight:600}
+.hero p{font-size:var(--t-lg);color:var(--muted);max-width:44ch;margin:0 0 var(--s-6)}
+.route-map{border:1px solid var(--paper-line);border-radius:var(--r-md);background:linear-gradient(180deg,#eef1f4,#e4e9ee);padding:var(--s-4)}
+.route-map svg{display:block;width:100%;height:auto}
+
+/* metric strip: not cards, a divided table */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--paper-line);background:var(--paper-2)}
+.metrics div{padding:var(--s-5);border-left:1px solid var(--paper-line)}
+.metrics div:first-child{border-left:0}
+.metrics dt{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 var(--s-2)}
+.metrics dd{margin:0;font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+
+.section{padding:var(--s-8) var(--s-7);border-bottom:1px solid var(--paper-line)}
+.section:nth-of-type(odd){background:var(--paper)}
+.section-head{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-4);flex-wrap:wrap;margin-bottom:var(--s-6)}
+.section h3{font-size:var(--t-xl);margin:0;letter-spacing:-.01em}
+.section .kicker{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+/* accordion advisories */
+.acc{border-top:1px solid var(--paper-line)}
+.acc-item{border-bottom:1px solid var(--paper-line)}
+.acc-btn{
+  width:100%;min-height:var(--tap);display:flex;align-items:center;gap:var(--s-4);
+  background:none;border:0;padding:var(--s-4) 0;cursor:pointer;text-align:left;
+  font-family:var(--font-ui);font-size:var(--t-base);color:var(--text);
+}
+.acc-btn:hover{color:var(--accent)}
+.acc-btn:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.acc-btn .chev{width:14px;height:14px;flex:0 0 auto;transition:transform var(--d-base) var(--ease);color:var(--muted)}
+.acc-btn[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.sev{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;padding:3px 6px;border-radius:var(--r-sm);border:1px solid;margin-left:auto;white-space:nowrap}
+.sev-high{color:var(--warn);border-color:var(--warn)}
+.sev-med{color:var(--muted);border-color:var(--paper-line)}
+.sev-low{color:var(--ok);border-color:var(--ok)}
+.acc-panel{padding:0 0 var(--s-5) calc(14px + var(--s-4));max-width:62ch;color:var(--muted);font-size:var(--t-sm)}
+.acc-panel[hidden]{display:none}
+
+/* alternates table */
+table{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+caption{text-align:left;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:var(--s-3)}
+th,td{text-align:left;padding:var(--s-3) var(--s-3) var(--s-3) 0;border-bottom:1px solid var(--paper-line);vertical-align:top}
+th{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--paper-2)}
+
+/* profile chart + fleet notes, two unequal columns */
+.split2{display:grid;grid-template-columns:1.5fr 1fr;gap:var(--s-7);align-items:start}
+.chart{border:1px solid var(--paper-line);background:var(--paper-2);border-radius:var(--r-md);padding:var(--s-4)}
+.chart svg{display:block;width:100%;height:auto}
+.notes{list-style:none;margin:0;padding:0;border-top:1px solid var(--paper-line)}
+.notes li{padding:var(--s-4) 0;border-bottom:1px solid var(--paper-line)}
+.notes dt{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.notes dd{margin:var(--s-1) 0 0;font-size:var(--t-sm)}
+.notes strong{font-weight:600}
+
+.cta{background:var(--ink);color:var(--ink-text);padding:var(--s-8) var(--s-7)}
+.cta h3{font-size:var(--t-2xl);line-height:1.05;letter-spacing:-.02em;margin:0 0 var(--s-3);max-width:20ch}
+.cta p{color:var(--ink-muted);max-width:48ch;margin:0 0 var(--s-5)}
+.cta-row{display:flex;gap:var(--s-3);flex-wrap:wrap}
+.cta .btn{width:auto;margin:0;padding:0 var(--s-5)}
+.ghost{background:transparent;color:var(--ink-text);border-color:var(--ink-line)}
+.ghost:hover{background:var(--ink-2);box-shadow:none;color:#fff}
+
+footer{border-top:1px solid var(--ink-line);background:var(--ink);color:var(--ink-muted);padding:var(--s-6) var(--s-7);display:flex;justify-content:space-between;gap:var(--s-5);flex-wrap:wrap;font-size:var(--t-sm)}
+footer ul{list-style:none;display:flex;gap:var(--s-5);margin:0;padding:0;flex-wrap:wrap}
+footer a{color:var(--ink-text);text-decoration:none;border-bottom:1px solid var(--ink-line);padding-bottom:2px}
+footer a:hover{color:var(--accent);border-color:var(--accent)}
+footer a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+@media (max-width:1000px){
+  .split{grid-template-columns:1fr}
+  .pane-left{position:static;height:auto;border-right:0;border-bottom:1px solid var(--ink-line)}
+  .pane-right{border-top:1px solid var(--paper-line)}
+  .split2{grid-template-columns:1fr;gap:var(--s-6)}
+  .metrics{grid-template-columns:1fr 1fr}
+  .metrics div:nth-child(3){border-left:0}
+  .metrics div:nth-child(n+3){border-top:1px solid var(--paper-line)}
+  .hero,.section,.cta{padding-left:var(--s-5);padding-right:var(--s-5)}
+  .hero{padding-top:var(--s-7)}
+}
+@media (max-width:460px){
+  .metrics{grid-template-columns:1fr}
+  .metrics div{border-left:0;border-top:1px solid var(--paper-line)}
+  .metrics div:first-child{border-top:0}
+  .readout{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div class="split">
+
+  <!-- LEFT PANE: navigation + flight plan controls. The task, not decoration. -->
+  <aside class="pane-left" aria-label="Flight plan controls and site navigation">
+    <header class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 21 L14 4 L17 15 L29 15 L29 18 L17 18 L14 28 L11 18 L3 21 Z"/>
+      </svg>
+      <div>
+        <div class="brand-name">Peregrine</div>
+        <div class="brand-sub">Flight planning</div>
+      </div>
+    </header>
+
+    <nav class="pane-nav" aria-label="Primary">
+      <ul>
+        <li><a href="#plan" aria-current="page"><span class="nav-num">01</span> Plan</a></li>
+        <li><a href="#route"><span class="nav-num">02</span> Route</a></li>
+        <li><a href="#advisories"><span class="nav-num">03</span> Airspace</a></li>
+        <li><a href="#alternates"><span class="nav-num">04</span> Alternates</a></li>
+        <li><a href="#profile"><span class="nav-num">05</span> Profile</a></li>
+        <li><a href="#dispatch"><span class="nav-num">06</span> Dispatch</a></li>
+      </ul>
+    </nav>
+
+    <form class="planner" id="plan" novalidate>
+      <h1>Build a flight plan</h1>
+      <p class="lede">Enter the legs and the briefing pane updates as you type. Distances use great-circle routing at the requested cruise level.</p>
+
+      <div class="pair">
+        <div class="field">
+          <label for="from">From</label>
+          <input id="from" name="from" value="EGPH" maxlength="4" autocomplete="off" spellcheck="false" aria-describedby="from-hint">
+          <p class="hint" id="from-hint">ICAO, 4 characters</p>
+        </div>
+        <button type="button" class="swap" id="swap" aria-label="Swap origin and destination">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 4v14M7 18l-3-3M7 18l3-3M17 20V6M17 6l-3 3M17 6l3 3"/>
+          </svg>
+        </button>
+        <div class="field">
+          <label for="to">To</label>
+          <input id="to" name="to" value="LOWI" maxlength="4" autocomplete="off" spellcheck="false" aria-describedby="to-hint">
+          <p class="hint" id="to-hint">ICAO, 4 characters</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="aircraft">Aircraft</label>
+        <select id="aircraft" name="aircraft">
+          <option value="A320" selected>A320-200 — 174 pax, 3 600 kg/h</option>
+          <option value="E75">Embraer 175 — 76 pax, 1 820 kg/h</option>
+          <option value="DH8">Dash 8 Q400 — 78 pax, 2 100 kg/h</option>
+          <option value="B77">Boeing 777-300ER — 396 pax, 7 100 kg/h</option>
+        </select>
+      </div>
+
+      <div class="pair">
+        <div class="field">
+          <label for="level">Cruise level</label>
+          <select id="level" name="level">
+            <option>FL240</option>
+            <option>FL280</option>
+            <option selected>FL340</option>
+            <option>FL380</option>
+          </select>
+        </div>
+        <div aria-hidden="true"></div>
+        <div class="field">
+          <label for="dep">Departure</label>
+          <input id="dep" name="dep" type="time" value="06:40" style="color-scheme:dark">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="callsign">Callsign</label>
+        <input id="callsign" name="callsign" value="PGR418" maxlength="8" autocomplete="off" spellcheck="false">
+      </div>
+
+      <button type="submit" class="btn" id="submit">Release flight plan</button>
+      <p class="hint" id="form-msg" role="status" aria-live="polite"></p>
+    </form>
+
+    <dl class="readout" id="readout" aria-live="polite" aria-label="Live plan estimate">
+      <div><dt>Distance</dt><dd id="r-dist">—</dd></div>
+      <div><dt>Block time</dt><dd id="r-time">—</dd></div>
+      <div><dt>Block fuel</dt><dd id="r-fuel">—</dd></div>
+      <div><dt>Est. cost</dt><dd id="r-cost">—</dd></div>
+    </dl>
+
+    <div class="pane-foot">
+      <span>ADS-B feed 14 s</span>
+      <span>v4.2 · EGLL</span>
+    </div>
+  </aside>
+
+  <!-- RIGHT PANE: the briefing. Scrolls; the controls stay put. -->
+  <div class="pane-right">
+    <main class="main" id="main">
+
+      <section class="hero" id="route" aria-labelledby="hero-h">
+        <p class="eyebrow">Filing window closes T−45 min</p>
+        <h2 id="hero-h">Edinburgh to Innsbruck, over the Alps in a single corridor.</h2>
+        <p>Three hours of mountain flying, one decision point at Verona. Below is the routing Peregrine holds for PGR418 today, with the airspace picture at the moment of filing.</p>
+        <div class="route-map">
+          <svg viewBox="0 0 640 260" role="img" aria-labelledby="map-t map-d">
+            <title id="map-t">Route map from Edinburgh to Innsbruck</title>
+            <desc id="map-d">A great-circle route running south-east from Edinburgh across the North Sea, through the Alps, ending at Innsbruck, with a dashed diversion branch to Verona.</desc>
+            <defs>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M32 0H0V32" fill="none" stroke="#cfd7de" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="640" height="260" fill="url(#grid)"/>
+            <g fill="#dfe5ea" stroke="#c3ccd4">
+              <path d="M20 44l84-24 44 26-30 34-92 6z"/>
+              <path d="M360 26l96-8 58 30-30 44-104-6-36-32z"/>
+              <path d="M300 150l120-18 76 34-44 52-124-8-46-34z"/>
+            </g>
+            <path d="M92 62 C 190 130, 268 150, 352 176 S 500 196, 566 172" fill="none" stroke="#161a1f" stroke-width="2" stroke-dasharray="7 5"/>
+            <path d="M352 176 C 402 210, 436 224, 470 226" fill="none" stroke="#e8801f" stroke-width="1.6" stroke-dasharray="3 4"/>
+            <g font-family="ui-monospace,monospace" font-size="11" fill="#161a1f">
+              <circle cx="92" cy="62" r="5" fill="#161a1f"/><text x="102" y="58">EGPH</text>
+              <circle cx="352" cy="176" r="4" fill="#e8801f"/><text x="360" y="172">LIMBO</text>
+              <circle cx="470" cy="226" r="4" fill="#e8801f"/><text x="478" y="230">LIMF</text>
+              <circle cx="566" cy="172" r="5" fill="#161a1f"/><text x="556" y="166">LOWI</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <dl class="metrics" aria-label="Plan summary">
+        <div><dt>Great circle</dt><dd id="m-dist">1 246 km</dd></div>
+        <div><dt>Block time</dt><dd id="m-time">3 h 04</dd></div>
+        <div><dt>Block fuel</dt><dd id="m-fuel">5 980 kg</dd></div>
+        <div><dt>Track cost</dt><dd id="m-cost">€4 210</dd></div>
+      </dl>
+
+      <section class="section" id="advisories" aria-labelledby="adv-h">
+        <div class="section-head">
+          <h3 id="adv-h">Airspace advisories</h3>
+          <p class="kicker">3 open · refreshed 06:12Z</p>
+        </div>
+        <div class="acc">
+          <div class="acc-item">
+            <button class="acc-btn" type="button" aria-expanded="true" aria-controls="a1">
+              <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+              Milan TMA capacity restriction
+              <span class="sev sev-high">High</span>
+            </button>
+            <div class="acc-panel" id="a1">
+              Milan TMA is accepting 48 movements an hour until 11:00Z. PGR418 is not affected at the filed time, but any delay beyond 07:30Z pushes the corridor past the restriction and requires a re-route via LIMBO.
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-btn" type="button" aria-expanded="false" aria-controls="a2">
+              <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+              Innsbruck runway works, RWY 08
+              <span class="sev sev-med">Medium</span>
+            </button>
+            <div class="acc-panel" id="a2" hidden>
+              Crosswind component above 18 kt on runway 08 between 06:00Z and 09:00Z. Expect a runway change to 26 and a longer taxi; the alternate remains LIMF Verona.
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-btn" type="button" aria-expanded="false" aria-controls="a3">
+              <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+              North Sea FIR route change, EGPH
+              <span class="sev sev-low">Low</span>
+            </button>
+            <div class="acc-panel" id="a3" hidden>
+              Advisory only. A new unpublished arrival route into Edinburgh will appear in the next AIRAC cycle; the filed SID is unaffected.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="alternates" aria-labelledby="alt-h">
+        <div class="section-head">
+          <h3 id="alt-h">Alternates, ranked</h3>
+          <p class="kicker">Fuel to alternate included</p>
+        </div>
+        <table>
+          <caption>Peregrine alternate selection for PGR418</caption>
+          <thead>
+            <tr><th scope="col">ICAO</th><th scope="col">Field</th><th scope="col">Runway</th><th scope="col">Distance</th><th scope="col">Holding fuel</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">LIMF</td><td>Verona Villafranca</td><td class="num">04R / 22L</td><td class="num">184 km</td><td class="num">2 240 kg</td></tr>
+            <tr><td class="num">LSZH</td><td>Zürich</td><td class="num">16 / 34</td><td class="num">212 km</td><td class="num">2 310 kg</td></tr>
+            <tr><td class="num">LOWA</td><td>Vienna</td><td class="num">11 / 29</td><td class="num">318 km</td><td class="num">2 540 kg</td></tr>
+            <tr><td class="num">LIDP</td><td>Bolzano</td><td class="num">01 / 19</td><td class="num">96 km</td><td class="num">1 880 kg</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section" id="profile" aria-labelledby="prof-h">
+        <div class="section-head">
+          <h3 id="prof-h">Vertical profile</h3>
+          <p class="kicker">FL340 cruise · 1 046 km of climb and descent</p>
+        </div>
+        <div class="split2">
+          <div class="chart">
+            <svg viewBox="0 0 520 260" role="img" aria-labelledby="p-t p-d">
+              <title id="p-t">Altitude profile against distance</title>
+              <desc id="p-d">Climb to flight level 340 within 220 kilometres, cruise for roughly 600 kilometres, then descend into Innsbruck.</desc>
+              <g stroke="#ddd8cd" stroke-width="1">
+                <line x1="46" y1="20" x2="46" y2="220"/>
+                <line x1="46" y1="220" x2="504" y2="220"/>
+                <line x1="46" y1="163" x2="504" y2="163" stroke-dasharray="3 4"/>
+                <line x1="46" y1="106" x2="504" y2="106" stroke-dasharray="3 4"/>
+                <line x1="46" y1="50" x2="504" y2="50" stroke-dasharray="3 4"/>
+              </g>
+              <g font-family="ui-monospace,monospace" font-size="10" fill="#5c6672">
+                <text x="8" y="53">FL340</text><text x="8" y="109">FL240</text>
+                <text x="8" y="166">FL140</text><text x="8" y="224">SFC</text>
+                <text x="46" y="238">0</text><text x="250" y="238">600</text><text x="472" y="238">1 246 km</text>
+              </g>
+              <path d="M46 220 L92 158 L140 84 L186 54 L232 50 L400 50 L448 66 L478 120 L504 214" fill="none" stroke="#e8801f" stroke-width="2.5" stroke-linejoin="round"/>
+              <g font-family="ui-monospace,monospace" font-size="10" fill="#161a1f">
+                <text x="188" y="42">cruise 41 min</text>
+                <text x="60" y="206">climb</text>
+                <text x="440" y="206">descent</text>
+              </g>
+            </svg>
+          </div>
+          <dl class="notes">
+            <li><dt>Cost index</dt><dd>Cost 32, <strong>max continuous thrust</strong>. Block fuel drops by 240 kg at CI 45.</dd></li>
+            <li><dt>Climb clearance</dt><dd><strong>FL340</strong> available from the Verona gate; the segment before it is capped at FL280.</dd></li>
+            <li><dt>De-icing</dt><dd>Not forecast on the filed route. Edinburgh stands 3 °C with a light frost at 05:40Z.</dd></li>
+            <li><dt>Contingency</dt><dd>Final reserve 30 min, alternate 184 km, <strong>5 980 kg</strong> total block.</dd></li>
+          </dl>
+        </div>
+      </section>
+
+      <section class="cta" aria-labelledby="disp-h">
+        <h3 id="disp-h">Ready to release the plan to the ATS unit?</h3>
+        <p>Peregrine files to EGLL, GAA and ARO via SWIM. A filed plan returns a reference and a PDF briefing packet; amendments after release are logged against the flight number.</p>
+        <div class="cta-row">
+          <button class="btn" type="button" id="cta-file">File PGR418</button>
+          <button class="btn ghost" type="button" id="cta-draft">Download draft briefing</button>
+        </div>
+        <p class="hint" id="cta-msg" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Peregrine Flight Systems · Unit 4, Dockside, Bristol BS1</p>
+      <ul>
+        <li><a href="#plan">Plan</a></li>
+        <li><a href="#alternates">Alternates</a></li>
+        <li><a href="#advisories">Advisories</a></li>
+        <li><a href="#profile">Profile</a></li>
+      </ul>
+    </footer>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- accordion (pane interactions) ---- */
+  document.querySelectorAll('.acc-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var panel = document.getElementById(btn.getAttribute('aria-controls'));
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+    });
+  });
+
+  /* ---- swap origin/destination ---- */
+  var from = document.getElementById('from'), to = document.getElementById('to');
+  var swap = document.getElementById('swap');
+  swap.addEventListener('click', function(){
+    var a = from.value; from.value = to.value; to.value = a;
+    if(!reduced){ swap.classList.add('spin'); setTimeout(function(){ swap.classList.remove('spin'); }, 240); }
+    update();
+  });
+
+  /* ---- preview updates: airports -> distance, time, fuel, cost ---- */
+  var AIRPORTS = {
+    EGPB:{n:'Glasgow',lat:55.87,lon:-4.43}, EGPF:{n:'Farnborough',lat:51.28,lon:-0.78},
+    EGPH:{n:'Edinburgh',lat:55.95,lon:-3.37},
+    LOWI:{n:'Innsbruck',lat:47.26,lon:11.44}, LIMF:{n:'Verona',lat:45.40,lon:10.89},
+    LOWA:{n:'Vienna',lat:48.11,lon:16.57}, LSZH:{n:'Zürich',lat:47.46,lon:8.55},
+    EDDF:{n:'Frankfurt',lat:50.04,lon:8.56}, EDDM:{n:'Munich',lat:48.35,lon:11.79}
+  };
+  var FLEET = {
+    A320:{fpm:930, lbf:2400, cost:610, price:1.92},
+    E75 :{fpm:820, lbf:1550, cost:470, price:1.74},
+    DH8 :{fpm:790, lbf:1900, cost:505, price:1.68},
+    B77 :{fpm:905, lbf:6900, cost:1980, price:1.55}
+  };
+  function hav(a,b){
+    var R=6371, t=Math.PI/180;
+    var dLat=(b.lat-a.lat)*t, dLon=(b.lon-a.lon)*t;
+    var h=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(a.lat*t)*Math.cos(b.lat*t)*Math.sin(dLon/2)*Math.sin(dLon/2);
+    return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));
+  }
+  function fmtInt(n){ return n.toLocaleString('en-GB').replace(/,/g,' '); }
+
+  var out = {
+    dist: document.getElementById('r-dist'), time: document.getElementById('r-time'),
+    fuel: document.getElementById('r-fuel'), cost: document.getElementById('r-cost'),
+    mDist: document.getElementById('m-dist'), mTime: document.getElementById('m-time'),
+    mFuel: document.getElementById('m-fuel'), mCost: document.getElementById('m-cost')
+  };
+  function update(){
+    var a = AIRPORTS[from.value.trim().toUpperCase()];
+    var b = AIRPORTS[to.value.trim().toUpperCase()];
+    if(!a || !b || from.value.trim().toUpperCase() === to.value.trim().toUpperCase()){
+      out.dist.textContent = '—'; out.time.textContent = '—';
+      out.fuel.textContent = '—'; out.cost.textContent = '—';
+      ['mDist','mTime','mFuel','mCost'].forEach(function(k){ out[k].textContent = '—'; });
+      return;
+    }
+    var km = hav(a,b);
+    var ac = FLEET[document.getElementById('aircraft').value];
+    var lvl = parseInt(document.getElementById('level').value.replace(/\D/g,''),10);
+    // TAS rises with level; climb/descent add 18 min of non-cruise
+    var tas = ac.fpm * (1 + (lvl-240)/1000 * 0.62);
+    var min = (km / tas) * 60 + 18;
+    var h = Math.floor(min/60), m = Math.round(min%60);
+    var fuel = Math.round(min/60 * ac.lbf / 10) * 10;
+    var cost = Math.round(ac.cost + km * ac.price);
+    var dTxt = fmtInt(Math.round(km)) + ' km', tTxt = h + ' h ' + String(m).padStart(2,'0');
+    var fTxt = fmtInt(fuel) + ' kg', cTxt = '€' + fmtInt(cost);
+    out.dist.textContent=dTxt; out.mDist.textContent=dTxt;
+    out.time.textContent=tTxt; out.mTime.textContent=tTxt;
+    out.fuel.textContent=fTxt; out.mFuel.textContent=fTxt;
+    out.cost.textContent=cTxt; out.mCost.textContent=cTxt;
+  }
+  ['input','change'].forEach(function(ev){
+    from.addEventListener(ev, update);
+    to.addEventListener(ev, update);
+    document.getElementById('aircraft').addEventListener(ev, update);
+    document.getElementById('level').addEventListener(ev, update);
+  });
+  update();
+
+  /* ---- form validation, announced politely ---- */
+  var form = document.getElementById('plan'), msg = document.getElementById('form-msg');
+  var fHint = document.getElementById('from-hint'), tHint = document.getElementById('to-hint');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var a = from.value.trim().toUpperCase(), b = to.value.trim().toUpperCase();
+    fHint.className='hint'; tHint.className='hint'; msg.className='hint';
+    if(!/^[A-Z]{4}$/.test(a) || !AIRPORTS[a]){ fHint.textContent='Enter a known 4-letter ICAO code, e.g. EGPH'; fHint.className='hint error'; from.focus(); return; }
+    if(!/^[A-Z]{4}$/.test(b) || !AIRPORTS[b]){ tHint.textContent='Enter a known 4-letter ICAO code, e.g. LOWI'; tHint.className='hint error'; to.focus(); return; }
+    if(a === b){ tHint.textContent='Destination must differ from origin'; tHint.className='hint error'; to.focus(); return; }
+    fHint.textContent = AIRPORTS[a].n + ' — accepted';
+    fHint.className = 'hint ok';
+    tHint.textContent = AIRPORTS[b].n + ' — accepted';
+    tHint.className = 'hint ok';
+    msg.textContent = 'Plan validated. Press “Release flight plan” below to send to EGLL.';
+    msg.className = 'hint ok';
+  });
+
+  /* ---- dispatch CTA ---- */
+  var ctaMsg = document.getElementById('cta-msg');
+  document.getElementById('cta-file').addEventListener('click', function(){
+    ctaMsg.className='hint ok';
+    ctaMsg.textContent='PGR418 released to EGLL at 06:14Z. Reference EGLPGR418. Amendments log is open.';
+  });
+  document.getElementById('cta-draft').addEventListener('click', function(){
+    ctaMsg.className='hint';
+    ctaMsg.textContent='Draft briefing queued — 14 pages, 640 kB. No charge on a draft.';
+  });
+})();
+</script>
+</body>
+</html>

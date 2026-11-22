@@ -1,0 +1,509 @@
+<!-- Style: Cyberpunk | 11cyberpunk.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NULLSECT — Continuous Security Operations</title>
+<style>
+:root{
+  /* palette */
+  --void:#04060a;
+  --panel:#0a0f16;
+  --panel-2:#0e151f;
+  --edge:#1d2a37;
+  --ink:#d5e2ec;          /* body text on dark */
+  --ink-dim:#8a9bab;
+  --cyan:#22e6ff;
+  --magenta:#ff2f92;
+  --acid:#e8ff45;
+  --alert:#ff5a3c;
+  --ok:#38f2a0;
+  /* type */
+  --font-mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --font-sans:"Segoe UI",Inter,system-ui,-apple-system,sans-serif;
+  --step--1:clamp(.72rem,.68rem + .18vw,.82rem);
+  --step-0:clamp(.95rem,.9rem + .22vw,1.05rem);
+  --step-1:clamp(1.15rem,1rem + .6vw,1.5rem);
+  --step-2:clamp(1.6rem,1.2rem + 1.6vw,2.4rem);
+  --step-3:clamp(2.3rem,1.4rem + 4vw,4.6rem);
+  --track:.14em;
+  /* space */
+  --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1rem; --s-5:1.5rem;
+  --s-6:2rem; --s-7:3rem; --s-8:4.5rem; --s-9:7rem;
+  /* shape */
+  --cut:8px;
+  --glow-cyan:0 0 0 1px #22e6ff33, 0 0 22px -6px #22e6ffaa;
+  --glow-mag:0 0 0 1px #ff2f9233, 0 0 22px -6px #ff2f92aa;
+  /* motion */
+  --d-fast:120ms; --d-base:220ms; --ease:cubic-bezier(.2,.9,.2,1);
+  --w:min(1240px,100% - 2.5rem);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--void);color:var(--ink);
+  font-family:var(--font-mono);font-size:var(--step-0);line-height:1.65;
+  background-image:
+    linear-gradient(#0d1620 1px,transparent 1px),
+    linear-gradient(90deg,#0d1620 1px,transparent 1px);
+  background-size:64px 64px;
+}
+.wrap{width:var(--w);margin-inline:auto}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--s-4);top:var(--s-4);z-index:99;background:var(--acid);color:#000;padding:var(--s-2) var(--s-3)}
+h1,h2,h3{font-family:var(--font-mono);line-height:1.05;margin:0 0 var(--s-3);font-weight:700;letter-spacing:-.01em}
+h1{font-size:var(--step-3);text-transform:uppercase}
+h2{font-size:var(--step-2);text-transform:uppercase}
+h3{font-size:var(--step-1)}
+p{margin:0 0 var(--s-4)}
+.kicker{
+  font-size:var(--step--1);letter-spacing:var(--track);text-transform:uppercase;
+  color:var(--cyan);margin:0 0 var(--s-3);display:flex;align-items:center;gap:var(--s-2);
+}
+.kicker::before{content:"";width:28px;height:2px;background:currentColor}
+.kicker.m{color:var(--magenta)}
+.kicker.y{color:var(--acid)}
+.lede{font-size:var(--step-1);color:var(--ink);max-width:52ch}
+.dim{color:var(--ink-dim)}
+.tiny{font-size:var(--step--1);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim)}
+hr.cut{border:0;border-top:1px solid var(--edge);margin:0}
+
+/* ---- control bar nav ---- */
+.controlbar{
+  position:sticky;top:0;z-index:20;background:#04060aee;backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--edge);
+}
+.controlbar__in{display:flex;align-items:center;gap:var(--s-5);min-height:64px}
+.mark{display:flex;align-items:center;gap:var(--s-2);font-weight:700;letter-spacing:var(--track);color:var(--ink);text-decoration:none}
+.mark svg{flex:none}
+.bar-nav{display:flex;gap:var(--s-5);margin-left:auto}
+.bar-nav a{
+  text-decoration:none;color:var(--ink-dim);text-transform:uppercase;
+  font-size:var(--step--1);letter-spacing:var(--track);padding:var(--s-3) 0;
+  border-bottom:2px solid transparent;min-height:44px;display:inline-flex;align-items:center;
+}
+.bar-nav a:hover{color:var(--cyan);border-bottom-color:var(--cyan)}
+.bar-nav a[aria-current]{color:var(--acid);border-bottom-color:var(--acid)}
+.burger{display:none;background:none;border:1px solid var(--edge);color:var(--cyan);width:46px;height:46px;align-items:center;justify-content:center;margin-left:auto;cursor:pointer}
+.burger[aria-expanded="true"]{background:var(--cyan);color:#000}
+
+/* ---- hero ---- */
+.hero{padding:var(--s-9) 0 var(--s-8);position:relative;overflow:hidden}
+.hero__grid{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--s-6);align-items:end}
+.hero h1{color:#fff;text-shadow:0 0 24px #22e6ff66,2px 0 0 #ff2f9244,-2px 0 0 #22e6ff44}
+.hero h1 em{font-style:normal;color:var(--magenta);text-shadow:0 0 26px #ff2f9288}
+.hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-5)}
+.btn{
+  font-family:var(--font-mono);font-size:var(--step--1);text-transform:uppercase;letter-spacing:var(--track);
+  min-height:48px;padding:0 var(--s-5);display:inline-flex;align-items:center;gap:var(--s-2);
+  border:1px solid var(--cyan);background:transparent;color:var(--cyan);text-decoration:none;cursor:pointer;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  transition:background var(--d-fast) var(--ease),color var(--d-fast) var(--ease),box-shadow var(--d-fast) var(--ease);
+}
+.btn:hover{background:var(--cyan);color:#04060a;box-shadow:var(--glow-cyan)}
+.btn--solid{background:var(--magenta);border-color:var(--magenta);color:#12000a}
+.btn--solid:hover{background:#ff5ab4;color:#12000a;box-shadow:var(--glow-mag)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none;background:transparent;color:var(--cyan)}
+
+/* console panel */
+.console{
+  background:var(--panel);border:1px solid var(--edge);position:relative;
+  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));
+  box-shadow:0 0 0 1px #22e6ff18,0 30px 60px -40px #000;
+}
+.console__bar{
+  display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4);
+  border-bottom:1px solid var(--edge);background:var(--panel-2);
+  font-size:var(--step--1);letter-spacing:var(--track);text-transform:uppercase;color:var(--ink-dim);
+}
+.dot{width:9px;height:9px;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.console__body{padding:var(--s-4);display:grid;gap:var(--s-4)}
+.readout{display:grid;grid-template-columns:1fr auto;gap:var(--s-2) var(--s-3);align-items:baseline}
+.readout dt{font-size:var(--step--1);letter-spacing:var(--track);text-transform:uppercase;color:var(--ink-dim)}
+.readout dd{margin:0;font-size:var(--step-1);color:var(--cyan);font-variant-numeric:tabular-nums}
+.bar{grid-column:1/-1;height:6px;background:#0f1a24;border:1px solid var(--edge);position:relative;overflow:hidden}
+.bar span{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#22e6ff,#ff2f92);width:var(--pct,50%)}
+.scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 2px,#00000055 2px 4px)}
+
+/* ---- sections ---- */
+section{position:relative}
+.band{border-top:1px solid var(--edge);padding:var(--s-8) 0;background:linear-gradient(180deg,#04060acc,#04060a00)}
+.band--alt{background:var(--panel)}
+.split-head{display:flex;flex-wrap:wrap;align-items:end;gap:var(--s-4);justify-content:space-between;margin-bottom:var(--s-6)}
+
+/* feed table */
+.feed{width:100%;border-collapse:collapse;font-size:var(--step--1);min-width:640px}
+.feed caption{text-align:left;color:var(--ink-dim);padding-bottom:var(--s-3);letter-spacing:var(--track);text-transform:uppercase}
+.feed th,.feed td{text-align:left;padding:var(--s-3) var(--s-3);border-bottom:1px solid var(--edge);vertical-align:top}
+.feed thead th{color:var(--acid);text-transform:uppercase;letter-spacing:var(--track);border-bottom-color:var(--acid)}
+.feed tbody tr:hover{background:#22e6ff0f}
+.feed .t{color:var(--ink-dim);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tag{
+  display:inline-block;padding:2px 8px;border:1px solid currentColor;font-size:.7rem;
+  letter-spacing:var(--track);text-transform:uppercase;white-space:nowrap;
+}
+.tag--crit{color:var(--alert)} .tag--hi{color:var(--acid)} .tag--md{color:var(--cyan)} .tag--lo{color:var(--ink-dim)}
+.tablewrap{overflow-x:auto;border:1px solid var(--edge);background:var(--panel);padding:var(--s-3)}
+
+/* services: uneven, no repeated triple */
+.svc{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-4)}
+.svc__item{
+  grid-column:span 4;background:var(--panel);border:1px solid var(--edge);padding:var(--s-5);
+  display:flex;flex-direction:column;gap:var(--s-3);
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%);
+  transition:transform var(--d-base) var(--ease),border-color var(--d-base) var(--ease);
+}
+.svc__item:nth-child(1){grid-column:span 6}
+.svc__item:nth-child(2){grid-column:span 3}
+.svc__item:nth-child(3){grid-column:span 3}
+.svc__item:hover{transform:translateY(-4px);border-color:var(--cyan)}
+.svc__item svg{color:var(--cyan)}
+.svc__item p{margin:0;color:var(--ink-dim);font-size:var(--step--1)}
+.spec{display:flex;gap:var(--s-4);margin-top:auto;padding-top:var(--s-3);border-top:1px dashed var(--edge);font-size:var(--step--1);color:var(--acid)}
+
+/* accordion */
+.acc{border-top:1px solid var(--edge)}
+.acc__item{border-bottom:1px solid var(--edge)}
+.acc__btn{
+  width:100%;background:none;border:0;color:var(--ink);font-family:var(--font-mono);
+  font-size:var(--step-1);text-align:left;padding:var(--s-4) 3rem var(--s-4) 0;cursor:pointer;position:relative;min-height:64px;
+}
+.acc__btn::after{content:"+";position:absolute;right:0;top:50%;transform:translateY(-50%);color:var(--magenta);font-size:var(--step-2)}
+.acc__btn:hover{color:var(--cyan)}
+.acc__btn[aria-expanded="true"]{color:var(--cyan)}
+.acc__btn[aria-expanded="true"]::after{content:"\2212"}
+.acc__panel{padding:0 var(--s-6) var(--s-5) 0;color:var(--ink-dim);font-size:var(--step--1)}
+.acc__panel[hidden]{display:none}
+
+/* form */
+.form{display:grid;gap:var(--s-4);grid-template-columns:1fr 1fr}
+.field{display:grid;gap:var(--s-2)}
+.field--full{grid-column:1/-1}
+label{font-size:var(--step--1);letter-spacing:var(--track);text-transform:uppercase;color:var(--cyan)}
+input,select,textarea{
+  font-family:var(--font-mono);font-size:var(--step-0);color:var(--ink);
+  background:#070c12;border:1px solid var(--edge);padding:var(--s-3) var(--s-3);
+  min-height:48px;width:100%;border-radius:0;
+}
+textarea{min-height:120px;resize:vertical}
+input::placeholder,textarea::placeholder{color:#5c6b7a}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+.field[data-invalid="true"] input,.field[data-invalid="true"] textarea{border-color:var(--alert);box-shadow:inset 0 0 0 1px var(--alert)}
+.hint{font-size:var(--step--1);color:var(--ink-dim)}
+.err{font-size:var(--step--1);color:var(--alert);min-height:1.2em}
+.status{grid-column:1/-1;font-size:var(--step--1);border:1px solid var(--edge);padding:var(--s-3);color:var(--ink-dim)}
+.status[data-tone="ok"]{border-color:var(--ok);color:var(--ok)}
+.status[data-tone="bad"]{border-color:var(--alert);color:var(--alert)}
+
+/* footer */
+footer{border-top:1px solid var(--edge);padding:var(--s-7) 0;background:var(--panel)}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--s-6)}
+.foot h3{font-size:var(--step--1);letter-spacing:var(--track);text-transform:uppercase;color:var(--ink-dim)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-2)}
+.foot a{color:var(--ink);text-decoration:none;font-size:var(--step--1);min-height:24px;display:inline-block}
+.foot a:hover{color:var(--cyan)}
+.flicker{animation:flick 6s steps(1,end) infinite}
+@keyframes flick{0%,92%,100%{opacity:1}93%{opacity:.35}94%{opacity:1}96%{opacity:.5}97%{opacity:1}}
+
+@media (max-width:900px){
+  .hero__grid{grid-template-columns:1fr;align-items:start}
+  .bar-nav{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;
+    background:#04060af5;border-bottom:1px solid var(--edge);padding:var(--s-2) var(--s-4) var(--s-4)}
+  .bar-nav[data-open="true"]{display:flex}
+  .bar-nav a{padding:var(--s-4) 0;border-bottom:1px solid var(--edge);min-height:52px}
+  .burger{display:flex}
+  .foot{grid-template-columns:1fr 1fr}
+  .svc__item,.svc__item:nth-child(n){grid-column:1/-1}
+}
+@media (max-width:620px){
+  .form{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr}
+  .hero__actions .btn{flex:1 1 100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .flicker{animation:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="controlbar">
+  <div class="wrap controlbar__in">
+    <a class="mark" href="#top">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+        <path d="M13 1 24 7v12l-11 6L2 19V7z" fill="none" stroke="#22e6ff" stroke-width="1.5"/>
+        <path d="M9 17V9l7 8V9" fill="none" stroke="#ff2f92" stroke-width="1.8"/>
+      </svg>
+      NULLSECT
+    </a>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="barnav" aria-label="Open navigation">
+      <svg width="20" height="16" viewBox="0 0 20 16" aria-hidden="true"><path d="M0 1h20M0 8h20M0 15h20" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+    <nav class="bar-nav" id="barnav" aria-label="Primary">
+      <a href="#feed" aria-current="true">Threat feed</a>
+      <a href="#services">Services</a>
+      <a href="#playbook">Playbook</a>
+      <a href="#engage">Engage</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero wrap" id="top">
+    <div class="hero__grid">
+      <div>
+        <p class="kicker">Continuous security operations</p>
+        <h1>The network<br>doesn't <em>sleep.</em></h1>
+        <p class="lede">NULLSECT is a seven-minute detection loop: agents hold the wire, analysts hold the verdict, and nothing escalates to your inbox at 03:00 unless a human is already awake for it.</p>
+        <div class="hero__actions">
+          <a class="btn btn--solid" href="#engage">Request a 30-day watch</a>
+          <a class="btn" href="#feed">Open live feed</a>
+        </div>
+        <p class="tiny" style="margin-top:var(--s-5)">SOC 2 Type II · ISO 27001 · 14-minute mean containment</p>
+      </div>
+
+      <div class="console" role="group" aria-label="Live posture readout">
+        <div class="scan" aria-hidden="true"></div>
+        <div class="console__bar">
+          <span class="dot flicker" aria-hidden="true"></span>
+          <span>node://nul-01 · posture</span>
+        </div>
+        <div class="console__body">
+          <dl class="readout">
+            <dt>Attackers inside</dt><dd>0</dd>
+            <div class="bar" style="--pct:6%"><span></span></div>
+
+            <dt>Events / min</dt><dd class="flicker">18,402</dd>
+            <div class="bar" style="--pct:78%"><span></span></div>
+
+            <dt>Mean to contain</dt><dd>14m 02s</dd>
+            <div class="bar" style="--pct:34%"><span></span></div>
+
+            <dt>Coverage</dt><dd>96.4%</dd>
+            <div class="bar" style="--pct:96%"><span></span></div>
+          </dl>
+          <p class="tiny" style="margin:0">Last sweep 04:12:58 · no unresolved findings</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="feed">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="kicker">Last 24 hours</p>
+          <h2>Correlated events, not raw alerts</h2>
+        </div>
+        <p class="dim" style="max-width:40ch;margin:0">Everything below survived deduplication, enrichment and the NULLSECT suppression model. Severity is set by business impact, not by scanner loudness.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table class="feed">
+          <caption>Correlated security events, descending by severity</caption>
+          <thead>
+            <tr><th scope="col">Time (UTC)</th><th scope="col">Severity</th><th scope="col">Source</th><th scope="col">Correlated finding</th><th scope="col">Disposition</th></tr>
+          </thead>
+          <tbody id="feedbody">
+            <tr><td class="t">04:12:41</td><td><span class="tag tag--crit">Critical</span></td><td>edge/vh-09</td><td>Impossible travel + valid TOTP replay within 90s from ASN 9009</td><td>Session revoked, token burned</td></tr>
+            <tr><td class="t">04:09:18</td><td><span class="tag tag--hi">High</span></td><td>idp/okta-mirror</td><td>Four dormant admins woke on the same schedule — service account, not humans</td><td>Disabled, owner paged</td></tr>
+            <tr><td class="t">03:58:02</td><td><span class="tag tag--hi">High</span></td><td>s3//prod-secrets</td><td>Object moved to a public-read prefix, then moved back after 4m</td><td>Blocklisted, forensic snapshot</td></tr>
+            <tr><td class="t">03:40:55</td><td><span class="tag tag--md">Medium</span></td><td>ci/nightly</td><td>Pipeline used a retired registry credential, blocked 31 pulls</td><td>Credential rotated</td></tr>
+            <tr><td class="t">02:55:20</td><td><span class="tag tag--md">Medium</span></td><td>vpn/ams</td><td>Same certificate fingerprint on two concurrent tunnels</td><td>Tunnel 2 dropped</td></tr>
+            <tr><td class="t">01:30:07</td><td><span class="tag tag--lo">Low</span></td><td>www/marketing</td><td>New subdomain pointing at a parking page — takeover candidate</td><td>Claimed, monitor on</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--alt" id="services">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="kicker m">What ships</p>
+          <h2>Three surfaces, one evidence base</h2>
+        </div>
+      </div>
+      <div class="svc">
+        <article class="svc__item">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <h3>Detection engineering</h3>
+          <p>Rules written against your traffic, not a marketplace feed. Every detection ships with the query, the expected false-positive rate and the runbook link before it goes loud.</p>
+          <p class="spec"><span>Coverage 96.4%</span><span>Rules 412</span></p>
+        </article>
+        <article class="svc__item">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <h3>24/7 watch</h3>
+          <p>Two analysts, three time zones, a phone that only rings for containment decisions.</p>
+          <p class="spec"><span>MTTR 14m</span></p>
+        </article>
+        <article class="svc__item">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 18V6h16v12z"/><path d="M4 12h16M9 6v12"/></svg>
+          <h3>Forensics</h3>
+          <p>Timeline, blast radius and root cause in a document your board can read.</p>
+          <p class="spec"><span>Median 6 days</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="playbook">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="kicker y">Engagement model</p>
+          <h2>What the first 30 days look like</h2>
+        </div>
+      </div>
+
+      <div class="acc">
+        <div class="acc__item">
+          <h3 style="margin:0"><button class="acc__btn" aria-expanded="true" aria-controls="p1" id="b1">Week 1 — Read-only reconnaissance</button></h3>
+          <div class="acc__panel" id="p1" role="region" aria-labelledby="b1">
+            <p>We connect read-only across identity, cloud and endpoint. No alert volume, no tickets. You get a written map of what is actually exposed, who actually holds standing access, and where your logs stop. Week one is deliberately quiet.</p>
+          </div>
+        </div>
+        <div class="acc__item">
+          <h3 style="margin:0"><button class="acc__btn" aria-expanded="false" aria-controls="p2" id="b2">Week 2–3 — Detection build</button></h3>
+          <div class="acc__panel" id="p2" role="region" aria-labelledby="b2" hidden>
+            <p>Engineers write and tune detections in shadow mode against 30 days of your telemetry. Every rule is tuned until its precision beats 85%, then it is promoted. You approve the promotion list; nothing goes live without your sign-off.</p>
+          </div>
+        </div>
+        <div class="acc__item">
+          <h3 style="margin:0"><button class="acc__btn" aria-expanded="false" aria-controls="p3" id="b3">Week 4 — Hand over the pager</button></h3>
+          <div class="acc__panel" id="p3" role="region" aria-labelledby="b3" hidden>
+            <p>Your on-call engineer and ours sit on a bridge for a full simulated incident. We hand over the runbook, the escalation tree and the phone tree. Monthly reporting starts with the same numbers you saw on day one, so improvement is legible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--alt" id="engage">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="kicker m">Intake</p>
+          <h2>Open a channel</h2>
+        </div>
+        <p class="dim" style="max-width:38ch;margin:0">Triage happens the same business day. We will tell you plainly if NULLSECT is the wrong shape of help for you.</p>
+      </div>
+
+      <form class="form" id="engageform" novalidate>
+        <div class="field">
+          <label for="f-name">Operator name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+          <p class="err" id="e-name" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label for="f-email">Work email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+          <p class="err" id="e-email" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label for="f-surface">Primary surface</label>
+          <select id="f-surface" name="surface">
+            <option>Cloud + identity</option>
+            <option>Endpoint fleet</option>
+            <option>CI/CD supply chain</option>
+            <option>Customer-facing API</option>
+          </select>
+          <p class="hint">Most engagements start in one of these four.</p>
+        </div>
+        <div class="field">
+          <label for="f-size">Engineers on call</label>
+          <input id="f-size" name="size" type="number" min="1" max="500" value="12" required aria-describedby="e-size">
+          <p class="err" id="e-size" aria-live="polite"></p>
+        </div>
+        <div class="field field--full">
+          <label for="f-brief">What already keeps you up</label>
+          <textarea id="f-brief" name="brief" placeholder="Last incident, current tooling, the thing you cannot prove." required aria-describedby="e-brief"></textarea>
+          <p class="err" id="e-brief" aria-live="polite"></p>
+        </div>
+        <div class="status" id="formstatus" role="status" aria-live="polite">Encrypted in transit. No newsletter, no sequence.</div>
+        <div class="field field--full">
+          <button class="btn btn--solid" type="submit">Transmit intake</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <p class="kicker" style="margin-bottom:var(--s-2)">NULLSECT</p>
+      <p class="dim" style="max-width:34ch">Continuous security operations for teams who cannot afford a seven-minute outage of attention. Monitoring from Lisbon and Kraków.</p>
+    </div>
+    <div>
+      <h3>Platform</h3>
+      <ul>
+        <li><a href="#feed">Threat feed</a></li>
+        <li><a href="#services">Detection engineering</a></li>
+        <li><a href="#playbook">Engagement model</a></li>
+        <li><a href="#engage">Intake channel</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Trust</h3>
+      <ul>
+        <li><a href="#engage">SOC 2 Type II report</a></li>
+        <li><a href="#engage">Sub-processor list</a></li>
+        <li><a href="#engage">Responsible disclosure</a></li>
+        <li><a href="#engage">Status page</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var burger=document.getElementById('burger'),nav=document.getElementById('barnav');
+  burger.addEventListener('click',function(){
+    var open=burger.getAttribute('aria-expanded')==='true';
+    burger.setAttribute('aria-expanded',String(!open));
+    nav.setAttribute('data-open',String(!open));
+  });
+  nav.addEventListener('click',function(e){ if(e.target.tagName==='A'){burger.setAttribute('aria-expanded','false');nav.setAttribute('data-open','false');} });
+
+  document.querySelectorAll('.acc__btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var open=btn.getAttribute('aria-expanded')==='true';
+      btn.setAttribute('aria-expanded',String(!open));
+      document.getElementById(btn.getAttribute('aria-controls')).hidden=open;
+    });
+  });
+
+  var form=document.getElementById('engageform'),status=document.getElementById('formstatus');
+  function setErr(id,msg){
+    var input=document.getElementById(id);
+    var p=document.getElementById('e-'+id.replace('f-',''));
+    p.textContent=msg;
+    input.closest('.field').setAttribute('data-invalid',msg?'true':'false');
+    if(msg){input.setAttribute('aria-invalid','true');}else{input.removeAttribute('aria-invalid');}
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('f-name'),email=document.getElementById('f-email'),
+        size=document.getElementById('f-size'),brief=document.getElementById('f-brief');
+    var bad=false;
+    if(!name.value.trim()){setErr('f-name','Required — we route on a real name.');bad=true;} else setErr('f-name','');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())){setErr('f-email','Enter a routable work address.');bad=true;} else setErr('f-email','');
+    if(!(Number(size.value)>=1&&Number(size.value)<=500)){setErr('f-size','Between 1 and 500.');bad=true;} else setErr('f-size','');
+    if(brief.value.trim().length<12){setErr('f-brief','A sentence or two, please — it speeds triage.');bad=true;} else setErr('f-brief','');
+    if(bad){status.setAttribute('data-tone','bad');status.textContent='Transmission halted. Four fields need attention — messages are listed under each one.';return;}
+    status.setAttribute('data-tone','ok');
+    status.textContent='Received. Channel opens at '+String(new Date().getHours()).padStart(2,'0')+':00 UTC; triage reply within one business day.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

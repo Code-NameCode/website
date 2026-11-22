@@ -1,0 +1,575 @@
+<!-- Style: Luxury Editorial | 20luxuryeditorial.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Éclat — Autumn/Winter 2026</title>
+<style>
+:root{
+  --bone:#f1ede6;
+  --bone-2:#e5dfd4;
+  --paper:#faf8f4;
+  --ink:#12100e;
+  --ink-2:#4a453e;
+  --ink-3:#837c72;
+  --oxblood:#6d2028;
+  --hair:rgba(18,16,14,.18);
+  --hair-soft:rgba(18,16,14,.10);
+  --font-serif:"Didot","Bodoni MT","Playfair Display",Georgia,"Times New Roman",serif;
+  --font-sans:"Segoe UI",Inter,system-ui,-apple-system,Helvetica,sans-serif;
+  --t-xs:clamp(.66rem,.64rem + .1vw,.72rem);
+  --t-sm:clamp(.79rem,.77rem + .12vw,.87rem);
+  --t-md:clamp(.98rem,.95rem + .16vw,1.08rem);
+  --t-lg:clamp(1.3rem,1.1rem + .8vw,1.75rem);
+  --t-xl:clamp(1.8rem,1.35rem + 2vw,3.1rem);
+  --t-display:clamp(2.6rem,1.2rem + 6vw,6.2rem);
+  --t-poster:clamp(3.4rem,1rem + 10vw,9rem);
+  --s-1:.25rem;--s-2:.5rem;--s-3:.9rem;--s-4:1.4rem;--s-5:2.2rem;--s-6:3.4rem;--s-7:5rem;--s-8:7.5rem;
+  --w:min(1360px,100% - 3rem);
+  --col:min(1460px,100% - 1.5rem);
+  --d:1000ms;--ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bone);color:var(--ink);font-family:var(--font-sans);font-size:var(--t-md);line-height:1.68}
+h1,h2,h3,h4{margin:0;font-family:var(--font-serif);font-weight:400;line-height:1.04;letter-spacing:-.02em}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--oxblood);outline-offset:4px}
+.wrap{width:var(--w);margin-inline:auto}
+.col{width:var(--col);margin-inline:auto}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:1rem;top:1rem;z-index:60;background:var(--ink);color:var(--paper);padding:.8rem 1.4rem}
+.meta{font-size:var(--t-xs);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3)}
+.meta--accent{color:var(--oxblood)}
+.rule{border:0;border-top:1px solid var(--hair);margin:0}
+.kicker{display:flex;align-items:baseline;gap:var(--s-3);margin-bottom:var(--s-4)}
+.kicker::after{content:"";flex:1;height:1px;background:var(--hair)}
+.drop::first-letter{float:left;font-family:var(--font-serif);font-size:4.2em;line-height:.82;padding:.06em .1em 0 0;color:var(--oxblood)}
+
+/* masthead */
+.masthead{border-bottom:1px solid var(--hair);background:var(--paper);position:relative;z-index:40}
+.masthead__top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--s-4);padding:var(--s-4) 0 var(--s-3)}
+.wordmark{font-family:var(--font-serif);font-size:clamp(1.7rem,1.2rem + 1.8vw,2.9rem);letter-spacing:.22em;text-align:center;text-indent:.22em}
+.masthead__side{font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+.masthead__side:last-child{text-align:right}
+.masthead__nav{display:flex;justify-content:center;gap:var(--s-5);flex-wrap:wrap;padding-bottom:var(--s-3)}
+.masthead__nav a{font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;min-height:44px;display:inline-flex;align-items:center;
+  border-bottom:1px solid transparent}
+.masthead__nav a:hover{border-bottom-color:var(--oxblood)}
+.masthead__nav a[aria-current]{border-bottom-color:var(--ink)}
+.mobnav{display:none;background:none;border:1px solid var(--hair);color:var(--ink);min-height:44px;padding:0 1rem;
+  font-family:var(--font-sans);font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+
+/* cover */
+.cover{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:var(--s-5);padding-top:var(--s-6)}
+.cover__text{display:grid;align-content:space-between;gap:var(--s-5);padding-bottom:var(--s-4)}
+.cover h1{font-size:var(--t-poster);letter-spacing:-.04em;line-height:.86}
+.cover h1 .italic{font-style:italic;color:var(--oxblood);display:block}
+.cover__stand{font-size:var(--t-lg);line-height:1.42;max-width:34ch;color:var(--ink-2);margin-top:var(--s-4)}
+.cover__meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3);padding-top:var(--s-4);border-top:1px solid var(--hair)}
+.cover__meta div{display:grid;gap:.15rem}
+.cover__meta b{font-weight:500;font-size:var(--t-sm)}
+.cover figure{margin:0;position:relative}
+.cover figure svg{width:100%;height:auto}
+.cover figcaption{margin-top:var(--s-3);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);max-width:44ch}
+.cover__page{position:absolute;top:calc(-1 * var(--s-6));left:0;font-family:var(--font-serif);font-size:var(--t-2xl);color:var(--ink-3)}
+
+/* standfirst, two text columns */
+.standfirst{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-5);padding:var(--s-7) 0 var(--s-6);border-top:1px solid var(--hair);margin-top:var(--s-6)}
+.standfirst p{color:var(--ink-2);font-size:var(--t-md)}
+.standfirst p + p{margin-top:var(--s-4)}
+.pullquote{font-family:var(--font-serif);font-size:var(--t-xl);line-height:1.2;padding:var(--s-5) 0 var(--s-6);border-top:1px solid var(--hair)}
+.pullquote cite{display:block;font-style:normal;font-size:var(--t-xs);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3);margin-top:var(--s-3)}
+
+/* asymmetric editorial grid */
+.spread{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-5);padding:var(--s-6) 0;border-top:1px solid var(--hair)}
+.spread > figure{margin:0}
+.spread figure svg{width:100%;height:auto}
+.spread figcaption{margin-top:var(--s-3);font-size:var(--t-xs);letter-spacing:.1em;color:var(--ink-3);display:flex;gap:.6rem;flex-wrap:wrap}
+.spread figcaption b{font-weight:500;color:var(--ink-2);letter-spacing:.18em;text-transform:uppercase;font-size:.95em}
+.spread h2{font-size:var(--t-xl)}
+.spread .c7{grid-column:span 7} .spread .c5{grid-column:span 5}
+.spread .c4{grid-column:span 4} .spread .c8{grid-column:span 8}
+.spread .c6{grid-column:span 6}
+.spread__text{display:grid;gap:var(--s-3);align-content:start}
+.spread__text p{color:var(--ink-2);font-size:var(--t-sm)}
+.spread__index{font-family:var(--font-serif);font-size:var(--t-2xl);line-height:1;color:var(--oxblood)}
+.linkline{font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid var(--ink);
+  display:inline-flex;min-height:44px;align-items:center;gap:.5rem;justify-self:start}
+.linkline:hover{border-bottom-color:var(--oxblood);color:var(--oxblood)}
+
+/* lookbook */
+.lookbook{padding:var(--s-6) 0 var(--s-7);border-top:1px solid var(--hair)}
+.lookbook__hd{display:grid;grid-template-columns:1fr auto;gap:var(--s-4);align-items:end;padding-bottom:var(--s-4)}
+.lookbook__hd h2{font-size:var(--t-xl)}
+.filters{display:flex;gap:var(--s-4);flex-wrap:wrap}
+.filters button{background:none;border:0;border-bottom:1px solid transparent;font-family:var(--font-sans);
+  font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);cursor:pointer;min-height:44px}
+.filters button:hover{color:var(--ink)}
+.filters button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--oxblood)}
+.looks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s-5)}
+.look{display:grid;gap:var(--s-3);align-content:start}
+.look__no{font-family:var(--font-serif);font-size:var(--t-lg);color:var(--ink-3);line-height:1}
+.look figure{margin:0}
+.look figure svg{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover}
+.look figcaption{font-size:var(--t-xs);letter-spacing:.08em;color:var(--ink-3);display:grid;gap:.25rem}
+.look figcaption b{font-weight:500;color:var(--ink);letter-spacing:.16em;text-transform:uppercase;font-size:.95em}
+.look[hidden]{display:none}
+.look figcaption .stockist{color:var(--oxblood)}
+
+/* full-bleed band */
+.band{position:relative;background:var(--ink);color:var(--bone);overflow:hidden}
+.band svg{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+.band__in{position:relative;padding:var(--s-8) 0;display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);align-items:center}
+.band h2{font-size:var(--t-display);line-height:.9;letter-spacing:-.03em}
+.band p{color:rgba(241,237,230,.78);max-width:44ch}
+.band .meta{color:rgba(241,237,230,.6)}
+
+/* stockists + form */
+.service{display:grid;grid-template-columns:.8fr 1.2fr;gap:var(--s-6);padding:var(--s-7) 0;border-top:1px solid var(--hair)}
+.service h2{font-size:var(--t-xl)}
+.list{margin:0;padding:0;list-style:none}
+.list li{display:grid;grid-template-columns:9rem 1fr auto;gap:var(--s-3);padding:var(--s-3) 0;border-bottom:1px solid var(--hair-soft);font-size:var(--t-sm)}
+.list li:first-child{border-top:1px solid var(--hair-soft)}
+.list .city{letter-spacing:.16em;text-transform:uppercase;font-size:var(--t-xs);padding-top:.25rem;color:var(--ink-2)}
+.list .addr{color:var(--ink-3)}
+.list .hours{font-size:var(--t-xs);color:var(--ink-3);text-align:right;white-space:nowrap}
+.form{display:grid;gap:var(--s-4)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.field{display:grid;gap:.4rem}
+label{font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+input,select{font-family:var(--font-sans);font-size:var(--t-sm);color:var(--ink);background:transparent;border:0;
+  border-bottom:1px solid var(--hair);padding:.7rem 0;min-height:48px;width:100%}
+input::placeholder{color:#a49c92;font-style:italic}
+input:focus,select:focus{outline:none;border-bottom-color:var(--oxblood);box-shadow:0 1px 0 var(--oxblood)}
+input:focus-visible,select:focus-visible{outline:2px solid var(--oxblood);outline-offset:4px}
+.field[data-invalid="true"] input{border-bottom-color:var(--oxblood);box-shadow:0 1px 0 var(--oxblood)}
+.err{font-size:var(--t-xs);color:var(--oxblood);min-height:1.2em;letter-spacing:.04em}
+.hint{font-size:var(--t-xs);color:var(--ink-3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:var(--t-xs);
+  letter-spacing:.24em;text-transform:uppercase;min-height:56px;padding:0 var(--s-6);background:var(--ink);color:var(--paper);
+  border:1px solid var(--ink);cursor:pointer;justify-self:start;transition:background 600ms var(--ease),color 600ms var(--ease)}
+.btn:hover{background:transparent;color:var(--ink)}
+.btn[disabled]{background:var(--bone-2);color:var(--ink-3);border-color:var(--hair-soft);cursor:not-allowed}
+.formmsg{font-size:var(--t-sm);color:var(--ink-2);border-left:1px solid var(--oxblood);padding-left:var(--s-3);min-height:3.4em}
+.formmsg[data-tone="ok"]{color:var(--ink)}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity var(--d) var(--ease),transform var(--d) var(--ease)}
+.reveal.is-in{opacity:1;transform:none}
+
+footer{border-top:1px solid var(--hair);background:var(--paper);padding:var(--s-6) 0 var(--s-7)}
+.colophon{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--s-5);padding-top:var(--s-5);border-top:1px solid var(--hair)}
+.colophon h3{font-family:var(--font-sans);font-size:var(--t-xs);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3);margin-bottom:var(--s-3)}
+.colophon ul{list-style:none;margin:0;padding:0;display:grid;gap:.4rem}
+.colophon a{font-size:var(--t-sm);color:var(--ink-2);display:inline-block;min-height:32px}
+.colophon a:hover{color:var(--ink)}
+.colophon p{font-size:var(--t-sm);color:var(--ink-3);max-width:34ch}
+.colophon__base{margin-top:var(--s-5);padding-top:var(--s-3);border-top:1px solid var(--hair-soft);display:flex;
+  flex-wrap:wrap;gap:var(--s-3) var(--s-5);justify-content:space-between;font-size:var(--t-xs);color:var(--ink-3)}
+
+@media (max-width:1080px){
+  .cover{grid-template-columns:1fr;gap:var(--s-4)}
+  .cover__page{top:0}
+  .cover h1{font-size:var(--t-display)}
+  .looks{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .band__in{grid-template-columns:1fr}
+  .service{grid-template-columns:1fr}
+  .colophon{grid-template-columns:1fr 1fr}
+}
+@media (max-width:860px){
+  .standfirst{grid-template-columns:1fr}
+  .spread > *{grid-column:1/-1!important}
+  .cover__meta{grid-template-columns:1fr 1fr}
+}
+@media (max-width:720px){
+  .masthead__top{grid-template-columns:1fr}
+  .masthead__side{display:none}
+  .wordmark{text-align:left}
+  .masthead__nav{display:none;flex-direction:column;gap:0;padding-bottom:var(--s-3)}
+  .masthead__nav[data-open="true"]{display:flex}
+  .masthead__nav a{border-bottom:1px solid var(--hair-soft);width:100%;min-height:48px}
+  .mobnav{display:block;margin-bottom:var(--s-3)}
+  .list li{grid-template-columns:1fr;gap:.15rem}
+  .list .hours{text-align:left}
+}
+@media (max-width:560px){
+  .looks,.frow,.colophon{grid-template-columns:1fr}
+  .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="col masthead__top">
+    <p class="masthead__side">Number 14 · Autumn/Winter</p>
+    <a class="wordmark" href="#top">ÉCLAT</a>
+    <p class="masthead__side">Maison de couture · Founded 1978</p>
+  </div>
+  <div class="col">
+    <button class="mobnav" id="mobnav" aria-expanded="false" aria-controls="mnav" aria-label="Open contents">Contents</button>
+    <nav class="masthead__nav" id="mnav" aria-label="Contents">
+      <a href="#cover" aria-current="page">Cover</a>
+      <a href="#story">The Story</a>
+      <a href="#spread">The Atelier</a>
+      <a href="#lookbook">Looks</a>
+      <a href="#band">Campaign</a>
+      <a href="#service">Stockists</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="col cover" id="cover">
+    <div class="cover__text reveal">
+      <p class="meta meta--accent">Autumn / Winter 2026</p>
+      <h1>The Light<span class="italic">After Rain</span></h1>
+      <p class="cover__stand">Sixty-four looks, cut for a city that has been rained on all week and has decided to go out anyway. Photographed over three mornings in the eleventh arrondissement, on foot.</p>
+      <div class="cover__meta">
+        <div><span class="meta">Creative direction</span><b>Inès Calloway</b></div>
+        <div><span class="meta">Photography</span><b>Yannick Delon</b></div>
+        <div><span class="meta">Collection</span><b>34 pieces, made in France</b></div>
+        <div><span class="meta">Available</span><b>From 14 August</b></div>
+      </div>
+      <p><a class="linkline" href="#lookbook">See all sixty-four looks</a></p>
+    </div>
+    <figure class="reveal">
+      <span class="cover__page" aria-hidden="true">01</span>
+      <svg viewBox="0 0 520 700" role="img" aria-label="Cover image: a figure in a long wool coat standing in wet street light, seen from behind">
+        <defs>
+          <linearGradient id="wet" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#5a5b58"/><stop offset=".55" stop-color="#2f302e"/><stop offset="1" stop-color="#171817"/>
+          </linearGradient>
+          <linearGradient id="coat" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#7d7c76"/><stop offset=".45" stop-color="#b9b5a9"/><stop offset="1" stop-color="#55544f"/>
+          </linearGradient>
+        </defs>
+        <rect width="520" height="700" fill="url(#wet)"/>
+        <g opacity=".22" stroke="#cfd2cd" stroke-width="1">
+          <path d="M0 470h520M0 520h520M0 585h520M0 660h520"/>
+          <path d="M60 460v240M170 460v240M300 460v240M430 460v240"/>
+        </g>
+        <ellipse cx="262" cy="196" rx="46" ry="54" fill="#4b4842"/>
+        <path d="M258 196a46 54 0 0 1 88 22c-6 24-20 34-46 34s-42-14-42-34z" fill="#26241f"/>
+        <path d="M212 250c-30 60-40 180-34 380h168c8-200-2-320-34-380-24 22-76 22-100 0z" fill="url(#coat)"/>
+        <path d="M212 250c-30 60-40 180-34 380h60c-6-180 4-300 30-366z" fill="#8d8b83" opacity=".7"/>
+        <path d="M262 250v380" stroke="#3f3d38" stroke-width="2" opacity=".6"/>
+        <ellipse cx="262" cy="646" rx="86" ry="14" fill="#0d0e0d" opacity=".5"/>
+        <g opacity=".5" fill="#dfe1dc">
+          <circle cx="70" cy="520" r="2"/><circle cx="140" cy="600" r="1.5"/><circle cx="410" cy="556" r="2"/><circle cx="470" cy="640" r="1.5"/>
+        </g>
+      </svg>
+      <figcaption>Look 04 — double-faced wool coat, unlined. Rue de Bellechasse, 07:12.</figcaption>
+    </figure>
+  </section>
+
+  <section class="col">
+    <div class="standfirst">
+      <p class="drop reveal">Éclat has made clothes on the same two floors above a locksmith's on the rue de Charonne since 1978, and the collection for Autumn/Winter 2026 is the first since 2011 that has been cut entirely in the house. The fabrics arrived in January. Cutting began in March. Nothing was delegated, and nothing is a reissue.</p>
+      <p class="reveal">The argument the collection is built around is a small one: that a city in November is neither warm nor cold, and that clothes designed for either are wrong on roughly half the days of the year. So the coats are unlined and the wool is heavy enough to stand on its own. The knits are loose at the shoulder and long at the wrist. Nothing is waterproof, because nothing in Paris is.</p>
+    </div>
+    <p class="pullquote reveal">“We stopped designing for the season and started designing for the walk from the door to the taxi.”
+      <cite>Inès Calloway, creative director</cite>
+    </p>
+  </section>
+
+  <section class="col spread" id="spread">
+    <figure class="c7 reveal">
+      <svg viewBox="0 0 900 520" role="img" aria-label="Atelier interior: two figures cutting cloth on a long table under a north-facing window">
+        <defs>
+          <linearGradient id="room" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8e3d8"/><stop offset="1" stop-color="#c9c2b4"/></linearGradient>
+        </defs>
+        <rect width="900" height="520" fill="url(#room)"/>
+        <rect x="60" y="40" width="360" height="260" fill="#dfe7ea" stroke="#9aa0a0"/>
+        <path d="M240 40v260M60 170h360" stroke="#9aa0a0"/>
+        <g opacity=".18" stroke="#fff" stroke-width="26"><path d="M60 60 420 300M120 40l360 240M180 40l360 240M240 40l360 240M300 40l360 240M60 100l360 240"/></g>
+        <rect x="120" y="380" width="660" height="24" fill="#a8967c"/>
+        <rect x="120" y="404" width="660" height="10" fill="#8d7c66"/>
+        <path d="M180 380c40-70 120-90 200-72l90 24-30 60-210-8z" fill="#6d2028" opacity=".85"/>
+        <path d="M470 380c50-40 120-44 190-16l40 28-60 46-160-6z" fill="#2f302e" opacity=".8"/>
+        <circle cx="560" cy="300" r="34" fill="#3a352f"/>
+        <path d="M534 330c-16 20-24 44-22 70l80 2c4-28-4-52-18-72z" fill="#4a453e"/>
+        <circle cx="300" cy="322" r="30" fill="#332f2a"/>
+        <path d="M276 348c-14 18-20 40-18 62l72 2c4-24-2-46-16-64z" fill="#565049"/>
+        <path d="M120 452h660" stroke="#8d7c66" stroke-width="4"/>
+      </svg>
+      <figcaption><b>Atelier, rue de Charonne</b><span>Cutting table 1, 06:40</span></figcaption>
+    </figure>
+    <div class="spread__text c5 reveal" id="story">
+      <p class="spread__index">I</p>
+      <h2>The first floor is for cutting.<br>The second is for everything else.</h2>
+      <p>There are twenty-two people on the two floors. Eleven cutters, four fitters, two in the sample room, and the rest of us. The pattern room is air-conditioned to a degree that visitors consistently describe as hostile.</p>
+      <p>Cutting is done in one pass, on the full width of the cloth, because a coat cut in two pieces will never hang the same way as a coat cut in one. This is slower and it is the entire reason the collection looks the way it does.</p>
+      <a class="linkline" href="#service">Visit the atelier</a>
+    </div>
+
+    <div class="spread__text c4 reveal">
+      <p class="spread__index">II</p>
+      <h2>Thirty-four pieces,<br>made here</h2>
+      <p>Everything in the collection is cut, sewn and finished above the locksmith's. We have not sent a garment out of France since 2011 and we do not intend to start.</p>
+      <p>Lead time on a made-to-measure coat is eleven weeks. We will tell you that at the fitting, not after.</p>
+    </div>
+    <figure class="c8 reveal">
+      <svg viewBox="0 0 1000 460" role="img" aria-label="Detail: a sleeve head being padded by hand with a pin cushion on the table">
+        <rect width="1000" height="460" fill="#dcd6c9"/>
+        <path d="M0 330h1000v130H0z" fill="#b9ac96"/>
+        <path d="M120 120c120-40 260-30 380 20l-40 210-380 10z" fill="#3f3d38"/>
+        <path d="M160 150c90-24 200-16 290 16l-28 140-296 8z" fill="#565049"/>
+        <path d="M560 190c90 30 150 80 200 150l-120 60-100-160z" fill="#6d2028" opacity=".8"/>
+        <g fill="#7a6f5c">
+          <ellipse cx="820" cy="300" rx="70" ry="46"/>
+          <ellipse cx="800" cy="270" rx="40" ry="30"/>
+        </g>
+        <g stroke="#c8b48c" stroke-width="2">
+          <path d="M790 250l-8 44M820 244l-6 46M850 254l-8 42"/>
+        </g>
+        <circle cx="816" cy="242" r="7" fill="#c1452f"/>
+        <circle cx="782" cy="258" r="6" fill="#2f4f7a"/>
+        <g stroke="#8a7a62" stroke-width="3" opacity=".5"><path d="M0 360h1000M0 400h1000"/></g>
+      </svg>
+      <figcaption><b>Sleeve head, padded by hand</b><span>Eleven minutes per sleeve</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="band" id="band">
+    <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g stroke="#6d2028" stroke-width="1" opacity=".5">
+        <path d="M0 120C200 60 400 180 600 120s400-60 600 0"/>
+        <path d="M0 200C200 140 400 260 600 200s400-60 600 0"/>
+        <path d="M0 280C200 220 400 340 600 280s400-60 600 0"/>
+      </g>
+    </svg>
+    <div class="col band__in">
+      <h2 class="reveal">After<br>Rain</h2>
+      <div class="reveal">
+        <p class="meta" style="margin-bottom:var(--s-3)">The campaign</p>
+        <p>Shot over three mornings in November, on foot, in whatever the weather turned out to be. No studio, no truck, no generator. The collection is shown in the streets it was made for.</p>
+        <p style="margin-top:var(--s-3)"><a class="linkline" style="border-bottom-color:#f1ede6" href="#lookbook">View the looks</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="col lookbook" id="lookbook">
+    <div class="lookbook__hd">
+      <div>
+        <p class="meta meta--accent">Selected</p>
+        <h2>Eight of sixty-four</h2>
+      </div>
+      <div class="filters" role="group" aria-label="Filter looks by category">
+        <button type="button" data-cat="all" aria-pressed="true">All</button>
+        <button type="button" data-cat="outerwear" aria-pressed="false">Outerwear</button>
+        <button type="button" data-cat="tailoring" aria-pressed="false">Tailoring</button>
+        <button type="button" data-cat="knitwear" aria-pressed="false">Knitwear</button>
+      </div>
+    </div>
+    <div class="looks">
+      <article class="look" data-cat="outerwear">
+        <p class="look__no">Look 04</p>
+        <figure>
+          <svg viewBox="0 0 300 400" role="img" aria-label="Look 04: unlined double-faced wool coat, worn open over a grey knit"><rect width="300" height="400" fill="#cfc9bd"/><path d="M120 60c14-10 46-10 60 0l40 60-20 250H100L80 120z" fill="#6f6d66"/><path d="M150 70v280" stroke="#4c4a44" stroke-width="2"/><path d="M118 66 96 130l-24 190 24 40 8-180z" fill="#85837b"/><path d="M182 66l22 64 24 190-24 40-8-180z" fill="#85837b"/></svg>
+          <figcaption><b>Unlined wool coat</b><span>Double-faced cashmere wool · ecru</span><span class="stockist">Available 14 Aug</span></figcaption>
+        </figure>
+      </article>
+      <article class="look" data-cat="tailoring">
+        <p class="look__no">Look 19</p>
+        <figure>
+          <svg viewBox="0 0 300 400" role="img" aria-label="Look 19: double-breasted jacket with wide lapels, worn over a straight trouser"><rect width="300" height="400" fill="#c8c2b6"/><path d="M110 70l40-14 40 14 34 60-16 150H92L76 130z" fill="#33322e"/><path d="M110 70l40 40 40-40-14 44h-52z" fill="#e2ded4"/><path d="M104 286h92l6 114H98z" fill="#4a4843"/><path d="M150 110v70" stroke="#c9b48c" stroke-width="2"/></svg>
+          <figcaption><b>Double-breasted jacket</b><span>Wool flannel, cut long · slate</span><span class="stockist">Limited — 30 made</span></figcaption>
+        </figure>
+      </article>
+      <article class="look" data-cat="knitwear">
+        <p class="look__no">Look 27</p>
+        <figure>
+          <svg viewBox="0 0 300 400" role="img" aria-label="Look 27: oversized knit worn over a long skirt"><rect width="300" height="400" fill="#d5cfc2"/><path d="M100 60h100l28 90-40 30-8 130H120l-8-130-40-30z" fill="#8a5a4e"/><path d="M120 280h60l22 120H98z" fill="#3b3a36"/><path d="M100 96h100" stroke="#6f4a40" stroke-width="2"/></svg>
+          <figcaption><b>Oversized knit</b><span>Undyed lambswool, dropped shoulder · madder</span><span class="stockist">Available 14 Aug</span></figcaption>
+        </figure>
+      </article>
+      <article class="look" data-cat="outerwear">
+        <p class="look__no">Look 33</p>
+        <figure>
+          <svg viewBox="0 0 300 400" role="img" aria-label="Look 33: long wrap coat belted at the waist"><rect width="300" height="400" fill="#c4bfb4"/><path d="M112 56h76l44 60-30 60 22 200H76l22-200-30-60z" fill="#45443f"/><path d="M112 176h76v18h-76z" fill="#c9b48c"/><path d="M150 194v20" stroke="#c9b48c" stroke-width="2"/></svg>
+          <figcaption><b>Wrap coat, belted</b><span>Boiled wool, raw hem · peat</span><span class="stockist">Available 14 Aug</span></figcaption>
+        </figure>
+      </article>
+      <article class="look" data-cat="tailoring">
+        <p class="look__no">Look 41</p>
+        <figure>
+          <svg viewBox="0 0 300 400" role="img" aria-label="Look 41: soft-shouldered jacket with a silk scarf at the neck"><rect width="300" height="400" fill="#cdc7ba"/><path d="M108 74l42-12 42 12 30 66-18 130H96L78 140z" fill="#5a5852"/><path d="M132 66c8 16 28 16 36 0l14 18-32 40-32-40z" fill="#6d2028" opacity=".85"/></svg>
+          <figcaption><b>Soft-shouldered jacket</b><span>Wool crepe, unpressed · stone</span><span class="stockist">Limited — 30 made</span></figcaption>
+        </figure>
+      </article>
+      <article class="look" data-cat="knitwear">
+        <p class="look__no">Look 52</p>
+        <figure>
+          <svg viewBox="0 0 300 400" role="img" aria-label="Look 52: long ribbed knit dress, collarless"><rect width="300" height="400" fill="#d0cabd"/><path d="M112 64h76l30 60-14 90 16 170H80l16-170-14-90z" fill="#a89b86"/><path d="M130 64v320M150 64v320M170 64v320" stroke="#8c8171" stroke-width="1.5" opacity=".7"/></svg>
+          <figcaption><b>Long rib knit</b><span>Merino, collarless · oyster</span><span class="stockist">Available 14 Aug</span></figcaption>
+        </figure>
+      </article>
+      <article class="look" data-cat="outerwear">
+        <p class="look__no">Look 58</p>
+        <figure>
+          <svg viewBox="0 0 300 400" role="img" aria-label="Look 58: short cape over a long column"><rect width="300" height="400" fill="#c6c1b6"/><path d="M96 76h108l40 70-124 30-124-30z" fill="#2e2d2a"/><path d="M124 176h52l14 210h-80z" fill="#55534d"/></svg>
+          <figcaption><b>Cape, unlined</b><span>Wool gauze, raw edge · ink</span><span class="stockist">One of nine</span></figcaption>
+        </figure>
+      </article>
+      <article class="look" data-cat="tailoring">
+        <p class="look__no">Look 64</p>
+        <figure>
+          <svg viewBox="0 0 300 400" role="img" aria-label="Look 64: final look, a full-length coat with a raised collar"><rect width="300" height="400" fill="#cbc5b9"/><path d="M104 54h92l40 70-22 40 20 210H66l20-210-22-40z" fill="#33322e"/><path d="M104 54h92l-14 30h-64z" fill="#c9b48c" opacity=".5"/></svg>
+          <figcaption><b>Closing coat</b><span>Melton, high collar · black</span><span class="stockist">Available 14 Aug</span></figcaption>
+        </figure>
+      </article>
+    </div>
+    <p class="formmsg" id="lookmsg" role="status" aria-live="polite" style="margin-top:var(--s-5);border-left-color:var(--hair)">Showing 8 of 64 looks.</p>
+  </section>
+
+  <section class="col service" id="service">
+    <div class="reveal">
+      <p class="meta meta--accent">Where to see it</p>
+      <h2>Four rooms, one hour each</h2>
+      <p style="margin-top:var(--s-4);color:var(--ink-2);font-size:var(--t-sm);max-width:36ch">The collection travels to four cities before it reaches the boutique. Appointments are one hour, private, and there is no obligation attached to any of them.</p>
+      <hr class="rule" style="margin:var(--s-5) 0">
+      <p class="meta">The atelier</p>
+      <p style="font-size:var(--t-sm);color:var(--ink-2);margin-top:.4rem">Visits to the cutting floor on rue de Charonne are possible on Thursday mornings, by arrangement, for six people at a time.</p>
+    </div>
+    <div class="reveal">
+      <ul class="list">
+        <li><span class="city">Paris</span><span class="addr">14 rue de Charonne, 11e — boutique &amp; atelier</span><span class="hours">Tue–Sat, 11–19</span></li>
+        <li><span class="city">Milan</span><span class="addr">Via della Spiga 21 — by appointment</span><span class="hours">18–24 Aug</span></li>
+        <li><span class="city">New York</span><span class="addr">57 Greene Street — showroom</span><span class="hours">4–12 Sep</span></li>
+        <li><span class="city">Tokyo</span><span class="addr">5-3-6 Minami-Aoyama — 2F</span><span class="hours">9–19 Oct</span></li>
+      </ul>
+
+      <form class="form" id="reqform" novalidate style="margin-top:var(--s-6)">
+        <h3 style="font-family:var(--font-sans);font-size:var(--t-xs);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3)">Request the lookbook</h3>
+        <div class="frow">
+          <div class="field">
+            <label for="r-name">Name</label>
+            <input id="r-name" name="name" type="text" autocomplete="name" required aria-describedby="e-r-name" placeholder="As you would like it printed">
+            <p class="err" id="e-r-name" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="r-email">Email</label>
+            <input id="r-email" name="email" type="email" autocomplete="email" required aria-describedby="e-r-email" placeholder="For the courier">
+            <p class="err" id="e-r-email" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="field">
+            <label for="r-city">Your city</label>
+            <select id="r-city" name="city">
+              <option>Paris</option><option>Milan</option><option>New York</option><option>Tokyo</option>
+              <option>Somewhere else</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r-purpose">Requested for</label>
+            <select id="r-purpose" name="purpose">
+              <option>Personal purchase</option>
+              <option>Press or editorial</option>
+              <option>Stockist enquiry</option>
+              <option>Made-to-measure enquiry</option>
+            </select>
+          </div>
+        </div>
+        <p class="formmsg" id="r-msg" role="status" aria-live="polite">Printed in Paris and sent by hand. No mailing list, no tracking pixels.</p>
+        <button class="btn" type="submit">Request</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="col">
+    <div class="colophon">
+      <div>
+        <h3>Éclat</h3>
+        <p>Maison de couture, Paris. Twenty-two people on two floors above a locksmith's on the rue de Charonne, since 1978.</p>
+      </div>
+      <div>
+        <h3>The issue</h3>
+        <ul>
+          <li><a href="#cover">Cover story</a></li>
+          <li><a href="#story">The story</a></li>
+          <li><a href="#spread">The atelier</a></li>
+          <li><a href="#lookbook">All sixty-four looks</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>House</h3>
+        <ul>
+          <li><a href="#service">Stockists</a></li>
+          <li><a href="#service">Appointments</a></li>
+          <li><a href="#service">Made to measure</a></li>
+          <li><a href="#service">Repairs, for life</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="colophon__base">
+      <span>© 2026 Éclat Paris. All rights reserved.</span>
+      <span>Privacy · Terms · Press</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var mob=document.getElementById('mobnav'),nav=document.getElementById('mnav');
+  mob.addEventListener('click',function(){
+    var open=mob.getAttribute('aria-expanded')==='true';
+    mob.setAttribute('aria-expanded',String(!open));
+    nav.setAttribute('data-open',String(!open));
+  });
+  nav.addEventListener('click',function(e){if(e.target.tagName==='A'){mob.setAttribute('aria-expanded','false');nav.setAttribute('data-open','false');}});
+
+  var items=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    items.forEach(function(i){i.classList.add('is-in');});
+  }else{
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('is-in');io.unobserve(en.target);}});
+    },{threshold:.1,rootMargin:'0px 0px -6% 0px'});
+    items.forEach(function(i){io.observe(i);});
+  }
+
+  var looks=Array.prototype.slice.call(document.querySelectorAll('.look')),lmsg=document.getElementById('lookmsg');
+  document.querySelectorAll('.filters button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.filters button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      var c=b.getAttribute('data-cat'),n=0;
+      looks.forEach(function(l){
+        var show=c==='all'||l.getAttribute('data-cat')===c;
+        l.hidden=!show; if(show) n++;
+      });
+      lmsg.textContent='Showing '+n+' of 64 looks'+(c==='all'?'.':' in '+c+'.');
+    });
+  });
+
+  var form=document.getElementById('reqform'),msg=document.getElementById('r-msg');
+  function setErr(input,id,text){
+    document.getElementById(id).textContent=text;
+    input.closest('.field').setAttribute('data-invalid',text?'true':'false');
+    if(text){input.setAttribute('aria-invalid','true');}else{input.removeAttribute('aria-invalid');}
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('r-name'),email=document.getElementById('r-email'),bad=false;
+    if(name.value.trim().length<2){setErr(name,'e-r-name','We need a name for the courier.');bad=true;}else setErr(name,'e-r-name','');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())){setErr(email,'e-r-email','That address will not reach you.');bad=true;}else setErr(email,'e-r-email','');
+    if(bad){msg.removeAttribute('data-tone');msg.textContent='Not sent — the highlighted fields need attention.';return;}
+    msg.setAttribute('data-tone','ok');
+    msg.textContent='Noted. A lookbook for '+document.getElementById('r-city').value+' will be posted this week, for '+document.getElementById('r-purpose').value.toLowerCase()+'.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

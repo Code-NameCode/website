@@ -1,0 +1,668 @@
+<!-- Style: Synthwave | 58synthwave.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Midnight Circuit - three nights of music in a car park</title>
+<style>
+  :root{
+    --night:#070418;
+    --deep:#150735;
+    --deep-2:#1f0d4a;
+    --ink:#f2ecff;
+    --dim:#b0a2d4;
+    --cyan:#22e0ff;
+    --magenta:#ff2c9c;
+    --orange:#ff7a29;
+    --violet:#8a5cff;
+
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --t-hero:clamp(2.5rem,9.5vw,6.6rem);
+    --t-h2:clamp(1.7rem,4.2vw,3rem);
+    --t-h3:clamp(1.1rem,1.8vw,1.35rem);
+    --t-body:clamp(.96rem,1.05vw,1.04rem);
+    --t-small:.84rem;
+
+    --r:10px; --r-sm:6px;
+    --neon-line:1px solid rgba(138,92,255,.42);
+    --s-1:.4rem; --s-2:.8rem; --s-3:1.3rem; --s-4:2.1rem; --s-5:3.2rem; --s-6:4.6rem;
+    --gutter:clamp(1.1rem,3.5vw,2.6rem);
+    --wrap:1200px;
+    --motion:200ms;
+    --grid-speed:9s;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--night);color:var(--ink);font-family:var(--font);font-size:var(--t-body);line-height:1.6}
+  h1,h2,h3{margin:0;line-height:1.06;font-weight:800;letter-spacing:.01em}
+  h1{font-size:var(--t-hero);text-transform:uppercase;line-height:.9;letter-spacing:.02em}
+  h2{font-size:var(--t-h2);text-transform:uppercase}
+  h3{font-size:var(--t-h3);font-weight:750}
+  p{margin:0 0 1em}
+  ul,ol{margin:0;padding:0;list-style:none}
+  a{color:inherit}
+  button{font:inherit}
+  svg{display:block;max-width:100%}
+  :focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+  .wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+  .skip{position:absolute;left:-999px;background:var(--cyan);color:var(--night);padding:.7rem 1rem;font-weight:800}
+  .skip:focus{left:.5rem;top:.5rem;z-index:60}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .panel{background:linear-gradient(180deg,rgba(31,13,74,.72),rgba(15,7,45,.9));border:var(--neon-line);border-radius:var(--r)}
+  .kicker{display:block;font-family:var(--font-mono);font-size:var(--t-small);letter-spacing:.3em;text-transform:uppercase;
+    color:var(--cyan);margin-bottom:var(--s-2)}
+  .cyan{color:var(--cyan);text-shadow:0 0 16px rgba(34,224,255,.6)}
+  .magenta{color:var(--magenta);text-shadow:0 0 16px rgba(255,44,156,.6)}
+  .outline-text{color:transparent;-webkit-text-stroke:2px var(--violet);text-shadow:0 0 30px rgba(138,92,255,.45)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:52px;padding:.85rem 1.6rem;
+    font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:var(--t-small);text-decoration:none;cursor:pointer;
+    border:2px solid var(--cyan);border-radius:var(--r);background:transparent;color:var(--cyan);
+    box-shadow:0 0 22px -8px rgba(34,224,255,.9);transition:background var(--motion) ease,box-shadow var(--motion) ease,transform var(--motion) ease}
+  .btn:hover{background:rgba(34,224,255,.12);box-shadow:0 0 30px -6px rgba(34,224,255,.95);transform:translateY(-2px)}
+  .btn--fill{background:var(--cyan);color:var(--night);box-shadow:0 0 30px -6px rgba(34,224,255,.95)}
+  .btn--fill:hover{background:#7ceeff}
+  .btn--pink{border-color:var(--magenta);color:var(--magenta);box-shadow:0 0 22px -8px rgba(255,44,156,.9)}
+  .btn--pink:hover{background:rgba(255,44,156,.14);box-shadow:0 0 30px -6px rgba(255,44,156,.95)}
+  .btn--sm{min-height:44px;padding:.45rem .95rem}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:30;background:rgba(7,4,24,.86);border-bottom:var(--neon-line);backdrop-filter:blur(3px)}
+  .nav-in{display:flex;align-items:center;gap:var(--s-2);min-height:72px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;margin-right:auto;font-weight:800;
+    text-transform:uppercase;letter-spacing:.2em;font-size:1.02rem}
+  .brand svg{width:34px;height:34px}
+  .nav-links{display:flex;gap:.25rem;flex-wrap:wrap}
+  .nav-links a{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .9rem;text-decoration:none;
+    font-size:var(--t-small);text-transform:uppercase;letter-spacing:.12em;color:var(--dim);border-radius:var(--r-sm)}
+  .nav-links a:hover{color:var(--cyan);box-shadow:inset 0 -2px 0 var(--cyan)}
+  .nav-toggle{display:none;background:transparent;color:var(--ink);border:2px solid var(--cyan);border-radius:var(--r-sm);
+    min-height:44px;padding:.45rem .9rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;cursor:pointer}
+
+  /* hero */
+  .hero{position:relative;overflow:hidden;min-height:min(94vh,800px);display:flex;flex-direction:column;justify-content:flex-end;
+    background:linear-gradient(180deg,#070418 0%,#1b0a4d 38%,#5b1480 62%,#c72a7a 82%,#ff8a3d 100%)}
+  .hero-sun{position:absolute;left:50%;top:34%;width:min(56vw,380px);aspect-ratio:1;transform:translate(-50%,-50%);
+    border-radius:50%;overflow:hidden;
+    background:linear-gradient(180deg,#fff07a 0%,#ffb03d 45%,#ff2c9c 100%);
+    box-shadow:0 0 80px 24px rgba(255,90,150,.42)}
+  .hero-sun::after{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(180deg,rgba(7,4,24,.9) 0 5px,transparent 5px 13px)}
+  .hero-grid{position:absolute;left:-30%;right:-30%;bottom:-4%;height:46%;
+    background-image:
+      repeating-linear-gradient(90deg,rgba(255,44,156,.65) 0 2px,transparent 2px 90px),
+      repeating-linear-gradient(0deg,rgba(34,224,255,.5) 0 2px,transparent 2px 70px);
+    transform:perspective(300px) rotateX(76deg);transform-origin:bottom center;
+    mask-image:linear-gradient(180deg,transparent,#000 30%);
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 30%);
+    animation:grid var(--grid-speed) linear infinite}
+  @keyframes grid{from{background-position:0 0,0 0}to{background-position:0 0,0 70px}}
+  .hero-mountains{position:absolute;left:0;right:0;bottom:40%;height:14vh;min-height:70px}
+  .hero-inner{position:relative;z-index:5;padding-block:var(--s-5) var(--s-4);text-align:center}
+  .hero-inner .lede{max-width:56ch;margin:0 auto var(--s-3);color:#f7f0ff}
+  .hero-cta{display:flex;gap:var(--s-2);justify-content:center;flex-wrap:wrap}
+  .countdown{display:inline-flex;gap:.5rem;margin:var(--s-3) 0;flex-wrap:wrap;justify-content:center}
+  .count-cell{background:rgba(7,4,24,.72);border:1px solid rgba(34,224,255,.4);border-radius:var(--r-sm);
+    padding:.5rem .8rem;min-width:82px}
+  .count-cell b{display:block;font-family:var(--font-mono);font-size:clamp(1.3rem,3vw,1.9rem);color:var(--cyan);line-height:1.1;
+    text-shadow:0 0 14px rgba(34,224,255,.7)}
+  .count-cell small{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+  .count-note{font-family:var(--font-mono);font-size:var(--t-small);letter-spacing:.14em;color:var(--magenta);margin:0}
+
+  section{padding-block:var(--s-5)}
+  .sec-head{max-width:64ch;margin-bottom:var(--s-4)}
+  .sec-head p{color:var(--dim);margin:.4rem 0 0}
+
+  /* lineup tabs */
+  .days{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:var(--s-3)}
+  .day-tab{font:inherit;font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:var(--t-small);cursor:pointer;
+    min-height:48px;padding:.6rem 1.2rem;background:transparent;color:var(--dim);border:1px solid rgba(138,92,255,.5);border-radius:var(--r-sm)}
+  .day-tab[aria-selected="true"]{background:var(--magenta);border-color:var(--magenta);color:#fff;box-shadow:0 0 24px -6px rgba(255,44,156,.9)}
+  .day-tab:hover{color:var(--cyan);border-color:var(--cyan)}
+  .day-tab[aria-selected="true"]:hover{color:#fff}
+  .set-list{display:grid;gap:1px;background:rgba(138,92,255,.28);border:var(--neon-line);border-radius:var(--r);overflow:hidden}
+  .set{display:grid;grid-template-columns:110px 1fr auto;gap:var(--s-3);align-items:center;padding:var(--s-3);
+    background:rgba(15,7,45,.92)}
+  .set time{font-family:var(--font-mono);color:var(--cyan);font-size:var(--t-small);letter-spacing:.08em}
+  .set h3{margin-bottom:.1rem}
+  .set p{margin:0;color:var(--dim);font-size:.9rem}
+  .set .stage{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--violet);
+    border:1px solid rgba(138,92,255,.5);border-radius:2px;padding:.15rem .45rem;white-space:nowrap}
+  .set--head{border-left:4px solid var(--magenta);background:rgba(58,10,74,.92)}
+  .set--head .stage{color:var(--magenta);border-color:var(--magenta)}
+  .day-panel[hidden]{display:none}
+
+  /* tiers */
+  .tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-3);align-items:stretch}
+  .tier{padding:var(--s-3);display:flex;flex-direction:column;gap:.4rem}
+  .tier h3{text-transform:uppercase;letter-spacing:.1em}
+  .tier .price{font-size:2.2rem;font-weight:800;line-height:1;color:var(--cyan);text-shadow:0 0 18px rgba(34,224,255,.45)}
+  .tier p{margin:0;color:var(--dim);font-size:.94rem}
+  .tier ul{display:grid;gap:.35rem;margin:.5rem 0 0;font-size:.92rem;flex:1}
+  .tier li{padding-left:1.2rem;position:relative;color:#dcd2f5}
+  .tier li::before{content:"";position:absolute;left:0;top:.55em;width:.5rem;height:.5rem;background:var(--violet);
+    transform:rotate(45deg)}
+  .tier--best{border-color:var(--magenta);box-shadow:0 0 40px -14px rgba(255,44,156,.8)}
+  .tier--best .price{color:var(--magenta);text-shadow:0 0 18px rgba(255,44,156,.5)}
+
+  /* order form */
+  .order{display:grid;grid-template-columns:.9fr 1.1fr;gap:var(--s-3);margin-top:var(--s-4);align-items:start}
+  .form-panel{padding:var(--s-4)}
+  .passes{display:grid;gap:.5rem;margin-bottom:var(--s-3)}
+  .pass{display:grid;grid-template-columns:auto 1fr auto;gap:.7rem;align-items:center;padding:.7rem .9rem;min-height:56px;
+    border:1px solid rgba(138,92,255,.4);border-radius:var(--r-sm);background:rgba(7,4,24,.6);cursor:pointer}
+  .pass:hover{border-color:var(--cyan)}
+  .pass input{width:22px;height:22px;accent-color:var(--magenta)}
+  .pass:has(input:checked){border-color:var(--magenta);background:rgba(58,10,74,.6)}
+  .pass:has(input:focus-visible){outline:3px solid var(--cyan);outline-offset:2px}
+  .pass b{font-size:.98rem}
+  .pass small{display:block;color:var(--dim);font-size:var(--t-small)}
+  .pass .p{font-weight:800;color:var(--cyan)}
+  .field{display:block;margin-bottom:var(--s-2)}
+  .field .lab{display:block;font-family:var(--font-mono);font-size:var(--t-small);letter-spacing:.14em;text-transform:uppercase;
+    color:var(--dim);margin-bottom:.4rem}
+  .field input{width:100%;min-height:50px;padding:.7rem .9rem;font:inherit;background:rgba(7,4,24,.7);color:var(--ink);
+    border:1px solid rgba(138,92,255,.5);border-radius:var(--r-sm)}
+  .field input:focus{border-color:var(--cyan)}
+  .field .err{display:none;font-size:var(--t-small);color:var(--magenta);margin-top:.35rem}
+  .field[data-invalid] .err{display:block}
+  .field[data-invalid] input{border-color:var(--magenta)}
+  .total{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-2);padding:var(--s-3);
+    border:1px dashed rgba(34,224,255,.5);border-radius:var(--r-sm);margin:var(--s-2) 0;font-family:var(--font-mono)}
+  .total span:first-child{letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-size:var(--t-small)}
+  .total b{font-size:1.5rem;color:var(--cyan)}
+  .order-status{min-height:1.6em;font-size:var(--t-small);font-family:var(--font-mono)}
+  .order-status[data-state="ok"]{color:var(--cyan)} .order-status[data-state="err"]{color:var(--magenta)}
+
+  /* venue */
+  .venue{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--s-4);align-items:start}
+  .venue-art{border:var(--neon-line);border-radius:var(--r);overflow:hidden;background:#0a0426}
+  .facts{display:grid;gap:var(--s-3)}
+  .fact{display:grid;grid-template-columns:52px 1fr;gap:var(--s-2);align-items:start}
+  .fact svg{width:52px;height:52px;padding:8px;border:1px solid rgba(138,92,255,.5);border-radius:var(--r-sm)}
+  .fact b{display:block}
+  .fact p{margin:0;color:var(--dim);font-size:.94rem}
+
+  /* quote */
+  .quote-band{border-block:var(--neon-line);background:linear-gradient(90deg,rgba(255,44,156,.12),rgba(34,224,255,.08));padding-block:var(--s-5)}
+  .quote-band blockquote{margin:0 auto;max-width:30ch;font-size:clamp(1.3rem,3.2vw,2.1rem);line-height:1.28;text-align:center;font-weight:800}
+  .quote-band cite{display:block;text-align:center;margin-top:var(--s-2);font-style:normal;font-family:var(--font-mono);
+    font-size:var(--t-small);letter-spacing:.24em;text-transform:uppercase;color:var(--cyan)}
+
+  /* sponsors */
+  .sponsors{display:flex;gap:var(--s-4);flex-wrap:wrap;justify-content:center;align-items:center;opacity:.75}
+  .sponsors span{font-family:var(--font-mono);font-size:clamp(.9rem,1.6vw,1.1rem);letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+
+  /* newsletter */
+  .news{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:center;padding:var(--s-4)}
+  .news h2{margin-bottom:.3rem}
+
+  footer{border-top:var(--neon-line);padding-block:var(--s-4) var(--s-3);margin-top:var(--s-4);background:rgba(7,4,24,.6)}
+  .foot{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:var(--s-3)}
+  footer h3{font-size:var(--t-small);letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:.6rem}
+  footer li{margin-bottom:.3rem}
+  footer a{text-decoration:none;color:var(--dim);font-size:.94rem}
+  footer a:hover{color:var(--magenta)}
+  .fine{margin-top:var(--s-3);padding-top:var(--s-2);border-top:1px solid rgba(138,92,255,.3);display:flex;
+    justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;color:var(--dim);font-size:var(--t-small);font-family:var(--font-mono)}
+
+  @media (max-width:1000px){
+    .order,.venue,.news{grid-template-columns:1fr}
+    .tier-grid{grid-template-columns:1fr}
+    .nav-toggle{display:inline-block}
+    .nav-links{display:none;width:100%;order:3;padding-bottom:var(--s-2)}
+    .nav-links[data-open="true"]{display:flex}
+  }
+  @media (max-width:620px){
+    .set{grid-template-columns:1fr;gap:.3rem}
+    .set .stage{justify-self:start}
+    .foot{grid-template-columns:1fr}
+    .hero{min-height:auto;padding-bottom:var(--s-4)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#lineup">Skip to the lineup</a>
+
+<header>
+  <nav class="wrap" aria-label="Primary">
+    <div class="nav-in">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 8 22h8l-4 15 12-19h-8z" fill="#22e0ff"/><circle cx="20" cy="20" r="18" fill="none" stroke="#ff2c9c" stroke-width="2" opacity=".7"/></svg>
+        Midnight Circuit
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="nav-links" id="menu">
+        <a href="#lineup">Lineup</a>
+        <a href="#tickets">Tickets</a>
+        <a href="#venue">The Grid</a>
+        <a href="#news">Updates</a>
+      </div>
+      <a class="btn btn--fill btn--sm" href="#tickets">Tickets</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-sun" aria-hidden="true"></div>
+    <svg class="hero-mountains" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 200 120 96l70 62 90-108 100 128 84-70 96 92h80l96-118 84 82 90-52 110 88 100-70 150 92v96H0z" fill="#0a0426"/>
+      <path d="M0 200 150 128l90 66 110-92 120 108 140-58 130 84 150-72 120 66 90-52 100 76v46H0z" fill="#150735"/>
+    </svg>
+    <div class="hero-grid" aria-hidden="true"></div>
+
+    <div class="hero-inner wrap">
+      <span class="kicker">Level 4 car park &middot; 14&ndash;16 August 2026</span>
+      <h1 id="hero-title"><span class="magenta">Midnight</span><br><span class="cyan">Circuit</span></h1>
+      <p class="lede">Three nights, two stages, one four-storey car park in Rotterdam with a sound limit nobody has ever agreed on. Forty-one acts, a silent disco in the stairwell, and a generator that has survived four editions.</p>
+
+      <div class="countdown" id="countdown" role="group" aria-label="Time until the festival begins">
+        <span class="count-cell"><b id="cDays">--</b><small>days</small></span>
+        <span class="count-cell"><b id="cHours">--</b><small>hours</small></span>
+        <span class="count-cell"><b id="cMins">--</b><small>mins</small></span>
+        <span class="count-cell"><b id="cSecs">--</b><small>secs</small></span>
+      </div>
+      <p class="count-note" id="countNote">Doors 17:00 Friday. Main stage 18:30.</p>
+
+      <div class="hero-cta">
+        <a class="btn btn--fill" href="#tickets">Get a pass</a>
+        <a class="btn btn--pink" href="#lineup">See the lineup</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="lineup" aria-labelledby="lineup-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">41 acts &middot; 2 stages &middot; 3 nights</span>
+        <h2 id="lineup-title">The lineup</h2>
+        <p>Times are approximate and subject to the generator. Friday is the quiet one. Saturday is not.</p>
+      </div>
+
+      <div class="days" role="tablist" aria-label="Festival days">
+        <button class="day-tab" type="button" role="tab" id="tab-fri" aria-controls="panel-fri" aria-selected="true">Friday 14</button>
+        <button class="day-tab" type="button" role="tab" id="tab-sat" aria-controls="panel-sat" aria-selected="false" tabindex="-1">Saturday 15</button>
+        <button class="day-tab" type="button" role="tab" id="tab-sun" aria-controls="panel-sun" aria-selected="false" tabindex="-1">Sunday 16</button>
+      </div>
+
+      <div class="day-panel" role="tabpanel" id="panel-fri" aria-labelledby="tab-fri" tabindex="0">
+        <ul class="set-list">
+          <li class="set"><time datetime="18:30">18:30</time><span><h3>Neon Cassette Club</h3><p>Opening the main stage, apologising for nothing.</p></span><span class="stage">Rooftop</span></li>
+          <li class="set"><time datetime="20:00">20:00</time><span><h3>Halogen Sisters</h3><p>Two drummers, one mixer, no setlist.</p></span><span class="stage">Rooftop</span></li>
+          <li class="set set--head"><time datetime="21:30">21:30</time><span><h3>VECTR</h3><p>Headliner. 70 minutes. Bring earplugs, they are free at the desk.</p></span><span class="stage">Rooftop</span></li>
+          <li class="set"><time datetime="23:15">23:15</time><span><h3>Blue Hour Social</h3><p>Stairwell silent disco, 11:15 to close.</p></span><span class="stage">Level 2</span></li>
+        </ul>
+      </div>
+
+      <div class="day-panel" role="tabpanel" id="panel-sat" aria-labelledby="tab-sat" tabindex="0" hidden>
+        <ul class="set-list">
+          <li class="set"><time datetime="17:00">17:00</time><span><h3>Ghost Ribbon</h3><p>Ambient set on the ground floor, seated area available.</p></span><span class="stage">Ground</span></li>
+          <li class="set"><time datetime="19:00">19:00</time><span><h3>Pale Cascade</h3><p>Live re-score of a 1984 arcade game, per the arcade's request.</p></span><span class="stage">Rooftop</span></li>
+          <li class="set set--head"><time datetime="20:30">20:30</time><span><h3>MARGINALIA</h3><p>Headliner. Last played a show this size in a swimming pool.</p></span><span class="stage">Rooftop</span></li>
+          <li class="set"><time datetime="22:45">22:45</time><span><h3>Chrome Orchard</h3><p>Six-piece, string section included.</p></span><span class="stage">Rooftop</span></li>
+          <li class="set set--head"><time datetime="00:30">00:30</time><span><h3>K. OYELARAN</h3><p>Second headliner, because Saturday is not a one-act night.</p></span><span class="stage">Rooftop</span></li>
+        </ul>
+      </div>
+
+      <div class="day-panel" role="tabpanel" id="panel-sun" aria-labelledby="tab-sun" tabindex="0" hidden>
+        <ul class="set-list">
+          <li class="set"><time datetime="16:00">16:00</time><span><h3>Slow Machine Choir</h3><p>Twelve singers, one synth, a lot of reverb.</p></span><span class="stage">Ground</span></li>
+          <li class="set"><time datetime="18:00">18:00</time><span><h3>Zero Signal</h3><p>Dub techno from a booth the size of a phone box.</p></span><span class="stage">Level 2</span></li>
+          <li class="set"><time datetime="19:45">19:45</time><span><h3>Ferrous</h3><p>Guitar band that plays entirely in the key of the fire escape.</p></span><span class="stage">Rooftop</span></li>
+          <li class="set set--head"><time datetime="21:00">21:00</time><span><h3>HALCYON DRIVE</h3><p>Closes the festival. 21:30 curfew, as the city insists.</p></span><span class="stage">Rooftop</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="tickets" aria-labelledby="tickets-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Limited to 2,400 across three nights</span>
+        <h2 id="tickets-title">Passes and tiers</h2>
+        <p>Every pass includes both stages, the stairwell disco, and free earplugs. There is no VIP tier, because a car park does not have a VIP area.</p>
+      </div>
+
+      <div class="tier-grid">
+        <article class="tier panel">
+          <h3>Night Pass</h3>
+          <p class="price">&euro;34</p>
+          <p>Any one night, both stages.</p>
+          <ul>
+            <li>Entry before 19:00 that night</li>
+            <li>Free earplugs and lockers</li>
+            <li>Not transferable once used</li>
+          </ul>
+        </article>
+        <article class="tier panel tier--best">
+          <h3>Full Circuit</h3>
+          <p class="price">&euro;86</p>
+          <p>All three nights, plus the after-hours session.</p>
+          <ul>
+            <li>Everything in Night Pass</li>
+            <li>Sunday soundcheck, 14:00, ground floor</li>
+            <li>Priority re-entry if it rains</li>
+            <li>One free t-shirt, size chosen at the desk</li>
+          </ul>
+        </article>
+        <article class="tier panel">
+          <h3>Sound Policy</h3>
+          <p class="price">23:00</p>
+          <p>Curfew on the rooftop stage, every night.</p>
+          <ul>
+            <li>Level 2 disco runs past curfew, headphones only</li>
+            <li>Free earplugs at every desk, no questions</li>
+            <li>Quiet tent on ground floor, all weekend</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="order">
+        <div class="panel form-panel">
+          <h3>Reserve a pass</h3>
+          <p style="color:var(--dim);font-size:.95rem">Held for 20 minutes. Pay on the card reader at the desk, or at any shop in the neighbourhood.</p>
+          <div class="passes">
+            <label class="pass">
+              <input type="radio" name="pass" value="night" data-price="34" checked>
+              <span><b>Night Pass</b><small>One night, choose on arrival</small></span>
+              <span class="p">&euro;34</span>
+            </label>
+            <label class="pass">
+              <input type="radio" name="pass" value="full" data-price="86">
+              <span><b>Full Circuit</b><small>Three nights + soundcheck + after-hours</small></span>
+              <span class="p">&euro;86</span>
+            </label>
+          </div>
+          <label class="field" for="qty">
+            <span class="lab">How many passes</span>
+            <input id="qty" name="qty" type="number" min="1" max="6" value="2" inputmode="numeric">
+            <span class="err">One to six per order, please. It is a car park.</span>
+          </label>
+          <label class="field" for="email">
+            <span class="lab">Email for the entry code</span>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <span class="err">We need a working address to send the code to.</span>
+          </label>
+          <div class="total"><span>Total</span><b id="total">&euro;68.00</b></div>
+          <button class="btn btn--fill" type="submit">Hold these passes</button>
+          <p class="order-status" id="orderStatus" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="panel form-panel">
+          <h3>What your pass gets you</h3>
+          <p style="color:var(--dim)">Practicalities, because a festival site this size is mostly walkways.</p>
+          <ul style="display:grid;gap:.7rem;padding-left:1.1rem;color:#dcd2f5">
+            <li>Entry is via the west ramp. There is no step-free route to the rooftop; the ground floor is fully step-free and has the quiet tent, the water, and the food.</li>
+            <li>Lockers are free and inside the booking. Bring a padlock or a euro in coins, which nobody does and everybody regrets.</li>
+            <li>Cash only at the four food stalls. The rooftop bar takes cards and is the only place with a queue worth queueing for.</li>
+            <li>Water is free at four points on all three levels. Bring an empty bottle; there is nothing on the roof to fill one.</li>
+            <li>The 23:00 curfew is enforced by the city, not by us. The Level 2 disco continues with headphones, which is the correct compromise.</li>
+            <li>Photography is fine on the ground floor and not on the rooftop. Several artists have asked, and we have honoured all of them.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="venue" aria-labelledby="venue-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Level 4 &middot; Parklaan 14, Rotterdam</span>
+        <h2 id="venue-title">The Grid</h2>
+        <p>Four decks, one core stair, and 1,100 parking spaces. The plan below is the same one taped to the entrance barrier, slightly weathered.</p>
+      </div>
+      <div class="venue">
+        <div class="venue-art">
+          <svg viewBox="0 0 520 360" role="img" aria-label="Plan of the festival site: rooftop main stage at the top, level three bars, level two stairwell disco, and the ground floor with the quiet tent, water, food and the entrance ramp.">
+            <rect width="520" height="360" fill="#0a0426"/>
+            <g stroke="#8a5cff" stroke-width="1" opacity=".4">
+              <path d="M0 40h520M0 80h520M0 120h520M0 160h520M0 200h520M0 240h520M0 280h520M0 320h520"/>
+              <path d="M40 0v360M80 0v360M120 0v360M160 0v360M200 0v360M240 0v360M280 0v360M320 0v360M360 0v360M400 0v360M440 0v360M480 0v360"/>
+            </g>
+            <rect x="24" y="18" width="472" height="70" fill="none" stroke="#ff2c9c" stroke-width="2"/>
+            <text x="260" y="46" text-anchor="middle" font-family="monospace" font-size="15" fill="#ff2c9c">L5 &mdash; ROOFTOP / MAIN STAGE</text>
+            <text x="260" y="68" text-anchor="middle" font-family="monospace" font-size="11" fill="#b0a2d4">stage + bar + 1,100 capacity</text>
+            <rect x="24" y="100" width="472" height="58" fill="none" stroke="#8a5cff" stroke-width="2"/>
+            <text x="260" y="128" text-anchor="middle" font-family="monospace" font-size="13" fill="#8a5cff">L4 &mdash; BARS + TOILETS</text>
+            <text x="260" y="147" text-anchor="middle" font-family="monospace" font-size="11" fill="#b0a2d4">water point + earplug desk</text>
+            <rect x="24" y="170" width="472" height="52" fill="none" stroke="#22e0ff" stroke-width="2"/>
+            <text x="260" y="200" text-anchor="middle" font-family="monospace" font-size="13" fill="#22e0ff">L3 &mdash; STAIRWELL DISCO (HEADPHONES)</text>
+            <rect x="24" y="234" width="472" height="76" fill="none" stroke="#8a5cff" stroke-width="2"/>
+            <text x="260" y="262" text-anchor="middle" font-family="monospace" font-size="13" fill="#8a5cff">L2 &mdash; AMBIENT / SOUNDCHECK</text>
+            <text x="260" y="284" text-anchor="middle" font-family="monospace" font-size="11" fill="#b0a2d4">seated area + charging</text>
+            <rect x="24" y="320" width="300" height="30" fill="none" stroke="#ff7a29" stroke-width="2"/>
+            <text x="174" y="340" text-anchor="middle" font-family="monospace" font-size="11" fill="#ff7a29">L1 &mdash; QUIET TENT + FOOD + WATER</text>
+            <rect x="340" y="320" width="156" height="30" fill="none" stroke="#22e0ff" stroke-width="2"/>
+            <text x="418" y="340" text-anchor="middle" font-family="monospace" font-size="11" fill="#22e0ff">WEST RAMP ENTRY</text>
+            <path d="M262 12v306" stroke="#ff2c9c" stroke-width="3" stroke-dasharray="8 8" opacity=".7"/>
+            <text x="274" y="30" font-family="monospace" font-size="10" fill="#ff2c9c">CORE STAIR</text>
+          </svg>
+        </div>
+        <div class="facts">
+          <div class="fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22e0ff" stroke-width="2" aria-hidden="true"><path d="M4 20h16M6 20V9l6-5 6 5v11"/><path d="M10 20v-6h4v6"/></svg>
+            <span><b>Getting there</b><p>Tram 4 to Parklaan, then four minutes on foot. No parking on site &mdash; it is a car park, but a full one. Cycle racks at the ramp, 300 spaces.</p></span>
+          </div>
+          <div class="fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ff2c9c" stroke-width="2" aria-hidden="true"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg>
+            <span><b>Levels</b><p>Five decks, one core stair, and two lifts that serve levels 1 to 3 only. The rooftop is a ramp, and it is a long one.</p></span>
+          </div>
+          <div class="fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8a5cff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+            <span><b>Quiet hours</b><p>23:00 curfew on the rooftop, all three nights. The ground floor stays quiet all weekend and never closes.</p></span>
+          </div>
+          <div class="fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ff7a29" stroke-width="2" aria-hidden="true"><path d="M4 6h16v14H4z"/><path d="M4 10h16M9 6v14"/></svg>
+            <span><b>Weather</b><p>Bring a jacket. The rooftop is a rooftop. If it rains we move the Rooftop stage to level 2 and tell everyone twice.</p></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote-band" aria-label="Headliner quote">
+    <div class="wrap">
+      <blockquote>&ldquo;We asked for a car park and they gave us a mountain.&rdquo;</blockquote>
+      <cite>MARGINALIA, on stage, Saturday 20:30</cite>
+    </div>
+  </section>
+
+  <section aria-label="Festival partners">
+    <div class="wrap">
+      <p class="kicker" style="text-align:center">On the roof, one way or another</p>
+      <div class="sponsors">
+        <span>Parklaan Werk</span><span>Nocturne Radio</span><span>Tol</span>
+        <span>Stadslicht</span><span>Halve Maan</span><span>Betaalbare Nacht</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="news" aria-labelledby="news-title">
+    <div class="wrap">
+      <div class="panel news">
+        <div>
+          <span class="kicker">One email, six times a year</span>
+          <h2 id="news-title">Set times, generator news, nothing else</h2>
+          <p style="color:var(--dim)">When the generator is struggling we say so. When a set moves 20 minutes earlier we say that too. Six emails between now and August, and one in September to say thank you.</p>
+        </div>
+        <form id="newsForm" novalidate>
+          <label class="field" for="nname">
+            <span class="lab">Name on the list</span>
+            <input id="nname" name="nname" type="text" autocomplete="name" required>
+            <span class="err">A name helps when we send the soundcheck reminder.</span>
+          </label>
+          <label class="field" for="nemail">
+            <span class="lab">Email</span>
+            <input id="nemail" name="nemail" type="email" autocomplete="email" required>
+            <span class="err">Check the address and we will take it from there.</span>
+          </label>
+          <button class="btn btn--pink" type="submit">Join the list</button>
+          <p class="order-status" id="newsStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h3>Midnight Circuit</h3>
+        <p>A fictional festival, built for a style demo. Four editions, one car park, 23:00 curfew enforced by the city rather than by us.</p>
+      </div>
+      <div>
+        <h3>Festival</h3>
+        <ul>
+          <li><a href="#lineup">Lineup</a></li>
+          <li><a href="#tickets">Passes</a></li>
+          <li><a href="#venue">Site plan</a></li>
+          <li><a href="#news">Updates</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Info</h3>
+        <ul>
+          <li><a href="#venue">Accessibility</a></li>
+          <li><a href="#tickets">Sound policy</a></li>
+          <li><a href="#venue">Getting there</a></li>
+          <li><a href="#news">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>&copy; 2026 Midnight Circuit. A fictional brand, built for a style demo.</span>
+      <span>Doors 17:00 &middot; curfew 23:00 &middot; quiet floor always open</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  var toggle = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.getAttribute('data-open') === 'true';
+    menu.setAttribute('data-open', String(!open));
+    toggle.setAttribute('aria-expanded', String(!open));
+    toggle.textContent = open ? 'Menu' : 'Close';
+  });
+
+  // Countdown to 14 Aug 2026, 17:00 local
+  var target = new Date(2026, 7, 14, 17, 0, 0);
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cells = { d: document.getElementById('cDays'), h: document.getElementById('cHours'), m: document.getElementById('cMins'), s: document.getElementById('cSecs') };
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+  function tick() {
+    var diff = target - new Date();
+    if (diff <= 0) {
+      document.getElementById('countNote').textContent = 'Doors are open. Go up the ramp.';
+      cells.d.textContent = '00'; cells.h.textContent = '00';
+      cells.m.textContent = '00'; cells.s.textContent = '00';
+      return;
+    }
+    var s = Math.floor(diff / 1000);
+    cells.d.textContent = pad(Math.floor(s / 86400));
+    cells.h.textContent = pad(Math.floor(s / 3600) % 24);
+    cells.m.textContent = pad(Math.floor(s / 60) % 60);
+    cells.s.textContent = String(s % 60);
+  }
+  tick();
+  if (!reduced) setInterval(tick, 1000);
+
+  // Lineup tabs
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.day-tab'));
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener('click', function () { selectTab(tab); });
+    tab.addEventListener('keydown', function (e) {
+      var next = null;
+      if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+      if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      if (e.key === 'Home') next = tabs[0];
+      if (e.key === 'End') next = tabs[tabs.length - 1];
+      if (next) { e.preventDefault(); next.focus(); selectTab(next); }
+    });
+  });
+
+  // Pass order
+  var qty = document.getElementById('qty');
+  var email = document.getElementById('email');
+  var total = document.getElementById('total');
+  var status = document.getElementById('orderStatus');
+  var orderForm = qty.closest('form');
+  function money(n) { return '\u20ac' + n.toFixed(2); }
+  function recalc() {
+    var pass = orderForm.querySelector('input[name="pass"]:checked');
+    var count = parseInt(qty.value, 10);
+    if (isNaN(count) || count < 1) count = 1;
+    total.textContent = money(parseFloat(pass.dataset.price) * count);
+  }
+  document.querySelectorAll('input[name="pass"]').forEach(function (r) { r.addEventListener('change', recalc); });
+  qty.addEventListener('input', recalc);
+  recalc();
+
+  orderForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var count = parseInt(qty.value, 10);
+    var qtyOk = !isNaN(count) && count >= 1 && count <= 6;
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+    var qtyField = qty.closest('.field');
+    var emailField = email.closest('.field');
+    qtyField.toggleAttribute('data-invalid', !qtyOk);
+    emailField.toggleAttribute('data-invalid', !emailOk);
+    email.setAttribute('aria-invalid', String(!emailOk));
+
+    if (!qtyOk) {
+      status.setAttribute('data-state', 'err');
+      status.textContent = 'One to six passes per order. It is a car park.';
+      qty.focus();
+      return;
+    }
+    if (!emailOk) {
+      status.setAttribute('data-state', 'err');
+      status.textContent = 'Check the email address and we will send the code.';
+      email.focus();
+      return;
+    }
+    var pass = orderForm.querySelector('input[name="pass"]:checked');
+    status.setAttribute('data-state', 'ok');
+    status.textContent = 'Held: ' + count + ' x ' + (pass.value === 'full' ? 'Full Circuit' : 'Night Pass') +
+      ', ' + money(parseFloat(pass.dataset.price) * count) + '. Code sent to ' + email.value.trim() + '.';
+  });
+
+  // Newsletter
+  var newsForm = document.getElementById('newsForm');
+  var newsStatus = document.getElementById('newsStatus');
+  newsForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = document.getElementById('nname');
+    var email = document.getElementById('nemail');
+    var nameOk = name.value.trim().length >= 2;
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+    name.closest('.field').toggleAttribute('data-invalid', !nameOk);
+    email.closest('.field').toggleAttribute('data-invalid', !emailOk);
+    if (!nameOk || !emailOk) {
+      newsStatus.textContent = 'Both fields, please, then we are done.';
+      (nameOk ? email : name).focus();
+      return;
+    }
+    newsStatus.textContent = 'On the list, ' + name.value.trim() + '. Six emails, and one in September.';
+  });
+</script>
+</body>
+</html>

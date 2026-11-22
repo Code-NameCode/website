@@ -1,0 +1,657 @@
+<!-- Style: Storytelling | 34storytelling.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riverkeeper — The Kessel Story</title>
+<style>
+:root{
+  /* the river's own palette: silt, reed, dark water */
+  --silt:#f5f1e8;
+  --silt-2:#eae3d4;
+  --bank:#dcd3c0;
+  --ink:#17211f;
+  --ink-2:#2c3a37;
+  --muted:#5d6b67;
+  --water:#1f4a4a;
+  --water-deep:#122e2f;
+  --reed:#5f7a4a;
+  --reed-dim:#42583a;
+  --clay:#a8562f;
+  --gold:#c08a2e;
+  --line:rgba(23,33,31,.16);
+  --line-2:rgba(23,33,31,.3);
+  --ok:#2f6b47;
+  --focus:#0d6bb5;
+  /* type */
+  --font-display:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif;
+  --font-body:Georgia,"Iowan Old Style","Book Antiqua",serif;
+  --font-ui:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --t-xs:clamp(.68rem,.66rem + .1vw,.76rem);
+  --t-sm:clamp(.82rem,.79rem + .14vw,.94rem);
+  --t-base:clamp(1.04rem,1rem + .22vw,1.18rem);
+  --t-lg:clamp(1.2rem,1.1rem + .45vw,1.55rem);
+  --t-xl:clamp(1.6rem,1.3rem + 1.3vw,2.6rem);
+  --t-2xl:clamp(2.1rem,1.4rem + 3.4vw,4.2rem);
+  --t-hook:clamp(2.6rem,1.3rem + 6vw,7rem);
+  /* space */
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;
+  --s-6:2.25rem;--s-7:3rem;--s-8:4.5rem;--s-9:7rem;
+  --gutter:clamp(1.25rem,5vw,5rem);
+  --measure:34rem;
+  --rail-w:15rem;
+  /* edges */
+  --tap:44px;
+  /* motion */
+  --d-slow:900ms;--d-base:320ms;--d-fast:160ms;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--silt);color:var(--ink);font-family:var(--font-body);font-size:var(--t-base);line-height:1.65}
+
+/* ---------- chapter rail: the story's spine, always visible ---------- */
+.rail{
+  position:fixed;left:0;top:0;bottom:0;width:var(--rail-w);z-index:30;
+  padding:calc(var(--s-7)) var(--s-4) var(--s-5) var(--gutter);
+  display:flex;flex-direction:column;gap:var(--s-6);
+  border-right:1px solid var(--line);background:var(--silt);
+}
+.brand{display:flex;align-items:center;gap:var(--s-2);text-decoration:none;color:var(--ink)}
+.brand svg{width:26px;height:26px;color:var(--water);flex:0 0 auto}
+.brand-name{font-family:var(--font-ui);font-size:var(--t-sm);letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+.rail nav{flex:1;position:relative;display:flex;flex-direction:column;justify-content:center;gap:var(--s-1)}
+.rail nav::before{content:"";position:absolute;left:7px;top:0;bottom:0;width:1px;background:var(--line-2)}
+.rail nav i.fill{position:absolute;left:7px;top:0;width:1px;background:var(--water);height:var(--fill,0%);transition:height var(--d-fast) linear}
+.rail nav a{
+  position:relative;padding-left:1.9rem;min-height:2rem;display:flex;align-items:center;
+  color:var(--muted);text-decoration:none;font-family:var(--font-ui);font-size:var(--t-xs);
+  letter-spacing:.1em;text-transform:uppercase;line-height:1.25;padding-top:.2rem;padding-bottom:.2rem;
+  transition:color var(--d-fast) var(--ease);
+}
+.rail nav a::before{
+  content:"";position:absolute;left:2px;top:50%;width:11px;height:11px;margin-top:-5.5px;
+  border-radius:50%;background:var(--silt);border:1px solid var(--line-2);
+  transition:background var(--d-fast) var(--ease),border-color var(--d-fast) var(--ease),transform var(--d-fast) var(--ease);
+}
+.rail nav a:hover{color:var(--ink)}
+.rail nav a[aria-current="true"]{color:var(--ink);font-weight:600}
+.rail nav a[aria-current="true"]::before{background:var(--water);border-color:var(--water);transform:scale(1.15)}
+.rail nav a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.rail-foot{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--muted);letter-spacing:.08em}
+.rail-foot b{color:var(--reed-dim);font-weight:600}
+
+/* ---------- the story column ---------- */
+.story{margin-left:var(--rail-w)}
+.chapter{position:relative;padding:calc(var(--s-9) + 2rem) var(--gutter) var(--s-9);max-width:72rem}
+.chapter + .chapter{border-top:1px solid var(--line)}
+.chapter-no{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.3em;color:var(--clay);margin:0 0 var(--s-3)}
+.chapter h2{font-size:var(--t-2xl);line-height:1.04;letter-spacing:-.015em;margin:0 0 var(--s-5);max-width:18ch;font-weight:400}
+.chapter p{max-width:var(--measure);margin:0 0 var(--s-4)}
+.chapter p.lead{font-size:var(--t-lg);line-height:1.5}
+.chapter p:last-of-type{margin-bottom:0}
+.pull{
+  font-size:var(--t-xl);line-height:1.2;font-style:italic;
+  border-left:2px solid var(--water);padding-left:var(--s-5);margin:var(--s-6) 0;max-width:30ch;
+}
+.byline{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:var(--s-2)}
+.hook .chapter-no{color:var(--gold)}
+.figure-note{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--muted);padding:var(--s-3) var(--s-4);border-top:1px solid var(--line);letter-spacing:.06em}
+
+/* opening hook */
+.hook{
+  position:relative;isolation:isolate;overflow:hidden;background:var(--water-deep);
+  min-height:100svh;display:flex;align-items:flex-end;color:var(--silt);
+}
+.hook-media{position:absolute;inset:0;z-index:-2}
+.hook-media svg{width:100%;height:100%;display:block}
+.hook::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(18,46,47,.5) 0%,rgba(18,46,47,.28) 40%,rgba(18,46,47,.92) 100%)}
+.hook-inner{padding:var(--s-8) var(--gutter) var(--s-8);max-width:70rem;width:100%}
+.hook h1{font-size:var(--t-hook);line-height:.92;letter-spacing:-.025em;margin:0 0 var(--s-5);max-width:14ch;font-weight:400}
+.hook .standfirst{font-size:var(--t-lg);max-width:42ch;color:rgba(245,241,232,.86);margin:0 0 var(--s-6)}
+.hook-meta{display:flex;gap:clamp(1rem,3vw,3rem);flex-wrap:wrap;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:rgba(245,241,232,.66);padding-top:var(--s-4);border-top:1px solid rgba(245,241,232,.22)}
+.btn{
+  min-height:var(--tap);padding:0 var(--s-6);background:transparent;color:var(--silt);
+  border:1px solid rgba(245,241,232,.45);border-radius:0;cursor:pointer;
+  font-family:var(--font-ui);font-size:var(--t-sm);letter-spacing:.1em;
+  transition:background var(--d-base) var(--ease),color var(--d-base) var(--ease),border-color var(--d-base) var(--ease);
+}
+.btn:hover{background:var(--silt);color:var(--water-deep);border-color:var(--silt)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.btn-solid{background:var(--water);color:var(--silt);border-color:var(--water)}
+.btn-solid:hover{background:var(--ink);border-color:var(--ink);color:var(--silt)}
+.btn-clay{background:var(--clay);color:#fdf6f2;border-color:var(--clay)}
+.btn-clay:hover{background:var(--ink);border-color:var(--ink)}
+.btn-row{display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-6)}
+
+/* chapter 1: text-led with a wide media band */
+.band{margin-top:var(--s-7);border:1px solid var(--line);background:var(--silt-2)}
+.band svg{display:block;width:100%;height:auto}
+.band figcaption{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;color:var(--muted);padding:var(--s-3) var(--s-4);border-top:1px solid var(--line)}
+
+/* chapter 2: before / after, driven by one range input */
+.compare{border:1px solid var(--line);background:var(--silt-2);margin-top:var(--s-6)}
+.compare-view{position:relative;aspect-ratio:16/9;overflow:hidden}
+.compare-view svg{position:absolute;inset:0;width:100%;height:100%}
+.compare-after{clip-path:inset(0 0 0 var(--w,50%))}
+.compare-tag{
+  position:absolute;top:var(--s-3);font-family:var(--font-mono);font-size:var(--t-xs);
+  letter-spacing:.16em;text-transform:uppercase;background:rgba(245,241,232,.9);color:var(--ink);
+  padding:3px 7px;border:1px solid var(--line-2);
+}
+.compare-tag.left{left:var(--s-3)}
+.compare-tag.right{right:var(--s-3)}
+.compare-control{display:flex;align-items:center;gap:var(--s-4);padding:var(--s-4);border-top:1px solid var(--line)}
+.compare-control label{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.compare-control input[type=range]{flex:1;min-height:var(--tap);accent-color:var(--water);background:transparent}
+.compare-control input[type=range]:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+.compare-control output{font-family:var(--font-mono);font-size:var(--t-sm);min-width:5.5rem;text-align:right;font-variant-numeric:tabular-nums}
+
+/* chapter 3: one person */
+.person{display:grid;grid-template-columns:minmax(0,.8fr) 1.2fr;gap:clamp(1.5rem,4vw,4rem);align-items:center;margin-top:var(--s-6)}
+.portrait{border:1px solid var(--line);background:var(--silt-2)}
+.portrait svg{display:block;width:100%;height:auto}
+.portrait figcaption{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--muted);padding:var(--s-3);border-top:1px solid var(--line);letter-spacing:.1em}
+blockquote.big{font-size:var(--t-xl);line-height:1.24;margin:0 0 var(--s-4);max-width:24ch}
+blockquote.big::before{content:"\201C"}
+blockquote.big::after{content:"\201D"}
+
+/* chapter 4: timeline */
+.timeline{list-style:none;margin:var(--s-6) 0 0;padding:0;border-top:1px solid var(--line);max-width:60rem}
+.timeline li{display:grid;grid-template-columns:8rem 1fr;gap:var(--s-5);padding:var(--s-5) 0;border-bottom:1px solid var(--line)}
+.timeline .year{font-family:var(--font-mono);font-size:var(--t-sm);color:var(--clay);letter-spacing:.08em;padding-top:.25rem}
+.timeline h3{font-size:var(--t-lg);margin:0 0 var(--s-2);font-weight:400}
+.timeline p{margin:0;font-size:var(--t-sm);color:var(--muted);max-width:52ch}
+
+/* chapter 5: impact, an asymmetric editorial arrangement — not three cards */
+.impact{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:var(--s-6)}
+.impact figure{margin:0;background:var(--silt);padding:var(--s-5)}
+.impact .wide{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between}
+.impact .num{font-size:clamp(2.2rem,1.4rem + 2.6vw,4rem);line-height:1;letter-spacing:-.03em;color:var(--water);font-variant-numeric:tabular-nums}
+.impact .wide .num{font-size:clamp(3rem,1.6rem + 5vw,6.5rem)}
+.impact .unit-sm{font-size:.4em}
+.impact figcaption{font-family:var(--font-ui);font-size:var(--t-sm);color:var(--muted);margin-top:var(--s-3);max-width:30ch}
+.impact .wide figcaption{font-size:var(--t-base);color:var(--ink)}
+
+/* the turning-point CTA, mid-narrative */
+.turn{
+  background:var(--water-deep);color:var(--silt);
+  margin:0;padding:calc(var(--s-8)) var(--gutter);
+}
+.turn-inner{max-width:70rem;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(1.5rem,4vw,4rem);align-items:center}
+.turn h2{font-size:var(--t-2xl);line-height:1.04;margin:0 0 var(--s-4);font-weight:400;max-width:16ch}
+.turn p{color:rgba(245,241,232,.8);margin:0}
+
+/* closing form */
+.join{background:var(--silt-2);border-top:1px solid var(--line)}
+.join-inner{max-width:70rem;margin:0 auto;padding:var(--s-9) var(--gutter);display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(1.5rem,4vw,4rem);align-items:start}
+.join h2{font-size:var(--t-2xl);line-height:1.04;margin:0 0 var(--s-4);font-weight:400}
+.join-copy p{max-width:38ch}
+.f{margin-bottom:var(--s-4)}
+.f label{display:block;font-family:var(--font-ui);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:var(--s-2)}
+.f input,.f select,.f textarea{
+  width:100%;min-height:var(--tap);padding:var(--s-3);
+  background:var(--silt);color:var(--ink);border:1px solid var(--line-2);border-radius:0;
+  font-family:var(--font-ui);font-size:var(--t-sm);
+  transition:border-color var(--d-fast) var(--ease),box-shadow var(--d-fast) var(--ease);
+}
+.f textarea{min-height:5.5rem;resize:vertical}
+.f select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 1.2rem,calc(100% - 13px) 1.2rem;background-size:5px 5px;background-repeat:no-repeat}
+.f input:hover,.f select:hover,.f textarea:hover{border-color:var(--reed-dim)}
+.f input:focus-visible,.f select:focus-visible,.f textarea:focus-visible{outline:none;border-color:var(--water);box-shadow:inset 0 -2px 0 var(--water)}
+.f input[aria-invalid="true"],.f select[aria-invalid="true"],.f textarea[aria-invalid="true"]{border-color:var(--clay);box-shadow:inset 0 -2px 0 var(--clay)}
+.f .hint{display:block;font-family:var(--font-mono);font-size:var(--t-xs);color:var(--muted);margin-top:var(--s-2);min-height:1.2em}
+.f .hint.error{color:var(--clay)}
+.f .hint.ok{color:var(--ok)}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+.form-status{font-family:var(--font-ui);font-size:var(--t-sm);margin:var(--s-4) 0 0;min-height:1.5em;color:var(--water)}
+.form-status.error{color:var(--clay)}
+
+/* sources & footer */
+.sources{max-width:70rem;margin:0 auto;padding:var(--s-7) var(--gutter) 0;font-family:var(--font-mono);font-size:var(--t-xs);color:var(--muted);line-height:2}
+.sources a{color:var(--water)}
+footer{background:var(--water-deep);color:var(--silt);margin-top:var(--s-8)}
+.foot-inner{max-width:70rem;margin:0 auto;padding:var(--s-8) var(--gutter);display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:var(--s-6)}
+.foot-inner h2{font-family:var(--font-ui);font-size:var(--t-sm);letter-spacing:.22em;text-transform:uppercase;margin:0 0 var(--s-3)}
+.foot-inner h3{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 var(--s-3)}
+.foot-inner p{color:rgba(245,241,232,.72);margin:0;max-width:36ch;font-size:var(--t-sm)}
+.foot-inner ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-1)}
+.foot-inner a{color:rgba(245,241,232,.8);text-decoration:none;font-family:var(--font-ui);font-size:var(--t-sm);display:inline-flex;align-items:center;min-height:var(--tap)}
+.foot-inner a:hover{color:var(--gold)}
+.foot-inner a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.colophon{border-top:1px solid rgba(245,241,232,.16)}
+.colophon p{max-width:70rem;margin:0 auto;padding:var(--s-4) var(--gutter);font-family:var(--font-mono);font-size:var(--t-xs);color:rgba(245,241,232,.6);display:flex;justify-content:space-between;gap:var(--s-4);flex-wrap:wrap}
+
+/* reveal on chapter entry */
+.rise{opacity:0;transform:translateY(20px);transition:opacity var(--d-slow) var(--ease),transform var(--d-slow) var(--ease)}
+.is-lit .rise{opacity:1;transform:none}
+.is-lit .rise[data-d="1"]{transition-delay:110ms}
+.is-lit .rise[data-d="2"]{transition-delay:220ms}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+@media (max-width:1000px){
+  :root{--rail-w:0px}
+  .rail{
+    position:sticky;top:0;left:auto;bottom:auto;width:auto;flex-direction:row;align-items:center;gap:var(--s-4);
+    padding:var(--s-2) var(--gutter);border-right:0;border-bottom:1px solid var(--line);
+    overflow-x:auto;-webkit-overflow-scrolling:touch;
+  }
+  .rail nav{flex-direction:row;gap:var(--s-4);flex:0 0 auto;padding-bottom:2px}
+  .rail nav::before,.rail nav i.fill{display:none}
+  .rail nav a{padding-left:0;white-space:nowrap}
+  .rail nav a::before{display:none}
+  .rail nav a[aria-current="true"]{border-bottom:2px solid var(--water);padding-bottom:2px}
+  .rail-foot{display:none}
+  .story{margin-left:0}
+  .hook{min-height:auto}
+  .person,.turn-inner,.join-inner{grid-template-columns:1fr}
+  .impact{grid-template-columns:1fr 1fr}
+  .impact .wide{grid-row:auto;grid-column:span 2}
+  .foot-inner{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .impact{grid-template-columns:1fr}
+  .impact .wide{grid-column:auto}
+  .f-row{grid-template-columns:1fr}
+  .timeline li{grid-template-columns:1fr;gap:var(--s-2)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .rise{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- the spine -->
+<div class="rail">
+  <a class="brand" href="#hook">
+    <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M2 18c4-4 6 2 10-2s6 2 10-2 4 0 4 0"/>
+      <path d="M2 23c4-4 6 2 10-2s6 2 10-2"/>
+      <path d="M14 3v9M14 3l4 4M14 3l-4 4" stroke-width="1.4"/>
+    </svg>
+    <span class="brand-name">Riverkeeper</span>
+  </a>
+  <nav id="toc" aria-label="Chapters">
+    <i class="fill" id="toc-fill" aria-hidden="true"></i>
+    <a href="#hook" aria-current="true">The hook</a>
+    <a href="#ch1">A river we lost</a>
+    <a href="#ch2">Nine years</a>
+    <a href="#ch3">Marta</a>
+    <a href="#ch4">What we did</a>
+    <a href="#ch5">What it added up to</a>
+    <a href="#ch6">Where you come in</a>
+  </nav>
+  <p class="rail-foot">Annual report<br><b>2024</b> · published Mar 2025</p>
+</div>
+
+<main class="story">
+
+  <!-- THE HOOK -->
+  <header class="hook" id="hook" data-chapter="The hook">
+    <div class="hook-media" aria-hidden="true">
+      <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+        <defs><linearGradient id="w" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0f2a2b"/><stop offset="60%" stop-color="#1f4a4a"/><stop offset="100%" stop-color="#122e2f"/>
+        </linearGradient></defs>
+        <rect width="1600" height="1000" fill="url(#w)"/>
+        <g stroke="#7fa39a" stroke-opacity=".3" fill="none" stroke-width="2">
+          <path d="M0 640c180-40 340 30 520-10s360 20 540-20 340 10 540-20"/>
+          <path d="M0 700c200-46 330 34 520 0s350 26 540-16 340 14 540-24"/>
+          <path d="M0 780c160-40 350 26 540-8s340 24 520-18 360 12 540-22"/>
+        </g>
+        <g fill="#5f7a4a" fill-opacity=".55">
+          <path d="M0 1000V860c140-30 220 20 340 0s180 26 300 6 200 20 320-4 200 24 320-6 200 18 320 2v142z"/>
+        </g>
+        <g fill="none" stroke="#5f7a4a" stroke-width="3" stroke-linecap="round">
+          <path d="M200 860V700M210 760c-24-16-40-6-48 10M210 730c22-14 38-4 46 12"/>
+          <path d="M1400 880V690M1408 750c-26-18-44-6-52 12M1408 720c24-16 42-4 50 14"/>
+        </g>
+      </svg>
+    </div>
+    <div class="hook-inner">
+      <p class="chapter-no">The Kessel report · 2016 – 2024</p>
+      <h1>The river that ran brown, and the nine years that brought it back</h1>
+      <p class="standfirst">In 2016 the Kessel carried 40 tonnes of eroded topsoil past the town each spring. This is the story of what happened next, told in the order it happened.</p>
+      <div class="btn-row">
+        <a class="btn" href="#ch1">Start at chapter one</a>
+        <a class="btn" href="#ch6">Skip to joining in</a>
+      </div>
+      <p class="hook-meta"><span>14 200 hectares</span><span>38 landowners</span><span>9 years</span><span>£1.94m raised</span></p>
+    </div>
+  </header>
+
+  <!-- CHAPTER 1 -->
+  <section class="chapter" id="ch1" data-chapter="A river we lost" aria-labelledby="h1">
+    <p class="chapter-no">Chapter one</p>
+    <h2 id="h1">A river we lost in about six years</h2>
+    <p class="lead rise" data-d="1">Nobody in Ardvale voted to lose the Kessel. It happened the way most losses happen: one field boundary at a time, each change reasonable on its own.</p>
+    <p class="rise" data-d="2">Between 2009 and 2015 the arable blocks above Ardvale were ploughed to the hedge line. Hedgerows came out for a 4.6 m sprayer. The slope above the town lost the roots that had held it together since the last Ice Age, and the first serious rain moved what had been a field into a river.</p>
+    <blockquote class="pull rise">We did not notice the loss. We noticed the flood.</blockquote>
+    <p class="rise">The March 2016 spate carried 40 tonnes of topsoil through the town in eleven hours. It closed the mill bridge twice and put 6 cm of silt in the Ardvale treatment works. The river was carrying the shape of the fields above it.</p>
+    <figure class="band rise">
+      <svg viewBox="0 0 1200 300" role="img" aria-labelledby="b1-t b1-d">
+        <title id="b1-t">Sediment load of the Kessel, 2004 to 2016</title>
+        <desc id="b1-d">Sediment load rises gradually from about 6 thousand tonnes a year in 2004 to 40 thousand tonnes in 2016.</desc>
+        <g font-family="ui-monospace,monospace" font-size="12" fill="#5d6b67">
+          <text x="0" y="18">Tonnes of suspended sediment per year</text>
+          <text x="0" y="288">2004</text><text x="1090" y="288">2016</text>
+        </g>
+        <g stroke="rgba(23,33,31,.16)" stroke-width="1">
+          <path d="M40 60H1180M40 110H1180M40 160H1180M40 210H1180M40 258H1180"/>
+        </g>
+        <path d="M40 246 L130 240 L220 236 L310 232 L400 226 L490 218 L580 206 L670 190 L760 170 L850 146 L940 118 L1030 88 L1120 66 L1180 58 L1180 258 L40 258 Z" fill="rgba(168,86,47,.18)"/>
+        <path d="M40 246 L130 240 L220 236 L310 232 L400 226 L490 218 L580 206 L670 190 L760 170 L850 146 L940 118 L1030 88 L1120 66 L1180 58" fill="none" stroke="#a8562f" stroke-width="2.5"/>
+        <circle cx="1180" cy="58" r="5" fill="#a8562f"/>
+        <text x="1090" y="46" font-family="ui-monospace,monospace" font-size="14" fill="#a8562f" text-anchor="end">40 200 t</text>
+      </svg>
+      <figcaption>Fig. 1 — Measured at the Ardvale gauge, from Environment Agency monitoring returns.</figcaption>
+    </figure>
+  </section>
+
+  <!-- CHAPTER 2 -->
+  <section class="chapter" id="ch2" data-chapter="Nine years" aria-labelledby="h2">
+    <p class="chapter-no">Chapter two</p>
+    <h2 id="h2">Nine years, measured one field at a time</h2>
+    <p class="lead rise" data-d="1">Restoration is not a project. It is a queue. The only question the programme ever asked was which field goes into the queue next.</p>
+    <p class="rise">We started at the bottom and worked uphill, because planting at the top of a catchment while the silt keeps arriving just moves the problem down. Fourteen hundred hectares were taken out of tillage, 9.2 km of hedgerow went back in, and 61 000 trees went up across eleven winters.</p>
+    <p class="rise">Drag the handle to see the same reach of river in 2015 and in 2024. It is the same photograph, taken from the same bank, at the same time of year.</p>
+
+    <figure class="compare rise" data-d="2">
+      <div class="compare-view" id="compare-view">
+        <svg viewBox="0 0 1000 562" role="img" aria-labelledby="c-t">
+          <title id="c-t">The same reach of the Kessel in 2015 and 2024</title>
+          <rect width="1000" height="562" fill="#3a3630"/>
+          <g fill="#4a453c"><rect x="0" y="180" width="1000" height="382"/></g>
+          <path d="M0 320 C 200 300 340 360 520 340 S 820 300 1000 330 L1000 420 C 800 400 640 440 500 410 S 180 380 0 400 Z" fill="#6d5a3a"/>
+          <g fill="#5b4a30"><rect x="120" y="150" width="180" height="120"/><rect x="380" y="130" width="200" height="140"/><rect x="700" y="150" width="190" height="120"/></g>
+          <g stroke="#8a7a5c" stroke-width="2" fill="none"><path d="M130 160l160 100M400 140l160 120M720 160l150 100"/></g>
+        </svg>
+        <svg class="compare-after" viewBox="0 0 1000 562" role="img" aria-labelledby="c-t2">
+          <title id="c-t2">The Kessel in 2024: floodplain trees, clear water, exposed gravel bar</title>
+          <rect width="1000" height="562" fill="#1f4a4a"/>
+          <g fill="#2c5d4e"><path d="M0 300 C 200 280 340 340 520 320 S 820 280 1000 310 L1000 562 L0 562 Z"/></g>
+          <g fill="#3a6b56">
+            <path d="M0 400 C 220 380 360 440 540 420 S 820 380 1000 410 L1000 562 L0 562 Z"/>
+          </g>
+          <g fill="#5f7a4a">
+            <path d="M60 300v-150M70 190c-26-18-44-6-52 14M70 160c24-16 42-4 50 16"/>
+            <path d="M300 320V150M310 200c-28-20-48-6-56 16M310 170c26-18 46-4 54 18"/>
+            <path d="M700 300V140M710 190c-26-18-44-6-52 14M710 160c24-16 42-4 50 16"/>
+            <path d="M900 320V170M910 210c-24-16-42-4-50 12"/>
+          </g>
+          <path d="M420 400 C 520 390 600 400 700 396 L760 404 C 640 412 520 410 430 408 Z" fill="#c9c0ac"/>
+        </svg>
+        <span class="compare-tag left">2015</span>
+        <span class="compare-tag right">2024</span>
+      </div>
+      <div class="compare-control">
+        <label for="cmp">Compare</label>
+        <input type="range" id="cmp" min="0" max="100" value="50" step="1" aria-describedby="cmp-out">
+        <output id="cmp-out" for="cmp">50%</output>
+      </div>
+      <figcaption class="figure-note">Fig. 2 — Bank opposite the mill, February. Water clarity measured 41 cm against 6 cm in 2015.</figcaption>
+    </figure>
+  </section>
+
+  <!-- CHAPTER 3 -->
+  <section class="chapter" id="ch3" data-chapter="Marta" aria-labelledby="h3">
+    <p class="chapter-no">Chapter three</p>
+    <h2 id="h3">Marta Espinal, who farms the worst field</h2>
+    <p class="lead rise" data-d="1">The largest field in the programme belonged to someone who did not want to be in the programme.</p>
+    <div class="person">
+      <figure class="portrait rise" data-d="2">
+        <svg viewBox="0 0 480 600" role="img" aria-labelledby="p-t">
+          <title id="p-t">Illustrated portrait of Marta Espinal standing in a field edge</title>
+          <rect width="480" height="600" fill="#dcd3c0"/>
+          <g fill="#c3b8a2"><rect x="0" y="430" width="480" height="170"/></g>
+          <g fill="none" stroke="#5f7a4a" stroke-width="3" stroke-linecap="round">
+            <path d="M40 430V330M48 370c-20-14-32-4-38 10M48 344c18-12 30-2 36 12"/>
+            <path d="M440 430V320M448 362c-20-14-32-4-38 10M448 336c18-12 30-2 36 12"/>
+          </g>
+          <g fill="#2c3a37">
+            <path d="M170 600V400c0-40 30-70 70-70s70 30 70 70v200z"/>
+            <circle cx="240" cy="270" r="52"/>
+            <path d="M188 260c0-46 26-72 52-72s52 26 52 72c-18-16-30-22-52-22s-34 6-52 22z"/>
+          </g>
+          <g fill="none" stroke="#a8562f" stroke-width="3" stroke-linecap="round"><path d="M310 470c26-6 44 4 60 22"/></g>
+        </svg>
+        <figcaption>Marta Espinal · 214 ha above Ardvale · photographed 2023</figcaption>
+      </figure>
+      <div>
+        <blockquote class="big rise">They kept offering me money to take the field out. I kept saying the field pays the mortgage. Nobody asked me what the field would look like in ten years.</blockquote>
+        <p class="rise">Her 61 hectares sat directly above the worst of the silt fans, and she was right about the money. The breakthrough came when nobody sent a letter at all: a Riverkeeper field officer turned up in April with a spade and a hedgerow, and they planted 900 metres of it together over three Sundays.</p>
+        <p class="rise">Marta took the 61 hectares out of tillage in 2019 for a 15-year agreement at a rent she calls "stupid, but written down". She now runs two cattle and sells the hedge. Her son runs the new cover on the lower field.</p>
+        <p class="byline">Marta Espinal, Ardvale</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 4 -->
+  <section class="chapter" id="ch4" data-chapter="What we did" aria-labelledby="h4">
+    <p class="chapter-no">Chapter four</p>
+    <h2 id="h4">What we did, in the order we did it</h2>
+    <p class="rise">Five decisions, taken over nine years. Most of them were boring, and the boring ones are the ones that worked.</p>
+    <ol class="timeline">
+      <li><span class="year">2016 – 17</span><div><h3>Stop the source before touching the river</h3><p>Two hundred and forty hectares under permanent cover, chosen by slope rather than by willingness. We took the steepest ground first, which is also the ground nobody wanted to farm.</p></div></li>
+      <li><span class="year">2017 – 18</span><div><h3>Put the boundary back</h3><p>9.2 km of new hedgerow, planted to the original 1780 line where the parish survey still records it. Existing hedges were cut on a two-year rotation, not every year, which is the single most common mistake.</p></div></li>
+      <li><span class="year">2018 – 20</span><div><h3>Reconnect the floodplain</h3><p>Eleven hectares of bank lowered and set back to let the river out of its ditch. Two footbridges replaced, because a lower bank you cannot cross is a flood defence you have simply moved.</p></div></li>
+      <li><span class="year">2020 – 22</span><div><h3>Plant the wood</h3><p>61 000 trees, mostly willow and alder on the lower floodplain, hazel and oak on the terraces. Dogged willow in blocks, not rows, so the deer can browse the edge without stripping the middle.</p></div></li>
+      <li><span class="year">2022 – 24</span><div><h3>Pay for the next ten years</h3><p>Fourteen agreements signed through to 2034, so the maintenance is somebody's job and not a charity's.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- CHAPTER 5 — impact, asymmetric -->
+  <section class="chapter" id="ch5" data-chapter="What it added up to" aria-labelledby="h5">
+    <p class="chapter-no">Chapter five</p>
+    <h2 id="h5">What it added up to</h2>
+    <p class="rise">These are the numbers in the 2024 annual report. They are measured, not modelled, unless the caption says otherwise.</p>
+    <div class="impact">
+      <figure class="wide">
+        <div>
+          <p class="num">−83%</p>
+          <figcaption>Sediment load at the Ardvale gauge, comparing 2016 with 2024. 40 200 tonnes down to 6 900 tonnes a year.</figcaption>
+        </div>
+        <div style="margin-top:var(--s-5)">
+          <svg viewBox="0 0 400 90" role="img" aria-labelledby="spark-t">
+            <title id="spark-t">Sediment load by year from 2016 to 2024</title>
+            <g stroke="rgba(23,33,31,.14)" stroke-width="1"><path d="M0 22H400M0 56H400"/></g>
+            <path d="M0 12 L50 20 L100 26 L150 36 L200 44 L250 52 L300 58 L350 64 L400 70" fill="none" stroke="#1f4a4a" stroke-width="2.5"/>
+            <g font-family="ui-monospace,monospace" font-size="10" fill="#5d6b67"><text x="0" y="88">2016</text><text x="360" y="88">2024</text></g>
+          </svg>
+        </div>
+      </figure>
+      <figure><p class="num">41<span class="unit-sm"> cm</span></p><figcaption>Water clarity in February, against 6 cm in 2015.</figcaption></figure>
+      <figure><p class="num">118</p><figcaption>Brown trout redds counted in the 2024 survey, against 4 in 2016.</figcaption></figure>
+      <figure><p class="num">−1.4 °C</p><figcaption>Summer water temperature in the shaded reach.</figcaption></figure>
+      <figure><p class="num">38</p><figcaption>Landowners in signed agreements, of 61 approached.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- THE TURNING POINT -->
+  <section class="turn" data-chapter="Where you come in" aria-labelledby="h6">
+    <div class="turn-inner">
+      <div>
+        <h2 id="h6">The next ten years need 1.1 million more</h2>
+        <p>We have agreements to 2034 on the ground we have already done. We do not have agreements on the twelve fields above the new wood, and without those the wood is a very expensive pile of trees with nothing to slow the water when it comes out of it.</p>
+        <p style="margin-top:var(--s-4)">£1.94m raised since 2016. £1.1m outstanding. Every agreement signed so far has been paid for in full.</p>
+      </div>
+      <div>
+        <p style="font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 var(--s-4)">Three ways in</p>
+        <div style="display:grid;gap:var(--s-3)">
+          <a class="btn btn-clay" href="#ch6">Join a planting day</a>
+          <a class="btn" href="#ch6">Sign a field agreement</a>
+          <a class="btn" href="#ch6">Fund a year of monitoring</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 6 — the form -->
+  <section class="chapter join" id="ch6" data-chapter="Where you come in" aria-labelledby="h7">
+    <div class="join-inner">
+      <div class="join-copy">
+        <p class="chapter-no">Chapter six</p>
+        <h2 id="h7">Where you come in</h2>
+        <p>Planting days run from October to March, Wednesdays and Saturdays, 09:30 to 15:00, meet at the Ardvale mill car park. We provide tools, waders, tea and a great deal of unsolicited advice from retired contractors.</p>
+        <p>If you would rather put money in than a day of it, choose the fund option. If you own or farm ground above the Kessel, tell us and we will come and walk it with you before anyone writes anything down.</p>
+        <p class="byline">Riverkeeper · Ardvale field office · 01452 000 000</p>
+      </div>
+
+      <form id="join-form" novalidate>
+        <div class="f-row">
+          <div class="f">
+            <label for="j-name">Your name</label>
+            <input id="j-name" name="name" type="text" autocomplete="name" placeholder="Marta Espinal" aria-describedby="j-name-msg">
+            <span class="hint" id="j-name-msg" role="alert"></span>
+          </div>
+          <div class="f">
+            <label for="j-email">Email</label>
+            <input id="j-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="j-email-msg">
+            <span class="hint" id="j-email-msg" role="alert"></span>
+          </div>
+        </div>
+        <div class="f">
+          <label for="j-way">I want to</label>
+          <select id="j-way" name="way" aria-describedby="j-way-msg">
+            <option value="plant">Come to a planting day</option>
+            <option value="land">Talk about a field agreement</option>
+            <option value="fund">Fund a year of monitoring — £38 000</option>
+            <option value="monitor">Volunteer as a water quality volunteer</option>
+          </select>
+          <span class="hint" id="j-way-msg"></span>
+        </div>
+        <div class="f">
+          <label for="j-when">Saturday 8 November, 09:30 — does that work?</label>
+          <select id="j-when" name="when" aria-describedby="j-when-msg">
+            <option>Yes, put me down</option>
+            <option>Yes, but bring my own waders</option>
+            <option>I'd prefer a weekday</option>
+            <option>Not yet</option>
+          </select>
+          <span class="hint" id="j-when-msg"></span>
+        </div>
+        <div class="f">
+          <label for="j-note">Anything we should know</label>
+          <textarea id="j-note" name="note" placeholder="Access needs, transport, how many of you are coming…" aria-describedby="j-note-msg"></textarea>
+          <span class="hint" id="j-note-msg" role="alert"></span>
+        </div>
+        <button class="btn btn-solid" type="submit">Send it to the field office</button>
+        <p class="form-status" id="j-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <div class="sources">
+    <p>Sources · Environment Agency gauge 84 122, annual returns 2004–2024 · Ardvale parish hedgerow survey, 1780 and 2021 · Riverkeeper Kessel annual report 2024, published March 2025 · Kessel headwater trout survey, 2016 and 2024.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <h2>Riverkeeper</h2>
+      <p>A small catchment trust working on one river. Registered charity 1094 221. We publish everything we measure, including the years that went badly.</p>
+    </div>
+    <nav aria-label="The work">
+      <h3>The work</h3>
+      <ul>
+        <li><a href="#ch1">The Kessel story</a></li>
+        <li><a href="#ch4">What we did</a></li>
+        <li><a href="#ch5">2024 results</a></li>
+        <li><a href="#ch6">Planting days</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="About">
+      <h3>About</h3>
+      <ul>
+        <li><a href="#ch5">Annual reports</a></li>
+        <li><a href="#ch2">Monitoring data</a></li>
+        <li><a href="#ch3">Landowner agreements</a></li>
+        <li><a href="#ch6">Contact the field office</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="colophon">
+    <p>Riverkeeper is a fictional trust created for this example page. Every figure on this page is invented.</p>
+    <p>Typeset in the browser · no images loaded</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- chapter state: rail, reading progress, reveals ---- */
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('[data-chapter]'));
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var fill = document.getElementById('toc-fill');
+  var ticking = false;
+
+  function update(){
+    var y = window.scrollY || window.pageYOffset;
+    var vh = window.innerHeight;
+    var progress = y / Math.max(1, document.documentElement.scrollHeight - vh);
+    fill.style.setProperty('--fill', (progress * 100).toFixed(1) + '%');
+
+    var mark = y + vh * 0.4, active = chapters[0];
+    for(var i = 0; i < chapters.length; i++){ if(chapters[i].offsetTop <= mark) active = chapters[i]; }
+    var id = active.id;
+    tocLinks.forEach(function(a){
+      var on = a.getAttribute('href') === '#' + id;
+      if(on) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
+    });
+    chapters.forEach(function(c){ c.classList.toggle('is-lit', c.offsetTop - vh * 0.25 <= y); });
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  window.addEventListener('resize', update, {passive:true});
+  update();
+
+  /* ---- chapter 2 comparison: one range input, announced value ---- */
+  var cmp = document.getElementById('cmp');
+  var view = document.getElementById('compare-view');
+  var cmpOut = document.getElementById('cmp-out');
+  function paint(){
+    var w = Number(cmp.value);
+    view.style.setProperty('--w', w + '%');
+    cmpOut.textContent = w + '% 2024';
+  }
+  cmp.addEventListener('input', paint);
+  paint();
+
+  /* ---- chapter 6 form ---- */
+  var form = document.getElementById('join-form');
+  var nameI = document.getElementById('j-name'), emailI = document.getElementById('j-email'), noteI = document.getElementById('j-note');
+  var nameM = document.getElementById('j-name-msg'), emailM = document.getElementById('j-email-msg'), noteM = document.getElementById('j-note-msg');
+  var status = document.getElementById('j-status');
+  var WAY = {plant:'planting day', land:'field agreement', fund:'monitoring fund', monitor:'volunteer role'};
+  var WHEN = 'Saturday 8 November, 09:30';
+
+  function set(el, text, ok){ el.textContent = text; el.className = 'hint' + (ok ? ' ok' : ' error'); }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var bad = false;
+    if(nameI.value.trim().length < 2){ set(nameM,'We need a name to put on the list.',false); nameI.setAttribute('aria-invalid','true'); bad = true; }
+    else { set(nameM,'Name accepted.',true); nameI.removeAttribute('aria-invalid'); }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailI.value.trim())){ set(emailM,'That address will not reach you — check it.',false); emailI.setAttribute('aria-invalid','true'); bad = true; }
+    else { set(emailM,'Address accepted.',true); emailI.removeAttribute('aria-invalid'); }
+    if(noteI.value.length > 400){ set(noteM,'Keep it under 400 characters.',false); noteI.setAttribute('aria-invalid','true'); bad = true; }
+    else if(noteI.value.length){ set(noteM,'Thank you — read.',true); noteI.removeAttribute('aria-invalid'); }
+    if(bad){ status.className = 'form-status error'; status.textContent = 'One or two fields need attention. The field office will not be able to reply without them.'; return; }
+    var way = WAY[document.getElementById('j-way').value];
+    var when = document.getElementById('j-when').value;
+    status.className = 'form-status';
+    status.textContent = 'Noted, ' + nameI.value.trim().split(' ')[0] + '. We will confirm the ' + way +
+      ' by email within two working days. Your reply says “' + when + '”. Bring boots.';
+  });
+})();
+</script>
+</body>
+</html>

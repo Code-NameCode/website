@@ -1,0 +1,585 @@
+<!-- Style: Minimal Maximalism | 69minimalmaximalism.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Thing — a campaign for a single object</title>
+<meta name="description" content="One Thing is a workshop of four in Stoke-on-Trent making one kettle, in one run of 500, numbered by hand.">
+<style>
+  :root{
+    --paper:#F4F3EF;
+    --ink:#111110;
+    --ink-soft:#55534E;
+    --ink-faint:#6B6960;
+    --red:#C5341A;              /* the one dominant colour. there is no second accent. */
+    --hair:rgba(17,17,16,.16);
+    --hair-strong:rgba(17,17,16,.42);
+
+    --font-sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --t-mega:clamp(3.2rem,15.5vw,15rem);
+    --t-h1:clamp(1.9rem,3.4vw,2.9rem);
+    --t-h2:clamp(1.25rem,1.8vw,1.6rem);
+    --t-h3:1.1rem;
+    --t-lead:clamp(1.05rem,1.3vw,1.18rem);
+    --t-body:1.0625rem;
+    --t-small:.875rem;
+    --t-micro:.72rem;
+
+    --s-1:.35rem;--s-2:.7rem;--s-3:1.1rem;--s-4:1.6rem;--s-5:2.4rem;
+    --s-6:3.4rem;--s-7:4.8rem;--s-8:7rem;
+    --shell:min(1120px,100% - 3rem);
+    --narrow:min(640px,100% - 3rem);
+
+    --d-slow:1200ms;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--font-sans);font-size:var(--t-body);line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.025em;line-height:1.08}
+  p{margin:0}
+  a{color:inherit}
+  ul,ol,dl{margin:0;padding:0;list-style:none}
+  svg{display:block}
+  :focus-visible{outline:2px solid var(--red);outline-offset:4px}
+  .shell{width:var(--shell);margin-inline:auto}
+  .narrow{width:var(--narrow);margin-inline:auto}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+  .skip{position:absolute;left:1rem;top:-120px;z-index:90;background:var(--ink);color:var(--paper);padding:.9rem 1.3rem;transition:top var(--d-slow) var(--ease)}
+  .skip:focus{top:1rem}
+  .meta{font-size:var(--t-micro);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 1.6rem;
+    background:var(--ink);color:var(--paper);border:1px solid var(--ink);text-decoration:none;cursor:pointer;
+    font-family:inherit;font-size:1rem;font-weight:500;
+    transition:background 160ms,color 160ms,border-color 160ms
+  }
+  .btn:hover{background:var(--red);border-color:var(--red)}
+  .btn--quiet{background:transparent;color:var(--ink)}
+  .btn--quiet:hover{background:var(--ink);color:var(--paper)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed}
+
+  /* ---------- nav: thin, quiet, no shadow ---------- */
+  .nav{position:relative;z-index:20;border-bottom:1px solid var(--hair)}
+  .nav-in{display:flex;align-items:center;gap:var(--s-4);min-height:72px}
+  .logo{text-decoration:none;font-size:1.05rem;letter-spacing:.22em;text-transform:uppercase}
+  .nav ul{display:flex;gap:var(--s-4);margin-left:auto;align-items:center}
+  .nav a{text-decoration:none;font-size:var(--t-small);color:var(--ink-soft);display:inline-flex;align-items:center;min-height:44px}
+  .nav a:hover{color:var(--ink)}
+  .nav a[aria-current]{color:var(--ink);box-shadow:inset 0 -1px 0 var(--ink)}
+  .nav .order{color:var(--red)}
+  .nav-toggle{display:none;margin-left:auto;min-height:44px;padding:0 1.1rem;background:transparent;
+    border:1px solid var(--hair-strong);font-family:inherit;font-size:var(--t-small);cursor:pointer}
+
+  /* ---------- the one dramatic element: the wordmark ---------- */
+  .hero{padding-block:var(--s-6) var(--s-7);position:relative}
+  .wordmark{
+    font-size:var(--t-mega);line-height:.86;font-weight:600;letter-spacing:-.055em;
+    margin:0;text-align:center;
+  }
+  /* the single signature animation on the whole page */
+  .wordmark .ink{
+    display:block;
+    background:linear-gradient(100deg,#111110 0 46%,var(--red) 50%,#111110 54% 100%);
+    background-size:260% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:ink 2000ms var(--ease) .1s both;
+  }
+  @keyframes ink{from{background-position:100% 0}to{background-position:0 0}}
+  .hero-caption{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-4);align-items:end;
+    border-top:1px solid var(--hair);padding-top:var(--s-3);margin-top:var(--s-5);
+  }
+  .hero-caption p{max-width:48ch;color:var(--ink-soft);font-size:var(--t-lead)}
+  .hero-caption .actions{display:flex;gap:var(--s-2);flex-wrap:wrap}
+  .ticker{
+    display:flex;justify-content:space-between;gap:var(--s-3);flex-wrap:wrap;
+    border-bottom:1px solid var(--hair);padding-bottom:var(--s-2);
+    font-family:var(--font-sans);font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);
+  }
+  .ticker b{color:var(--ink);font-weight:500}
+
+  /* ---------- the object ---------- */
+  .object{padding-block:var(--s-7);border-top:1px solid var(--hair);text-align:center;position:relative}
+  .object .figure{margin:0;display:grid;place-items:center;min-height:min(58vh,520px)}
+  .object svg{width:min(420px,74vw);height:auto}
+  /* the object breathes very slightly as it comes into view — the only other motion on the page */
+  .object svg{animation:settle 1400ms var(--ease) both}
+  @keyframes settle{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .facts{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-4);
+    border-top:1px solid var(--hair);margin-top:var(--s-6);padding-top:var(--s-4);text-align:left;
+  }
+  .facts dt{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.45rem}
+  .facts dd{margin:0;font-size:var(--t-small);color:var(--ink-soft)}
+
+  /* ---------- how it is made: numbered, quiet ---------- */
+  .making{border-top:1px solid var(--hair);padding-block:var(--s-7)}
+  .making h2{font-size:var(--t-h2);margin-bottom:var(--s-5)}
+  .steps{counter-reset:step;display:grid;gap:0;border-top:1px solid var(--hair)}
+  .step{counter-increment:step;display:grid;grid-template-columns:5.5rem minmax(0,1fr) 9rem;gap:var(--s-4);
+    align-items:baseline;padding:var(--s-4) 0;border-bottom:1px solid var(--hair)}
+  .step::before{content:counter(step,decimal-leading-zero);color:var(--red);font-size:var(--t-small);
+    letter-spacing:.14em;font-variant-numeric:tabular-nums}
+  .step b{font-weight:500;font-size:var(--t-h3);letter-spacing:-.01em;display:block}
+  .step p{color:var(--ink-soft);font-size:var(--t-small);margin-top:.35rem;max-width:52ch}
+  .step .when{font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);text-align:right}
+
+  /* ---------- long quiet essay ---------- */
+  .essay{border-top:1px solid var(--hair);padding-block:var(--s-8)}
+  .essay h2{font-size:var(--t-h2);margin-bottom:var(--s-5)}
+  .essay .big{font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.34;letter-spacing:-.025em;max-width:22ch}
+  .essay .body{color:var(--ink-soft);max-width:54ch;margin-top:var(--s-4)}
+  .essay .body p + p{margin-top:var(--s-3)}
+
+  /* ---------- press: a list, hairlines, no cards ---------- */
+  .press{border-top:1px solid var(--hair);padding-block:var(--s-7)}
+  .press h2{font-size:var(--t-h2);margin-bottom:var(--s-4)}
+  .press li{border-top:1px solid var(--hair);padding:var(--s-4) 0;display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:var(--s-4);align-items:baseline}
+  .press li:last-child{border-bottom:1px solid var(--hair)}
+  .press blockquote{margin:0;font-size:var(--t-lead);letter-spacing:-.01em;max-width:44ch}
+  .press cite{font-style:normal;font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);text-align:right}
+
+  /* ---------- reserve ---------- */
+  .reserve{border-top:1px solid var(--hair);padding-block:var(--s-8)}
+  .reserve h2{font-size:var(--t-h1);margin-bottom:var(--s-3);max-width:16ch}
+  .reserve .note{color:var(--ink-soft);max-width:50ch;margin-bottom:var(--s-5)}
+  .reserve-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:var(--s-6);align-items:start}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+  .field{display:grid;gap:.4rem;margin-bottom:var(--s-4)}
+  .field label{font-size:var(--t-small);font-weight:500}
+  .field .hint{font-size:var(--t-micro);color:var(--ink-faint)}
+  .field .err{font-size:var(--t-micro);color:var(--red);font-weight:500}
+  .field .err:empty{display:none}
+  input,select{
+    font-family:inherit;font-size:1rem;width:100%;min-height:50px;padding:.75rem .9rem;
+    background:transparent;border:1px solid var(--hair-strong);color:var(--ink);border-radius:0;
+  }
+  input:focus-visible,select:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+  [aria-invalid="true"]{border-color:var(--red);border-width:2px}
+  .form-msg{margin-top:var(--s-3);min-height:1.7em;font-size:var(--t-small);color:var(--ink-soft)}
+  .form-msg[data-state="error"]{color:var(--red)}
+  .form-msg[data-state="ok"]{color:var(--ink)}
+  .summary{font-size:var(--t-small)}
+  .summary dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.6rem var(--s-3);border-top:1px solid var(--hair);padding-top:var(--s-3)}
+  .summary dt{color:var(--ink-faint);white-space:nowrap}
+  .summary dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+  .summary .total{border-top:1px solid var(--hair);margin-top:var(--s-3);padding-top:var(--s-3);
+    display:flex;justify-content:space-between;align-items:baseline}
+  .summary .total b{font-size:1.5rem;font-weight:500;letter-spacing:-.03em}
+  .remaining{margin-top:var(--s-3);font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
+  .reserve .btn{width:100%;margin-top:var(--s-3)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--hair);padding-block:var(--s-5)}
+  .foot-top{display:flex;flex-wrap:wrap;gap:var(--s-3);justify-content:space-between;align-items:baseline}
+  .foot-mark{letter-spacing:.22em;text-transform:uppercase;font-size:var(--t-small)}
+  .foot-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4);margin-top:var(--s-5)}
+  footer h2{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);font-weight:500;margin-bottom:var(--s-2)}
+  footer li{font-size:var(--t-small);margin-bottom:.4rem}
+  footer a{text-decoration:none}
+  footer a:hover{color:var(--red);text-decoration:underline;text-underline-offset:3px}
+  .foot-bottom{margin-top:var(--s-5);padding-top:var(--s-2);border-top:1px solid var(--hair);
+    display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:space-between;font-size:var(--t-micro);color:var(--ink-faint)}
+
+  @media (max-width:900px){
+    .reserve-grid{grid-template-columns:1fr;gap:var(--s-5)}
+    .facts,.foot-cols{grid-template-columns:1fr;gap:var(--s-3)}
+    .press li{grid-template-columns:1fr;gap:.3rem}
+    .press cite{text-align:left}
+    .hero-caption{grid-template-columns:1fr;align-items:start;gap:var(--s-3)}
+    .step{grid-template-columns:3.2rem minmax(0,1fr);gap:var(--s-3)}
+    .step .when{grid-column:2;text-align:left;margin-top:.4rem}
+  }
+  @media (max-width:720px){
+    .nav-toggle{display:block}
+    .nav ul{display:none;position:absolute;left:0;right:0;top:72px;background:var(--paper);border-bottom:1px solid var(--hair);padding:.4rem 1.5rem 1rem}
+    .nav ul[data-open="true"]{display:block}
+    .nav ul a{width:100%;min-height:48px;border-bottom:1px solid var(--hair);box-shadow:none}
+    .row{grid-template-columns:1fr}
+    .hero-caption .actions{width:100%}
+    .hero-caption .actions .btn{flex:1 1 auto}
+    .wordmark{line-height:.9}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    .wordmark .ink{animation:none;background:none;-webkit-text-fill-color:var(--ink);color:var(--ink)}
+    .object svg{animation:none}
+    .skip{transition:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="nav">
+  <div class="nav-in shell">
+    <a class="logo" href="#top">One Thing</a>
+    <button class="nav-toggle" type="button" id="navToggle" aria-expanded="false" aria-controls="primaryNav">Menu</button>
+    <nav id="siteNav" aria-label="Primary">
+      <ul id="primaryNav">
+        <li><a href="#object">The object</a></li>
+        <li><a href="#making">How it is made</a></li>
+        <li><a href="#why">Why one</a></li>
+        <li><a href="#press">Press</a></li>
+        <li><a class="order" href="#reserve">Reserve — £48</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero shell" id="top" aria-labelledby="hero-h">
+    <h1 id="hero-h" class="wordmark"><span class="ink">ONE THING</span></h1>
+    <div class="hero-caption">
+      <p>A campaign for a single object, made by a single workshop, sold in a single run of 500.
+        When they are gone, that is the end of it.</p>
+      <div class="actions">
+        <a class="btn" href="#reserve">Reserve one</a>
+        <a class="btn btn--quiet" href="#object">See what it is</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="shell ticker" aria-hidden="true">
+    <span>Run 04 · Stoke-on-Trent</span>
+    <span><b id="remainingTop">41</b> of 500 unreserved</span>
+    <span>Ships October 2026</span>
+  </div>
+
+  <section class="object" id="object" aria-labelledby="obj-h">
+    <div class="narrow">
+      <h2 id="obj-h" class="sr-only">The object</h2>
+      <figure class="figure">
+        <svg viewBox="0 0 320 320" role="img" aria-label="A single enamel kettle drawn in outline, with one red handle.">
+          <g fill="none" stroke="#111110" stroke-width="2">
+            <path d="M96 132h128a48 48 0 0 1 48 48v52a44 44 0 0 1-44 44H92a44 44 0 0 1-44-44v-52a48 48 0 0 1 48-48z"/>
+            <path d="M272 176c22 0 34 12 34 30s-12 30-34 30"/>
+          </g>
+          <path d="M160 132V96" fill="none" stroke="#C5341A" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="160" cy="86" r="9" fill="none" stroke="#C5341A" stroke-width="5"/>
+          <path d="M120 176h80" stroke="#111110" stroke-width="1" opacity=".35"/>
+        </svg>
+      </figure>
+      <dl class="facts">
+        <div>
+          <dt>Material</dt>
+          <dd>Enamelled steel. No electronics, no app, no subscription, no firmware.</dd>
+        </div>
+        <div>
+          <dt>Made in</dt>
+          <dd>Stoke-on-Trent, by a workshop of four who have made kettles since 1974.</dd>
+        </div>
+        <div>
+          <dt>Run</dt>
+          <dd>500 units, numbered on the base by hand. No restock, no second colour, no season.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="making shell" id="making" aria-labelledby="mk-h">
+    <h2 id="mk-h">How one kettle is made</h2>
+    <ol class="steps">
+      <li class="step">
+        <b>Pressed, not cast</b>
+        <p>A single steel blank is pressed into body and spout in one operation, which is why there is no seam to fail and no solder anywhere in the product.</p>
+        <span class="when">Day 1 — 2</span>
+      </li>
+      <li class="step">
+        <b>Enamelled twice</b>
+        <p>Two coats, fired at 800 °C. The first fills the surface; the second is what you touch. It takes four days and cannot be rushed by adding heat.</p>
+        <span class="when">Day 3 — 6</span>
+      </li>
+      <li class="step">
+        <b>Fitted by one person</b>
+        <p>The same person who enamelled it fits the element, the base and the cable, then initials the underside. If a kettle fails in year three, the same workshop answers it.</p>
+        <span class="when">Day 7</span>
+      </li>
+      <li class="step">
+        <b>Numbered and boxed</b>
+        <p>Your number is engraved on the base and written on the box in the same hand. There is no barcode, because there is no resale channel to feed.</p>
+        <span class="when">Day 8</span>
+      </li>
+    </ol>
+  </section>
+
+  <section class="essay narrow" id="why" aria-labelledby="why-h">
+    <h2 id="why-h" class="meta">Why only one</h2>
+    <p class="big">We are a company of four people and we make kettles.</p>
+    <div class="body">
+      <p>That is the entire business. We have turned down two offers to extend into adjacent categories, one of which was very good money, and we would like to say we did it on principle.</p>
+      <p>In practice we did it because making a range means making four slightly worse kettles instead of one good one, and nobody at this workshop has the hours. The offer we refused was for a travel flask, and the travel flask would have been fine, and we would have made it badly.</p>
+      <p>So: one object, one colour, one run. When the 500 are gone we will either make the same kettle again in two years, or we will make something else entirely — and either way it will be a decision made by four people who use a kettle every morning, not by a meeting about a pipeline.</p>
+    </div>
+  </section>
+
+  <section class="press shell" id="press" aria-labelledby="press-h">
+    <h2 id="press-h">Press</h2>
+    <ul>
+      <li>
+        <blockquote>“The least interesting launch of the year, which is to say the most interesting one.”</blockquote>
+        <cite>The Correspondent</cite>
+      </li>
+      <li>
+        <blockquote>“It boils water. It will still boil water in forty years. We tried to fault it and could not.”</blockquote>
+        <cite>Standard Review</cite>
+      </li>
+      <li>
+        <blockquote>“A kettle, sold with an essay, at four times the price — and it still works out cheaper.”</blockquote>
+        <cite>Paper Magazine</cite>
+      </li>
+    </ul>
+  </section>
+
+  <section class="reserve shell" id="reserve" aria-labelledby="res-h">
+    <div class="reserve-grid">
+      <div>
+        <h2 id="res-h">Reserve the number you want</h2>
+        <p class="note">500 units, numbered by hand. We email you when yours ships, and once when the run is finished — whichever comes first. Payment is taken when it ships, not now.</p>
+
+        <form id="reserveForm" novalidate>
+          <div class="row">
+            <div class="field">
+              <label for="rName">Name</label>
+              <input type="text" id="rName" name="name" autocomplete="name" required aria-describedby="rName-err">
+              <p class="err" id="rName-err" role="alert"></p>
+            </div>
+            <div class="field">
+              <label for="rEmail">Email</label>
+              <input type="email" id="rEmail" name="email" autocomplete="email" required aria-describedby="rEmailHint rEmail-err">
+              <p class="hint" id="rEmailHint">Required. Used twice: once to reserve, once to say it has shipped.</p>
+              <p class="err" id="rEmail-err" role="alert"></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="rColour">Enamel</label>
+              <select id="rColour" name="colour"
+                      data-label="Black enamel" data-price="48" data-surcharge="0">
+                <option value="black" selected>Black — £48</option>
+                <option value="bone" data-price="48" data-surcharge="0">Bone — £48</option>
+                <option value="red" data-price="48" data-surcharge="6">Red — £54 (the handle, in red)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="rQty">How many</label>
+              <select id="rQty" name="qty" data-unit="44">
+                <option value="1" selected>1 kettle</option>
+                <option value="2">2 kettles</option>
+                <option value="3">3 kettles</option>
+              </select>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label for="rNote">Anything we should know</label>
+            <textarea id="rNote" name="note" rows="2" style="min-height:88px;resize:vertical" placeholder="Optional. Engraving, a delivery date that matters, or nothing at all."></textarea>
+          </div>
+          <button class="btn" type="submit" id="reserveSubmit">Reserve</button>
+          <p class="form-msg" id="reserveMsg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div class="summary" aria-live="polite">
+        <dl>
+          <dt>Object</dt><dd>Enamel kettle, run 04</dd>
+          <dt>Enamel</dt><dd id="sumEnamel">Black</dd>
+          <dt>Number</dt><dd id="sumNumber">—</dd>
+          <dt>Collection</dt><dd id="sumCollection">Ships October 2026</dd>
+          <dt>Payment</dt><dd>On dispatch</dd>
+        </dl>
+        <p class="total"><span>Total</span><b id="sumTotal">£48</b></p>
+        <p class="remaining"><span id="remainingInline">41</span> of 500 numbers unreserved</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="foot-top">
+      <span class="foot-mark">One Thing</span>
+      <span class="meta">Made in Stoke-on-Trent · Run 04 · 500 units · 2026</span>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <h2>Product</h2>
+        <ul>
+          <li><a href="#object">The kettle</a></li>
+          <li><a href="#making">How it is made</a></li>
+          <li><a href="#reserve">Reserve a number</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Company</h2>
+        <ul>
+          <li><a href="#why">Why one thing</a></li>
+          <li><a href="#press">Press</a></li>
+          <li><a href="#making">The workshop</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li><a href="mailto:one@onething.example">one@onething.example</a></li>
+          <li><a href="#reserve">Repairs — 15 years</a></li>
+          <li><a href="#reserve">Questions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 One Thing Ltd</span>
+      <span>Repairs guaranteed for fifteen years. After that, we will still try.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var STORE = 500;
+  var START_REMAINING = 41;   /* the run is 459 units into its life when this page loads */
+
+  /* ---------- mobile nav ---------- */
+  var toggle = $('navToggle');
+  var nav = $('primaryNav');
+  function setMenu(open) {
+    nav.setAttribute('data-open', String(open));
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Close' : 'Menu';
+  }
+  toggle.addEventListener('click', function () { setMenu(nav.getAttribute('data-open') !== 'true'); });
+  nav.addEventListener('click', function (e) {
+    if (e.target.closest('a')) setMenu(false);
+  });
+
+  /* mark the section currently in view — the only nav state worth having */
+  var navLinks = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
+  var targets = navLinks
+    .map(function (a) { return { link: a, el: document.querySelector(a.getAttribute('href')) }; })
+    .filter(function (t) { return t.el; });
+  if ('IntersectionObserver' in window) {
+    var seen = new Map();
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { seen.set(en.target, en.intersectionRatio); });
+      var best = null, bestRatio = 0;
+      seen.forEach(function (ratio, el) {
+        if (ratio > bestRatio) { bestRatio = ratio; best = el; }
+      });
+      navLinks.forEach(function (a) { a.removeAttribute('aria-current'); });
+      if (best && bestRatio > 0.05) {
+        var match = targets.find(function (t) { return t.el === best; });
+        if (match) match.link.setAttribute('aria-current', 'true');
+      }
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.1, 0.5, 1] });
+    targets.forEach(function (t) { spy.observe(t.el); });
+  }
+
+  /* ---------- the order, computed from data attributes, not by parsing option text ---------- */
+  var colour = $('rColour');
+  var qty = $('rQty');
+  var remaining = START_REMAINING;
+
+  function money(n) { return '£' + n; }
+
+  function update() {
+    var opt = colour.options[colour.selectedIndex];
+    var unit = +qty.dataset.unit + (+opt.dataset.surcharge || 0);
+    var n = +qty.value;
+    var total = unit * n;
+
+    $('sumEnamel').textContent = opt.dataset.label;
+    $('sumTotal').textContent = money(total);
+    $('sumNumber').textContent = n === 1
+      ? 'One number, chosen at packing'
+      : n + ' numbers, consecutive where possible';
+
+    var avail = Math.max(0, remaining - n);
+    $('remainingTop').textContent = String(remaining);
+    $('remainingInline').textContent = String(remaining);
+    $('reserveSubmit').disabled = n > remaining;
+    $('reserveSubmit').textContent = n > remaining
+      ? 'Not enough left in this run'
+      : 'Reserve ' + n;
+  }
+  colour.addEventListener('change', update);
+  qty.addEventListener('change', update);
+  update();
+
+  /* ---------- validation with per-field messages ---------- */
+  var form = $('reserveForm');
+  var msg = $('reserveMsg');
+  var name = $('rName');
+  var email = $('rEmail');
+  var nameErr = $('rName-err');
+  var emailErr = $('rEmail-err');
+
+  function setErr(field, slot, message) {
+    slot.textContent = message || '';
+    if (message) field.setAttribute('aria-invalid', 'true');
+    else field.removeAttribute('aria-invalid');
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.removeAttribute('data-state');
+    msg.textContent = '';
+
+    if (name.value.trim().length < 2) {
+      setErr(name, nameErr, 'We put your name against the number. Add it.');
+      msg.dataset.state = 'error';
+      msg.textContent = 'Nothing was reserved — the name is missing.';
+      name.focus();
+      return;
+    }
+    setErr(name, nameErr, '');
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      setErr(email, emailErr, 'That address will not receive a shipping email.');
+      msg.dataset.state = 'error';
+      msg.textContent = 'Nothing was reserved — the email address will not reach you.';
+      email.focus();
+      return;
+    }
+    setErr(email, emailErr, '');
+
+    var n = +qty.value;
+    if (n > remaining) {
+      msg.dataset.state = 'error';
+      msg.textContent = 'Only ' + remaining + ' numbers are left. Lower the quantity to continue.';
+      qty.focus();
+      return;
+    }
+
+    var submit = $('reserveSubmit');
+    submit.disabled = true;
+    submit.textContent = 'Holding…';
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Reserved ' + n + '. Nothing has been charged — we will email ' +
+      email.value.trim() + ' in October when your kettle ships.';
+
+    remaining = Math.max(0, remaining - n);
+    update();
+    setErr(name, nameErr, '');
+    setErr(email, emailErr, '');
+    /* the form is deliberately left as the visitor filled it in, so the summary
+       above still shows the choice that was just reserved */
+
+    window.setTimeout(function () { msg.textContent = ''; }, 9000);
+  });
+
+  [name, email].forEach(function (el) {
+    el.addEventListener('input', function () {
+      setErr(el, el === name ? nameErr : emailErr, '');
+    });
+  });
+})();
+</script>
+</body>
+</html>

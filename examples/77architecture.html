@@ -1,0 +1,743 @@
+<!-- Style: Architecture | 77architecture.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bureau Nord — Architecture practice</title>
+<style>
+  :root{
+    --white:#FFFFFF;
+    --paper:#F4F4F1;
+    --paper-2:#E9E9E4;
+    --ink:#131313;
+    --ink-2:#4A4A46;
+    --ink-3:#8B8B84;
+    --rule:#D6D6CF;
+    --rule-2:#B8B8B0;
+    --slate:#4E5F68;   /* the practice's single accent */
+    /* type */
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --t-hero: clamp(2rem, 1.2rem + 3.4vw, 4.2rem);
+    --t-h2: clamp(1.4rem, 1.1rem + 1.4vw, 2.2rem);
+    --t-h3: clamp(1.05rem, 1rem + .4vw, 1.3rem);
+    --t-body: .98rem;
+    --t-small: .84rem;
+    --t-micro: .7rem;
+    /* space */
+    --s-1:.25rem; --s-2:.5rem; --s-3:.85rem; --s-4:1.5rem; --s-5:2.5rem; --s-6:4rem; --s-7:6rem; --s-8:9rem;
+    --ring:0 0 0 2px var(--white), 0 0 0 3px var(--slate);
+    --dur:220ms; --dur-slow:640ms; --ease:cubic-bezier(.2,.7,.2,1);
+    --wrap:1440px;
+    --col:1320px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);font-size:var(--t-body);line-height:1.55;-webkit-font-size-adjust:100%}
+  img,svg{display:block;max-width:100%}
+  h1,h2,h3,h4,p,ul,figure,blockquote,dl{margin:0}
+  ul{padding:0;list-style:none}
+  a{color:inherit;text-decoration:none}
+  .wrap{width:min(100% - 4rem, var(--col));margin-inline:auto}
+  .bleed{width:min(100% - 4rem, var(--wrap));margin-inline:auto}
+  .skip{position:absolute;left:-9999px;background:var(--ink);color:var(--white);padding:.7rem 1.1rem;z-index:99}
+  .skip:focus{left:0}
+  :focus-visible{outline:none;box-shadow:var(--ring)}
+
+  .h2{font-size:var(--t-h2);line-height:1.2;letter-spacing:-.015em;font-weight:500}
+  .h3{font-size:var(--t-h3);line-height:1.35;font-weight:500}
+  .muted{color:var(--ink-2)}
+  .small{font-size:var(--t-small)}
+  .micro{font-size:var(--t-micro);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+  .num{font-variant-numeric:tabular-nums}
+
+  .btn{
+    --bg:var(--ink);--fg:var(--white);--bd:var(--ink);
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    min-height:48px;padding:.7rem 1.4rem;background:var(--bg);color:var(--fg);
+    border:1px solid var(--bd);font:inherit;font-size:var(--t-small);font-weight:500;
+    letter-spacing:.04em;cursor:pointer;transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease);
+  }
+  .btn:hover{--bg:var(--slate);--bd:var(--slate)}
+  .btn--line{--bg:transparent;--fg:var(--ink);--bd:var(--rule-2)}
+  .btn--line:hover{--bg:var(--ink);--fg:var(--white);--bd:var(--ink)}
+
+  /* header */
+  .head{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid var(--rule)}
+  .head-in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;min-height:80px;gap:var(--s-4)}
+  .mark{font-family:var(--serif);font-size:1.3rem;letter-spacing:.01em;white-space:nowrap}
+  .head nav{justify-self:center}
+  .head nav ul{display:flex;gap:var(--s-5)}
+  .head nav a{font-size:var(--t-small);color:var(--ink-2);display:inline-block;padding:.5rem 0;border-bottom:1px solid transparent}
+  .head nav a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+  .head-right{justify-self:end;display:flex;align-items:center;gap:var(--s-4);font-size:var(--t-small)}
+  .head-right a{padding:.5rem 0}
+  .menu-btn{display:none;background:none;border:1px solid var(--ink);min-height:44px;padding:.4rem .9rem;font:inherit;font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+
+  /* hero: full-bleed image with caption bar */
+  .hero{border-bottom:1px solid var(--rule)}
+  .hero img,.hero svg{width:100%;height:clamp(400px,64vh,720px)}
+  .hero-bar{display:grid;grid-template-columns:1.3fr 1fr;gap:var(--s-5);align-items:end;padding-block:var(--s-5)}
+  .hero-bar h1{font-family:var(--serif);font-size:var(--t-hero);line-height:1.08;letter-spacing:-.02em;font-weight:400;max-width:18ch}
+  .hero-bar .project{text-align:right}
+  .hero-bar .project b{display:block;font-weight:500;font-size:1.05rem}
+  .hero-bar .project span{display:block;font-size:var(--t-small);color:var(--ink-2)}
+
+  /* project index as a table */
+  .index{padding-block:var(--s-7)}
+  .index-head{display:flex;flex-wrap:wrap;gap:var(--s-3);align-items:baseline;justify-content:space-between;padding-bottom:var(--s-4);border-bottom:1px solid var(--ink)}
+  .index-head h2{font-family:var(--serif);font-size:var(--t-h2);font-weight:400}
+  .prow{display:grid;grid-template-columns:3.5rem 1fr 9rem 8rem 6rem;gap:var(--s-4);align-items:baseline;padding:1.15rem 0;border-bottom:1px solid var(--rule);position:relative}
+  .prow:hover{background:var(--paper)}
+  .prow .n{color:var(--ink-3);font-size:var(--t-small)}
+  .prow .t{font-size:1.15rem;letter-spacing:-.01em;display:flex;align-items:baseline;gap:.75rem}
+  .prow .t em{font-style:normal;font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--slate);border:1px solid currentColor;padding:.15rem .45rem}
+  .prow .loc,.prow .typ,.prow .ar{font-size:var(--t-small);color:var(--ink-2)}
+  .prow .ar{text-align:right;text-decoration:underline;text-underline-offset:4px}
+  .prow:hover .ar{color:var(--slate)}
+  .prow figure{
+    position:absolute;right:8rem;bottom:60%;width:230px;background:var(--paper-2);border:1px solid var(--rule);
+    opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);z-index:5;
+  }
+  .prow:hover figure,.prow:focus-within figure{opacity:1;transform:none}
+  .prow figure svg{width:100%;height:150px}
+
+  /* featured projects */
+  .project{padding-block:var(--s-7);border-top:1px solid var(--rule)}
+  .project-head{display:grid;grid-template-columns:1fr .9fr;gap:var(--s-6);align-items:end;padding-bottom:var(--s-5)}
+  .project-head h2{font-family:var(--serif);font-size:clamp(1.7rem,1.2rem+2.2vw,3rem);font-weight:400;line-height:1.1;letter-spacing:-.02em}
+  .project-head .meta{display:grid;grid-template-columns:1fr 1fr;gap:.6rem var(--s-4);font-size:var(--t-small);border-top:1px solid var(--ink);padding-top:var(--s-3)}
+  .project-head .meta div{display:flex;justify-content:space-between;gap:var(--s-3)}
+  .project-head .meta dt{color:var(--ink-3);font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase}
+  .project-head .meta dd{margin:0}
+  .project-figures{display:grid;grid-template-columns:1.4fr .6fr;gap:var(--s-4);align-items:start}
+  .project-figures figure figcaption,.cap{font-size:var(--t-small);color:var(--ink-3);margin-top:.7rem;max-width:56ch}
+  .project-figures .side{display:grid;gap:var(--s-4)}
+  .project-body{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--s-6);margin-top:var(--s-6);padding-top:var(--s-5);border-top:1px solid var(--rule)}
+  .project-body p{color:var(--ink-2);max-width:56ch}
+  .project-body p + p{margin-top:var(--s-3)}
+  .specs{margin-top:var(--s-5)}
+  .specs h3{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:var(--s-3)}
+  .specs dl{display:grid;grid-template-columns:1fr 1fr;gap:0 var(--s-5)}
+  .specs div{display:flex;justify-content:space-between;gap:var(--s-3);padding:.6rem 0;border-bottom:1px solid var(--rule);font-size:var(--t-small)}
+  .specs dt{color:var(--ink-3)}
+  .specs dd{margin:0;text-align:right}
+
+  /* philosophy with plan drawing */
+  .philosophy{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-7);padding-block:var(--s-7);border-top:1px solid var(--rule);align-items:center}
+  .philosophy h2{font-family:var(--serif);font-size:var(--t-h2);font-weight:400;line-height:1.15;letter-spacing:-.015em;margin-block:var(--s-3) var(--s-4)}
+  .philosophy p{color:var(--ink-2);max-width:48ch}
+  .philosophy p + p{margin-top:var(--s-3)}
+  .principles{list-style:none;padding:0;margin-top:var(--s-5);border-top:1px solid var(--ink)}
+  .principles li{display:grid;grid-template-columns:3rem 1fr;gap:var(--s-3);padding:.9rem 0;border-bottom:1px solid var(--rule);font-size:var(--t-small)}
+  .principles .n{color:var(--slate);font-variant-numeric:tabular-nums}
+  .drawing{border:1px solid var(--rule);background:var(--paper);padding:var(--s-5)}
+  .drawing figcaption{font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:var(--s-3);display:flex;justify-content:space-between;gap:var(--s-3)}
+
+  /* practice */
+  .practice{border-top:1px solid var(--ink);padding-block:var(--s-7)}
+  .practice-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--s-6)}
+  .practice h3{font-size:var(--t-micro);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:var(--s-3)}
+  .person{display:grid;grid-template-columns:3.5rem 1fr;gap:var(--s-3);padding:.8rem 0;border-bottom:1px solid var(--rule);font-size:var(--t-small);align-items:center}
+  .person i{width:3.5rem;height:3.5rem;background:var(--paper-2);display:block;border:1px solid var(--rule)}
+  .person b{display:block;font-weight:500}
+  .awards li{display:grid;grid-template-columns:5rem 1fr;gap:var(--s-3);padding:.7rem 0;border-bottom:1px solid var(--rule);font-size:var(--t-small)}
+  .awards .yr{color:var(--ink-3)}
+  .offices li{font-size:var(--t-small);padding:.7rem 0;border-bottom:1px solid var(--rule);color:var(--ink-2)}
+  .offices b{display:block;font-weight:500;color:var(--ink)}
+
+  /* contact */
+  .contact{background:var(--paper);border-top:1px solid var(--rule);padding-block:var(--s-7)}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-7)}
+  .contact h2{font-family:var(--serif);font-size:var(--t-h2);font-weight:400;margin-block:var(--s-3) var(--s-4)}
+  .contact p{color:var(--ink-2);max-width:46ch}
+  .form{display:grid;gap:var(--s-3);margin-top:var(--s-4)}
+  .field{display:grid;gap:.4rem}
+  .field label{font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+  .field input,.field select,.field textarea{
+    min-height:48px;padding:.6rem 0;background:transparent;border:0;border-bottom:1px solid var(--rule-2);
+    font:inherit;font-size:var(--t-body);color:var(--ink);width:100%;border-radius:0;
+  }
+  .field textarea{min-height:96px;resize:vertical}
+  .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{border-bottom-color:var(--ink);box-shadow:none}
+  .field select option{background:var(--white)}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+  .form-msg{font-size:var(--t-small);min-height:1.3em;color:#8C3A2C}
+  .form-msg[data-state="ok"]{color:#2C5A46}
+
+  /* footer */
+  .foot{border-top:1px solid var(--ink);padding-block:var(--s-5)}
+  .foot-in{display:flex;flex-wrap:wrap;gap:var(--s-4) var(--s-6);align-items:center;justify-content:space-between;font-size:var(--t-micro);color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase}
+  .foot-in nav{display:flex;flex-wrap:wrap;gap:var(--s-4)}
+  .foot-in a:hover{color:var(--ink)}
+
+  @media (max-width:1080px){
+    .project-figures,.project-body,.philosophy,.contact-grid{grid-template-columns:1fr}
+    .project-figures .side{grid-template-columns:1fr 1fr}
+    .practice-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:900px){
+    .head-in{grid-template-columns:1fr auto;min-height:64px}
+    .head nav{display:none}
+    .head nav[data-open="true"]{display:block;position:absolute;top:64px;left:0;right:0;background:var(--white);border-bottom:1px solid var(--rule);padding:.5rem 2rem 1rem}
+    .head nav[data-open="true"] ul{flex-direction:column;gap:0}
+    .head nav[data-open="true"] a{display:block;padding:.9rem 0;border-bottom:1px solid var(--rule)}
+    .head-right{display:none}
+    .menu-btn{display:block}
+    .hero-bar{grid-template-columns:1fr}
+    .hero-bar .project{text-align:left}
+    .prow{grid-template-columns:3rem 1fr 5rem;row-gap:.3rem}
+    .prow .loc,.prow .typ{grid-column:2}
+    .prow .ar{grid-column:3;grid-row:1}
+    .prow figure{display:none}
+  }
+  @media (max-width:640px){
+    .wrap,.bleed{width:min(100% - 2.2rem,var(--col))}
+    .project-figures .side{grid-template-columns:1fr}
+    .practice-grid{grid-template-columns:1fr}
+    .form-row{grid-template-columns:1fr}
+    .specs dl{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+    .prow figure{opacity:0;transform:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="head">
+  <div class="wrap head-in">
+    <a class="mark" href="#top">Bureau Nord</a>
+    <nav id="nav" aria-label="Sections">
+      <ul>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#philosophy">Position</a></li>
+        <li><a href="#practice">Practice</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="head-right">
+      <a href="mailto:studio@bureaunord.dk">studio@bureaunord.dk</a>
+      <a href="#contact">+45 32 11 04 90</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+  </div>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <section class="hero" aria-labelledby="heroTitle">
+    <svg viewBox="0 0 1600 720" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Havnegade Baths: a long brick building beside the water with a stepped concrete roof and tall arched windows.">
+      <rect width="1600" height="720" fill="#D5D8D6"/>
+      <rect y="430" width="1600" height="290" fill="#9FA8A6"/>
+      <g stroke="#8C9794" stroke-width="1.5" opacity=".6"><path d="M0 480h1600M0 540h1600M0 610h1600"/></g>
+      <rect x="120" y="180" width="1180" height="290" fill="#8C6A5A"/>
+      <g fill="#7A5A4C">
+        <rect x="120" y="180" width="1180" height="6"/>
+        <rect x="120" y="286" width="1180" height="4"/>
+        <rect x="120" y="392" width="1180" height="4"/>
+        <rect x="120" y="460" width="1180" height="10"/>
+      </g>
+      <g fill="#6E5044" opacity=".5">
+        <rect x="120" y="200" width="1180" height="80" opacity=".25"/>
+      </g>
+      <g fill="#D5D8D6">
+        <rect x="180" y="220" width="90" height="150" rx="45"/>
+        <rect x="330" y="220" width="90" height="150" rx="45"/>
+        <rect x="480" y="220" width="90" height="150" rx="45"/>
+        <rect x="630" y="220" width="90" height="150" rx="45"/>
+        <rect x="780" y="220" width="90" height="150" rx="45"/>
+        <rect x="930" y="220" width="90" height="150" rx="45"/>
+        <rect x="1080" y="220" width="90" height="150" rx="45"/>
+      </g>
+      <g fill="#3E4A50">
+        <rect x="190" y="230" width="70" height="140" rx="35"/>
+        <rect x="340" y="230" width="70" height="140" rx="35"/>
+        <rect x="490" y="230" width="70" height="140" rx="35"/>
+        <rect x="640" y="230" width="70" height="140" rx="35"/>
+        <rect x="790" y="230" width="70" height="140" rx="35"/>
+        <rect x="940" y="230" width="70" height="140" rx="35"/>
+        <rect x="1090" y="230" width="70" height="140" rx="35"/>
+      </g>
+      <g fill="#93A5AC" opacity=".6">
+        <rect x="196" y="250" width="26" height="100" rx="13"/>
+        <rect x="346" y="250" width="26" height="100" rx="13"/>
+        <rect x="496" y="250" width="26" height="100" rx="13"/>
+        <rect x="646" y="250" width="26" height="100" rx="13"/>
+        <rect x="796" y="250" width="26" height="100" rx="13"/>
+        <rect x="946" y="250" width="26" height="100" rx="13"/>
+        <rect x="1096" y="250" width="26" height="100" rx="13"/>
+      </g>
+      <g fill="#B9B3A8">
+        <rect x="150" y="120" width="480" height="24"/>
+        <rect x="180" y="96" width="420" height="24"/>
+        <rect x="210" y="72" width="360" height="24"/>
+      </g>
+      <rect x="120" y="470" width="1180" height="16" fill="#CFCBC1"/>
+      <g fill="#2F3833">
+        <rect x="300" y="430" width="7" height="42"/><circle cx="303" cy="424" r="7"/>
+        <rect x="330" y="432" width="6" height="40"/><circle cx="333" cy="427" r="6"/>
+      </g>
+      <g stroke="#7F8A87" stroke-width="2" opacity=".55"><path d="M1380 430c40 24 60 60 70 100M1440 430c30 30 40 70 44 100M1330 430c-20 30-30 70-32 100"/></g>
+    </svg>
+    <div class="wrap hero-bar">
+      <h1 id="heroTitle">Buildings that outlive the argument about them</h1>
+      <p class="project">
+        <b>Havnegade Baths, Aarhus</b>
+        <span>Public baths · 2023–2025 · built 2025</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="index" id="projects" aria-labelledby="indexTitle">
+    <div class="wrap">
+      <div class="index-head">
+        <h2 id="indexTitle">Built and current work</h2>
+        <p class="micro">Fourteen projects · 2019 — 2026</p>
+      </div>
+
+      <a class="prow" href="#p-havnegade">
+        <span class="n num">01</span>
+        <span class="t">Havnegade Baths <em>Built</em></span>
+        <span class="loc">Aarhus, DK</span>
+        <span class="typ">Public baths</span>
+        <span class="ar">View</span>
+        <figure aria-hidden="true"><svg viewBox="0 0 230 150"><rect width="230" height="150" fill="#E9E9E4"/><rect x="30" y="60" width="170" height="50" fill="#8C6A5A"/><g fill="#3E4A50"><rect x="44" y="70" width="18" height="34" rx="9"/><rect x="76" y="70" width="18" height="34" rx="9"/><rect x="108" y="70" width="18" height="34" rx="9"/><rect x="140" y="70" width="18" height="34" rx="9"/><rect x="172" y="70" width="18" height="34" rx="9"/></g><rect x="40" y="44" width="80" height="8" fill="#B9B3A8"/><rect x="60" y="34" width="60" height="8" fill="#B9B3A8"/><rect y="110" width="230" height="40" fill="#9FA8A6"/></svg></figure>
+      </a>
+
+      <a class="prow" href="#p-kirkegade">
+        <span class="n num">02</span>
+        <span class="t">Kirkegade Housing <em>Built</em></span>
+        <span class="loc">Odense, DK</span>
+        <span class="typ">64 apartments</span>
+        <span class="ar">View</span>
+        <figure aria-hidden="true"><svg viewBox="0 0 230 150"><rect width="230" height="150" fill="#E9E9E4"/><rect x="40" y="30" width="150" height="90" fill="#C4BEB2"/><g fill="#8E9AA0"><rect x="54" y="44" width="24" height="28"/><rect x="86" y="44" width="24" height="28"/><rect x="118" y="44" width="24" height="28"/><rect x="150" y="44" width="24" height="28"/><rect x="54" y="82" width="24" height="28"/><rect x="86" y="82" width="24" height="28"/><rect x="118" y="82" width="24" height="28"/><rect x="150" y="82" width="24" height="28"/></g><rect y="120" width="230" height="30" fill="#9FA8A6"/></svg></figure>
+      </a>
+
+      <a class="prow" href="#p-vestervig">
+        <span class="n num">03</span>
+        <span class="t">Vestervig Field Station <em>Built</em></span>
+        <span class="loc">Thy, DK</span>
+        <span class="typ">Research station</span>
+        <span class="ar">View</span>
+        <figure aria-hidden="true"><svg viewBox="0 0 230 150"><rect width="230" height="150" fill="#E4E6E4"/><path d="M20 110 90 60l40 30 40-24 40 44Z" fill="#7E8A84"/><rect x="80" y="86" width="70" height="26" fill="#4E5F68"/><g fill="#2F3833"><rect x="96" y="70" width="4" height="18"/><rect x="112" y="66" width="4" height="22"/><rect x="128" y="70" width="4" height="18"/></g><rect y="112" width="230" height="38" fill="#B9B3A8"/></svg></figure>
+      </a>
+
+      <a class="prow" href="#p-havnegade">
+        <span class="n num">04</span>
+        <span class="t">Havnegade Boathouse <em>Under construction</em></span>
+        <span class="loc">Aarhus, DK</span>
+        <span class="typ">Public building</span>
+        <span class="ar">View</span>
+        <figure aria-hidden="true"><svg viewBox="0 0 230 150"><rect width="230" height="150" fill="#E9E9E4"/><path d="M0 118 115 66l115 52Z" fill="#5B6660"/><rect x="70" y="96" width="90" height="24" fill="#8C6A5A"/><rect y="118" width="230" height="32" fill="#9FA8A6"/></svg></figure>
+      </a>
+
+      <a class="prow" href="#p-vestervig">
+        <span class="n num">05</span>
+        <span class="t">Thy Coastal Path <em>In design</em></span>
+        <span class="loc">Thy, DK</span>
+        <span class="typ">Landscape, 11 km</span>
+        <span class="ar">View</span>
+        <figure aria-hidden="true"><svg viewBox="0 0 230 150"><rect width="230" height="150" fill="#E4E6E4"/><path d="M0 120c40-20 70 10 110-6s70 6 120-14v50H0Z" fill="#9FA8A6"/><path d="M20 116c34-14 56 6 92-6s62 4 96-12" stroke="#B23A17" stroke-width="3" fill="none" stroke-dasharray="7 6"/><g fill="#7E8A84"><circle cx="40" cy="70" r="10"/><circle cx="72" cy="62" r="10"/><circle cx="188" cy="70" r="10"/></g></svg></figure>
+      </a>
+
+      <a class="prow" href="#p-kirkegade">
+        <span class="n num">06</span>
+        <span class="t">Sankt Jørgens Gymnasium <em>Competition, 1st</em></span>
+        <span class="loc">Roskilde, DK</span>
+        <span class="typ">School, 900 pupils</span>
+        <span class="ar">View</span>
+        <figure aria-hidden="true"><svg viewBox="0 0 230 150"><rect width="230" height="150" fill="#E9E9E4"/><rect x="30" y="60" width="80" height="60" fill="#C4BEB2"/><rect x="120" y="44" width="80" height="76" fill="#D5CEC0"/><g fill="#8E9AA0"><rect x="40" y="70" width="14" height="14"/><rect x="62" y="70" width="14" height="14"/><rect x="84" y="70" width="14" height="14"/><rect x="132" y="56" width="14" height="14"/><rect x="154" y="56" width="14" height="14"/><rect x="176" y="56" width="14" height="14"/></g><rect y="120" width="230" height="30" fill="#9FA8A6"/></svg></figure>
+      </a>
+    </div>
+  </section>
+
+  <article class="project" id="p-havnegade" aria-labelledby="hTitle">
+    <div class="wrap">
+      <header class="project-head">
+        <div>
+          <p class="micro">01 · Public baths · Aarhus</p>
+          <h2 id="hTitle">Havnegade Baths</h2>
+        </div>
+        <dl class="meta">
+          <div><dt>Status</dt><dd>Built 2025</dd></div>
+          <div><dt>Client</dt><dd>Aarhus Kommune</dd></div>
+          <div><dt>Area</dt><dd class="num">3,180 m²</dd></div>
+          <div><dt>Cost</dt><dd class="num">DKK 96.4m</dd></div>
+          <div><dt>Team</dt><dd>14 people</dd></div>
+          <div><dt>Contract</dt><dd>Traditional, 4 main</dd></div>
+        </dl>
+      </header>
+
+      <div class="project-figures">
+        <figure>
+          <svg viewBox="0 0 1000 620" role="img" aria-label="The harbour elevation of Havnegade Baths at dusk, arched windows lit from within.">
+            <rect width="1000" height="620" fill="#3A4348"/>
+            <rect y="470" width="1000" height="150" fill="#2A3134"/>
+            <rect x="80" y="150" width="840" height="330" fill="#7A5A4C"/>
+            <g fill="#6E5044"><rect x="80" y="150" width="840" height="5"/><rect x="80" y="248" width="840" height="4"/><rect x="80" y="346" width="840" height="4"/></g>
+            <g fill="#4A5F55">
+              <path d="M140 210a34 34 0 0 1 68 0v130h-68Z"/>
+              <path d="M250 210a34 34 0 0 1 68 0v130h-68Z"/>
+              <path d="M360 210a34 34 0 0 1 68 0v130h-68Z"/>
+              <path d="M470 210a34 34 0 0 1 68 0v130h-68Z"/>
+              <path d="M580 210a34 34 0 0 1 68 0v130h-68Z"/>
+              <path d="M690 210a34 34 0 0 1 68 0v130h-68Z"/>
+              <path d="M800 210a34 34 0 0 1 68 0v130h-68Z"/>
+            </g>
+            <g fill="#C9A96D" opacity=".85">
+              <path d="M146 230a28 28 0 0 1 56 0v110h-56Z"/>
+              <path d="M256 230a28 28 0 0 1 56 0v110h-56Z"/>
+              <path d="M366 230a28 28 0 0 1 56 0v110h-56Z"/>
+              <path d="M476 230a28 28 0 0 1 56 0v110h-56Z"/>
+              <path d="M586 230a28 28 0 0 1 56 0v110h-56Z"/>
+              <path d="M696 230a28 28 0 0 1 56 0v110h-56Z"/>
+              <path d="M806 230a28 28 0 0 1 56 0v110h-56Z"/>
+            </g>
+            <g fill="#B9B3A8">
+              <rect x="100" y="100" width="400" height="20"/>
+              <rect x="130" y="80" width="340" height="20"/>
+              <rect x="160" y="60" width="280" height="20"/>
+            </g>
+            <rect x="80" y="480" width="840" height="14" fill="#9A958C"/>
+            <g fill="#22282B"><path d="M470 494h4v44h-4ZM452 538h40v4h-40Z"/></g>
+            <g stroke="#4A5F68" stroke-width="3" opacity=".5" fill="none"><path d="M60 600c60-16 120 12 180-6M700 600c60-16 140 10 240-8"/></g>
+          </svg>
+          <figcaption>Harbour elevation, January. The stepped roof terrace is open to anyone; the building is not.</figcaption>
+        </figure>
+        <div class="side">
+          <figure>
+            <svg viewBox="0 0 420 300" role="img" aria-label="Section through the bathing hall showing a vaulted roof, a gallery and the pool.">
+              <rect width="420" height="300" fill="#E9E9E4"/>
+              <g fill="none" stroke="#131313" stroke-width="1.4">
+                <path d="M30 250V110c0-40 34-72 76-72s76 32 76 72v140"/>
+                <path d="M238 250V110c0-40 34-72 76-72s76 32 76 72v140"/>
+                <path d="M30 180h360M30 220h360"/>
+              </g>
+              <g fill="#8FC5CE" opacity=".6"><rect x="30" y="220" width="360" height="30"/></g>
+              <g fill="#C4BEB2"><rect x="30" y="104" width="152" height="12"/><rect x="238" y="104" width="152" height="12"/></g>
+              <g fill="#4A4A46" font-family="system-ui" font-size="9">
+                <text x="36" y="178">GALLERY</text><text x="300" y="178">GALLERY</text><text x="36" y="236">BASIN 25 m</text>
+              </g>
+            </svg>
+            <figcaption>Long section 1:200. Two galleries, one basin, no plant room above the water.</figcaption>
+          </figure>
+          <figure>
+            <svg viewBox="0 0 420 300" role="img" aria-label="Detail drawing of the brick arch window with a steel liner and lime mortar joints.">
+              <rect width="420" height="300" fill="#F4F4F1"/>
+              <g stroke="#131313" stroke-width="1" opacity=".6">
+                <path d="M0 60h420M0 120h420M0 180h420M0 240h420"/>
+                <path d="M60 0v300M120 0v300M180 0v300M240 0v300M300 0v300M360 0v300"/>
+              </g>
+              <path d="M130 250V130a52 52 0 0 1 104 0v120Z" fill="#8C6A5A"/>
+              <path d="M146 250V136a36 36 0 0 1 72 0v114Z" fill="#4A5F55"/>
+              <path d="M146 250V136a36 36 0 0 1 72 0v114Z" fill="none" stroke="#B23A17" stroke-width="3"/>
+              <g stroke="#131313" stroke-width="1"><path d="M182 60v190"/></g>
+              <g fill="#4A4A46" font-family="system-ui" font-size="9">
+                <text x="250" y="120">1:5</text><text x="250" y="140">hand-pressed brick</text>
+                <text x="250" y="170">2:1 lime mortar</text>
+                <text x="250" y="200">18 mm steel liner</text>
+              </g>
+            </svg>
+            <figcaption>Window detail. Every arch was propped for nine days, which is why the schedule says October.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="project-body">
+        <div>
+          <h3 class="h3">Position</h3>
+          <p>Aarhus asked for a landmark. We proposed a long brick wall with seven arches and a public roof, which took four years and several public meetings to be accepted as less impressive than what was originally drawn.</p>
+        </div>
+        <div>
+          <h3 class="h3">Construction</h3>
+          <p>Hand-pressed brick from a yard in Fåborg, lime mortar throughout, and a steel liner that carries the water load so the brick can stay thin. Twenty-six weeks on site for the shell, twenty-two for the fit-out.</p>
+          <div class="specs">
+            <h3>Key figures</h3>
+            <dl>
+              <div><dt>Basis</dt><dd class="num">3,180 m²</dd></div>
+              <div><dt>Storeys</dt><dd class="num">2 + roof</dd></div>
+              <div><dt>Brick</dt><dd>412,000 units</dd></div>
+              <div><dt>Site start</dt><dd class="num">Mar 2023</dd></div>
+              <div><dt>Completion</dt><dd class="num">Nov 2025</dd></div>
+              <div><dt>Visitors, year 1</dt><dd class="num">412,000</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="project" id="p-kirkegade" aria-labelledby="kTitle">
+    <div class="wrap">
+      <header class="project-head">
+        <div>
+          <p class="micro">02 · Housing · Odense</p>
+          <h2 id="kTitle">Kirkegade Housing</h2>
+        </div>
+        <dl class="meta">
+          <div><dt>Status</dt><dd>Built 2023</dd></div>
+          <div><dt>Client</dt><dd>Boligforeningen</dd></div>
+          <div><dt>Area</dt><dd class="num">7,940 m²</dd></div>
+          <div><dt>Units</dt><dd class="num">64</dd></div>
+          <div><dt>Rent</dt><dd>Social, capped</dd></div>
+          <div><dt>Cost</dt><dd class="num">DKK 118m</dd></div>
+        </dl>
+      </header>
+      <div class="project-figures">
+        <figure>
+          <svg viewBox="0 0 1000 600" role="img" aria-label="Kirkegade Housing: a five-storey rendered block with regular windows and a brick base, seen across a courtyard.">
+            <rect width="1000" height="600" fill="#DDE0DE"/>
+            <rect y="430" width="1000" height="170" fill="#B4B3AC"/>
+            <rect x="150" y="90" width="700" height="360" fill="#CFCBC0"/>
+            <rect x="150" y="410" width="700" height="40" fill="#8C6A5A"/>
+            <g fill="#6E7C82">
+              <rect x="190" y="130" width="70" height="80"/><rect x="300" y="130" width="70" height="80"/><rect x="410" y="130" width="70" height="80"/><rect x="520" y="130" width="70" height="80"/><rect x="630" y="130" width="70" height="80"/><rect x="740" y="130" width="70" height="80"/>
+              <rect x="190" y="250" width="70" height="80"/><rect x="300" y="250" width="70" height="80"/><rect x="410" y="250" width="70" height="80"/><rect x="520" y="250" width="70" height="80"/><rect x="630" y="250" width="70" height="80"/><rect x="740" y="250" width="70" height="80"/>
+              <rect x="300" y="360" width="70" height="50"/><rect x="410" y="360" width="70" height="50"/><rect x="520" y="360" width="70" height="50"/>
+            </g>
+            <g fill="#9DAEB4" opacity=".7">
+              <rect x="196" y="136" width="26" height="68"/><rect x="306" y="136" width="26" height="68"/><rect x="526" y="136" width="26" height="68"/><rect x="636" y="136" width="26" height="68"/><rect x="416" y="256" width="26" height="68"/><rect x="746" y="256" width="26" height="68"/>
+            </g>
+            <rect x="150" y="90" width="700" height="10" fill="#B7B3A8"/>
+            <g fill="#3E4A3F">
+              <rect x="180" y="470" width="6" height="52"/><circle cx="183" cy="462" r="11"/>
+              <rect x="820" y="476" width="5" height="46"/><circle cx="822" cy="468" r="9"/>
+              <rect x="600" y="486" width="4" height="36"/><circle cx="602" cy="480" r="8"/>
+            </g>
+          </svg>
+          <figcaption>Courtyard elevation. The brick base is the height of the flood line, which the architect insisted on twice.</figcaption>
+        </figure>
+        <div class="side">
+          <figure>
+            <svg viewBox="0 0 420 300" role="img" aria-label="Typical floor plan showing six apartments around a stair and a shared laundry.">
+              <rect width="420" height="300" fill="#E9E9E4"/>
+              <g fill="none" stroke="#131313" stroke-width="1.4">
+                <rect x="30" y="30" width="360" height="240"/>
+                <path d="M180 30v240M30 150h150M300 30v240M300 150h90"/>
+                <path d="M180 150h120"/>
+              </g>
+              <g fill="#C4BEB2">
+                <rect x="196" y="166" width="88" height="88"/>
+                <path d="M196 210h88M240 166v88" stroke="#131313" stroke-width="1"/>
+              </g>
+              <g fill="#4A4A46" font-family="system-ui" font-size="9">
+                <text x="40" y="50">3R</text><text x="40" y="120">2R</text><text x="40" y="180">2R</text><text x="40" y="250">4R</text>
+                <text x="200" y="50">2R</text><text x="200" y="120">3R</text><text x="310" y="50">3R</text><text x="310" y="120">2R</text>
+                <text x="196" y="276">STAIR + LAUNDRY</text>
+              </g>
+              <g fill="#4E5F68" opacity=".85"><rect x="30" y="150" width="6" height="120"/></g>
+            </svg>
+            <figcaption>Typical floor, 1:200. Two four-room flats, the rest two and three.</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="project-body">
+        <div>
+          <h3 class="h3">Brief</h3>
+          <p>Sixty-four social-housing apartments on a leftover plot, at a rent the municipality could defend to residents in a meeting. No podium, no car park, no shared corridors longer than six metres.</p>
+        </div>
+        <div>
+          <h3 class="h3">Outcome</h3>
+          <p>Completed three months over the client's optimistic programme and four months under the tender figure. Ninety-one per cent of households stayed after three years against a local average of seventy-four.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <section class="philosophy" id="philosophy" aria-labelledby="phTitle">
+    <div class="wrap" style="display:contents">
+      <div>
+        <p class="micro">Position</p>
+        <h2 id="phTitle">We are interested in the parts of a building nobody photographs</h2>
+        <p>Stairs, thresholds, drainage, the way a wall meets the ground. These are the things that decide whether a building is still good in fifty years, and they are where our time goes.</p>
+        <p>We work slowly in the early stages and normally afterwards. We do not enter competitions we cannot staff with partners we trust, and we have turned down more work than we have taken.</p>
+        <ol class="principles">
+          <li><span class="n">01</span><span>Build what was drawn. A construction drawing is a promise, not a starting point.</span></li>
+          <li><span class="n">02</span><span>Details at 1:5 before elevations at 1:200.</span></li>
+          <li><span class="n">03</span><span>Repair is a design decision, not a maintenance line item.</span></li>
+          <li><span class="n">04</span><span>Leave a maintenance manual that the caretaker will actually read.</span></li>
+        </ol>
+      </div>
+      <figure class="drawing">
+        <svg viewBox="0 0 640 470" role="img" aria-label="Measured plan drawing of the Havnegade Baths ground floor, with grid lines, dimensions and a north point.">
+          <rect width="640" height="470" fill="#F4F4F1"/>
+          <g stroke="#D6D6CF" stroke-width="1">
+            <path d="M0 60h640M0 140h640M0 220h640M0 300h640M0 380h640"/>
+            <path d="M80 0v470M180 0v470M280 0v470M380 0v470M480 0v470M580 0v470"/>
+          </g>
+          <g stroke="#131313" stroke-width="2" fill="none">
+            <path d="M100 110h440v250H100Z"/>
+            <path d="M100 220h440M280 110v250"/>
+            <path d="M380 220v140M460 220v140"/>
+          </g>
+          <g stroke="#4E5F68" stroke-width="1" fill="none">
+            <path d="M100 110a54 54 0 0 1 54 54M320 110a54 54 0 0 0 54 54M100 360a54 54 0 0 0 54-54M374 360a54 54 0 0 1-54-54"/>
+          </g>
+          <g fill="#C4BEB2">
+            <rect x="128" y="180" width="104" height="80"/>
+            <rect x="352" y="180" width="140" height="80"/>
+            <rect x="128" y="290" width="104" height="50"/>
+          </g>
+          <g fill="#4A4A46" font-family="system-ui" font-size="11">
+            <text x="60" y="90">1</text><text x="60" y="200">2</text><text x="60" y="310">3</text><text x="60" y="410">4</text>
+            <text x="140" y="330">BASIN</text><text x="364" y="200">HALL</text><text x="366" y="290">CHANGING</text>
+          </g>
+          <g stroke="#4A4A46" stroke-width="1" fill="none">
+            <path d="M100 396h440M100 390v12M540 390v12"/>
+          </g>
+          <text x="300" y="412" font-family="system-ui" font-size="10" fill="#4A4A46">38 400</text>
+          <g transform="translate(600 60)">
+            <circle r="18" fill="none" stroke="#131313" stroke-width="1.4"/>
+            <path d="M0-24v10" stroke="#131313" stroke-width="1.4"/>
+            <text x="-4" y="-28" font-family="system-ui" font-size="10" fill="#131313">N</text>
+          </g>
+          <text x="20" y="440" font-family="system-ui" font-size="10" fill="#4A4A46">GROUND FLOOR 1:200 · HAVNEGADE BATHS</text>
+        </svg>
+        <figcaption><span>Ground floor, 1:200</span><span>Sheet A-101</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="practice" id="practice" aria-labelledby="prTitle">
+    <div class="wrap">
+      <h2 class="h2" id="prTitle" style="font-family:var(--serif);font-weight:400;margin-bottom:var(--s-5)">The practice</h2>
+      <div class="practice-grid">
+        <div>
+          <h3>People</h3>
+          <div class="person"><i></i><span><b>Ingrid Bregendahl</b>Partner, architect</span></div>
+          <div class="person"><i></i><span><b>Tomas Rask</b>Partner, architect</span></div>
+          <div class="person"><i></i><span><b>Agnieszka Wieczorek</b>Associate, delivery</span></div>
+          <div class="person"><i></i><span><b>Jonas Falk</b>Architect, timber</span></div>
+          <div class="person"><i></i><span><b>Elin Sørup</b>Architect, interiors</span></div>
+          <p class="small muted" style="margin-top:var(--s-3)">Fourteen people in two rooms above a boatyard, one of whom is a dog.</p>
+        </div>
+        <div>
+          <h3>Recognition</h3>
+          <ul class="awards">
+            <li><span class="yr num">2026</span><span>Mies van der Rohe Award, nominated — Havnegade Baths</span></li>
+            <li><span class="yr num">2025</span><span>Kaspar Salin Prize, shortlist</span></li>
+            <li><span class="yr num">2025</span><span>Danish Building of the Year, public winner</span></li>
+            <li><span class="yr num">2024</span><span>RIBA International, Kirkegade Housing</span></li>
+            <li><span class="yr num">2023</span><span>Dreyer Foundation Honorary Award</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Offices</h3>
+          <ul class="offices">
+            <li><b>Aarhus</b>Skibsbrogade 12, 8000 Aarhus C<br>Mon–Fri, 08:30–16:30</li>
+            <li><b>Copenhagen</b>Refshalevej 163A, 1432 København K<br>By appointment</li>
+            <li><b>Enquiries</b>studio@bureaunord.dk<br>+45 32 11 04 90</li>
+          </ul>
+          <a class="btn" href="#contact" style="margin-top:var(--s-4)">Arrange a visit</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contactTitle">
+    <div class="wrap contact-grid">
+      <div>
+        <p class="micro">Enquiries</p>
+        <h2 id="contactTitle">New commissions and site visits</h2>
+        <p>We take on roughly four projects a year. If you are early, tell us what the building is for and when it has to open; we will be honest about whether we are the right practice for it.</p>
+        <a class="btn" href="#projects" style="margin-top:var(--s-4)">See built work</a>
+      </div>
+      <form class="form" id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label for="cName">Name</label>
+            <input id="cName" name="name" type="text" autocomplete="name" required placeholder="Ida Lindqvist">
+          </div>
+          <div class="field">
+            <label for="cOrg">Organisation</label>
+            <input id="cOrg" name="org" type="text" placeholder="Aarhus Kommune">
+          </div>
+        </div>
+        <div class="field">
+          <label for="cEmail">Email</label>
+          <input id="cEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="cType">Enquiry</label>
+          <select id="cType" name="type">
+            <option>New commission</option>
+            <option>Competition</option>
+            <option>Press or publication</option>
+            <option>Site visit</option>
+            <option>Work with us</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="cMsg">Brief, in a few lines</label>
+          <textarea id="cMsg" name="message" required placeholder="A public library for a town of 12,000, opening in autumn 2029."></textarea>
+        </div>
+        <div><button class="btn" type="submit">Send enquiry</button></div>
+        <p class="form-msg" id="contactMsg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>Bureau Nord ApS · CVR 38119044</span>
+    <nav aria-label="Footer">
+      <a href="#projects">Projects</a><a href="#philosophy">Position</a><a href="#practice">Practice</a><a href="#contact">Contact</a><a href="#top">Privacy</a>
+    </nav>
+    <span>© 2026</span>
+  </div>
+</footer>
+
+<script>
+  /* Menu */
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.getElementById('nav');
+  menuBtn.addEventListener('click', function () {
+    var open = nav.getAttribute('data-open') === 'true';
+    nav.setAttribute('data-open', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(!open));
+    menuBtn.textContent = open ? 'Menu' : 'Close';
+  });
+
+  /* Enquiry form */
+  var form = document.getElementById('contactForm');
+  var msg = document.getElementById('contactMsg');
+  var name = document.getElementById('cName');
+  var email = document.getElementById('cEmail');
+  var message = document.getElementById('cMsg');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!name.value.trim()) {
+      msg.removeAttribute('data-state');
+      msg.textContent = 'Please give a name we can reply to.';
+      name.focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      msg.removeAttribute('data-state');
+      msg.textContent = 'The email address appears to be incomplete.';
+      email.focus();
+      return;
+    }
+    if (!message.value.trim()) {
+      msg.removeAttribute('data-state');
+      msg.textContent = 'A few lines about the project, please.';
+      message.focus();
+      return;
+    }
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Enquiry received. One of the two partners reads these and replies within five working days.';
+    form.querySelector('button').disabled = true;
+  });
+  [name, email, message].forEach(function (el) {
+    el.addEventListener('input', function () {
+      if (!msg.dataset.state) { msg.textContent = ''; }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!-- Style: Science Fiction Interface | 12sciencefictioninterface.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORBITAL TRAFFIC CONTROL — Apogee Station</title>
+<style>
+:root{
+  --bg:#070b10;
+  --bg-2:#0b1219;
+  --panel:#0d1720;
+  --panel-2:#111d27;
+  --line:#1e2f3d;
+  --line-hot:#2f5a6e;
+  --txt:#cfe0e9;
+  --txt-2:#8ea4b2;
+  --cyan:#5fe0ff;
+  --amber:#ffc247;
+  --green:#5ef2a5;
+  --red:#ff6a5c;
+  --font-mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --font-sans:"Segoe UI",Inter,system-ui,-apple-system,sans-serif;
+  --t-xs:clamp(.64rem,.6rem + .1vw,.72rem);
+  --t-sm:clamp(.78rem,.74rem + .16vw,.88rem);
+  --t-md:clamp(.95rem,.9rem + .2vw,1.05rem);
+  --t-lg:clamp(1.2rem,1rem + .8vw,1.6rem);
+  --t-xl:clamp(1.6rem,1.2rem + 1.8vw,2.4rem);
+  --t-num:clamp(1.9rem,1.3rem + 2.6vw,3.2rem);
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;--s-6:2rem;--s-7:3rem;--s-8:4rem;
+  --r:2px;
+  --dur:280ms;--ease:cubic-bezier(.2,.8,.2,1);
+  --shell:min(1420px,100% - 2rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--font-sans);font-size:var(--t-md);line-height:1.6}
+h1,h2,h3,h4{margin:0;line-height:1.15;font-weight:600}
+p{margin:0}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.lbl{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--txt-2)}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:1rem;top:1rem;z-index:50;background:var(--amber);color:#000;padding:.5rem 1rem}
+
+/* corner-bracket panel */
+.panel{
+  position:relative;background:var(--panel);border:1px solid var(--line);
+  padding:var(--s-5);border-radius:var(--r);
+}
+.panel--bare{padding:0}
+.panel > .brk{position:absolute;width:9px;height:9px;border:1px solid var(--cyan);opacity:.85}
+.brk.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.brk.tr{top:-1px;right:-1px;border-left:0;border-bottom:0}
+.brk.bl{bottom:-1px;left:-1px;border-right:0;border-top:0}
+.brk.br{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.panel__hd{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);margin-bottom:var(--s-4)}
+
+/* command nav */
+.cmd{border-bottom:1px solid var(--line);background:var(--bg-2);position:sticky;top:0;z-index:30}
+.cmd__in{display:flex;align-items:center;gap:var(--s-5);min-height:58px;width:var(--shell);margin-inline:auto}
+.cmd__mark{display:flex;align-items:center;gap:var(--s-3);color:var(--txt);text-decoration:none}
+.cmd__mark b{font-family:var(--font-mono);letter-spacing:.2em;font-size:var(--t-sm);text-transform:uppercase}
+.cmd__nav{display:flex;gap:var(--s-4);margin-left:auto;align-items:center}
+.cmd__nav a{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--txt-2);text-decoration:none;padding:.6rem 0;border-bottom:1px solid transparent;min-height:44px;display:inline-flex;align-items:center}
+.cmd__nav a:hover{color:var(--cyan);border-color:var(--line-hot)}
+.cmd__nav a[aria-current]{color:var(--amber);border-color:var(--amber)}
+.clock{font-family:var(--font-mono);font-size:var(--t-sm);color:var(--cyan);border:1px solid var(--line);padding:.35rem .6rem;border-radius:var(--r)}
+.tgl{display:none;margin-left:auto;background:none;border:1px solid var(--line-hot);color:var(--cyan);min-width:46px;min-height:46px;border-radius:var(--r);cursor:pointer;font-family:var(--font-mono)}
+
+/* station header */
+.station{width:var(--shell);margin-inline:auto;padding:var(--s-5) 0 var(--s-4);display:flex;flex-wrap:wrap;gap:var(--s-4);align-items:flex-end;justify-content:space-between}
+.station h1{font-size:var(--t-xl);font-family:var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+
+/* main console grid */
+.console{
+  width:var(--shell);margin-inline:auto;display:grid;gap:var(--s-4);
+  grid-template-columns:230px minmax(0,1fr) 300px;
+  padding-bottom:var(--s-7);
+}
+.rail{display:grid;gap:var(--s-2);align-content:start}
+.rail__btn{
+  display:flex;align-items:center;gap:var(--s-3);width:100%;text-align:left;cursor:pointer;
+  background:transparent;border:1px solid var(--line);color:var(--txt-2);border-radius:var(--r);
+  font-family:var(--font-mono);font-size:var(--t-sm);padding:.7rem .8rem;min-height:46px;
+}
+.rail__btn:hover{border-color:var(--line-hot);color:var(--txt)}
+.rail__btn[aria-pressed="true"]{background:var(--panel-2);border-color:var(--cyan);color:var(--cyan)}
+.rail__btn i{width:7px;height:7px;background:currentColor;flex:none;font-style:normal}
+.rail__btn .cnt{margin-left:auto;font-size:var(--t-xs);color:var(--txt-2)}
+
+.stack{display:grid;gap:var(--s-4);align-content:start}
+.stage{aspect-ratio:16/10;position:relative;background:
+  radial-gradient(circle at 50% 50%,#0f2432 0%,#070b10 70%);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.stage svg{width:100%;height:100%;display:block}
+.stage__hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;padding:var(--s-3);
+  font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.14em;color:var(--txt-2);text-transform:uppercase;
+  background:linear-gradient(#070b10cc,transparent)}
+.sweep{animation:sweep 7s linear infinite;transform-origin:50% 50%}
+@keyframes sweep{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.blip{animation:blip 2.4s var(--ease) infinite}
+@keyframes blip{0%,100%{opacity:.25}50%{opacity:1}}
+
+.readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:var(--s-3)}
+.ro{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r);padding:var(--s-3) var(--s-4)}
+.ro b{display:block;font-family:var(--font-mono);font-size:var(--t-lg);color:var(--cyan);font-variant-numeric:tabular-nums;font-weight:500}
+.ro.warn b{color:var(--amber)} .ro.bad b{color:var(--red)} .ro.ok b{color:var(--green)}
+
+table.tbl{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+.tbl caption{text-align:left;padding:0 0 var(--s-3);color:var(--txt-2);font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase}
+.tbl th,.tbl td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl th{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--txt-2);font-weight:400}
+.tbl tbody tr:hover{background:var(--panel-2)}
+.tbl .id{color:var(--cyan);font-family:var(--font-mono)}
+.state{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.1em;text-transform:uppercase;padding:.15rem .45rem;border:1px solid currentColor;border-radius:var(--r)}
+.state--hold{color:var(--amber)} .state--clr{color:var(--green)} .state--chk{color:var(--cyan)} .state--warn{color:var(--red)}
+
+.btn{
+  font-family:var(--font-mono);font-size:var(--t-sm);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+  min-height:44px;padding:0 var(--s-4);display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);
+  border:1px solid var(--line-hot);background:transparent;color:var(--txt);border-radius:var(--r);text-decoration:none;
+  transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),color var(--dur) var(--ease);
+}
+.btn:hover{border-color:var(--cyan);color:var(--cyan);background:#5fe0ff0f}
+.btn--go{border-color:var(--cyan);color:var(--cyan);background:#5fe0ff14}
+.btn--go:hover{background:var(--cyan);color:#06131a}
+.btn--arm{border-color:var(--amber);color:var(--amber)}
+.btn--arm:hover{background:var(--amber);color:#1a1200}
+.btn[disabled]{opacity:.4;cursor:not-allowed;background:transparent;color:var(--txt)}
+
+.feedlist{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-3);max-height:330px;overflow:auto}
+.feedlist li{border-left:2px solid var(--line-hot);padding-left:var(--s-3);font-size:var(--t-sm)}
+.feedlist li.amber{border-color:var(--amber)}
+.feedlist li.cyan{border-color:var(--cyan)}
+.feedlist time{display:block;font-family:var(--font-mono);font-size:var(--t-xs);color:var(--txt-2);letter-spacing:.1em}
+
+.form{display:grid;gap:var(--s-3)}
+label{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+input,select,textarea{
+  width:100%;min-height:46px;background:#081017;color:var(--txt);border:1px solid var(--line);
+  font-family:var(--font-mono);font-size:var(--t-sm);padding:.6rem .7rem;border-radius:var(--r);
+}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan);outline:none;box-shadow:0 0 0 1px var(--cyan)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.field[data-invalid="true"] input,.field[data-invalid="true"] textarea{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+.helper{font-size:var(--t-xs);color:var(--txt-2)}
+.err{font-size:var(--t-xs);color:var(--red);min-height:1.1em}
+.okmsg{font-family:var(--font-mono);font-size:var(--t-sm);color:var(--green);min-height:1.4em}
+
+.notes{display:grid;gap:var(--s-4);grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.note h3{font-family:var(--font-mono);font-size:var(--t-sm);letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:var(--s-2)}
+.note p{color:var(--txt-2);font-size:var(--t-sm)}
+.note dl{margin:var(--s-3) 0 0;display:grid;grid-template-columns:auto 1fr;gap:.3rem .8rem;font-size:var(--t-sm);font-family:var(--font-mono)}
+.note dt{color:var(--txt-2)} .note dd{margin:0;color:var(--txt)}
+
+footer{border-top:1px solid var(--line);background:var(--bg-2);padding:var(--s-6) 0}
+.foot{width:var(--shell);margin-inline:auto;display:flex;flex-wrap:wrap;gap:var(--s-4) var(--s-6);justify-content:space-between;align-items:center}
+.foot ul{list-style:none;display:flex;flex-wrap:wrap;gap:var(--s-4);margin:0;padding:0}
+.foot a{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--txt-2);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.foot a:hover{color:var(--cyan)}
+
+@media (max-width:1080px){
+  .console{grid-template-columns:minmax(0,1fr) 300px}
+  .rail{grid-column:1/-1;grid-auto-flow:column;grid-auto-columns:max-content;overflow-x:auto;padding-bottom:var(--s-2)}
+}
+@media (max-width:860px){
+  .console{grid-template-columns:minmax(0,1fr)}
+  .cmd__nav{display:none;position:absolute;top:58px;left:0;right:0;flex-direction:column;align-items:stretch;
+    gap:0;background:var(--bg-2);border-bottom:1px solid var(--line);padding:0 1rem}
+  .cmd__nav[data-open="true"]{display:flex}
+  .cmd__nav a{border-bottom:1px solid var(--line);padding:.8rem 0}
+  .tgl{display:block}
+  .clock{margin-left:0}
+  .cmd__in{gap:var(--s-3)}
+  .stage{aspect-ratio:4/3}
+}
+@media (max-width:520px){
+  .readouts{grid-template-columns:1fr 1fr}
+  .station h1{font-size:var(--t-lg)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .sweep,.blip{animation:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="cmd">
+  <div class="cmd__in">
+    <a class="cmd__mark" href="#top">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <circle cx="15" cy="15" r="13" fill="none" stroke="#5fe0ff" stroke-width="1"/>
+        <circle cx="15" cy="15" r="4" fill="none" stroke="#ffc247" stroke-width="1"/>
+        <path d="M15 2v9M15 19v9M2 15h9M19 15h9" stroke="#5fe0ff" stroke-width="1"/>
+      </svg>
+      <b>OTC · Apogee</b>
+    </a>
+    <button class="tgl" id="tgl" aria-expanded="false" aria-controls="cmdnav" aria-label="Open navigation">MENU</button>
+    <nav class="cmd__nav" id="cmdnav" aria-label="Primary">
+      <a href="#plot" aria-current="true">Plot</a>
+      <a href="#registry">Registry</a>
+      <a href="#events">Event log</a>
+      <a href="#clearance">Clearance</a>
+    </nav>
+    <span class="clock num" id="clock" aria-label="Mission elapsed time">T+00:00:00</span>
+  </div>
+</header>
+
+<div class="station" id="top">
+  <div>
+    <p class="lbl">Sector 7 · Low earth orbit · 412 km</p>
+    <h1>Orbital Traffic Control</h1>
+  </div>
+  <div class="readouts" style="max-width:420px">
+    <div class="ro ok"><b class="num" id="m-tracked">1,284</b><span class="lbl">Tracked</span></div>
+    <div class="ro warn"><b class="num">06</b><span class="lbl">Holding</span></div>
+    <div class="ro bad"><b class="num">01</b><span class="lbl">Conjunction</span></div>
+  </div>
+</div>
+
+<main class="console" id="main">
+  <nav class="rail" aria-label="Object classes">
+    <button class="rail__btn" data-class="all" aria-pressed="true"><i aria-hidden="true"></i>All objects <span class="cnt num">1284</span></button>
+    <button class="rail__btn" data-class="crew" aria-pressed="false"><i aria-hidden="true"></i>Crewed <span class="cnt num">412</span></button>
+    <button class="rail__btn" data-class="cargo" aria-pressed="false"><i aria-hidden="true"></i>Cargo <span class="cnt num">603</span></button>
+    <button class="rail__btn" data-class="debris" aria-pressed="false"><i aria-hidden="true"></i>Debris <span class="cnt num">247</span></button>
+    <button class="rail__btn" data-class="station" aria-pressed="false"><i aria-hidden="true"></i>Station <span class="cnt num">22</span></button>
+  </nav>
+
+  <div class="stack">
+    <section class="panel panel--bare" id="plot" aria-label="Orbital plot">
+      <div class="stage">
+        <div class="stage__hud"><span>Azimuth sweep · 30°</span><span id="plot-sub">Range 20 km · 1 km grid</span></div>
+        <svg viewBox="0 0 800 500" role="img" aria-label="Schematic orbital plot showing ground tracks, station keep zones and one predicted conjunction point">
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M40 0H0V40" fill="none" stroke="#1e2f3d" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="800" height="500" fill="url(#grid)"/>
+          <g fill="none" stroke="#2f5a6e" stroke-width="1">
+            <circle cx="400" cy="250" r="70" stroke-dasharray="4 6"/>
+            <circle cx="400" cy="250" r="140"/>
+            <circle cx="400" cy="250" r="210" stroke-dasharray="4 6"/>
+          </g>
+          <g stroke="#1e2f3d" stroke-width="1">
+            <path d="M400 20V480M170 250H630"/>
+          </g>
+          <path d="M190 250a210 210 0 0 1 420 0" fill="none" stroke="#5fe0ff" stroke-width="1.5" opacity=".7"/>
+          <g class="sweep" opacity=".35">
+            <path d="M400 250L610 250A210 210 0 0 0 400 40Z" fill="#5fe0ff" opacity=".12"/>
+          </g>
+          <g id="plot-objects"></g>
+          <g>
+            <circle cx="470" cy="196" r="9" fill="none" stroke="#ff6a5c" stroke-width="1.5"/>
+            <circle cx="470" cy="196" r="18" fill="none" stroke="#ff6a5c" stroke-width="1" opacity=".5"/>
+            <path d="M470 178V214M452 196H488" stroke="#ff6a5c" stroke-width="1" opacity=".7"/>
+            <text x="494" y="200" fill="#ff6a5c" font-family="monospace" font-size="13">CZ-2291 · 0.31 km</text>
+          </g>
+          <text x="24" y="476" fill="#8ea4b2" font-family="monospace" font-size="12">VECTOR MODEL · ORB-7 SIM / NOT FOR FLIGHT</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="panel" id="registry" aria-labelledby="reg-h">
+      <span class="brk tl" aria-hidden="true"></span><span class="brk tr" aria-hidden="true"></span>
+      <span class="brk bl" aria-hidden="true"></span><span class="brk br" aria-hidden="true"></span>
+      <div class="panel__hd">
+        <h2 id="reg-h" class="lbl">Object registry</h2>
+        <span class="lbl" id="reg-count">Showing 6 of 1,284</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <caption>Objects in the selected class, refreshed every 15 seconds</caption>
+          <thead>
+            <tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Class</th><th scope="col">Incl.</th><th scope="col">Closest</th><th scope="col">State</th></tr>
+          </thead>
+          <tbody id="regbody">
+            <tr data-class="crew"><td class="id">OTC-114</td><td>Shackleton-class tug</td><td>Crewed</td><td>51.64°</td><td>38 km</td><td><span class="state state--hold">Holding</span></td></tr>
+            <tr data-class="station"><td class="id">APG-01</td><td>Apogee Station</td><td>Station</td><td>51.62°</td><td>—</td><td><span class="state state--clr">Nominal</span></td></tr>
+            <tr data-class="cargo"><td class="id">CG-8802</td><td>Tanker Aurora</td><td>Cargo</td><td>51.70°</td><td>112 km</td><td><span class="state state--clr">Coasting</span></td></tr>
+            <tr data-class="debris"><td class="id">DB-04417</td><td>Fragment, SL-16 ring</td><td>Debris</td><td>51.55°</td><td>0.31 km</td><td><span class="state state--warn">Conj.</span></td></tr>
+            <tr data-class="cargo"><td class="id">CG-8819</td><td>Resupply Kestrel</td><td>Cargo</td><td>51.68°</td><td>64 km</td><td><span class="state state--chk">Checked in</span></td></tr>
+            <tr data-class="crew"><td class="id">OTC-206</td><td>Crew capsule Shenzhou-VI</td><td>Crewed</td><td>51.59°</td><td>41 km</td><td><span class="state state--hold">Holding</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="notes" aria-label="Operating doctrine">
+      <div class="panel note">
+        <span class="brk tl" aria-hidden="true"></span><span class="brk br" aria-hidden="true"></span>
+        <h3>Standard approach</h3>
+        <p>All traffic is cleared to 20 km stand-off. A burn is authorised only when the projected miss distance exceeds the object's hard-body radius by 5×.</p>
+        <dl><dt>Corridor</dt><dd>7·G / 7·H</dd><dt>Handoff</dt><dd>Ground 04:00Z</dd></dl>
+      </div>
+      <div class="panel note">
+        <span class="brk tr" aria-hidden="true"></span><span class="brk bl" aria-hidden="true"></span>
+        <h3>Debris handling</h3>
+        <p>Fragments under 10 cm are logged and ignored. Anything larger is given a track ID, an owner and a re-forecast window of six hours.</p>
+        <dl><dt>Live tracks</dt><dd>247</dd><dt>Stale</dt><dd>0</dd></dl>
+      </div>
+      <div class="panel note">
+        <span class="brk tl" aria-hidden="true"></span><span class="brk tr" aria-hidden="true"></span>
+        <h3>Telemetry note</h3>
+        <p>Ground stations publish a 200 ms heartbeat. A missing heartbeat longer than 2 s is a link fault, not a target fault, and is displayed amber.</p>
+        <dl><dt>Heartbeat</dt><dd>200 ms</dd><dt>Stations</dt><dd>9</dd></dl>
+      </div>
+    </section>
+  </div>
+
+  <div class="stack">
+    <section class="panel" aria-labelledby="ev-h">
+      <span class="brk tr" aria-hidden="true"></span><span class="brk bl" aria-hidden="true"></span>
+      <div class="panel__hd"><h2 id="ev-h" class="lbl">Event log</h2><span class="state state--clr">Live</span></div>
+      <ul class="feedlist" id="events">
+        <li class="cyan"><time>04:12:02Z</time>Cargo 8819 checked in through Hamburg, transponder nominal.</li>
+        <li class="amber"><time>04:09:41Z</time>Conjunction CZ-2291 confirmed. Apogee Station hold authorised.</li>
+        <li><time>04:05:10Z</time>Ground station Kourou lost heartbeat 3.1 s — link fault logged, no target action.</li>
+        <li class="amber"><time>03:58:33Z</time>Debris 04417 re-forecast. Miss distance fell from 0.9 km to 0.31 km.</li>
+        <li><time>03:44:19Z</time>Tug 114 completed trim burn, 38 km stand-off restored.</li>
+        <li class="cyan"><time>03:31:02Z</time>Crew capsule Shenzhou-VI entered holding orbit on schedule.</li>
+      </ul>
+    </section>
+
+    <section class="panel" aria-labelledby="cmd-h">
+      <span class="brk tl" aria-hidden="true"></span><span class="brk br" aria-hidden="true"></span>
+      <h2 id="cmd-h" class="lbl" style="margin-bottom:var(--s-4)">Burn authorisation</h2>
+      <div class="readouts" style="margin-bottom:var(--s-4)">
+        <div class="ro"><b class="num">0.31</b><span class="lbl">Miss km</span></div>
+        <div class="ro bad"><b class="num">11.2</b><span class="lbl">Δv m/s</span></div>
+      </div>
+      <p class="helper" style="margin-bottom:var(--s-4)">Authorisation is recorded against the operator ID below and mirrored to Ground Kourou.</p>
+      <div style="display:grid;gap:var(--s-3)">
+        <button class="btn btn--go" type="button" id="btn-go">Request Δv clearance</button>
+        <button class="btn btn--arm" type="button" id="btn-abort">Abort approach</button>
+        <p class="okmsg" id="cmdmsg" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="panel" id="clearance" aria-labelledby="cl-h">
+      <span class="brk tl" aria-hidden="true"></span><span class="brk.tr" aria-hidden="true"></span>
+      <span class="brk bl" aria-hidden="true"></span><span class="brk br" aria-hidden="true"></span>
+      <div class="panel__hd"><h2 id="cl-h" class="lbl">Clearance request</h2></div>
+      <form class="form" id="clform" novalidate>
+        <div class="field">
+          <label for="op">Operator ID</label>
+          <input id="op" name="op" type="text" value="OTC-KESTREL-3" required aria-describedby="e-op">
+          <p class="err" id="e-op" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label for="obj">Object</label>
+          <select id="obj" name="obj">
+            <option>DB-04417 · debris</option>
+            <option>OTC-114 · tug</option>
+            <option>CG-8802 · cargo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="reason">Justification</label>
+          <textarea id="reason" name="reason" required aria-describedby="e-reason" placeholder="Hard-body radius, forecast window, corridor effect."></textarea>
+          <p class="err" id="e-reason" aria-live="polite"></p>
+        </div>
+        <button class="btn" type="submit">File with Ground</button>
+        <p class="helper">Filed requests are auditable and cannot be edited after submission.</p>
+      </form>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="foot">
+    <p class="lbl">Apogee Station · OTC-7 · simulation build 4.11</p>
+    <ul>
+      <li><a href="#registry">Registry</a></li>
+      <li><a href="#events">Event log</a></li>
+      <li><a href="#clearance">Clearance</a></li>
+      <li><a href="#top">Top of console</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* nav */
+  var tgl=document.getElementById('tgl'),nav=document.getElementById('cmdnav');
+  tgl.addEventListener('click',function(){
+    var open=tgl.getAttribute('aria-expanded')==='true';
+    tgl.setAttribute('aria-expanded',String(!open));
+    nav.setAttribute('data-open',String(!open));
+  });
+  nav.addEventListener('click',function(e){if(e.target.tagName==='A'){tgl.setAttribute('aria-expanded','false');nav.setAttribute('data-open','false');}});
+
+  /* mission clock */
+  var t0=Date.now(),clock=document.getElementById('clock');
+  function pad(n){return String(n).padStart(2,'0');}
+  setInterval(function(){
+    var s=Math.floor((Date.now()-t0)/1000);
+    clock.textContent='T+'+pad(Math.floor(s/3600))+':'+pad(Math.floor(s/60)%60)+':'+pad(s%60);
+  },1000);
+
+  /* class filter: table + plot markers */
+  var rows=Array.prototype.slice.call(document.querySelectorAll('#regbody tr'));
+  var markers=document.getElementById('plot-objects');
+  var all=[[300,180,'#5fe0ff'],[520,320,'#5fe0ff'],[250,360,'#ffc247'],[600,200,'#8ea4b2'],[380,430,'#5fe0ff'],[560,120,'#8ea4b2']];
+  var count=document.getElementById('reg-count'),sub=document.getElementById('plot-sub');
+  document.querySelectorAll('.rail__btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.rail__btn').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      var cls=b.getAttribute('data-class'),shown=0;
+      rows.forEach(function(r,i){
+        var match=cls==='all'||r.getAttribute('data-class')===cls;
+        r.hidden=!match; if(match) shown++;
+        markers.children[i].style.display=match?'':'none';
+      });
+      count.textContent='Showing '+shown+' of 1,284';
+      sub.textContent=cls==='all'?'Range 20 km · 1 km grid':'Filtered · '+cls;
+    });
+  });
+  var NS='http://www.w3.org/2000/svg';
+  function svgEl(name,attrs){
+    var el=document.createElementNS(NS,name);
+    for(var k in attrs){el.setAttribute(k,attrs[k]);}
+    return el;
+  }
+  all.forEach(function(p){
+    var g=svgEl('g',{});
+    g.appendChild(svgEl('circle',{cx:p[0],cy:p[1],r:4,fill:p[2],'class':'blip'}));
+    g.appendChild(svgEl('circle',{cx:p[0],cy:p[1],r:11,fill:'none',stroke:p[2],'stroke-width':1,opacity:'.45'}));
+    markers.appendChild(g);
+  });
+
+  /* burn commands */
+  var msg=document.getElementById('cmdmsg');
+  document.getElementById('btn-go').addEventListener('click',function(){msg.textContent='Δv clearance GRANTED for 11.2 m/s. Executing 04:15:00Z.';});
+  document.getElementById('btn-abort').addEventListener('click',function(){msg.textContent='Approach aborted. Apogee Station holding at 38 km.';});
+
+  /* clearance form */
+  var form=document.getElementById('clform');
+  function setErr(input,id,msg){
+    var p=document.getElementById(id);p.textContent=msg;
+    input.closest('.field').setAttribute('data-invalid',msg?'true':'false');
+    if(msg){input.setAttribute('aria-invalid','true');}else{input.removeAttribute('aria-invalid');}
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var op=document.getElementById('op'),reason=document.getElementById('reason'),bad=false;
+    if(op.value.trim().length<4){setErr(op,'e-op','Operator ID must be 4 characters or more.');bad=true;}else setErr(op,'e-op','');
+    if(reason.value.trim().length<10){setErr(reason,'e-reason','Justification needs at least 10 characters.');bad=true;}else setErr(reason,'e-reason','');
+    msg.textContent = bad ? 'Request rejected. Check the flagged fields.' : 'Request ' + op.value.trim().toUpperCase() + ' filed with Ground Kourou and mirrored to the event log.';
+  });
+})();
+</script>
+</body>
+</html>

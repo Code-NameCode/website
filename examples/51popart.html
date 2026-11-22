@@ -1,0 +1,551 @@
+<!-- Style: Pop Art | 51popart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZAP! Energy — Charged or Not At All</title>
+<style>
+  :root{
+    /* ink + print primaries */
+    --ink:#141210;
+    --paper:#fdf2dd;
+    --paper-2:#f6e3c0;
+    --zap-yellow:#ffd400;
+    --zap-red:#e8192b;
+    --zap-blue:#1b4fd8;
+    --zap-cyan:#0fa8c8;
+
+    /* type */
+    --font-display:"Arial Black","Arial Bold",Impact,"Haettenschweiler",system-ui,sans-serif;
+    --font-body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --t-hero:clamp(2.9rem,11vw,8.5rem);
+    --t-display:clamp(2rem,6vw,4.4rem);
+    --t-section:clamp(1.75rem,4.5vw,3.1rem);
+    --t-body:clamp(1rem,1.05vw,1.075rem);
+    --t-small:.875rem;
+
+    /* space */
+    --s-1:.5rem; --s-2:.875rem; --s-3:1.5rem; --s-4:2.25rem;
+    --s-5:3.25rem; --s-6:4.75rem; --s-7:6.5rem;
+    --gutter:clamp(1.15rem,4vw,3.5rem);
+    --wrap:1280px;
+
+    /* edges */
+    --line:4px;
+    --pop:8px 8px 0 var(--ink);
+    --pop-sm:5px 5px 0 var(--ink);
+    --pop-ink:0 0 0 var(--line) var(--ink);
+    --halftone:radial-gradient(var(--ink) 1.6px, transparent 1.7px);
+    --halftone-red:radial-gradient(var(--zap-red) 1.8px, transparent 1.9px);
+
+    --motion-fast:120ms; --motion-base:220ms;
+    --ease-pop:cubic-bezier(.34,1.56,.64,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:var(--t-body);
+    line-height:1.55;
+    background-image:var(--halftone);
+    background-size:14px 14px;
+  }
+  h1,h2,h3,.display{font-family:var(--font-display);font-weight:900;line-height:.86;letter-spacing:-.02em;text-transform:uppercase;margin:0}
+  p{margin:0 0 1em}
+  a{color:inherit}
+  img,svg{display:block;max-width:100%}
+  ul{list-style:none;margin:0;padding:0}
+  :focus-visible{outline:4px dashed var(--zap-blue);outline-offset:3px}
+
+  .wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+  .panel{background:var(--paper);border:var(--line) solid var(--ink);box-shadow:var(--pop)}
+  .skip{position:absolute;left:-999px;top:0;background:var(--zap-yellow);border:var(--line) solid var(--ink);padding:.75rem 1rem;font-weight:800}
+  .skip:focus{left:.5rem;top:.5rem;z-index:99}
+
+  /* ---------- top strip + nav ---------- */
+  .strip{
+    background:var(--ink);color:var(--zap-yellow);
+    font-family:var(--font-display);font-size:var(--t-small);
+    letter-spacing:.14em;text-transform:uppercase;
+    display:flex;gap:var(--s-3);align-items:center;justify-content:center;
+    padding:.4rem 1rem;text-align:center;
+  }
+  .site-nav{border-bottom:var(--line) solid var(--ink);background:var(--paper)}
+  .nav-in{display:flex;align-items:center;gap:var(--s-3);min-height:78px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;margin-right:auto;padding:.25rem}
+  .logo span{font-family:var(--font-display);font-size:clamp(1.6rem,3.4vw,2.3rem);letter-spacing:-.03em}
+  .logo svg{width:34px;height:40px}
+  .nav-links{display:flex;gap:.25rem;align-items:center;flex-wrap:wrap}
+  .nav-links a{
+    text-decoration:none;font-family:var(--font-display);text-transform:uppercase;
+    font-size:var(--t-small);letter-spacing:.06em;
+    padding:.85rem .9rem;min-height:44px;display:inline-flex;align-items:center;
+    border:3px solid transparent;
+  }
+  .nav-links a:hover{background:var(--zap-yellow);border-color:var(--ink);box-shadow:var(--pop-sm)}
+  .cart{
+    display:inline-flex;align-items:center;gap:.5rem;
+    background:var(--zap-red);color:#fff;text-decoration:none;
+    border:var(--line) solid var(--ink);box-shadow:var(--pop-sm);
+    padding:.6rem 1rem;min-height:44px;
+    font-family:var(--font-display);text-transform:uppercase;font-size:var(--t-small);
+  }
+  .cart:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .cart b{background:var(--ink);color:var(--zap-yellow);min-width:26px;height:26px;display:grid;place-items:center;font-size:.9rem;padding-inline:.3rem}
+  .nav-toggle{display:none;background:var(--zap-yellow);border:var(--line) solid var(--ink);box-shadow:var(--pop-sm);
+    font-family:var(--font-display);text-transform:uppercase;padding:.6rem .9rem;min-height:44px;cursor:pointer}
+
+  /* ---------- hero poster ---------- */
+  .hero{position:relative;overflow:hidden;border-bottom:var(--line) solid var(--ink)}
+  .rays{
+    position:absolute;inset:-30%;
+    background:repeating-conic-gradient(from 0deg at 50% 50%, var(--zap-yellow) 0deg 11deg, var(--paper) 11deg 22deg);
+    opacity:.55;
+  }
+  .hero-grid{position:relative;display:grid;grid-template-columns:1.25fr .75fr;gap:var(--s-4);align-items:center;padding-block:var(--s-6) var(--s-5)}
+  .kicker{
+    display:inline-block;background:var(--ink);color:var(--zap-yellow);
+    font-family:var(--font-display);text-transform:uppercase;letter-spacing:.2em;
+    font-size:var(--t-small);padding:.45rem .8rem;margin-bottom:var(--s-2);
+  }
+  .hero h1{font-size:var(--t-hero);text-transform:uppercase}
+  .hero h1 em{
+    display:block;font-style:normal;color:var(--paper);
+    -webkit-text-stroke:6px var(--ink);
+    paint-order:stroke fill;
+    text-shadow:10px 10px 0 var(--zap-red);
+  }
+  .hero p.lede{font-size:clamp(1.05rem,1.6vw,1.3rem);max-width:46ch;background:var(--paper);padding:var(--s-2);border-left:8px solid var(--ink)}
+  .hero-cta{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3)}
+  .hero-art{position:relative;display:grid;place-items:center;min-height:300px}
+  .hero-art .can{width:min(100%,330px);filter:drop-shadow(14px 14px 0 var(--ink))}
+  .burst{
+    position:absolute;right:0;top:0;width:clamp(110px,15vw,160px);height:clamp(110px,15vw,160px);
+    display:grid;place-items:center;text-align:center;
+    background:var(--zap-red);color:#fff;
+    clip-path:polygon(50% 0%,61% 21%,84% 16%,78% 39%,100% 50%,78% 61%,84% 84%,61% 79%,50% 100%,39% 79%,16% 84%,22% 61%,0% 50%,22% 39%,16% 16%,39% 21%);
+    font-family:var(--font-display);font-size:var(--t-small);line-height:1.1;letter-spacing:.04em;
+    animation:pop 3.2s var(--ease-pop) infinite;
+  }
+  @keyframes pop{0%,100%{transform:scale(1) rotate(-4deg)}50%{transform:scale(1.09) rotate(4deg)}}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    min-height:52px;padding:.85rem 1.5rem;
+    font-family:var(--font-display);text-transform:uppercase;letter-spacing:.04em;
+    font-size:1rem;cursor:pointer;text-decoration:none;
+    border:var(--line) solid var(--ink);box-shadow:var(--pop);
+    background:var(--zap-yellow);color:var(--ink);
+    transition:transform var(--motion-fast) ease,box-shadow var(--motion-fast) ease;
+  }
+  .btn:hover{transform:translate(-3px,-3px);box-shadow:11px 11px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+  .btn--red{background:var(--zap-red);color:#fff}
+  .btn--blue{background:var(--zap-blue);color:#fff}
+  .btn--ghost{background:var(--paper)}
+  .btn--sm{min-height:44px;padding:.5rem .9rem;font-size:var(--t-small);box-shadow:var(--pop-sm)}
+
+  /* ---------- ticker ---------- */
+  .ticker{border-block:var(--line) solid var(--ink);background:var(--zap-blue);color:#fff;overflow:hidden;padding-block:.6rem}
+  .ticker-track{display:flex;gap:var(--s-4);width:max-content;animation:slide 22s linear infinite;
+    font-family:var(--font-display);text-transform:uppercase;letter-spacing:.1em;font-size:clamp(1rem,2.4vw,1.5rem)}
+  .ticker-track span{display:inline-flex;align-items:center;gap:var(--s-3);white-space:nowrap}
+  .ticker-track em{font-style:normal;color:var(--zap-yellow)}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- sections ---------- */
+  section{padding-block:var(--s-6)}
+  .sec-head{display:flex;align-items:flex-end;gap:var(--s-3);flex-wrap:wrap;margin-bottom:var(--s-4);
+    border-bottom:var(--line) solid var(--ink);padding-bottom:var(--s-2)}
+  .sec-head h2{font-size:var(--t-section)}
+  .sec-head p{margin:0 0 .4rem;max-width:40ch;font-weight:600}
+  .num{
+    font-family:var(--font-display);font-size:clamp(2.4rem,6vw,4rem);line-height:1;
+    color:var(--paper);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;
+  }
+
+  /* lineup */
+  .lineup{background:var(--zap-cyan);border-block:var(--line) solid var(--ink)}
+  .flavors{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3)}
+  .flavor{background:var(--paper);border:var(--line) solid var(--ink);box-shadow:var(--pop);display:flex;flex-direction:column}
+  .flavor .tag{align-self:flex-start;background:var(--ink);color:#fff;font-family:var(--font-display);
+    font-size:var(--t-small);text-transform:uppercase;padding:.3rem .6rem;letter-spacing:.08em}
+  .flavor-art{height:150px;border-bottom:var(--line) solid var(--ink);display:grid;place-items:center;
+    background-image:var(--halftone-red);background-size:11px 11px}
+  .flavor-art svg{width:74px;height:74px}
+  .flavor-body{padding:var(--s-2);display:flex;flex-direction:column;gap:.35rem;flex:1}
+  .flavor h3{font-size:clamp(1.3rem,2.4vw,1.7rem)}
+  .flavor p{font-size:.95rem;margin:0;flex:1}
+  .flavor-foot{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-top:.4rem}
+  .price{font-family:var(--font-display);font-size:1.4rem}
+  .flavor:nth-child(2) .tag{background:var(--zap-red)}
+  .flavor:nth-child(3) .tag{background:var(--zap-blue)}
+  .flavor:nth-child(4) .tag{background:var(--ink);color:var(--zap-yellow)}
+
+  /* comic panels */
+  .panels{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--s-3)}
+  .pn{background:var(--paper);border:var(--line) solid var(--ink);box-shadow:var(--pop);padding:var(--s-3);position:relative}
+  .pn--wide{grid-column:span 6;background:var(--zap-yellow);display:grid;grid-template-columns:1fr 220px;gap:var(--s-3);align-items:center}
+  .pn--a{grid-column:span 3;background:var(--paper)}
+  .pn--b{grid-column:span 3;background:var(--zap-blue);color:#fff}
+  .pn h3{font-size:clamp(1.5rem,3.2vw,2.3rem);margin-bottom:.5rem}
+  .bubble{
+    position:absolute;top:-26px;right:-14px;max-width:230px;
+    background:#fff;border:var(--line) solid var(--ink);border-radius:22px;
+    padding:.8rem 1rem;font-family:var(--font-display);font-size:var(--t-small);
+    text-transform:uppercase;box-shadow:var(--pop-sm);color:var(--ink);
+  }
+  .bubble::after{content:"";position:absolute;left:26px;bottom:-16px;width:0;height:0;
+    border:8px solid transparent;border-top-color:var(--ink);border-bottom:0}
+
+  /* stats halftone */
+  .halftone-band{background:var(--ink);color:var(--paper);border-block:var(--line) solid var(--ink)}
+  .halftone-band h2{color:var(--zap-yellow)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3);margin-top:var(--s-4)}
+  .stat{border:4px solid var(--paper);padding:var(--s-2);background:rgba(253,242,221,.07)}
+  .stat b{display:block;font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);color:var(--zap-yellow);line-height:1}
+  .stat span{font-size:var(--t-small);letter-spacing:.12em;text-transform:uppercase}
+
+  /* form */
+  .signup{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);align-items:center;background:var(--zap-red);color:#fff;
+    border:var(--line) solid var(--ink);box-shadow:var(--pop);padding:var(--s-4)}
+  .signup h2{font-size:var(--t-section)}
+  .field{display:block;margin-bottom:var(--s-2)}
+  .field span{display:block;font-family:var(--font-display);text-transform:uppercase;letter-spacing:.1em;
+    font-size:var(--t-small);margin-bottom:.35rem}
+  .field input,.field select{
+    width:100%;min-height:52px;padding:.7rem .9rem;font:inherit;
+    background:var(--paper);color:var(--ink);border:var(--line) solid var(--ink);
+  }
+  .field input::placeholder{color:#6b6156}
+  .field .err{display:none;font-family:var(--font-display);font-size:var(--t-small);color:var(--zap-yellow);margin-top:.3rem}
+  .field[data-invalid] .err{display:block}
+  .field[data-invalid] input{border-color:var(--zap-yellow);background:#fff}
+  .form-note{font-size:var(--t-small);margin-top:.6rem}
+  .signup .btn--ghost{background:var(--zap-yellow)}
+
+  /* footer */
+  footer{background:var(--ink);color:var(--paper);padding-block:var(--s-5) var(--s-3);border-top:var(--line) solid var(--ink)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:var(--s-4)}
+  footer h2{font-size:clamp(1.6rem,3vw,2.1rem);color:var(--zap-yellow)}
+  footer ul li{margin-bottom:.4rem}
+  footer a{text-decoration:none;font-size:var(--t-small)}
+  footer a:hover{color:var(--zap-yellow);text-decoration:underline}
+  .fine{margin-top:var(--s-4);padding-top:var(--s-2);border-top:2px solid rgba(253,242,221,.3);
+    display:flex;justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;font-size:var(--t-small)}
+
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr;padding-block:var(--s-5)}
+    .hero-art{order:-1;min-height:220px}
+    .flavors{grid-template-columns:repeat(2,1fr)}
+    .pn--wide{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .signup{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .nav-toggle{display:inline-flex;align-items:center;min-height:44px}
+    .nav-links{display:none;width:100%;order:3;padding-bottom:var(--s-2)}
+    .nav-links[data-open="true"]{display:grid;gap:.35rem}
+    .nav-links a{border-color:var(--ink)}
+  }
+  @media (max-width:560px){
+    .flavors{grid-template-columns:1fr}
+    .panels{grid-template-columns:1fr}
+    .pn--wide,.pn--a,.pn--b{grid-column:span 1}
+    .foot-grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+    .burst{animation:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#lineup">Skip to the lineup</a>
+
+<div class="strip">Free shipping on cases of 12 · Zero sugar, 160mg caffeine · Bottled in Milwaukee, WI</div>
+
+<header>
+  <nav class="site-nav" aria-label="Primary">
+    <div class="wrap nav-in">
+      <a class="logo" href="#top">
+        <svg viewBox="0 0 24 28" aria-hidden="true"><path d="M14 0 0 16h8l-3 12 16-17h-9z" fill="#ffd400" stroke="#141210" stroke-width="2.4" stroke-linejoin="round"/></svg>
+        <span>ZAP!</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="nav-links" id="menu">
+        <a href="#lineup">The Lineup</a>
+        <a href="#story">Story</a>
+        <a href="#proof">Numbers</a>
+        <a href="#signup">Stockists</a>
+      </div>
+      <a class="cart" href="#lineup">Cart <b id="cartCount" aria-live="polite">0</b></a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="rays" aria-hidden="true"></div>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker">Issue No. 7 · Citrus Static</span>
+        <h1 id="hero-title">Charged<em>Or Not</em>At All</h1>
+        <p class="lede">ZAP! is a 160mg caffeinated energy drink built on a 1980s soda fountain recipe and a modern lab bench. No taurine fog. No crash landing. Just a bright, sharp citrus hit that lands in under four seconds and stays out of your way.</p>
+        <div class="hero-cta">
+          <a class="btn btn--red" href="#lineup">Shop the cans</a>
+          <a class="btn btn--ghost" href="#story">Read the label story</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="burst" aria-hidden="true">$2.49<br>a can</div>
+        <svg class="can" viewBox="0 0 200 320" role="img" aria-label="ZAP! Citrus Static energy drink can">
+          <ellipse cx="100" cy="26" rx="74" ry="18" fill="#c9c2b4" stroke="#141210" stroke-width="6"/>
+          <ellipse cx="100" cy="26" rx="30" ry="8" fill="#8f8a7e" stroke="#141210" stroke-width="5"/>
+          <path d="M26 26v246c0 24 33 42 74 42s74-18 74-42V26z" fill="#ffd400" stroke="#141210" stroke-width="6"/>
+          <path d="M26 120h148v52H26z" fill="#e8192b" stroke="#141210" stroke-width="5"/>
+          <path d="M26 200h148v10H26z" fill="#141210"/>
+          <path d="M104 60 62 158h28l-10 62 44-84H96z" fill="#fff" stroke="#141210" stroke-width="5" stroke-linejoin="round"/>
+          <text x="100" y="150" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="40" font-weight="900" fill="#fff" stroke="#141210" stroke-width="3" paint-order="stroke">ZAP!</text>
+          <text x="100" y="240" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="17" font-weight="900" fill="#141210">CITRUS STATIC</text>
+          <text x="100" y="264" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="13" font-weight="900" fill="#141210">ZERO SUGAR 160MG</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span><em>&#9889;</em> No crash</span><span><em>&#9889;</em> 160mg caffeine</span><span><em>&#9889;</em> Zero sugar</span><span><em>&#9889;</em> B-corp brewed</span>
+      <span><em>&#9889;</em> No crash</span><span><em>&#9889;</em> 160mg caffeine</span><span><em>&#9889;</em> Zero sugar</span><span><em>&#9889;</em> B-corp brewed</span>
+    </div>
+  </div>
+
+  <section class="lineup" id="lineup" aria-labelledby="lineup-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="num">01</span>
+        <div>
+          <h2 id="lineup-title">The Lineup</h2>
+          <p>Four flavours, one engine. 16oz slim cans, mixed 24 to a case.</p>
+        </div>
+      </div>
+      <ul class="flavors">
+        <li class="flavor">
+          <span class="tag">Fan favourite</span>
+          <div class="flavor-art"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="#ffd400" stroke="#141210" stroke-width="4"/><path d="M26 6 12 28h9l-3 14 15-20h-9z" fill="#e8192b" stroke="#141210" stroke-width="3" stroke-linejoin="round"/></svg></div>
+          <div class="flavor-body">
+            <h3>Citrus Static</h3>
+            <p>Yuzu, lemon peel and a dry grapefruit finish. The original, unchanged since 2019.</p>
+            <div class="flavor-foot">
+              <span class="price">$32</span>
+              <button class="btn btn--sm add" type="button" data-name="Citrus Static">Add to cart</button>
+            </div>
+          </div>
+        </li>
+        <li class="flavor">
+          <span class="tag">New</span>
+          <div class="flavor-art"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="#e8192b" stroke="#141210" stroke-width="4"/><path d="M24 8c8 6 10 14 6 22-3 6-11 8-16 4 6-2 8-8 6-14 0 4 2 6 4 8 1-8 0-14 0-20z" fill="#fff" stroke="#141210" stroke-width="3" stroke-linejoin="round"/></svg></div>
+          <div class="flavor-body">
+            <h3>Red Rhubarb</h3>
+            <p>Tart rhubarb and pink grapefruit. Sharp enough to reset a bad afternoon.</p>
+            <div class="flavor-foot">
+              <span class="price">$32</span>
+              <button class="btn btn--sm add" type="button" data-name="Red Rhubarb">Add to cart</button>
+            </div>
+          </div>
+        </li>
+        <li class="flavor">
+          <span class="tag">Limited</span>
+          <div class="flavor-art"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="#1b4fd8" stroke="#141210" stroke-width="4"/><path d="M24 6 14 20h7v6h6v-6h7z" fill="#ffd400" stroke="#141210" stroke-width="3" stroke-linejoin="round"/><path d="M12 30h24v5H12z" fill="#fff" stroke="#141210" stroke-width="3"/></svg></div>
+          <div class="flavor-body">
+            <h3>Cold Brew Blue</h3>
+            <p>Single-origin Guatamalan cold brew, cocoa nib, no dairy. Tastes like a mocha that ran.</p>
+            <div class="flavor-foot">
+              <span class="price">$34</span>
+              <button class="btn btn--sm add" type="button" data-name="Cold Brew Blue">Add to cart</button>
+            </div>
+          </div>
+        </li>
+        <li class="flavor">
+          <span class="tag">Night shift</span>
+          <div class="flavor-art"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="#141210" stroke="#141210" stroke-width="4"/><path d="M30 8a16 16 0 1 0 10 22A18 18 0 0 1 30 8z" fill="#ffd400" stroke="#fff" stroke-width="2"/></svg></div>
+          <div class="flavor-body">
+            <h3>Midshift Grape</h3>
+            <p>Concord grape and yerba mate for anyone still awake at 2am on a deadline.</p>
+            <div class="flavor-foot">
+              <span class="price">$32</span>
+              <button class="btn btn--sm add" type="button" data-name="Midshift Grape">Add to cart</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <p style="margin-top:var(--s-3);font-weight:700">Cases of 12 ship free in the continental US. Cases of 24 ship for $4. <a href="#signup">Find a stockist near you.</a></p>
+    </div>
+  </section>
+
+  <section id="story" aria-labelledby="story-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="num">02</span>
+        <div>
+          <h2 id="story-title">Three Panels From The Lab</h2>
+          <p>How a fizzy fountain drink became a working-hours staple.</p>
+        </div>
+      </div>
+      <div class="panels">
+        <article class="pn pn--wide">
+          <div>
+            <h3>Panel One: The Fountain</h3>
+            <p>In 1984 our founder's grandmother ran a soda fountain in Sheboygan. Her citrus soda was the only thing on the menu that could get a dock shift done by 6pm. We rebuilt the recipe in a lab in 2018 and changed exactly one thing: the caffeine source.</p>
+            <p class="bubble">It tastes like her fountain. Not like a lab.</p>
+          </div>
+          <svg viewBox="0 0 200 150" aria-hidden="true"><rect x="20" y="20" width="160" height="110" fill="#fff" stroke="#141210" stroke-width="5"/><rect x="34" y="34" width="132" height="20" fill="#e8192b"/><rect x="34" y="62" width="90" height="12" fill="#141210"/><rect x="34" y="82" width="110" height="12" fill="#141210"/><path d="M120 100h46v30h-46z" fill="#0fa8c8" stroke="#141210" stroke-width="4"/><path d="M130 88h26v14h-26z" fill="#0fa8c8" stroke="#141210" stroke-width="4"/></svg>
+        </article>
+        <article class="pn pn--a">
+          <h3>Panel Two: The Bench</h3>
+          <p>Every batch is tasted by three people before it ships. If it doesn't snap, it doesn't leave. We throw away about one in nine.</p>
+          <p><b>160mg</b> caffeine per can, from a slow-dissolving guarana source so the lift arrives in a ramp, not a cliff.</p>
+        </article>
+        <article class="pn pn--b">
+          <h3>Panel Three: The Print</h3>
+          <p>The label is one colour plus black on unbleached board. No shrink wrap, no foil. The can is 82% recycled aluminium.</p>
+          <p style="margin:0">Printed two colour, four times a year, by a family shop in Sheboygan that has run the same press since 1958.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="halftone-band" id="proof" aria-labelledby="proof-title">
+    <div class="wrap">
+      <div class="sec-head" style="border-color:var(--paper)">
+        <span class="num">03</span>
+        <div>
+          <h2 id="proof-title">By The Numbers</h2>
+          <p>Independent counts, not ad copy.</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>2.4M</b><span>Cans sold in 2024</span></div>
+        <div class="stat"><b>1,180</b><span>Stockists nationwide</span></div>
+        <div class="stat"><b>89%</b><span>Say they would not switch back</span></div>
+        <div class="stat"><b>4.7/5</b><span>Average store rating</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="signup" aria-labelledby="signup-title">
+    <div class="wrap">
+      <div class="signup">
+        <div>
+          <h2 id="signup-title">Get The Drop List</h2>
+          <p>One email a month: new flavours, the stockist nearest you, and the occasional case discount code. No bottle-cap-and-mail-back nonsense.</p>
+          <p style="margin:0;font-weight:700">1,180 stores carry ZAP! &mdash; most of them independent.</p>
+        </div>
+        <form id="dropForm" novalidate>
+          <label class="field" for="email">
+            <span>Email address</span>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <span class="err">That address does not look right. Try again.</span>
+          </label>
+          <label class="field" for="flavour">
+            <span>Favourite flavour</span>
+            <select id="flavour" name="flavour">
+              <option>Citrus Static</option>
+              <option>Red Rhubarb</option>
+              <option>Cold Brew Blue</option>
+              <option>Midshift Grape</option>
+            </select>
+          </label>
+          <button class="btn btn--ghost" type="submit">Sign me up</button>
+          <p class="form-note" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h2>ZAP!</h2>
+        <p>Energy drink co. Brewed in Milwaukee, Wisconsin since 2018. Employee owned, 41 people, one very loud break room.</p>
+      </div>
+      <div>
+        <h3 style="font-size:1rem;letter-spacing:.1em">Drink</h3>
+        <ul>
+          <li><a href="#lineup">Citrus Static</a></li>
+          <li><a href="#lineup">Red Rhubarb</a></li>
+          <li><a href="#lineup">Cold Brew Blue</a></li>
+          <li><a href="#lineup">Midshift Grape</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-size:1rem;letter-spacing:.1em">Company</h3>
+        <ul>
+          <li><a href="#story">Our story</a></li>
+          <li><a href="#signup">Find a stockist</a></li>
+          <li><a href="#signup">Wholesale enquiries</a></li>
+          <li><a href="#proof">Press kit</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>&copy; 2026 ZAP! Energy Drink Co. A fictional brand, built for a style demo.</span>
+      <span>160mg caffeine per 16oz can. Not recommended for children or people sensitive to caffeine.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  var toggle = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.getAttribute('data-open') === 'true';
+    menu.setAttribute('data-open', String(!open));
+    toggle.setAttribute('aria-expanded', String(!open));
+    toggle.textContent = open ? 'Menu' : 'Close';
+  });
+
+  // Cart counter
+  var count = document.getElementById('cartCount');
+  var total = 0;
+  document.querySelectorAll('.add').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      total += 1;
+      count.textContent = total;
+      var was = btn.textContent;
+      btn.textContent = 'Added';
+      setTimeout(function () { btn.textContent = was; }, 1200);
+    });
+  });
+
+  // Drop-list form
+  var form = document.getElementById('dropForm');
+  var status = document.getElementById('formStatus');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('email');
+    var field = email.closest('.field');
+    var ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+    if (field.hasAttribute('data-invalid')) field.removeAttribute('data-invalid');
+    email.setAttribute('aria-invalid', String(!ok));
+    if (!ok) {
+      field.setAttribute('data-invalid', '');
+      status.textContent = 'Almost there - we need a working email address.';
+      email.focus();
+      return;
+    }
+    status.textContent = 'You are on the drop list. First dispatch lands on the 3rd.';
+  });
+</script>
+</body>
+</html>

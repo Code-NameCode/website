@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<!-- Style: Editorial × Swiss | 1b-app.html -->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian Control — the app for the Meridian One</title>
+<meta name="description" content="Meridian Control: firmware, a real five-band parametric EQ, per-source trims, the measurement log and Roon setup for the Meridian One. macOS, Windows and Linux.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridian">
+<meta property="og:title" content="Meridian Control — the app for the Meridian One">
+<meta property="og:description" content="Firmware, a five-band parametric EQ that runs on the hardware, per-source trims, the measurement log and Roon setup. macOS, Windows and Linux.">
+<meta property="og:url" content="https://meridian.audio/control">
+<meta property="og:image" content="https://meridian.audio/og/control.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meridian Control — the app for the Meridian One">
+<meta name="twitter:description" content="Firmware, a five-band parametric EQ that runs on the hardware, per-source trims and the measurement log.">
+<link rel="canonical" href="https://meridian.audio/control">
+<style>
+/* ===================================================================
+   MERIDIAN CONTROL — design tokens
+   Editorial light. Serif display over a paper ground, hairline rules,
+   one cobalt accent used only for what is live or selectable. No cards,
+   no shadows, no glass: the grid and the rules do the work.
+   =================================================================== */
+:root{
+  /* ground */
+  --paper:#f4f3ef;
+  --paper-2:#eceae4;
+  --paper-3:#ffffff;
+  --ink:#111217;
+  --ink-2:#2b2d33;
+  --muted:#55575e;
+  --muted-2:#66686f;
+  --line:#d9d8d1;
+  --line-2:#c3c2ba;
+  --line-3:#111217;
+  /* one accent, live things only */
+  --blue:#1b3ad1;
+  --blue-ink:#152c9e;
+  --blue-tint:#e7eafb;
+  --blue-line:#b9c2f2;
+  /* semantics */
+  --ok:#0f6f4c;
+  --ok-tint:#e3f0e9;
+  --warn:#8a5400;
+  --warn-tint:#f7ecd8;
+  --bad:#b3261e;
+  --bad-tint:#fae7e5;
+  /* type */
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:"Helvetica Neue",Helvetica,Arial,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --t-hero:clamp(2.9rem,8.4vw,7.4rem);
+  --t-h1:clamp(1.85rem,4.1vw,3.5rem);
+  --t-h2:clamp(1.35rem,2.1vw,1.9rem);
+  --t-h3:clamp(1.02rem,1.3vw,1.16rem);
+  --t-body:clamp(.95rem,1.02vw,1.02rem);
+  --t-small:.84rem;
+  --t-mono:.7rem;
+  /* space */
+  --s1:6px;--s2:12px;--s3:20px;--s4:34px;--s5:56px;--s6:92px;--s7:132px;
+  /* edges — no radius above 2px, no shadows */
+  --r:2px;
+  --hair:1px solid var(--line);
+  --hair-dark:1px solid var(--line-2);
+  /* motion */
+  --d1:130ms;
+  --d2:280ms;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  /* layout */
+  --wrap:1420px;
+  --gut:clamp(18px,4.4vw,60px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:var(--t-body);line-height:1.55;letter-spacing:-.005em;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+svg{display:block;max-width:100%}
+table{border-collapse:collapse}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:var(--r)}
+::selection{background:var(--blue);color:#fff}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--blue);color:#fff;padding:12px 18px;font-weight:600}
+.skip:focus{left:0}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:var(--gut)}
+.mono{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.15em;text-transform:uppercase;color:var(--muted-2)}
+.eyebrow{display:flex;align-items:baseline;gap:var(--s2);color:var(--muted-2);font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.16em;text-transform:uppercase}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--line-2);align-self:center}
+
+/* ---------------- header ---------------- */
+.head{position:sticky;top:0;z-index:60;background:rgba(244,243,239,.9);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color var(--d2) var(--ease)}
+.head.is-stuck{border-bottom-color:var(--line)}
+.head-in{display:flex;align-items:center;gap:var(--s3);min-height:66px}
+.mark{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-size:1.08rem;font-weight:600;letter-spacing:-.02em}
+.mark svg{width:18px;height:18px;color:var(--blue)}
+.mark small{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;color:var(--muted-2);padding-top:4px}
+.head nav{margin-left:auto;display:flex;gap:clamp(10px,1.8vw,26px)}
+.head nav a{font-size:.85rem;color:var(--muted);padding:10px 0;position:relative;transition:color var(--d1)}
+.head nav a::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:2px;background:var(--blue);transform:scaleX(0);transform-origin:0 50%;transition:transform var(--d2) var(--ease)}
+.head nav a:hover{color:var(--ink)}
+.head nav a:hover::after,.head nav a[aria-current="true"]::after{transform:scaleX(1)}
+.head nav a[aria-current="true"]{color:var(--ink)}
+.head-cta{display:flex;align-items:center;gap:var(--s2)}
+.burger{display:none;width:44px;height:44px;place-items:center;background:none;border:var(--hair-dark);border-radius:var(--r);cursor:pointer}
+.burger svg{width:20px;height:20px}
+
+/* ---------------- buttons ---------------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:0 20px;
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:var(--r);
+  font-size:.9rem;font-weight:600;letter-spacing:-.01em;cursor:pointer;
+  transition:background var(--d1),color var(--d1),border-color var(--d1)
+}
+.btn:hover{background:var(--blue);border-color:var(--blue)}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:16px;height:16px}
+.btn--line{background:transparent;color:var(--ink);border-color:var(--line-3)}
+.btn--line:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn--blue{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn--blue:hover{background:var(--blue-ink);border-color:var(--blue-ink)}
+.btn--sm{min-height:40px;padding:0 14px;font-size:.82rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------------- hero ---------------- */
+.hero{padding-top:clamp(30px,5vw,62px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4);padding-bottom:var(--s5)}
+.hero h1{
+  font-family:var(--serif);font-weight:400;font-size:var(--t-hero);line-height:.94;
+  letter-spacing:-.03em;margin-top:var(--s3);max-width:15ch
+}
+.hero h1 em{font-style:italic;color:var(--blue)}
+.hero-lede{max-width:46ch;color:var(--muted);margin-top:var(--s3);font-size:clamp(1rem,1.2vw,1.14rem)}
+.hero-lede b{color:var(--ink);font-weight:600}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center;margin-top:var(--s4)}
+.hero-note{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s3);margin-top:var(--s4);padding-top:var(--s3);border-top:var(--hair)}
+.hero-note span{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
+.hero-note b{color:var(--ink);font-weight:500}
+
+/* the app window: the product itself, built from the same components as the rest of the page */
+.win{border:var(--hair-dark);border-radius:var(--r);background:var(--paper-3);overflow:hidden;max-width:1000px}
+.win-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:var(--hair);background:var(--paper-2)}
+.win-dots{display:flex;gap:6px}
+.win-dots i{width:9px;height:9px;border-radius:50%;background:var(--line-2);display:block}
+.win-title{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.1em;color:var(--muted-2);margin-left:6px}
+.win-state{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ok)}
+.win-state::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.win-body{display:grid;grid-template-columns:180px minmax(0,1fr)}
+.win-side{border-right:var(--hair);padding:var(--s2) 0;background:var(--paper-3)}
+.win-h{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);padding:8px 14px}
+.win-nav{display:flex;align-items:center;gap:9px;min-height:38px;padding:0 14px;font-size:.85rem;color:var(--muted)}
+.win-nav svg{width:14px;height:14px;flex:none;opacity:.7}
+.win-nav:first-of-type{color:var(--ink);background:var(--blue-tint);box-shadow:inset 2px 0 0 var(--blue);font-weight:600}
+.win-main{padding:var(--s3);min-width:0}
+.win-head{display:flex;align-items:baseline;gap:var(--s2);margin-bottom:var(--s3)}
+.win-title-lg{font-size:var(--t-h3);font-weight:600;letter-spacing:-.02em}
+.win-head span{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.1em;color:var(--muted-2);margin-left:auto}
+.win-meter{position:relative;border:var(--hair);background:var(--paper);padding:10px 12px 8px}
+.win-meter-top{display:flex;align-items:baseline;gap:var(--s2);margin-bottom:6px}
+.win-meter-top b{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.08em;font-weight:500}
+.win-meter-top span{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.08em;color:var(--muted-2);margin-left:auto}
+.win-meter svg{width:100%;height:auto}
+.win-rows{margin-top:var(--s2);border-top:var(--hair)}
+.win-row{display:flex;align-items:center;gap:var(--s2);padding:9px 0;border-bottom:var(--hair);font-size:.85rem}
+.win-row span:first-child{color:var(--muted)}
+.win-row b{margin-left:auto;font-family:var(--mono);font-size:.8rem;font-weight:500;letter-spacing:.04em}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:99px;font-family:var(--mono);font-size:.63rem;letter-spacing:.1em;text-transform:uppercase}
+.pill--ok{background:var(--ok-tint);color:var(--ok)}
+.pill--blue{background:var(--blue-tint);color:var(--blue-ink)}
+
+.legend{display:flex;flex-wrap:wrap;gap:var(--s3);font-size:var(--t-mono);color:var(--muted-2);margin-top:var(--s2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:16px;height:2px;background:var(--blue);display:block}
+.legend i.dash{background:repeating-linear-gradient(90deg,var(--line-2) 0 4px,transparent 4px 8px)}
+.push-right{margin-left:auto}
+.opt-note{font-weight:400;color:var(--muted-2)}
+.link-inline{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+.flow-num,.foot-end{margin-left:auto}
+.noindent{letter-spacing:.1em}
+.prose{letter-spacing:none;text-transform:none;max-width:36ch;line-height:1.7}
+.sec{padding-block:var(--s6) 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s2);padding-bottom:var(--s4);border-top:1px solid var(--line-3);padding-top:var(--s2)}
+.sec-head h2{font-family:var(--serif);font-weight:400;font-size:var(--t-h1);letter-spacing:-.025em;max-width:22ch;margin-top:var(--s2)}
+.sec-head p{color:var(--muted);max-width:58ch;margin-top:var(--s1)}
+.sec-head .split{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s4);align-items:baseline;justify-content:space-between}
+
+/* ---------------- the EQ lab ---------------- */
+.lab{border:var(--hair-dark);border-radius:var(--r);background:var(--paper-3)}
+.lab-top{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3);padding:var(--s2) var(--s3);border-bottom:var(--hair)}
+.lab-top h3{font-size:var(--t-h3)}
+.lab-presets{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.preset{
+  min-height:36px;padding:0 13px;border:var(--hair-dark);border-radius:99px;background:var(--paper);
+  font-size:.8rem;font-weight:500;cursor:pointer;transition:background var(--d1),border-color var(--d1),color var(--d1)
+}
+.preset:hover{background:var(--paper-2);border-color:var(--ink)}
+.preset[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.lab-grid{display:grid;grid-template-columns:minmax(0,1fr)}
+.lab-plot{padding:var(--s3);border-bottom:var(--hair);display:flex;flex-direction:column;justify-content:center}
+.plotwrap{position:relative}
+.plotwrap svg{width:100%;height:auto;overflow:visible}
+.plotwrap .grid{stroke:var(--line);stroke-width:1}
+.plotwrap .zero{stroke:var(--line-2);stroke-width:1}
+.plotwrap .axis{fill:var(--muted-2);font-family:var(--mono);font-size:9px;letter-spacing:.06em}
+.plotwrap .curve{fill:none;stroke:var(--blue);stroke-width:2.2;stroke-linejoin:round}
+.plotwrap .ref{fill:none;stroke:var(--line-2);stroke-width:1.5;stroke-dasharray:4 4}
+.plotwrap .handle{fill:var(--paper-3);stroke:var(--blue);stroke-width:2}
+.plotwrap .handle-hit{fill:transparent;cursor:grab}
+.plotwrap .readout{
+  position:absolute;top:8px;right:8px;background:var(--ink);color:var(--paper);
+  font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.08em;padding:5px 9px;border-radius:var(--r)
+}
+.lab-bands{border-top:var(--hair)}
+@media (min-width:900px){.lab-grid{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr)}.lab-plot{border-bottom:0;border-right:var(--hair)}}
+.bands{padding:var(--s3);display:grid;gap:var(--s3);align-content:start}
+.band{display:grid;grid-template-columns:1fr;gap:6px;padding-bottom:var(--s3);border-bottom:var(--hair)}
+.band:last-child{border-bottom:0;padding-bottom:0}
+.band-top{display:flex;align-items:baseline;gap:var(--s2)}
+.band-name{font-size:.86rem;font-weight:600}
+.band-freq{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.08em;color:var(--muted-2);margin-left:auto}
+.band-val{font-family:var(--mono);font-size:.86rem;color:var(--blue-ink);min-width:56px;text-align:right}
+.band input[type="range"]{
+  -webkit-appearance:none;appearance:none;width:100%;height:44px;background:transparent;cursor:pointer;margin:0
+}
+.band input[type="range"]::-webkit-slider-runnable-track{height:2px;background:var(--line-2)}
+.band input[type="range"]::-moz-range-track{height:2px;background:var(--line-2)}
+.band input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:18px;height:18px;margin-top:-8px;border-radius:50%;
+  background:var(--paper-3);border:2px solid var(--blue);transition:transform var(--d1)
+}
+.band input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--paper-3);border:2px solid var(--blue)}
+.band input[type="range"]:hover::-webkit-slider-thumb{transform:scale(1.15)}
+.band input[type="range"]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px var(--blue-tint)}
+.band-q{display:flex;gap:4px}
+.band-q button{
+  flex:1;min-height:40px;border:var(--hair);background:var(--paper);border-radius:var(--r);
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;color:var(--muted-2);cursor:pointer
+}
+.band-q button[aria-pressed="true"]{background:var(--blue-tint);border-color:var(--blue-line);color:var(--blue-ink)}
+.lab-foot{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:center;padding:var(--s2) var(--s3);border-top:var(--hair);background:var(--paper)}
+.lab-foot p{font-size:.8rem;color:var(--muted-2);max-width:60ch}
+
+/* ---------------- bento ---------------- */
+.bento{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--hair);background:var(--line);border:var(--hair-dark);border-radius:var(--r);overflow:hidden}
+.cell{background:var(--paper-3);padding:var(--s3);display:grid;align-content:start;gap:10px;min-height:150px}
+.cell h3{font-size:var(--t-h3);letter-spacing:-.02em}
+.cell p{font-size:.9rem;color:var(--muted)}
+.cell .num{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;color:var(--muted-2)}
+.cell svg{width:20px;height:20px;color:var(--blue)}
+.cell--blue{background:var(--blue);color:#fff}
+.cell--blue p,.cell--blue .num{color:rgba(255,255,255,.78)}
+.cell--blue svg{color:#fff}
+.cell--tint{background:var(--blue-tint)}
+.cell-list{list-style:none;display:grid;gap:7px;margin-top:4px}
+.cell-list li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;font-size:.85rem;color:var(--muted-2)}
+.cell--blue .cell-list li{color:rgba(255,255,255,.85)}
+.cell-list li::before{content:"";width:5px;height:5px;background:var(--blue);margin-top:8px}
+.cell--blue .cell-list li::before{background:#fff}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px var(--s2);margin-top:4px;font-family:var(--mono);font-size:.76rem;letter-spacing:.04em}
+.kv dt{color:var(--muted-2)}
+.kv dd{margin:0;text-align:right}
+@media (min-width:900px){
+  /* six cells that fill a 3 x 3 grid exactly: the firmware cell takes 2 x 2,
+     the other five take one slot each, so there are no holes in the block */
+  .bento{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(170px,auto)}
+  .cell{grid-column:span 1;min-height:0}
+  .cell--tall{grid-column:span 2;grid-row:span 2}
+  .cell--wide{grid-column:span 2}
+}
+
+/* ---------------- workflow ---------------- */
+.flow{display:grid;grid-template-columns:minmax(0,1fr);gap:0;border-top:var(--hair-dark)}
+.flow-step{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s3);padding:var(--s4) 0;border-bottom:var(--hair)}
+.flow-n{font-family:var(--serif);font-size:clamp(1.6rem,2.6vw,2.3rem);line-height:1;color:var(--blue);width:2ch}
+.flow-step h3{font-size:var(--t-h2);font-family:var(--serif);font-weight:400;letter-spacing:-.02em}
+.flow-step p{color:var(--muted);margin-top:10px;max-width:58ch}
+.flow-step .mono{display:block;margin-top:var(--s2)}
+@media (min-width:900px){
+  .flow{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+  .flow-step{grid-template-columns:1fr;border-bottom:0;border-top:2px solid var(--ink);padding:var(--s3) 0 0}
+}
+
+/* ---------------- shortcuts ---------------- */
+.keys{display:grid;grid-template-columns:minmax(0,1fr);gap:0 var(--s5);border-top:var(--hair)}
+.keyrow{display:flex;align-items:center;gap:var(--s3);padding:11px 0;border-bottom:var(--hair);font-size:.88rem}
+.keyrow span{color:var(--muted)}
+.keyrow kbd{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;background:var(--paper-2);
+  border:var(--hair-dark);border-bottom-width:2px;border-radius:3px;padding:3px 7px;color:var(--ink);white-space:nowrap
+}
+.keyrow .acts{margin-left:auto;display:flex;gap:5px}
+@media (min-width:760px){.keys{grid-template-columns:1fr 1fr}}
+
+/* ---------------- pricing ---------------- */
+.bill{display:inline-flex;align-items:center;gap:2px;padding:3px;border:var(--hair-dark);border-radius:99px;background:var(--paper-3)}
+.bill button{min-height:38px;padding:0 16px;border:0;border-radius:99px;background:transparent;font-size:.82rem;font-weight:600;color:var(--muted);cursor:pointer}
+.bill button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.tiers{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--hair);background:var(--line);border:var(--hair-dark);border-radius:var(--r);overflow:hidden;margin-top:var(--s3)}
+.tier{background:var(--paper-3);padding:var(--s3);display:grid;align-content:start;gap:var(--s2)}
+.tier-name{font-size:var(--t-h3)}
+.tier-price{display:flex;align-items:baseline;gap:8px;padding:var(--s2) 0;border-block:var(--hair)}
+.tier-price b{font-family:var(--serif);font-size:clamp(1.9rem,3vw,2.6rem);font-weight:400;letter-spacing:-.03em;line-height:1}
+.tier-price span{font-size:.8rem;color:var(--muted-2)}
+.tier ul{display:grid;gap:9px;margin-top:4px}
+.tier li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;font-size:.87rem;color:var(--muted)}
+.tier li::before{content:"";width:5px;height:5px;background:var(--blue);margin-top:8px}
+.tier--pick{background:var(--ink);color:var(--paper)}
+.tier--pick .tier-price{border-color:rgba(255,255,255,.2)}
+.tier--pick p,.tier--pick li{color:rgba(255,255,255,.8)}
+.tier--pick li::before{background:#fff}
+.tier .btn{width:100%;margin-top:var(--s2)}
+@media (min-width:860px){.tiers{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* ---------------- voices ---------------- */
+.voices{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4)}
+.voice{border-top:2px solid var(--ink);padding-top:var(--s3)}
+.voice blockquote{margin:0;font-family:var(--serif);font-size:clamp(1.1rem,1.7vw,1.45rem);line-height:1.32;letter-spacing:-.015em}
+.voice figcaption{margin-top:var(--s2);font-size:.82rem;color:var(--muted)}
+.voice figcaption b{color:var(--ink);font-weight:600}
+@media (min-width:860px){.voices{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* ---------------- download ---------------- */
+.get{background:var(--paper-2);border-top:var(--hair-dark)}
+.get-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4);padding-block:var(--s5) var(--s6)}
+.get-copy h2{font-family:var(--serif);font-weight:400;font-size:var(--t-h1);letter-spacing:-.025em;max-width:16ch}
+.get-copy>p{color:var(--muted);margin-top:var(--s2);max-width:42ch}
+.picker{display:grid;gap:var(--s2);margin-top:var(--s3)}
+.pick-field{border:0;padding:0;margin:0;display:grid;gap:var(--s2)}
+.pick{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:var(--s2);align-items:center;
+  min-height:60px;padding:0 var(--s2);border:var(--hair-dark);border-radius:var(--r);background:var(--paper-3);cursor:pointer;
+  transition:border-color var(--d1),background var(--d1)
+}
+.pick:hover{border-color:var(--ink)}
+.pick input{width:18px;height:18px;accent-color:var(--blue);margin:0}
+.pick b{font-size:.92rem;font-weight:600}
+.pick small{display:block;font-size:.78rem;color:var(--muted-2);font-weight:400}
+.pick .size{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.08em;color:var(--muted-2)}
+.pick:has(input:checked){border-color:var(--blue);background:var(--blue-tint)}
+.pick:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:3px}
+.reqs{margin-top:var(--s3);border-top:var(--hair-dark);padding-top:var(--s2)}
+.reqs h3{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);font-weight:500}
+.reqs dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px var(--s3);margin-top:var(--s2);font-size:.86rem}
+.reqs dt{color:var(--muted-2);font-family:var(--mono);font-size:.76rem;letter-spacing:.06em}
+.reqs dd{margin:0}
+.form{display:grid;gap:var(--s2);align-content:start}
+.field{display:grid;gap:6px}
+.field label{font-size:.84rem;font-weight:600}
+.field .hint{font-size:.76rem;color:var(--muted-2)}
+.field input{min-height:48px;padding:0 14px;background:var(--paper-3);border:var(--hair-dark);border-radius:var(--r);font-size:.95rem;width:100%}
+.field input::placeholder{color:var(--muted-2)}
+.field input:hover{border-color:var(--muted-2)}
+.field input[aria-invalid="true"]{border-color:var(--bad);box-shadow:0 0 0 3px var(--bad-tint)}
+.field .err{font-size:.78rem;color:var(--bad);font-weight:600}
+.field .err:empty{display:none}
+.form-note{font-size:.84rem;color:var(--muted);min-height:1.4em}
+.form-note[data-state="ok"]{color:var(--ok);font-weight:600}
+.form-note[data-state="bad"]{color:var(--bad);font-weight:600}
+
+/* ---------------- faq ---------------- */
+.faq{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4);padding-bottom:var(--s6)}
+.faq-side h2{font-family:var(--serif);font-weight:400;font-size:var(--t-h1);letter-spacing:-.025em;margin-top:var(--s2)}
+.faq-side p{color:var(--muted);margin-top:var(--s2);max-width:36ch}
+.q{border-top:var(--hair-dark)}
+.q-item{border-bottom:var(--hair)}
+.q-btn{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);align-items:center;width:100%;
+  min-height:66px;padding:var(--s2) 0;background:none;border:0;text-align:left;cursor:pointer;
+  font-family:var(--serif);font-size:clamp(1.02rem,1.45vw,1.24rem);color:var(--ink)
+}
+.q-btn:hover{color:var(--blue)}
+.q-ico{position:relative;width:14px;height:14px;flex:none}
+.q-ico::before,.q-ico::after{content:"";position:absolute;background:var(--ink);transition:transform var(--d2) var(--ease)}
+.q-ico::before{left:0;top:6.5px;width:14px;height:1.5px}
+.q-ico::after{top:0;left:6.5px;width:1.5px;height:14px}
+.q-btn[aria-expanded="true"] .q-ico::after{transform:scaleY(0)}
+.q-panel{height:0;overflow:hidden;transition:height var(--d2) var(--ease)}
+.q-panel>div{overflow:hidden}
+.q-panel p{padding:0 0 var(--s3);color:var(--muted);max-width:64ch;font-size:.94rem}
+@media (min-width:900px){.faq{grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:var(--s5)}}
+
+/* ---------------- footer ---------------- */
+.foot{border-top:1px solid var(--line-3);padding-block:var(--s4)}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s3) var(--s4)}
+.foot h4{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);font-weight:500;margin-bottom:10px}
+.foot ul{display:grid;gap:8px}
+.foot a{font-size:.88rem;color:var(--muted)}
+.foot a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.foot p{font-size:.85rem;color:var(--muted);max-width:36ch;margin-top:10px}
+.foot-note{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s4);padding-top:var(--s3);border-top:var(--hair)}
+@media (min-width:760px){.foot-grid{grid-template-columns:1.6fr repeat(3,minmax(0,1fr))}}
+
+/* ---------------- reveal ---------------- */
+[data-reveal]{opacity:0;transform:translateY(14px);transition:opacity 640ms var(--ease),transform 640ms var(--ease)}
+[data-reveal].is-in{opacity:1;transform:none}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:900px){
+  .head nav{
+    position:fixed;inset:66px 0 auto 0;margin:0;flex-direction:column;gap:0;background:var(--paper-3);
+    border-bottom:var(--hair-dark);padding:0 var(--gut);max-height:0;overflow:hidden;
+    transition:max-height var(--d2) var(--ease)
+  }
+  .head[data-nav="open"] nav{max-height:70vh}
+  .head nav a{padding:15px 0;border-bottom:var(--hair);font-size:1rem;color:var(--ink)}
+  .head nav a::after{display:none}
+  .burger{display:grid}
+  .win-body{grid-template-columns:minmax(0,1fr)}
+  .win-side{border-right:0;border-bottom:var(--hair);display:flex;overflow-x:auto;padding:0}
+  .win-h{display:none}
+  .win-nav{white-space:nowrap;border-right:var(--hair)}
+  .win-nav:first-of-type{box-shadow:inset 0 -2px 0 var(--blue)}
+}
+@media (max-width:620px){
+  .hero-actions .btn{width:100%}
+  .lab-presets{margin-left:0;width:100%}
+  .band{grid-template-columns:1fr}
+  .foot-note{font-size:.72rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  [data-reveal]{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<noscript><style>[data-reveal]{opacity:1;transform:none}</style></noscript>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="head" id="head">
+  <div class="wrap head-in">
+    <a class="mark" href="#top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M4.2 7.5h15.6M4.2 16.5h15.6"/></svg>
+      Meridian <small>Control</small>
+    </a>
+    <button class="burger" type="button" id="burger" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+    </button>
+    <nav id="site-nav" aria-label="Sections">
+      <a href="#lab" data-spy="lab">The EQ</a>
+      <a href="#inside" data-spy="inside">What it does</a>
+      <a href="#setup">Setup</a>
+      <a href="#keys">Shortcuts</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#questions">Questions</a>
+    </nav>
+    <div class="head-cta">
+      <a class="btn btn--sm" href="#get">Download 2.4</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============ hero ============ -->
+  <section class="hero wrap" id="top">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Meridian Control 2.4 · macOS, Windows, Linux</p>
+        <h1>The hardware in <em>one window.</em></h1>
+        <p class="hero-lede">The dial handles the listening. The app handles everything you would otherwise do with a browser and a support page: <b>firmware, a five-band EQ, per-source trims, the measurement log</b> and Roon setup — offline, over USB, in about four seconds.</p>
+        <div class="hero-actions">
+          <a class="btn btn--blue" href="#get">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+            Download for free
+          </a>
+          <a class="btn btn--line" href="#lab">Try the EQ</a>
+        </div>
+        <p class="hero-note">
+          <span><b>2.4.1</b> current</span>
+          <span><b>9.4 MB</b> macOS</span>
+          <span><b>11 MB</b> Windows</span>
+          <span><b>Free</b> with any Meridian</span>
+        </p>
+      </div>
+
+      <div class="win" role="img" aria-label="The Meridian Control app on macOS: a sidebar with the connected Meridian One, an output level meter reading minus 18 decibels with a peak hold at minus 6, and the device settings — input format, bias match, volume, EQ preset and firmware version.">
+        <div class="win-bar">
+          <span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="win-title">meridian-control — one@studio</span>
+          <span class="win-state">Connected</span>
+        </div>
+        <div class="win-body">
+          <div class="win-side">
+            <p class="win-h">Device</p>
+            <span class="win-nav" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/></svg>
+              Meridian One
+            </span>
+            <span class="win-nav" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 18V9M10 18V4M16 18v-7M22 18v-4"/></svg>
+              Equaliser
+            </span>
+            <span class="win-nav" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h13"/></svg>
+              Sources
+            </span>
+            <span class="win-nav" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+              Log
+            </span>
+          </div>
+          <div class="win-main">
+            <div class="win-head">
+              <p class="win-title-lg">Meridian One · Graphite</p>
+              <span>SN 0417</span>
+            </div>
+            <div class="win-meter">
+              <p class="win-meter-top"><b>Output</b><span>PCM 768 kHz · −18.4 dBFS</span></p>
+              <svg viewBox="0 0 300 46" role="img" aria-label="Output level meter: three bars, the top one at minus 6 decibels with a peak hold marker">
+                <g stroke="#d9d8d1" stroke-width="1">
+                  <path d="M0 40h300"/><path d="M0 24h300"/><path d="M0 8h300"/>
+                </g>
+                <g fill="#1b3ad1">
+                  <rect x="0" y="37" width="186" height="3"/><rect x="0" y="21" width="164" height="3"/><rect x="0" y="5" width="132" height="3"/>
+                </g>
+                <g fill="#b3261e"><rect x="246" y="1" width="3" height="14"/></g>
+              </svg>
+            </div>
+            <div class="win-rows">
+              <p class="win-row"><span>Input</span><b>USB-C · 768 kHz PCM</b></p>
+              <p class="win-row"><span>Bias</span><b>2.0 V</b> <span class="pill pill--ok">matched</span></p>
+              <p class="win-row"><span>Volume</span><b>−48.0 dB</b></p>
+              <p class="win-row"><span>Preset</span><b>Flat</b> <span class="pill pill--blue">5 bands</span></p>
+              <p class="win-row"><span>Firmware</span><b>2.4.1</b> <span class="pill pill--ok">current</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EQ lab ============ -->
+  <section class="sec wrap" id="lab" aria-labelledby="lab-h">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">01 — The equaliser</span>
+      <h2 id="lab-h">Five bands, summed properly, written to the hardware.</h2>
+      <p>Move a slider and the curve is recalculated from the actual filter maths — five peaking sections in series, not a wiggle drawn by hand. Whatever you land on is stored on the unit, so the EQ stays put when the app is closed.</p>
+    </div>
+
+    <div class="lab" data-reveal>
+      <div class="lab-top">
+        <h3>Parametric EQ</h3>
+        <span class="mono">Live · stored on device</span>
+        <div class="lab-presets" role="group" aria-label="Presets">
+          <button class="preset" type="button" data-preset="flat" aria-pressed="true">Flat</button>
+          <button class="preset" type="button" data-preset="podcast" aria-pressed="false">Podcast</button>
+          <button class="preset" type="button" data-preset="late" aria-pressed="false">Late night</button>
+          <button class="preset" type="button" data-preset="loud" aria-pressed="false">Loudness</button>
+        </div>
+      </div>
+
+      <div class="lab-grid">
+        <div class="lab-plot">
+          <div class="plotwrap">
+            <p class="readout" id="eq-readout">±0.0 dB · 20 Hz–20 kHz</p>
+            <svg viewBox="0 0 460 230" id="eq-svg" role="img" aria-labelledby="eq-title">
+              <title id="eq-title">Equaliser response curve; the exact values are listed in the band controls below</title>
+            </svg>
+          </div>
+          <p class="legend">
+            <span><i></i>Your curve</span>
+            <span><i class="dash"></i>Flat reference</span>
+          </p>
+        </div>
+
+        <div class="lab-bands" id="bands">
+          <div class="bands" id="band-list"></div>
+        </div>
+      </div>
+
+      <div class="lab-foot">
+        <p id="eq-summary">Flat. No correction applied — the unit is already within 0.05 dB of target.</p>
+        <button class="btn btn--line btn--sm push-right" type="button" id="eq-reset">Reset to flat</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ bento ============ -->
+  <section class="sec wrap" id="inside" aria-labelledby="inside-h">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">02 — What it actually does</span>
+      <h2 id="inside-h">Six jobs, and none of them need an account.</h2>
+      <p>The app talks to the unit over USB and does nothing else. No sign-up, no telemetry, no cloud service to go down in February.</p>
+    </div>
+
+    <div class="bento" data-reveal>
+      <div class="cell cell--tall">
+        <span class="num">A / Firmware</span>
+        <h3>Updates without a website</h3>
+        <p>Firmware is signed, staged and verified on the device itself. If a download is interrupted the unit keeps the version it already has, and the app tells you what it was rather than showing a progress bar that lies.</p>
+        <ul class="cell-list">
+          <li>Signed images, verified on-device before flash</li>
+          <li>Two-year rollback to any previous release</li>
+          <li>Release notes in plain language, opened in the app</li>
+          <li>Offline install from a file on a USB stick</li>
+        </ul>
+      </div>
+
+      <div class="cell cell--blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 18V9M10 18V4M16 18v-7M22 18v-4"/></svg>
+        <h3>Per-source trims</h3>
+        <p>Your DAC measures a hot streaming master and a quiet one. Set a trim per source once; the app remembers it by input, not by app.</p>
+      </div>
+
+      <div class="cell">
+        <span class="num">C / Log</span>
+        <h3>The measurement log</h3>
+        <p>Every session is recorded: volume, bias, format, peak level. Export it as CSV and you have a listening log that actually means something.</p>
+        <dl class="kv">
+          <dt>Retention</dt><dd>Unlimited, on device</dd>
+          <dt>Export</dt><dd>CSV · JSON</dd>
+        </dl>
+      </div>
+
+      <div class="cell">
+        <span class="num">D / Room</span>
+        <h3>Roon, properly</h3>
+        <p>Roon Native discovers the unit on its own and exposes it as an endpoint with the correct sample rates. No manual IP entry.</p>
+      </div>
+
+      <div class="cell cell--tint">
+        <span class="num">E / Hardware</span>
+        <h3>Things the dial cannot do</h3>
+        <ul class="cell-list">
+          <li>Sample-rate and lock display</li>
+          <li>Bias, and what your headphones matched</li>
+          <li>Factory reset, with a printable report first</li>
+        </ul>
+      </div>
+
+      <div class="cell">
+        <span class="num">F / Privacy</span>
+        <h3>No account, no cloud</h3>
+        <p>Nothing leaves the machine. There is no sign-in, no analytics and no remote kill switch, because the unit works without a server.</p>
+        <dl class="kv">
+          <dt>Telemetry</dt><dd>None</dd>
+          <dt>Network</dt><dd>Not required</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ setup ============ -->
+  <section class="sec wrap" id="setup" aria-labelledby="setup-h">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">03 — Setup</span>
+      <h2 id="setup-h">Three steps, about four seconds.</h2>
+    </div>
+    <div class="flow" data-reveal>
+      <div class="flow-step">
+        <span class="flow-n">01</span>
+        <div>
+          <h3>Plug it in</h3>
+          <p>USB-C from the unit to the computer. The app finds it over the bus; no pairing, no driver, nothing to install first.</p>
+          <span class="mono">Meridian appears in the sidebar</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-n">02</span>
+        <div>
+          <h3>Match the bias</h3>
+          <p>Run the bias match. It plays a sweep, measures the current draw and tells you whether 0, 2 or 4 V suits the headphones you have connected.</p>
+          <span class="mono">About 20 seconds, once</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-n">03</span>
+        <div>
+          <h3>Set the curve</h3>
+          <p>Start from a measurement of your room, or from a preset, then move three sliders and listen. The unit stores the result; the app can close.</p>
+          <span class="mono">Saved on device, survives a power cut</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ shortcuts ============ -->
+  <section class="sec wrap" id="keys" aria-labelledby="keys-h">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">04 — Keyboard</span>
+      <h2 id="keys-h">The app is faster than the mouse.</h2>
+      <p>Every control that matters has a shortcut, on all three platforms, and the same ones in every version.</p>
+    </div>
+    <ul class="keys" data-reveal>
+      <li class="keyrow"><kbd>Space</kbd><span>Play the test sweep</span><span class="acts"><kbd>Shift</kbd></span></li>
+      <li class="keyrow"><kbd>1</kbd>–<kbd>5</kbd><span>Select band, then focus its gain</span></li>
+      <li class="keyrow"><kbd>↑</kbd><kbd>↓</kbd><span>Nudge the selected band by 0.5 dB</span></li>
+      <li class="keyrow"><kbd>⌘</kbd><kbd>B</kbd><span>Bias match</span><span class="acts"><kbd>Ctrl</kbd></span></li>
+      <li class="keyrow"><kbd>⌘</kbd><kbd>L</kbd><span>Open the measurement log</span><span class="acts"><kbd>Ctrl</kbd></span></li>
+      <li class="keyrow"><kbd>⌘</kbd><kbd>R</kbd><span>Check for firmware</span><span class="acts"><kbd>Ctrl</kbd></span></li>
+      <li class="keyrow"><kbd>⌘</kbd><kbd>0</kbd><span>Reset the curve to flat</span><span class="acts"><kbd>Ctrl</kbd></span></li>
+      <li class="keyrow"><kbd>Esc</kbd><span>Close the sheet you are in</span></li>
+    </ul>
+  </section>
+
+  <!-- ============ pricing ============ -->
+  <section class="sec wrap" id="pricing" aria-labelledby="price-h">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">05 — Pricing</span>
+      <div class="split">
+        <h2 id="price-h">Free with the hardware. Cheap without it.</h2>
+        <div class="bill" role="group" aria-label="Billing period">
+          <button type="button" data-bill="year" aria-pressed="true">Per year</button>
+          <button type="button" data-bill="once" aria-pressed="false">One-off</button>
+        </div>
+      </div>
+      <p>Own a Meridian and every feature below is included, forever, at no cost. The paid tiers exist for people evaluating the app against hardware they do not own yet.</p>
+    </div>
+
+    <div class="tiers" data-reveal>
+      <div class="tier">
+        <p class="tier-name">Included</p>
+        <p class="tier-price"><b>£0</b><span>with any Meridian</span></p>
+        <p>Firmware, bias match, the log, per-source trims and a five-band EQ on one device.</p>
+        <ul>
+          <li>One connected unit</li>
+          <li>All firmware releases</li>
+          <li>CSV and JSON export</li>
+          <li>Roon Native endpoint</li>
+        </ul>
+        <a class="btn btn--line" href="#get">Download</a>
+      </div>
+
+      <div class="tier tier--pick">
+        <p class="tier-name">Plus</p>
+        <p class="tier-price"><b data-price="year">£24</b><span data-term="year">per year</span></p>
+        <p>Everything in Included, plus room correction, unlimited presets and measurement history.</p>
+        <ul>
+          <li>Up to four units</li>
+          <li>10-band room correction</li>
+          <li>Unlimited saved presets</li>
+          <li>Speaker and mic measurement</li>
+          <li>Priority firmware builds</li>
+        </ul>
+        <a class="btn btn--blue" href="#get">Start with Plus</a>
+      </div>
+
+      <div class="tier">
+        <p class="tier-name">Studio</p>
+        <p class="tier-price"><b data-price="year">£72</b><span data-term="year">per year</span></p>
+        <p>For rooms with more than one desk: shared profiles, client presets and a signed measurement report.</p>
+        <ul>
+          <li>Unlimited units and profiles</li>
+          <li>Per-client preset sets</li>
+          <li>PDF measurement reports</li>
+          <li>Named support contact</li>
+        </ul>
+        <a class="btn btn--line" href="#get">Talk to us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ voices ============ -->
+  <section class="sec wrap" aria-labelledby="voices-h">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">06 — From the bench</span>
+      <h2 id="voices-h">People who measure things for a living.</h2>
+    </div>
+    <div class="voices" data-reveal>
+      <figure class="voice">
+        <blockquote>“The bias match is the first bit of software I have used that tells me the answer instead of giving me a slider and a prayer.”</blockquote>
+        <figcaption><b>Ilse Vandermeer</b> · mastering, Utrecht</figcaption>
+      </figure>
+      <figure class="voice">
+        <blockquote>“I keep the log on the unit, not in a cloud. When a client asks what happened at 14:02, the answer is on the desk and not in somebody's retention policy.”</blockquote>
+        <figcaption><b>Rowan Adeyemi</b> · producer, London</figcaption>
+      </figure>
+      <figure class="voice">
+        <blockquote>“Five bands is enough. The other four apps I tried offered ten and I could not hear the difference, which told me everything about the measurements behind them.”</blockquote>
+        <figcaption><b>Marta Kaczmarek</b> · mix engineer, Gdańsk</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ download ============ -->
+  <section class="get" id="get" aria-labelledby="get-h">
+    <div class="wrap get-grid">
+      <div class="get-copy" data-reveal>
+        <span class="eyebrow">07 — Download</span>
+        <h2 id="get-h">Pick a platform. It is one file.</h2>
+        <p>No installer framework, no update service, no account. Unpack it and run it.</p>
+
+        <div class="picker" id="picker">
+          <fieldset class="pick-field">
+            <legend class="sr-only">Choose your platform</legend>
+            <label class="pick">
+              <input type="radio" name="platform" value="mac" form="get-form" checked>
+              <span><b>macOS</b><small>Apple silicon and Intel · 12 or later</small></span>
+              <span class="size">9.4 MB</span>
+            </label>
+            <label class="pick">
+              <input type="radio" name="platform" value="win" form="get-form">
+              <span><b>Windows</b><small>64-bit · 10 or later</small></span>
+              <span class="size">11 MB</span>
+            </label>
+            <label class="pick">
+              <input type="radio" name="platform" value="lin" form="get-form">
+              <span><b>Linux</b><small>x86-64 · AppImage, needs udev rules</small></span>
+              <span class="size">9.1 MB</span>
+            </label>
+          </fieldset>
+        </div>
+
+        <div class="reqs" id="reqs" aria-live="polite">
+          <h3>Before you install</h3>
+          <dl id="reqs-list"></dl>
+        </div>
+      </div>
+
+      <form class="form" id="get-form" novalidate data-reveal>
+        <div class="field">
+          <label for="g-email">Email</label>
+          <input id="g-email" name="email" type="email" autocomplete="email" placeholder="you@studio.com" required aria-describedby="g-email-hint g-email-err">
+          <p class="hint" id="g-email-hint">Only used to tell you about firmware. One message per release, no marketing.</p>
+          <p class="err" id="g-email-err" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="g-name">Name <span class="opt-note">(optional)</span></label>
+          <input id="g-name" name="name" type="text" autocomplete="name" placeholder="Ilse Vandermeer">
+        </div>
+        <button class="btn btn--blue" type="submit" id="g-submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+          <span id="g-submit-label">Get the download</span>
+        </button>
+        <p class="form-note" id="g-note" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ faq ============ -->
+  <section class="wrap" id="questions" aria-labelledby="faq-h">
+    <div class="faq">
+      <div class="faq-side" data-reveal>
+        <span class="eyebrow">08 — Questions</span>
+        <h2 id="faq-h">Short answers.</h2>
+        <p>Anything else goes to a person: <a class="link-inline" href="mailto:app@meridian.audio">app@meridian.audio</a>.</p>
+      </div>
+      <div class="q" id="faq" data-reveal>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="b1" id="f1">Does the EQ really run on the hardware?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="b1" role="region" aria-labelledby="f1"><div><p>Yes. The five bands are computed in the unit's own DSP and stored in its flash, so the curve survives unplugging it and closing the app. Only the ten-band room-correction profile in Plus is recalculated on the host.</p></div></div>
+        </div>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="b2" id="f2">Why five bands when everything else offers ten?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="b2" role="region" aria-labelledby="f2"><div><p>Because five well-placed bands fix what is actually wrong with a room or a pair of headphones, and ten invite people to solve problems they do not have. The Plus room-correction profile can use all ten when a measurement says it should.</p></div></div>
+        </div>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="b3" id="f3">What happens to the log when I sell the unit?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="b3" role="region" aria-labelledby="f3"><div><p>The log is stored on the device, so it goes with the hardware. Export it as CSV or JSON first and the file is yours forever, in a format that will still open in twenty years.</p></div></div>
+        </div>
+        <div class="q-item">
+          <h3><button class="q-btn" type="button" aria-expanded="false" aria-controls="b4" id="f4">Do I need the app running to listen?<span class="q-ico" aria-hidden="true"></span></button></h3>
+          <div class="q-panel" id="b4" role="region" aria-labelledby="f4"><div><p>No. The unit plays music the moment it is plugged in, and the app is not required at any point after setup. It is a tool for the twenty minutes a year you need it.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="mark" href="#top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M4.2 7.5h15.6M4.2 16.5h15.6"/></svg>
+          Meridian <small>Control</small>
+        </a>
+        <p>Signed, offline, and free with the hardware. Sheffield and Lisbon.</p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul>
+          <li><a href="#get">Download 2.4.1</a></li>
+          <li><a href="#keys">Keyboard shortcuts</a></li>
+          <li><a href="#lab">The equaliser</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hardware</h4>
+        <ul>
+          <li><a href="1a-product.html">Meridian One</a></li>
+          <li><a href="1a-product.html#configure">Configure a unit</a></li>
+          <li><a href="1a-product.html#measure">Measurements</a></li>
+          <li><a href="1a-product.html#compare">Compare the range</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#questions">Questions</a></li>
+          <li><a href="mailto:app@meridian.audio">app@meridian.audio</a></li>
+          <li><a href="#get">Firmware 2.4 notes</a></li>
+          <li><a href="#inside">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-note">
+      <span class="mono">© 2026 Meridian Audio Ltd</span>
+      <span class="mono">VAT GB 214 5566 09</span>
+      <span class="mono foot-end">1b-app.html</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  /* ==================================================================
+     1. Header: condense, mobile menu, scroll spy
+     ================================================================== */
+  var head = $('head');
+  var onScroll = function () { head.classList.toggle('is-stuck', window.scrollY > 20); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  var burger = $('burger');
+  burger.addEventListener('click', function () {
+    var open = head.getAttribute('data-nav') === 'open';
+    head.setAttribute('data-nav', open ? 'closed' : 'open');
+    burger.setAttribute('aria-expanded', String(!open));
+    burger.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+  });
+  $('site-nav').addEventListener('click', function (e) {
+    if (e.target.tagName !== 'A') return;
+    head.setAttribute('data-nav', 'closed');
+    burger.setAttribute('aria-expanded', 'false');
+  });
+
+  var spyLinks = Array.prototype.slice.call(document.querySelectorAll('[data-spy]'));
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        spyLinks.forEach(function (a) {
+          a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + en.target.id));
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    spyLinks.forEach(function (a) {
+      var sec = document.querySelector(a.getAttribute('href'));
+      if (sec) spy.observe(sec);
+    });
+  }
+
+  /* ==================================================================
+     2. The equaliser — five peaking sections summed in log frequency
+     Each band is a real biquad: a centre frequency, a Q and a gain in dB.
+     ================================================================== */
+  var BANDS = [
+    { name: 'Low shelf',  freq: 80,   q: 0.7, gain: 0 },
+    { name: 'Low mid',    freq: 400,  q: 1.1, gain: 0 },
+    { name: 'Mid',        freq: 1200, q: 1.4, gain: 0 },
+    { name: 'Upper mid',  freq: 4500, q: 1.6, gain: 0 },
+    { name: 'Air',        freq: 11000,q: 0.9, gain: 0 }
+  ];
+  var PRESETS = {
+    flat:    [0, 0, 0, 0, 0],
+    podcast: [3.5, -1.5, 1.5, -2.5, 0.5],
+    late:    [-2, 0, 1, 0, -3],
+    loud:    [4, 1.5, -1, 1, 2.5]
+  };
+  /* magnitude response of the five peaking sections summed in series, in dB:
+     a bell centred on each band frequency, one octave wide at the half-gain
+     point, so a wider Q really does reach further up and down the sweep */
+  function responseAt(f) {
+    var sum = 0;
+    for (var i = 0; i < BANDS.length; i++) {
+      var b = BANDS[i];
+      var oct = Math.log(f / b.freq) / Math.LN2;           /* distance in octaves */
+      var width = 1 / Math.max(0.2, b.q) * 0.9;            /* wider Q, wider bell */
+      sum += b.gain * Math.exp(-Math.pow(oct / width, 2) * 2.2);
+    }
+    return sum;
+  }
+  function svgEl(tag, attrs, text) {
+    var n = document.createElementNS(SVGNS, tag);
+    Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  var PW = 460, PH = 230, PL = 30, PR = 12, PT = 12, PB = 26;
+  var plotW = PW - PL - PR, plotH = PH - PT - PB;
+  var DBMAX = 12;
+  function xFor(f) { return PL + (Math.log(f / 20) / Math.log(1000)) * plotW; }
+  function yFor(db) { return PT + plotH / 2 - (db / DBMAX) * (plotH / 2); }
+  var eqSvg = $('eq-svg'), readout = $('eq-readout'), summary = $('eq-summary');
+  var curve = null, handles = [];
+
+  /* the grid, the axes and the five draggable handles are built once; only the
+     curve and the handle positions change, so focus survives a drag */
+  function buildEq() {
+    [-12, -6, 6, 12].forEach(function (db) {
+      var y = yFor(db);
+      eqSvg.appendChild(svgEl('line', { class: 'grid', x1: PL, x2: PW - PR, y1: y, y2: y }));
+      eqSvg.appendChild(svgEl('text', { class: 'axis', x: PL - 6, y: y + 3, 'text-anchor': 'end' }, (db > 0 ? '+' : '') + db));
+    });
+    var zero = yFor(0);
+    eqSvg.appendChild(svgEl('line', { class: 'zero', x1: PL, x2: PW - PR, y1: zero, y2: zero }));
+    [20, 100, 1000, 10000].forEach(function (f) {
+      var x = xFor(f);
+      eqSvg.appendChild(svgEl('text', { class: 'axis', x: x, y: PH - 8, 'text-anchor': f === 20 ? 'start' : (f === 10000 ? 'end' : 'middle') }, f >= 1000 ? (f / 1000) + 'k' : String(f)));
+    });
+    /* flat reference */
+    eqSvg.appendChild(svgEl('line', { class: 'ref', x1: PL, x2: PW - PR, y1: zero, y2: zero }));
+    curve = svgEl('path', { class: 'curve', d: '' });
+    eqSvg.appendChild(curve);
+
+    BANDS.forEach(function (b, i) {
+      var dot = svgEl('circle', { class: 'handle', cx: 0, cy: 0, r: 5 });
+      var hit = svgEl('circle', { class: 'handle-hit', cx: 0, cy: 0, r: 16 });
+      hit.setAttribute('tabindex', '0');
+      hit.setAttribute('role', 'slider');
+      hit.setAttribute('aria-label', b.name + ' gain at ' + b.freq + ' hertz');
+      hit.setAttribute('aria-valuemin', '-12');
+      hit.setAttribute('aria-valuemax', '12');
+      hit.addEventListener('keydown', function (e) {
+        var step = e.shiftKey ? 0.1 : 0.5;
+        if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { setGain(i, b.gain + step); e.preventDefault(); }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { setGain(i, b.gain - step); e.preventDefault(); }
+        if (e.key === 'Home') { setGain(i, -12); e.preventDefault(); }
+        if (e.key === 'End') { setGain(i, 12); e.preventDefault(); }
+      });
+      eqSvg.appendChild(dot);
+      eqSvg.appendChild(hit);
+      handles.push({ dot: dot, hit: hit });
+    });
+  }
+
+  function drawEq() {
+    var d = '';
+    var peak = 0, sumSq = 0, n = 0;
+    for (var i = 0; i <= 180; i++) {
+      var f = 20 * Math.pow(1000, i / 180);
+      var db = responseAt(f);
+      if (Math.abs(db) > Math.abs(peak)) peak = db;
+      sumSq += db * db; n++;
+      d += (i ? 'L' : 'M') + xFor(f).toFixed(1) + ' ' + yFor(db).toFixed(1) + ' ';
+    }
+    curve.setAttribute('d', d);
+    BANDS.forEach(function (b, i) {
+      var x = xFor(b.freq), y = yFor(responseAt(b.freq));
+      handles[i].dot.setAttribute('cx', x); handles[i].dot.setAttribute('cy', y);
+      handles[i].hit.setAttribute('cx', x); handles[i].hit.setAttribute('cy', y);
+      handles[i].hit.setAttribute('aria-valuenow', String(b.gain));
+      handles[i].hit.setAttribute('aria-valuetext', (b.gain > 0 ? '+' : '') + b.gain.toFixed(1) + ' decibels');
+    });
+    var rms = Math.sqrt(sumSq / n);
+    readout.textContent = (peak > 0.05 ? '+' : '') + peak.toFixed(1) + ' dB peak · ' + rms.toFixed(1) + ' dB RMS';
+  }
+
+  function setGain(i, value) {
+    var v = Math.max(-12, Math.min(12, Math.round(value * 2) / 2));
+    BANDS[i].gain = v;
+    var input = document.querySelector('input[data-band="' + i + '"]');
+    if (input) { input.value = String(v); syncBand(i); }
+    drawEq();
+    describe();
+  }
+
+  function describe() {
+    var active = BANDS.filter(function (b) { return Math.abs(b.gain) > 0.05; });
+    if (!active.length) {
+      summary.textContent = 'Flat. No correction applied — the unit is already within 0.05 dB of target.';
+      return;
+    }
+    var parts = active.map(function (b) {
+      return b.name.toLowerCase() + ' ' + (b.gain > 0 ? '+' : '') + b.gain.toFixed(1) + ' dB';
+    });
+    var last = parts.pop();
+    summary.textContent = parts.length
+      ? parts.join(', ') + ' and ' + last + ', stored on the unit.'
+      : last.charAt(0).toUpperCase() + last.slice(1) + ', stored on the unit.';
+  }
+
+  /* the band controls are built from the same data the curve is drawn from */
+  var bandList = $('band-list');
+  function buildBands() {
+    BANDS.forEach(function (b, i) {
+      var wrap = document.createElement('div');
+      wrap.className = 'band';
+
+      var top = document.createElement('div');
+      top.className = 'band-top';
+      var name = document.createElement('span');
+      name.className = 'band-name';
+      name.textContent = b.name;
+      var freq = document.createElement('span');
+      freq.className = 'band-freq';
+      freq.textContent = b.freq >= 1000 ? (b.freq / 1000) + ' kHz' : b.freq + ' Hz';
+      var val = document.createElement('output');
+      val.className = 'band-val';
+      val.id = 'band-out-' + i;
+      val.htmlFor = 'band-' + i;
+      top.appendChild(name); top.appendChild(freq); top.appendChild(val);
+
+      var range = document.createElement('input');
+      range.type = 'range';
+      range.id = 'band-' + i;
+      range.min = '-12';
+      range.max = '12';
+      range.step = '0.5';
+      range.value = '0';
+      range.dataset.band = String(i);
+      range.setAttribute('aria-label', b.name + ' gain, ' + (b.freq >= 1000 ? (b.freq / 1000) + ' kilohertz' : b.freq + ' hertz'));
+      range.setAttribute('aria-describedby', 'band-out-' + i);
+
+      var q = document.createElement('div');
+      q.className = 'band-q';
+      q.setAttribute('role', 'group');
+      q.setAttribute('aria-label', b.name + ' width');
+      ['Narrow', 'Mid', 'Wide'].forEach(function (label, qi) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = label;
+        btn.setAttribute('aria-pressed', String(qi === 1));
+        btn.addEventListener('click', function () {
+          BANDS[i].q = [2.2, 1.1, 0.55][qi];
+          Array.prototype.forEach.call(q.children, function (c, ci) { c.setAttribute('aria-pressed', String(ci === qi)); });
+          drawEq();
+        });
+        q.appendChild(btn);
+      });
+
+      range.addEventListener('input', function () { setGain(i, parseFloat(range.value)); });
+      wrap.appendChild(top); wrap.appendChild(range); wrap.appendChild(q);
+      bandList.appendChild(wrap);
+    });
+  }
+  function syncBand(i) {
+    var out = $('band-out-' + i);
+    var v = BANDS[i].gain;
+    out.textContent = (v > 0 ? '+' : '') + v.toFixed(1) + ' dB';
+  }
+  buildBands();
+  buildEq();
+  drawEq();
+  describe();
+
+  /* presets */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-preset]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var values = PRESETS[btn.dataset.preset];
+      BANDS.forEach(function (b, i) {
+        b.gain = values[i];
+        var el = document.querySelector('input[data-band="' + i + '"]');
+        if (el) { el.value = String(b.gain); syncBand(i); }
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('[data-preset]'), function (o) {
+        o.setAttribute('aria-pressed', String(o === btn));
+      });
+      drawEq();
+      describe();
+    });
+  });
+  $('eq-reset').addEventListener('click', function () {
+    var flat = document.querySelector('[data-preset="flat"]');
+    if (flat) flat.click();
+  });
+
+  /* ==================================================================
+     3. Pricing period
+     ================================================================== */
+  var PRICES = {
+    year: { plus: 24, studio: 72, term: 'per year' },
+    once: { plus: 34, studio: 96, term: 'one-off' }
+  };
+  Array.prototype.forEach.call(document.querySelectorAll('[data-bill]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var mode = btn.dataset.bill;
+      var p = PRICES[mode];
+      Array.prototype.forEach.call(document.querySelectorAll('[data-bill]'), function (o) {
+        o.setAttribute('aria-pressed', String(o === btn));
+      });
+      document.querySelector('[data-price="year"]').textContent = '£' + p.plus;
+      document.querySelectorAll('[data-term]').forEach(function (el) { el.textContent = p.term; });
+      var studio = document.querySelectorAll('[data-price]')[1];
+      if (studio) studio.textContent = '£' + p.studio;
+    });
+  });
+
+  /* ==================================================================
+     4. Platform picker — the requirements follow the choice
+     ================================================================== */
+  var PLATFORMS = {
+    mac: {
+      file: 'MeridianControl-2.4.1-universal.dmg',
+      rows: [['System', 'macOS 12 Monterey or later'], ['Chip', 'Apple silicon or Intel'], ['Disk', '9.4 MB'], ['Install', 'Drag to Applications'], ['Not needed', 'No admin rights, no kext']]
+    },
+    win: {
+      file: 'MeridianControl-2.4.1-win64.zip',
+      rows: [['System', 'Windows 10 1809 or later, 64-bit'], ['Runtime', 'Bundled — no .NET install'], ['Disk', '11 MB'], ['Install', 'Unzip and run'], ['Driver', 'WinUSB, installed on first run']]
+    },
+    lin: {
+      file: 'meridian-control-2.4.1-x86_64.AppImage',
+      rows: [['System', 'Any 64-bit distribution, kernel 4.15+'], ['Rules', 'One udev rule, documented in-app'], ['Disk', '9.1 MB'], ['Install', 'chmod +x, then run'], ['Tested', 'Ubuntu 22.04, Fedora 39, Debian 12']]
+    }
+  };
+  var reqList = $('reqs-list');
+  function renderReqs(key) {
+    var p = PLATFORMS[key];
+    reqList.innerHTML = '';
+    p.rows.forEach(function (row) {
+      var dt = document.createElement('dt');
+      dt.textContent = row[0];
+      var dd = document.createElement('dd');
+      dd.textContent = row[1];
+      reqList.appendChild(dt);
+      reqList.appendChild(dd);
+    });
+  }
+  $('picker').addEventListener('change', function (e) {
+    if (e.target.name === 'platform') renderReqs(e.target.value);
+  });
+  renderReqs('mac');
+
+  /* ==================================================================
+     5. Download form
+     ================================================================== */
+  var form = $('get-form'), note = $('g-note'), submit = $('g-submit');
+  function setErr(id, msg) {
+    $(id).textContent = msg || '';
+    if (msg) $(id.replace('-err', '')).setAttribute('aria-invalid', 'true');
+    else $(id.replace('-err', '')).removeAttribute('aria-invalid');
+  }
+  form.addEventListener('input', function () {
+    if ($('g-email').getAttribute('aria-invalid') === 'true') { setErr('g-email-err', ''); note.textContent = ''; }
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = $('g-email').value.trim();
+    var platform = document.querySelector('input[name="platform"]:checked').value;
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) {
+      setErr('g-email-err', 'That address will not reach you — check for a typo.');
+      note.dataset.state = 'bad';
+      note.textContent = 'One field needs attention.';
+      $('g-email').focus();
+      return;
+    }
+    setErr('g-email-err', '');
+    submit.disabled = true;
+    $('g-submit-label').textContent = 'Preparing…';
+    note.dataset.state = '';
+    note.textContent = 'Building the link for ' + PLATFORMS[platform].file;
+    window.setTimeout(function () {
+      submit.disabled = false;
+      $('g-submit-label').textContent = 'Get the download';
+      note.dataset.state = 'ok';
+      note.textContent = 'Sent. The link to ' + PLATFORMS[platform].file + ' is in your inbox and expires in 24 hours.';
+      form.reset();
+      renderReqs('mac');
+    }, 900);
+  });
+
+  /* ==================================================================
+     6. Questions
+     ================================================================== */
+  Array.prototype.forEach.call(document.querySelectorAll('.q-btn'), function (btn) {
+    var item = btn.closest('.q-item');
+    var panel = item.querySelector('.q-panel');
+    var inner = panel.firstElementChild;
+    btn.addEventListener('click', function () {
+      var open = item.classList.contains('is-open');
+      btn.setAttribute('aria-expanded', String(!open));
+      item.classList.toggle('is-open', !open);
+      panel.style.height = open ? '0px' : inner.scrollHeight + 'px';
+    });
+    panel.addEventListener('transitionend', function () {
+      if (item.classList.contains('is-open')) panel.style.height = 'auto';
+    });
+  });
+
+  /* ==================================================================
+     7. Reveal on scroll
+     ================================================================== */
+  var revealables = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  if (reduce || !('IntersectionObserver' in window)) {
+    revealables.forEach(function (el) { el.classList.add('is-in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-in');
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+    revealables.forEach(function (el) { io.observe(el); });
+    window.setTimeout(function () {
+      var fold = window.innerHeight;
+      revealables.forEach(function (el) {
+        if (el.getBoundingClientRect().top < fold) el.classList.add('is-in');
+      });
+    }, 2000);
+  }
+})();
+</script>
+</body>
+</html>

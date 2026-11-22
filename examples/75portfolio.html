@@ -1,0 +1,680 @@
+<!-- Style: Portfolio | 75portfolio.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iris Nakamura — Product designer</title>
+<style>
+  :root{
+    --bg:#F3F1EC;
+    --surface:#FFFFFF;
+    --ink:#1B1B19;
+    --ink-2:#575650;
+    --ink-3:#8D8C85;
+    --line:#DCDAD2;
+    --accent:#B23A17;   /* signal rust — used for state, not decoration */
+    --accent-soft:#F6E4DC;
+    /* type */
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --serif: "Iowan Old Style", Palatino, Georgia, "Times New Roman", serif;
+    --t-mega: clamp(3rem, 1rem + 11vw, 11rem);
+    --t-h2: clamp(1.6rem, 1.2rem + 1.8vw, 2.6rem);
+    --t-h3: clamp(1.15rem, 1.05rem + .5vw, 1.5rem);
+    --t-body: 1rem;
+    --t-small: .875rem;
+    --t-micro: .72rem;
+    /* space */
+    --s-1:.25rem; --s-2:.5rem; --s-3:.8rem; --s-4:1.4rem; --s-5:2.2rem; --s-6:3.6rem; --s-7:5.5rem; --s-8:8rem;
+    --r:3px;
+    --ring:0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+    --dur:200ms; --dur-slow:600ms; --ease:cubic-bezier(.2,.7,.2,1);
+    --wrap:1300px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:var(--t-body);line-height:1.58;-webkit-font-size-adjust:100%}
+  img,svg{display:block;max-width:100%}
+  h1,h2,h3,h4,p,ul,figure,blockquote{margin:0}
+  ul{padding:0;list-style:none}
+  a{color:inherit;text-decoration:none}
+  .wrap{width:min(100% - 3rem, var(--wrap));margin-inline:auto}
+  .skip{position:absolute;left:-9999px;background:var(--ink);color:var(--bg);padding:.7rem 1.1rem;z-index:99}
+  .skip:focus{left:0}
+  :focus-visible{outline:none;box-shadow:var(--ring)}
+
+  .h2{font-size:var(--t-h2);line-height:1.14;letter-spacing:-.025em;font-weight:600}
+  .h3{font-size:var(--t-h3);line-height:1.3;letter-spacing:-.01em;font-weight:650}
+  .muted{color:var(--ink-2)}
+  .small{font-size:var(--t-small)}
+  .micro{font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+
+  .btn{
+    --bg:var(--ink);--fg:var(--bg);--bd:var(--ink);
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    min-height:48px;padding:.7rem 1.4rem;background:var(--bg);color:var(--fg);
+    border:1px solid var(--bd);border-radius:var(--r);font:inherit;font-size:var(--t-small);font-weight:600;
+    cursor:pointer;transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease);
+  }
+  .btn:hover{--bg:var(--accent);--bd:var(--accent)}
+  .btn--line{--bg:transparent;--fg:var(--ink);--bd:var(--ink)}
+  .btn--line:hover{--bg:var(--ink);--fg:var(--bg);--bd:var(--ink)}
+
+  /* header */
+  .head{position:sticky;top:0;z-index:40;background:rgba(243,241,236,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .head-in{display:flex;align-items:center;gap:var(--s-5);min-height:70px}
+  .name{font-weight:700;letter-spacing:-.02em;font-size:1.05rem}
+  .head nav{margin-left:auto}
+  .head nav ul{display:flex;gap:var(--s-5)}
+  .head nav a{font-size:var(--t-small);color:var(--ink-2);display:inline-block;padding:.5rem 0;border-bottom:1px solid transparent}
+  .head nav a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+  .head .btn{margin-left:var(--s-4)}
+  .menu-btn{display:none;margin-left:auto;background:none;border:1px solid var(--ink);border-radius:var(--r);min-height:44px;padding:.4rem .9rem;font:inherit;font-size:var(--t-micro);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+
+  /* identity hero */
+  .identity{padding-block:var(--s-7) var(--s-6);border-bottom:1px solid var(--line)}
+  .identity h1{
+    font-size:var(--t-mega);line-height:.86;letter-spacing:-.045em;font-weight:700;
+    display:flex;flex-wrap:wrap;gap:0 .28em;
+  }
+  .identity h1 span{display:block}
+  .identity h1 .thin{font-weight:300;color:var(--ink-3)}
+  .identity-row{display:grid;grid-template-columns:1.2fr .8fr;gap:var(--s-5);margin-top:var(--s-5);align-items:end}
+  .identity-row p{font-size:clamp(1.02rem,.95rem+.4vw,1.2rem);color:var(--ink-2);max-width:44ch}
+  .avail{display:flex;align-items:center;gap:.6rem;justify-self:end;font-size:var(--t-small);border:1px solid var(--line);background:var(--surface);padding:.7rem 1rem;border-radius:var(--r)}
+  .avail i{width:8px;height:8px;border-radius:50%;background:#3E7A55;display:block}
+
+  /* work index */
+  .index{list-style:none;padding:0;border-bottom:1px solid var(--line)}
+  .index li{border-top:1px solid var(--line)}
+  .index li:first-child{border-top:0}
+  .index a{display:grid;grid-template-columns:5.5rem 1fr 9rem 5rem;gap:var(--s-4);align-items:center;padding:1.35rem .25rem;transition:background-color var(--dur) var(--ease)}
+  .index a:hover{background:var(--surface)}
+  .index .yr{font-size:var(--t-small);color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .index .ttl{font-size:clamp(1.15rem,1rem+1vw,1.75rem);letter-spacing:-.02em;font-weight:600}
+  .index .role{font-size:var(--t-small);color:var(--ink-2)}
+  .index .arrow{justify-self:end;display:flex;align-items:center;gap:.5rem;font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .index a:hover .arrow{color:var(--accent)}
+  .index li.current .ttl::after{content:" — selected";font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
+
+  /* case study */
+  .case{padding-block:var(--s-8)}
+  .case-head{display:grid;grid-template-columns:1fr .8fr;gap:var(--s-6);align-items:end;padding-bottom:var(--s-5);border-bottom:1px solid var(--ink)}
+  .case-head h2{font-size:clamp(2rem,1.4rem+3vw,4rem);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin-block:var(--s-3)}
+  .case-head .facts{display:grid;gap:.55rem;font-size:var(--t-small);justify-self:end;width:100%;max-width:24rem}
+  .case-head .facts div{display:flex;justify-content:space-between;gap:var(--s-3);border-bottom:1px solid var(--line);padding-bottom:.5rem}
+  .case-head .facts dt{color:var(--ink-3);font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase}
+  .case-head .facts dd{margin:0;text-align:right}
+  .case-media{margin-top:var(--s-5)}
+  .case-media svg{width:100%;height:auto}
+  .case-media figcaption{font-size:var(--t-small);color:var(--ink-3);margin-top:.75rem;max-width:60ch}
+  .case-body{display:grid;grid-template-columns:.9fr 1.1fr;gap:var(--s-6);margin-top:var(--s-6)}
+  .case-body h3{margin-bottom:.6rem}
+  .case-body p{color:var(--ink-2);max-width:52ch}
+  .case-body p + p{margin-top:var(--s-3)}
+  .outcomes{margin-top:var(--s-6);border-top:1px solid var(--line)}
+  .outcome{display:grid;grid-template-columns:5.5rem 1fr 8rem;gap:var(--s-4);align-items:baseline;padding:1.1rem 0;border-bottom:1px solid var(--line)}
+  .outcome .label{font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .outcome b{font-size:1.3rem;letter-spacing:-.02em;font-weight:650}
+  .outcome .note{font-size:var(--t-small);color:var(--ink-2);text-align:right}
+
+  /* other work — media-led, not a card grid */
+  .others{border-top:1px solid var(--ink);padding-block:var(--s-7)}
+  .others h2{margin-bottom:var(--s-5)}
+  .strip{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4)}
+  .piece{display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .piece:hover{border-color:var(--ink)}
+  .piece figure{aspect-ratio:4/3;background:var(--line);overflow:hidden}
+  .piece figure svg{width:100%;height:100%;transition:transform var(--dur-slow) var(--ease)}
+  .piece:hover figure svg{transform:scale(1.03)}
+  .piece .meta{padding:var(--s-3) var(--s-4) var(--s-4)}
+  .piece h3{margin-block:.35rem}
+  .piece p{font-size:var(--t-small);color:var(--ink-2)}
+
+  /* about */
+  .about{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--s-7);padding-block:var(--s-8);border-top:1px solid var(--ink);align-items:start}
+  .about figure{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--s-4)}
+  .about figure svg{width:100%;height:auto}
+  .about figcaption{font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:var(--s-3)}
+  .about h2{margin-bottom:var(--s-4)}
+  .about p{color:var(--ink-2);max-width:54ch}
+  .about p + p{margin-top:var(--s-3)}
+  .cap-list{list-style:none;padding:0;margin-top:var(--s-5);border-top:1px solid var(--line)}
+  .cap-list li{display:grid;grid-template-columns:3.5rem 1fr;gap:var(--s-3);padding:.9rem 0;border-bottom:1px solid var(--line);font-size:var(--t-small)}
+  .cap-list .n{color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+  /* record / experience */
+  .record{border-top:1px solid var(--line);padding-block:var(--s-7)}
+  .record-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6)}
+  .record h2{margin-bottom:var(--s-4)}
+  .record h3{font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:var(--s-3)}
+  .row{display:grid;grid-template-columns:1fr auto;gap:var(--s-4);padding:.7rem 0;border-bottom:1px solid var(--line);font-size:var(--t-small)}
+  .row .yr{color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+  /* contact */
+  .contact{background:var(--ink);color:#EFEDE7;padding-block:var(--s-8)}
+  .contact .micro{color:#9C9A92}
+  .contact h2{font-size:clamp(2rem,1.4rem+3vw,3.6rem);line-height:1.05;letter-spacing:-.03em;font-weight:700;margin-block:var(--s-3) var(--s-5);max-width:16ch}
+  .contact-in{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-7);align-items:start}
+  .contact ul{font-size:var(--t-small);color:#C9C6BE}
+  .contact ul li{padding-block:.5rem;border-bottom:1px solid #33322E;display:flex;gap:var(--s-3);justify-content:space-between}
+  .form{display:grid;gap:var(--s-3);max-width:30rem}
+  .field{display:grid;gap:.4rem}
+  .field label{font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;color:#9C9A92}
+  .field input,.field textarea,.field select{
+    min-height:50px;padding:.65rem 0;background:transparent;border:0;border-bottom:1px solid #4A4842;
+    color:#EFEDE7;font:inherit;font-size:var(--t-body);width:100%;border-radius:0;
+  }
+  .field textarea{min-height:100px;resize:vertical}
+  .field input::placeholder,.field textarea::placeholder{color:#6F6D66}
+  .field input:focus-visible,.field textarea:focus-visible,.field select:focus-visible{border-bottom-color:#EFEDE7;box-shadow:none}
+  .field select option{background:#1B1B19;color:#EFEDE7}
+  .form-msg{font-size:var(--t-small);min-height:1.4em;color:#E6A08C}
+  .form-msg[data-state="ok"]{color:#9FD3B2}
+  .contact .btn{--bg:#EFEDE7;--fg:var(--ink);--bd:#EFEDE7}
+  .contact .btn:hover{--bg:#B23A17;--bd:#B23A17;--fg:#fff}
+  .form-foot{font-size:var(--t-micro);color:#6F6D66;letter-spacing:.04em}
+
+  @media (max-width:1000px){
+    .identity-row,.case-head,.case-body,.about,.contact-in{grid-template-columns:1fr}
+    .case-head .facts{justify-self:start}
+    .avail{justify-self:start}
+    .outcome{grid-template-columns:5rem 1fr}
+    .outcome .note{grid-column:2;text-align:left}
+    .record-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:860px){
+    .head nav{display:none}
+    .head nav[data-open="true"]{display:block;position:absolute;top:70px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--line);padding:.5rem 1.5rem 1rem}
+    .head nav[data-open="true"] ul{flex-direction:column;gap:0}
+    .head nav[data-open="true"] a{display:block;padding:.9rem 0;border-bottom:1px solid var(--line)}
+    .head .btn{display:none}
+    .menu-btn{display:block}
+    .index a{grid-template-columns:4rem 1fr;row-gap:.35rem}
+    .index .role{grid-column:2}
+    .index .arrow{grid-column:2;justify-self:start}
+    .strip{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .wrap{width:min(100% - 2.2rem,var(--wrap))}
+    .section,.case{padding-block:var(--s-7)}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="head">
+  <div class="wrap head-in">
+    <a class="name" href="#top">Iris Nakamura</a>
+    <nav id="nav" aria-label="Sections">
+      <ul>
+        <li><a href="#work">Selected work</a></li>
+        <li><a href="#others">Other projects</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#record">Record</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn" href="#contact">Available for work</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+  </div>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <section class="identity" aria-labelledby="identityTitle">
+    <div class="wrap">
+      <h1 id="identityTitle"><span>Iris</span><span class="thin">Nakamura</span></h1>
+      <div class="identity-row">
+        <p>Product designer working on tools people use while distracted — dispatch, clinical, warehouse. Eleven years across hardware and software, most of it spent removing things.</p>
+        <p class="avail"><i></i> Open to new work from March 2027</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" aria-labelledby="workTitle">
+    <div class="wrap">
+      <p class="micro" id="workTitle">Selected work · 2021–2026</p>
+      <ol class="index" style="margin-top:var(--s-4)">
+        <li class="current">
+          <a href="#case-dispatch">
+            <span class="yr">2026</span>
+            <span class="ttl">Dispatch, rebuilt around the exceptions</span>
+            <span class="role">Lead product designer</span>
+            <span class="arrow">Read the case study <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </li>
+        <li>
+          <a href="#case-vitals">
+            <span class="yr">2024</span>
+            <span class="ttl">Vitals: a bedside chart that fits on a wall</span>
+            <span class="role">Design lead</span>
+            <span class="arrow">Read the case study <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </li>
+        <li>
+          <a href="#others">
+            <span class="yr">2023</span>
+            <span class="ttl">Fleet handover, 14 screens removed</span>
+            <span class="role">Product designer</span>
+            <span class="arrow">Summary below <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </li>
+        <li>
+          <a href="#others">
+            <span class="yr">2022</span>
+            <span class="ttl">Cold store scanning at −28°C</span>
+            <span class="role">Interaction designer</span>
+            <span class="arrow">Summary below <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </li>
+        <li>
+          <a href="#others">
+            <span class="yr">2021</span>
+            <span class="ttl">The first version of nothing</span>
+            <span class="role">Design lead</span>
+            <span class="arrow">Summary below <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <article class="case" id="case-dispatch" aria-labelledby="caseTitle">
+    <div class="wrap">
+      <header class="case-head">
+        <div>
+          <p class="micro">Case study 01 · Logistics software</p>
+          <h2 id="caseTitle">Dispatch, rebuilt around the exceptions</h2>
+        </div>
+        <dl class="facts">
+          <div><dt>Client</dt><dd>Northgate Haulage</dd></div>
+          <div><dt>Year</dt><dd>2025 – 2026</dd></div>
+          <div><dt>Role</dt><dd>Lead product designer, 0–1</dd></div>
+          <div><dt>Team</dt><dd>2 designers, 5 engineers, 1 planner</dd></div>
+          <div><dt>Scope</dt><dd>Research, interaction, UI, design system</dd></div>
+        </dl>
+      </header>
+
+      <figure class="case-media">
+        <svg viewBox="0 0 1200 600" role="img" aria-label="The dispatch board interface: a run list on the left, three exception cards, and a map summary on the right.">
+          <rect width="1200" height="600" fill="#E6E4DE"/>
+          <rect x="0" y="0" width="1200" height="52" fill="#1B1B19"/>
+          <rect x="24" y="18" width="120" height="16" rx="3" fill="#EFEDE7" opacity=".85"/>
+          <rect x="900" y="18" width="60" height="16" rx="3" fill="#6F6D66"/>
+          <rect x="990" y="14" width="186" height="24" rx="4" fill="#B23A17"/>
+          <rect x="0" y="52" width="330" height="548" fill="#F3F1EC"/>
+          <g fill="#BFBDB6">
+            <rect x="24" y="80" width="180" height="10" rx="5"/><rect x="24" y="112" width="260" height="26" rx="4"/>
+            <rect x="24" y="156" width="220" height="26" rx="4"/><rect x="24" y="200" width="244" height="26" rx="4"/>
+            <rect x="24" y="244" width="200" height="26" rx="4"/><rect x="24" y="288" width="250" height="26" rx="4"/>
+            <rect x="24" y="332" width="190" height="26" rx="4"/><rect x="24" y="376" width="236" height="26" rx="4"/>
+            <rect x="24" y="420" width="212" height="26" rx="4"/><rect x="24" y="464" width="256" height="26" rx="4"/>
+          </g>
+          <rect x="24" y="112" width="4" height="26" fill="#B23A17"/>
+          <rect x="356" y="76" width="440" height="140" rx="4" fill="#FFFFFF" stroke="#DCDAD2"/>
+          <rect x="380" y="100" width="10" height="10" rx="2" fill="#B23A17"/>
+          <rect x="380" y="128" width="200" height="12" rx="6" fill="#1B1B19" opacity=".8"/>
+          <g fill="#BFBDB6"><rect x="380" y="156" width="360" height="8" rx="4"/><rect x="380" y="174" width="300" height="8" rx="4"/><rect x="380" y="192" width="330" height="8" rx="4"/></g>
+          <rect x="712" y="76" width="20" height="20" rx="10" fill="#B23A17"/>
+          <rect x="356" y="236" width="440" height="140" rx="4" fill="#FFFFFF" stroke="#DCDAD2"/>
+          <rect x="380" y="260" width="10" height="10" rx="2" fill="#3E7A55"/>
+          <rect x="380" y="288" width="176" height="12" rx="6" fill="#1B1B19" opacity=".8"/>
+          <g fill="#BFBDB6"><rect x="380" y="316" width="340" height="8" rx="4"/><rect x="380" y="334" width="286" height="8" rx="4"/><rect x="380" y="352" width="316" height="8" rx="4"/></g>
+          <rect x="712" y="256" width="20" height="20" rx="10" fill="#3E7A55"/>
+          <rect x="356" y="396" width="440" height="140" rx="4" fill="#FFFFFF" stroke="#DCDAD2"/>
+          <rect x="380" y="420" width="10" height="10" rx="2" fill="#8A7B2E"/>
+          <rect x="380" y="448" width="150" height="12" rx="6" fill="#1B1B19" opacity=".8"/>
+          <g fill="#BFBDB6"><rect x="380" y="476" width="320" height="8" rx="4"/><rect x="380" y="494" width="252" height="8" rx="4"/><rect x="380" y="512" width="300" height="8" rx="4"/></g>
+          <rect x="712" y="416" width="20" height="20" rx="10" fill="#8A7B2E"/>
+          <rect x="832" y="76" width="344" height="460" rx="4" fill="#1B1B19"/>
+          <g stroke="#3A3934" stroke-width="1"><path d="M832 176h344M832 276h344M832 376h344M832 476h344M920 76v460M1008 76v460M1096 76v460"/></g>
+          <path d="M860 420 920 360 960 400 1030 320 1090 350 1140 300" stroke="#EFEDE7" stroke-width="3" fill="none" stroke-linejoin="round"/>
+          <circle cx="920" cy="360" r="7" fill="#B23A17"/>
+          <circle cx="1030" cy="320" r="7" fill="#EFEDE7"/>
+          <circle cx="1140" cy="300" r="7" fill="#EFEDE7" opacity=".5"/>
+          <rect x="860" y="100" width="120" height="10" rx="5" fill="#6F6D66"/>
+          <rect x="860" y="130" width="200" height="24" rx="4" fill="#2A2926"/>
+          <rect x="860" y="492" width="180" height="24" rx="4" fill="#B23A17"/>
+        </svg>
+        <figcaption>The board as it shipped: exceptions first, and nothing that is not an exception is allowed above the fold.</figcaption>
+      </figure>
+
+      <div class="case-body">
+        <div>
+          <h3 class="h3">The problem was not the screen</h3>
+          <p>Northgate's dispatchers opened the product at 4:40 a.m. to a screen of 214 rows. Every row was a truck that was on time. The four that were not were somewhere in the middle, and the dispatcher knew it only because the loading-bay colleague shouted.</p>
+        </div>
+        <div>
+          <h3 class="h3">What we changed</h3>
+          <p>We spent three weeks on the floor before drawing anything. Two changes did almost all of the work: the board now sorts exceptions to the top and says why, and a run is only “open” once it has a named owner and a phone number that has been answered.</p>
+          <p>Everything else — the map, the load history, the driver notes — moved behind the run itself, where it is read far less often but is never more than two taps away.</p>
+        </div>
+      </div>
+
+      <div class="outcomes">
+        <div class="outcome">
+          <span class="label">Metric</span>
+          <b>11 minutes → 90 seconds</b>
+          <span class="note">Median time to identify a late run</span>
+        </div>
+        <div class="outcome">
+          <span class="label">Metric</span>
+          <b>214 rows → 3 cards</b>
+          <span class="note">Anything not exceptional moved out of view</span>
+        </div>
+        <div class="outcome">
+          <span class="label">Result</span>
+          <b>Deployed to 19 depots</b>
+          <span class="note">No retraining, no release-notes backlash</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="case" id="case-vitals" aria-labelledby="vitalsTitle" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <header class="case-head">
+        <div>
+          <p class="micro">Case study 02 · Clinical hardware</p>
+          <h2 id="vitalsTitle" class="display" style="font-size:clamp(2rem,1.4rem+3vw,4rem);line-height:1.02;letter-spacing:-.035em;font-weight:700">Vitals: a bedside chart that fits on a wall</h2>
+        </div>
+        <dl class="facts">
+          <div><dt>Client</dt><dd>St Aidan's ward, Leeds</dd></div>
+          <div><dt>Year</dt><dd>2024</dd></div>
+          <div><dt>Role</dt><dd>Design lead</dd></div>
+          <div><dt>Scope</dt><dd>Print system, glyphs, bedside study</dd></div>
+        </dl>
+      </header>
+
+      <figure class="case-media">
+        <svg viewBox="0 0 1200 480" role="img" aria-label="A printed bedside observation chart pinned to a wall, with large numeric fields and a colour-coded row system.">
+          <rect width="1200" height="480" fill="#DCDAD3"/>
+          <rect x="150" y="24" width="900" height="432" fill="#FFFFFF"/>
+          <rect x="150" y="24" width="900" height="52" fill="#1B1B19"/>
+          <rect x="178" y="42" width="180" height="16" rx="3" fill="#EFEDE7"/>
+          <rect x="900" y="42" width="120" height="16" rx="3" fill="#6F6D66"/>
+          <g fill="#1B1B19">
+            <rect x="178" y="104" width="130" height="18" rx="3"/>
+            <rect x="640" y="104" width="90" height="18" rx="3"/>
+          </g>
+          <g>
+            <rect x="178" y="150" width="200" height="90" rx="3" fill="#F6E4DC"/>
+            <rect x="394" y="150" width="200" height="90" rx="3" fill="#F3F1EC"/>
+            <rect x="610" y="150" width="200" height="90" rx="3" fill="#F3F1EC"/>
+            <rect x="826" y="150" width="200" height="90" rx="3" fill="#F3F1EC"/>
+            <text x="278" y="212" text-anchor="middle" font-family="system-ui" font-size="46" font-weight="700" fill="#B23A17">38.9</text>
+            <text x="494" y="212" text-anchor="middle" font-family="system-ui" font-size="46" font-weight="700" fill="#1B1B19">98</text>
+            <text x="710" y="212" text-anchor="middle" font-family="system-ui" font-size="46" font-weight="700" fill="#1B1B19">16</text>
+            <text x="926" y="212" text-anchor="middle" font-family="system-ui" font-size="46" font-weight="700" fill="#1B1B19">12</text>
+          </g>
+          <g stroke="#DCDAD2" stroke-width="1.5">
+            <path d="M178 268h848M178 316h848M178 364h848M178 412h848"/>
+            <path d="M394 268v192M610 268v192M826 268v192"/>
+          </g>
+          <g fill="#8D8C85" font-family="system-ui" font-size="15">
+            <text x="186" y="296">Respiratory rate</text><text x="402" y="296">Blood pressure</text>
+            <text x="618" y="296">Oxygen saturation</text><text x="834" y="296">Consciousness</text>
+          </g>
+          <g fill="#1B1B19" font-family="system-ui" font-size="19" font-weight="600">
+            <text x="186" y="348">16 /min</text><text x="402" y="348">118 / 74</text>
+            <text x="618" y="348">97%</text><text x="834" y="348">Alert (V)</text>
+            <text x="186" y="396">14 /min</text><text x="402" y="396">122 / 78</text>
+            <text x="618" y="396">98%</text><text x="834" y="396">Alert (V)</text>
+            <text x="186" y="440">12 /min</text><text x="402" y="440">116 / 72</text>
+            <text x="618" y="440">96%</text><text x="834" y="440">Alert (V)</text>
+          </g>
+          <rect x="200" y="-14" width="220" height="30" fill="#BFBDB6" transform="rotate(-4 310 0)"/>
+        </svg>
+        <figcaption>Twelve hours of observations on one sheet, printed at A3, readable from the end of the bed at 2 a.m.</figcaption>
+      </figure>
+
+      <div class="case-body">
+        <div>
+          <h3 class="h3">Nobody asked for a tablet</h3>
+          <p>The ward had been issued tablets and quietly stopped using them: gloves, bed rails, thirty-second battery, no charging point. The paper chart had survived because paper is still the fastest thing in the room.</p>
+        </div>
+        <div>
+          <h3 class="h3">So we designed a chart</h3>
+          <p>One A3 sheet per twelve hours. Numerals at 46 point, colour reserved entirely for “this number is wrong”. We tested it with night staff at the bedside rather than in a usability lab, and cut a third of what we first drew.</p>
+        </div>
+      </div>
+
+      <div class="outcomes">
+        <div class="outcome">
+          <span class="label">Metric</span>
+          <b>41 → 14</b>
+          <span class="note">Fields on the sheet after two rounds of testing</span>
+        </div>
+        <div class="outcome">
+          <span class="label">Result</span>
+          <b>In use on four wards</b>
+          <span class="note">Printed nightly by the ward clerk, four minutes' work</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <section class="others" id="others" aria-labelledby="othersTitle">
+    <div class="wrap">
+      <p class="micro">Also shipped</p>
+      <h2 class="h2" id="othersTitle" style="margin-block:.6rem var(--s-5)">Three smaller pieces of work</h2>
+      <div class="strip">
+        <a class="piece" href="#work">
+          <figure>
+            <svg viewBox="0 0 400 300" role="img" aria-label="Diagram of a simplified vehicle handover flow with the removed steps crossed out.">
+              <rect width="400" height="300" fill="#E6E4DE"/>
+              <g fill="#1B1B19" opacity=".8">
+                <rect x="30" y="50" width="150" height="34" rx="3"/><rect x="220" y="50" width="150" height="34" rx="3"/>
+                <rect x="30" y="130" width="150" height="34" rx="3"/><rect x="220" y="130" width="150" height="34" rx="3"/>
+                <rect x="30" y="210" width="150" height="34" rx="3"/><rect x="220" y="210" width="150" height="34" rx="3"/>
+              </g>
+              <g stroke="#B23A17" stroke-width="3"><path d="M186 67h28M186 147h28M186 227h28"/></g>
+              <g stroke="#B23A17" stroke-width="3" fill="none" opacity=".85">
+                <path d="M30 100h340M60 92l16 8-16 8M350 92l-16 8 16 8"/>
+                <path d="M30 260h340M60 252l16 8-16 8M350 252l-16 8 16 8"/>
+              </g>
+              <rect x="30" y="176" width="340" height="10" fill="#C9C6BE"/>
+            </svg>
+          </figure>
+          <div class="meta">
+            <p class="micro">2023 · Logistics</p>
+            <h3 class="h3">Fleet handover</h3>
+            <p>Fourteen screens replaced by three. Measured on time-to-handover, not clicks.</p>
+          </div>
+        </a>
+        <a class="piece" href="#work">
+          <figure>
+            <svg viewBox="0 0 400 300" role="img" aria-label="A rugged handheld scanner interface with oversized targets and a glove-sized confirm button.">
+              <rect width="400" height="300" fill="#D9DDE2"/>
+              <rect x="110" y="26" width="180" height="248" rx="20" fill="#1B1B19"/>
+              <rect x="126" y="58" width="148" height="88" rx="6" fill="#EFEDE7"/>
+              <g fill="#1B1B19"><rect x="140" y="74" width="70" height="10" rx="5"/><rect x="140" y="96" width="100" height="10" rx="5"/><rect x="140" y="118" width="86" height="10" rx="5"/></g>
+              <rect x="140" y="164" width="120" height="46" rx="8" fill="#B23A17"/>
+              <text x="200" y="194" text-anchor="middle" font-family="system-ui" font-size="17" font-weight="700" fill="#fff">CONFIRM</text>
+              <g fill="#2A2926"><rect x="140" y="222" width="34" height="26" rx="4"/><rect x="184" y="222" width="34" height="26" rx="4"/><rect x="228" y="222" width="34" height="26" rx="4"/></g>
+            </svg>
+          </figure>
+          <div class="meta">
+            <p class="micro">2022 · Cold chain</p>
+            <h3 class="h3">Scanning at −28°C</h3>
+            <p>One screen, 32 px targets, and a confirm key reachable through a glove.</p>
+          </div>
+        </a>
+        <a class="piece" href="#work">
+          <figure>
+            <svg viewBox="0 0 400 300" role="img" aria-label="A wall of discarded interface sketches with three circled as kept.">
+              <rect width="400" height="300" fill="#EAE7E0"/>
+              <g fill="#FFFFFF" stroke="#C9C6BE">
+                <rect x="26" y="24" width="160" height="110"/><rect x="212" y="24" width="160" height="110"/>
+                <rect x="26" y="158" width="160" height="110"/><rect x="212" y="158" width="160" height="110"/>
+              </g>
+              <g fill="#BFBDB6">
+                <rect x="44" y="44" width="100" height="8" rx="4"/><rect x="44" y="62" width="120" height="6" rx="3"/><rect x="44" y="78" width="90" height="6" rx="3"/><rect x="44" y="98" width="70" height="16" rx="3"/>
+                <rect x="230" y="44" width="110" height="8" rx="4"/><rect x="230" y="62" width="80" height="6" rx="3"/><rect x="230" y="78" width="120" height="6" rx="3"/>
+                <rect x="44" y="178" width="90" height="8" rx="4"/><rect x="44" y="196" width="124" height="6" rx="3"/><rect x="44" y="212" width="60" height="16" rx="3"/>
+                <rect x="230" y="178" width="70" height="8" rx="4"/><rect x="230" y="196" width="124" height="6" rx="3"/>
+              </g>
+              <circle cx="150" cy="80" r="34" fill="none" stroke="#B23A17" stroke-width="4"/>
+              <circle cx="280" cy="200" r="34" fill="none" stroke="#B23A17" stroke-width="4"/>
+              <circle cx="120" cy="200" r="34" fill="none" stroke="#B23A17" stroke-width="4"/>
+            </svg>
+          </figure>
+          <div class="meta">
+            <p class="micro">2021 · Internal</p>
+            <h3 class="h3">The first version of nothing</h3>
+            <p>A week of sketching to establish what the product would not do. Three concepts survived.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about" aria-labelledby="aboutTitle">
+    <div class="wrap" style="display:contents">
+      <figure>
+        <svg viewBox="0 0 440 520" role="img" aria-label="Illustrated portrait of Iris Nakamura at a desk with sketches pinned to a wall.">
+          <rect width="440" height="520" fill="#E3E1DA"/>
+          <rect x="240" y="30" width="170" height="120" fill="#FFFFFF" stroke="#C9C6BE"/>
+          <g fill="#BFBDB6"><rect x="256" y="48" width="120" height="7" rx="3"/><rect x="256" y="66" width="90" height="6" rx="3"/><rect x="256" y="88" width="110" height="6" rx="3"/></g>
+          <rect x="40" y="40" width="150" height="104" fill="#FFFFFF" stroke="#C9C6BE" transform="rotate(-3 115 92)"/>
+          <g fill="#BFBDB6" transform="rotate(-3 115 92)"><rect x="56" y="60" width="90" height="7" rx="3"/><rect x="56" y="78" width="110" height="6" rx="3"/><rect x="56" y="100" width="70" height="16" rx="3"/></g>
+          <rect y="392" width="440" height="128" fill="#C9C6BE"/>
+          <path d="M96 392c0-40 26-64 62-64s62 24 62 64v0Z" fill="#1B1B19"/>
+          <circle cx="158" cy="288" r="52" fill="#E8C9AE"/>
+          <path d="M106 288a52 52 0 0 1 104 0c0-38-22-58-52-58s-52 20-52 58Z" fill="#1B1B19"/>
+          <path d="M106 290c0 42 24 66 52 66s52-24 52-66c-14 22-32 32-52 32s-38-10-52-32Z" fill="#1B1B19"/>
+          <g fill="#1B1B19"><circle cx="140" cy="288" r="3.4"/><circle cx="176" cy="288" r="3.4"/></g>
+          <path d="M148 312c6 5 14 5 20 0" stroke="#B08C6E" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M218 392l60-26 22 26Z" fill="#B23A17"/>
+          <rect x="290" y="360" width="120" height="32" rx="3" fill="#FFFFFF" stroke="#C9C6BE"/>
+          <g fill="#BFBDB6"><rect x="302" y="370" width="80" height="5" rx="2"/><rect x="302" y="380" width="60" height="5" rx="2"/></g>
+        </svg>
+        <figcaption>Studio, Hackney Wick — 2026</figcaption>
+      </figure>
+      <div>
+        <p class="micro">About</p>
+        <h2 class="h2" id="aboutTitle" style="margin-block:.6rem var(--s-4)">I design for people who cannot look down</h2>
+        <p>Most of my work is in places where the user's hands are busy, cold, gloved, or holding something heavy — and where the cost of a mis-tap is measured in a delayed truck or a missed dose. That constraint is a gift. It removes most of the questions designers usually get to enjoy.</p>
+        <p>Before going independent I led design at Northgate Haulage and before that shipped clinical software at a company you have heard of. I prototype in whatever medium answers the question fastest, which is usually paper and a stopwatch.</p>
+        <ul class="cap-list">
+          <li><span class="n">01</span><span>Interaction design and design systems</span></li>
+          <li><span class="n">02</span><span>Field research on site, in the cold</span></li>
+          <li><span class="n">03</span><span>Accessibility to WCAG 2.2 AA, including gloves and glare</span></li>
+          <li><span class="n">04</span><span>Working directly with engineers and planners</span></li>
+          <li><span class="n">05</span><span>Print and wayfinding, occasionally</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="record" id="record" aria-labelledby="recordTitle">
+    <div class="wrap record-grid">
+      <div>
+        <h2 class="h2" id="recordTitle" style="margin-bottom:var(--s-4)">Experience</h2>
+        <h3>Employment</h3>
+        <div class="row"><span>Independent product designer</span><span class="yr">2021 — now</span></div>
+        <div class="row"><span>Lead designer, Northgate Haulage</span><span class="yr">2018 — 2021</span></div>
+        <div class="row"><span>Product designer, clinical software</span><span class="yr">2015 — 2018</span></div>
+        <div class="row"><span>Junior designer, agency</span><span class="yr">2013 — 2015</span></div>
+      </div>
+      <div>
+        <h2 class="h2" style="margin-bottom:var(--s-4);visibility:hidden">Selected recognition</h2>
+        <h3>Recognition</h3>
+        <div class="row"><span>D&amp;AD Wood Pencil, interface</span><span class="yr">2025</span></div>
+        <div class="row"><span>Design Council Award, service</span><span class="yr">2024</span></div>
+        <div class="row"><span>Talk: “Don't design the screen”</span><span class="yr">2023</span></div>
+        <div class="row"><span>Visiting critic, Ravensbourne</span><span class="yr">2022 — 2025</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contactTitle">
+    <div class="wrap contact-in">
+      <div>
+        <p class="micro">Contact</p>
+        <h2 id="contactTitle">Tell me what is going wrong before you tell me what you want built</h2>
+        <ul>
+          <li><span>Email</span><span class="mono">iris@irisnakamura.design</span></li>
+          <li><span>Studio</span><span>Unit 12, Hackney Wick, London E9</span></li>
+          <li><span>Booking from</span><span>March 2027</span></li>
+        </ul>
+      </div>
+      <form class="form" id="contactForm" novalidate>
+        <div class="field">
+          <label for="cName">Your name</label>
+          <input id="cName" name="name" type="text" autocomplete="name" required placeholder="Sam Okafor">
+        </div>
+        <div class="field">
+          <label for="cEmail">Email</label>
+          <input id="cEmail" name="email" type="email" autocomplete="email" required placeholder="you@company.com">
+        </div>
+        <div class="field">
+          <label for="cType">What kind of work?</label>
+          <select id="cType" name="type">
+            <option>New product, 0 to 1</option>
+            <option>Redesign of something that exists</option>
+            <option>Design system or audit</option>
+            <option>Research and field study</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="cNote">The problem, in a sentence or two</label>
+          <textarea id="cNote" name="note" placeholder="Our dispatchers lose about ten minutes per shift finding out which run is late."></textarea>
+        </div>
+        <div><button class="btn" type="submit">Send</button></div>
+        <p class="form-msg" id="contactMsg" role="status" aria-live="polite"></p>
+        <p class="form-foot">I read everything myself and reply within two working days. No mailing list.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script>
+  /* Menu for narrow screens */
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.getElementById('nav');
+  menuBtn.addEventListener('click', function () {
+    var open = nav.getAttribute('data-open') === 'true';
+    nav.setAttribute('data-open', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(!open));
+    menuBtn.textContent = open ? 'Menu' : 'Close';
+  });
+
+  /* Contact form validation */
+  var form = document.getElementById('contactForm');
+  var msg = document.getElementById('contactMsg');
+  var name = document.getElementById('cName');
+  var email = document.getElementById('cEmail');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!name.value.trim()) {
+      msg.removeAttribute('data-state');
+      msg.textContent = 'Please add a name so I know who I am replying to.';
+      name.focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      msg.removeAttribute('data-state');
+      msg.textContent = 'That email address looks incomplete.';
+      email.focus();
+      return;
+    }
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Received. I read these on a Tuesday morning and reply within two working days.';
+    form.querySelector('button').disabled = true;
+  });
+  [name, email].forEach(function (el) {
+    el.addEventListener('input', function () {
+      if (msg.textContent && !msg.dataset.state) { msg.textContent = ''; }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!-- Style: Cinematic | 33cinematic.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vantage Automotive — Meridian GT</title>
+<style>
+:root{
+  /* cinematic grade: crushed blacks, tungsten key, cold steel fill */
+  --void:#06070a;
+  --frame:#0d1015;
+  --frame-2:#141922;
+  --steel:#8e9aa6;
+  --paper:#eceae4;
+  --key:#e0a458;
+  --key-dim:#9a6d2f;
+  --line:rgba(236,234,228,.14);
+  --line-2:rgba(236,234,228,.28);
+  --ok:#6fbf8b;
+  --focus:#8fc0ff;
+  /* type */
+  --font-display:"Futura","Avenir Next","Helvetica Neue",system-ui,sans-serif;
+  --font-body:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --t-xs:clamp(.66rem,.64rem + .1vw,.74rem);
+  --t-sm:clamp(.8rem,.77rem + .14vw,.9rem);
+  --t-base:clamp(1rem,.96rem + .2vw,1.1rem);
+  --t-lg:clamp(1.15rem,1.05rem + .45vw,1.45rem);
+  --t-xl:clamp(1.5rem,1.2rem + 1.4vw,2.4rem);
+  --t-2xl:clamp(2rem,1.3rem + 3.2vw,3.9rem);
+  --t-shot:clamp(2.4rem,1.2rem + 5.6vw,6rem);
+  /* space */
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;
+  --s-6:2.25rem;--s-7:3rem;--s-8:4.5rem;--s-9:7rem;
+  --gutter:clamp(1.25rem,4.5vw,4.5rem);
+  --bar:clamp(1.25rem,3.4vh,2.75rem);   /* letterbox bar height */
+  /* edges */
+  --tap:44px;
+  /* motion */
+  --d-open:1400ms;--d-slow:800ms;--d-base:300ms;--d-fast:150ms;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--void);color:var(--paper);
+  font-family:var(--font-body);font-size:var(--t-base);line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- letterbox: the frame is part of the layout, not an overlay ---------- */
+.frame-top,.frame-bottom{
+  position:fixed;left:0;right:0;height:var(--bar);z-index:50;
+  background:var(--void);pointer-events:none;
+}
+.frame-top{top:0;border-bottom:1px solid rgba(236,234,228,.06)}
+.frame-bottom{bottom:0;border-top:1px solid rgba(236,234,228,.06)}
+.frame-top::after,.frame-bottom::after{
+  content:"";position:absolute;left:0;right:0;height:1px;background:var(--key);opacity:.5;
+  transform:scaleX(var(--open,0));transform-origin:left;
+  transition:transform var(--d-open) var(--ease);
+}
+.frame-top::after{bottom:0}
+.frame-bottom::after{top:0}
+body.is-open{--open:1}
+
+main{padding-top:var(--bar);padding-bottom:var(--bar)}
+
+/* ---------- scrub bar: scene progress, like a playhead ---------- */
+.scrub{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--bar) * .32);z-index:51;
+  display:flex;align-items:center;gap:var(--s-3);
+  font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;color:var(--steel);
+}
+.scrub .track{width:min(34vw,20rem);height:1px;background:var(--line-2);position:relative}
+.scrub .track i{position:absolute;inset:0 auto 0 0;width:var(--pct,0%);background:var(--key);display:block}
+.scrub .tc{color:var(--paper)}
+@media (max-width:600px){ .scrub .track{width:26vw} .scrub .scene-name{display:none} }
+
+/* ---------- header, minimal chrome ---------- */
+.masthead{
+  position:fixed;top:0;left:0;right:0;height:var(--bar);z-index:52;
+  display:flex;align-items:center;gap:var(--s-4);
+  padding:0 var(--gutter);color:var(--paper);
+}
+.wordmark{font-family:var(--font-display);letter-spacing:.34em;text-transform:uppercase;font-size:var(--t-sm);text-decoration:none;color:var(--paper)}
+.masthead nav{margin-left:auto;display:flex;gap:clamp(.75rem,2.4vw,2.25rem)}
+.masthead nav a{
+  color:var(--steel);text-decoration:none;font-family:var(--font-mono);font-size:var(--t-xs);
+  letter-spacing:.2em;text-transform:uppercase;display:inline-flex;align-items:center;min-height:var(--tap);
+  transition:color var(--d-fast) var(--ease);
+}
+.masthead nav a:hover{color:var(--key)}
+.masthead nav a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width:700px){ .masthead nav a:nth-child(n+3){display:none} }
+
+/* ---------- shot: one full-bleed image with a title over it ---------- */
+.shot{position:relative;isolation:isolate;overflow:hidden}
+.shot-media{position:absolute;inset:0;z-index:-2}
+.shot-media svg{width:100%;height:100%;display:block}
+.shot::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(6,7,10,.72) 0%,rgba(6,7,10,.22) 42%,rgba(6,7,10,.9) 100%)}
+.shot-inner{
+  max-width:78rem;margin:0 auto;padding:calc(var(--s-9)) var(--gutter) var(--s-8);
+  min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
+}
+.shot-code{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.32em;color:var(--key);margin:0 0 var(--s-4)}
+.shot h1{
+  font-family:var(--font-display);font-weight:400;letter-spacing:-.02em;
+  font-size:var(--t-shot);line-height:.94;margin:0 0 var(--s-5);max-width:15ch;text-transform:uppercase;
+}
+.shot h1 .thin{color:var(--steel)}
+.shot p.standfirst{font-size:var(--t-lg);max-width:46ch;margin:0;color:rgba(236,234,228,.82);max-width:48ch}
+.shot-actions{display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-6)}
+
+/* buttons: understated, hairlined */
+.btn{
+  min-height:var(--tap);padding:0 var(--s-6);background:transparent;color:var(--paper);
+  border:1px solid var(--line-2);border-radius:0;cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.22em;text-transform:uppercase;
+  transition:background var(--d-base) var(--ease),color var(--d-base) var(--ease),border-color var(--d-base) var(--ease);
+}
+.btn:hover{background:var(--paper);color:var(--void);border-color:var(--paper)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.btn-key{border-color:var(--key);color:var(--key)}
+.btn-key:hover{background:var(--key);border-color:var(--key);color:var(--void)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ---------- intertitle: a title card between scenes ---------- */
+.intertitle{
+  min-height:52svh;display:grid;place-items:center;text-align:center;
+  padding:var(--s-8) var(--gutter);background:var(--void);
+}
+.intertitle p{font-family:var(--font-mono);font-size:clamp(.85rem,.8rem + .4vw,1.05rem);letter-spacing:.4em;text-transform:uppercase;color:var(--steel);margin:0}
+.intertitle b{display:block;font-family:var(--font-display);font-weight:400;font-size:var(--t-2xl);letter-spacing:.06em;text-transform:uppercase;color:var(--paper);margin-top:var(--s-4)}
+
+/* ---------- chapter: text left, media right, and the reverse ---------- */
+.chapter{background:var(--frame);border-top:1px solid rgba(236,234,228,.07)}
+.chapter-inner{max-width:78rem;margin:0 auto;padding:var(--s-9) var(--gutter);display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+.chapter.flip .chapter-inner{grid-template-columns:1.15fr 1fr}
+.chapter.flip .chapter-copy{order:2}
+.chapter h2{font-family:var(--font-display);font-weight:400;font-size:var(--t-2xl);line-height:1;letter-spacing:-.01em;text-transform:uppercase;margin:0 0 var(--s-4)}
+.chapter h2 + .kicker{font-family:var(--font-mono);color:var(--key);font-size:var(--t-xs);letter-spacing:.26em;margin:0 0 var(--s-4);display:block}
+.chapter p{color:rgba(236,234,228,.76);max-width:46ch;margin:0 0 var(--s-4)}
+.chapter figure{margin:0}
+.frame-shot{position:relative;border:1px solid rgba(236,234,228,.1);overflow:hidden;background:var(--void)}
+.frame-shot svg{display:block;width:100%;height:100%}
+.frame-shot figcaption{
+  position:absolute;left:0;bottom:0;right:0;
+  font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.14em;
+  color:var(--steel);padding:var(--s-3) var(--s-4);
+  background:linear-gradient(0deg,rgba(6,7,10,.9),rgba(6,7,10,0));
+}
+.frame-shot.ratio-16-9{aspect-ratio:16/9}
+.frame-shot.ratio-4-3{aspect-ratio:4/3}
+.frame-shot.ratio-1-1{aspect-ratio:1/1}
+
+/* ---------- specification ledger ---------- */
+.ledger{background:var(--void);padding:var(--s-9) var(--gutter)}
+.ledger-inner{max-width:78rem;margin:0 auto}
+.ledger h2{font-family:var(--font-display);font-weight:400;font-size:var(--t-xl);text-transform:uppercase;letter-spacing:.04em;margin:0 0 var(--s-2)}
+.ledger .lede{color:var(--steel);max-width:52ch;margin:0 0 var(--s-7)}
+.ledger table{width:100%;border-collapse:collapse}
+.ledger caption{text-align:left;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.22em;text-transform:uppercase;color:var(--key);padding-bottom:var(--s-4)}
+.ledger th,.ledger td{text-align:left;padding:var(--s-4) var(--s-3) var(--s-4) 0;border-bottom:1px solid rgba(236,234,228,.1);vertical-align:baseline}
+.ledger thead th{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--steel);font-weight:400}
+.ledger td{font-size:var(--t-base)}
+.ledger td:first-child{font-family:var(--font-mono);font-size:var(--t-sm);color:var(--steel);width:34%}
+.ledger td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.ledger tbody tr{transition:background var(--d-base) var(--ease)}
+.ledger tbody tr:hover{background:rgba(224,164,88,.07)}
+.ledger tbody tr:hover td:first-child{color:var(--key)}
+.ledger .variant{color:var(--paper);border-left:2px solid var(--key);padding-left:var(--s-3)}
+.ledger-note{color:var(--steel);font-size:var(--t-sm);margin:var(--s-5) 0 0;max-width:60ch}
+
+/* ---------- press kit form ---------- */
+.press{background:var(--frame-2);border-top:1px solid rgba(236,234,228,.07);padding:var(--s-9) var(--gutter)}
+.press-inner{max-width:78rem;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(2rem,5vw,5rem);align-items:start}
+.press h2{font-family:var(--font-display);font-weight:400;font-size:var(--t-2xl);line-height:1;margin:0 0 var(--s-4);text-transform:uppercase}
+.press-copy p{color:rgba(236,234,228,.72);max-width:40ch;margin:0 0 var(--s-5)}
+.press-facts{list-style:none;margin:0;padding:0;border-top:1px solid rgba(236,234,228,.12)}
+.press-facts li{display:flex;justify-content:space-between;gap:var(--s-4);padding:var(--s-3) 0;border-bottom:1px solid rgba(236,234,228,.12);font-family:var(--font-mono);font-size:var(--t-sm)}
+.press-facts li span:first-child{color:var(--steel);letter-spacing:.1em;text-transform:uppercase;font-size:var(--t-xs)}
+.f{margin-bottom:var(--s-4)}
+.f label{display:block;font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin-bottom:var(--s-2)}
+.f input,.f select,.f textarea{
+  width:100%;min-height:var(--tap);padding:var(--s-3);background:rgba(6,7,10,.6);
+  color:var(--paper);border:1px solid rgba(236,234,228,.16);border-radius:0;
+  font-family:var(--font-body);font-size:var(--t-sm);
+  transition:border-color var(--d-fast) var(--ease);
+}
+.f textarea{min-height:6rem;resize:vertical;line-height:1.5}
+.f select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--steel) 50%),linear-gradient(135deg,var(--steel) 50%,transparent 50%);background-position:calc(100% - 18px) 1.15rem,calc(100% - 13px) 1.15rem;background-size:5px 5px;background-repeat:no-repeat}
+.f select option{background:var(--void)}
+.f input::placeholder,.f textarea::placeholder{color:rgba(236,234,228,.3)}
+.f input:hover,.f select:hover,.f textarea:hover{border-color:var(--line-2)}
+.f input:focus-visible,.f select:focus-visible,.f textarea:focus-visible{outline:none;border-color:var(--key);box-shadow:0 0 0 1px var(--key)}
+.f input[aria-invalid="true"],.f textarea[aria-invalid="true"]{border-color:#e0705f;box-shadow:0 0 0 1px #e0705f}
+.f .field-msg{display:block;font-family:var(--font-mono);font-size:var(--t-xs);color:#ef9585;margin-top:var(--s-2);min-height:1.2em}
+.f .field-msg.ok{color:var(--ok)}
+.form-status{font-family:var(--font-mono);font-size:var(--t-sm);color:var(--key);margin:var(--s-4) 0 0;min-height:1.4em}
+.form-status.error{color:#ef9585}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+@media (max-width:860px){
+  .chapter-inner,.chapter.flip .chapter-inner,.press-inner{grid-template-columns:1fr}
+  .chapter.flip .chapter-copy{order:0}
+  .ledger td:first-child{width:auto}
+}
+@media (max-width:520px){ .field-row{grid-template-columns:1fr} .shot-actions .btn{flex:1 1 100%} }
+
+/* ---------- end credits ---------- */
+.credits{background:var(--void);padding:var(--s-9) var(--gutter) calc(var(--s-9) + var(--s-6))}
+.credits-inner{max-width:78rem;margin:0 auto;display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(2rem,5vw,5rem)}
+.credits h2{font-family:var(--font-display);font-weight:400;font-size:var(--t-xl);text-transform:uppercase;margin:0 0 var(--s-6)}
+.credits dl{display:grid;grid-template-columns:max-content 1fr;gap:var(--s-3) var(--s-5);margin:0;font-size:var(--t-sm)}
+.credits dt{font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
+.credits dd{margin:0;color:rgba(236,234,228,.8)}
+.credits ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-2)}
+.credits ul a{color:rgba(236,234,228,.8);text-decoration:none;font-size:var(--t-sm);display:inline-flex;align-items:center;min-height:var(--tap)}
+.credits ul a:hover{color:var(--key)}
+.credits ul a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.credits-legal{font-family:var(--font-mono);font-size:var(--t-xs);color:var(--steel);margin:var(--s-7) 0 0;line-height:1.9;max-width:80ch}
+@media (max-width:760px){ .credits-inner{grid-template-columns:1fr} .credits dl{grid-template-columns:1fr;gap:var(--s-1)} .credits dt{margin-top:var(--s-3)} }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .frame-top::after,.frame-bottom::after{transform:scaleX(1)}
+}
+</style>
+</head>
+<body>
+
+<div class="frame-top" aria-hidden="true"></div>
+<div class="frame-bottom" aria-hidden="true"></div>
+
+<header class="masthead">
+  <a class="wordmark" href="#s1">Vantage</a>
+  <nav aria-label="Sections">
+    <a href="#s2">Design</a>
+    <a href="#s3">Powertrain</a>
+    <a href="#s4">Specification</a>
+    <a href="#press">Press</a>
+  </nav>
+</header>
+
+<div class="scrub" aria-hidden="true">
+  <span class="tc" id="tc">00:00</span>
+  <span class="track"><i id="pct"></i></span>
+  <span class="scene-name" id="scene-name">COLD OPEN</span>
+</div>
+
+<main>
+
+  <!-- SHOT 1 — cold open -->
+  <section class="shot" id="s1" data-scene="COLD OPEN" aria-labelledby="h1">
+    <div class="shot-media" aria-hidden="true">
+      <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0b1220"/><stop offset="55%" stop-color="#1a1c22"/><stop offset="100%" stop-color="#08090c"/>
+          </linearGradient>
+          <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4a5160"/><stop offset="45%" stop-color="#22262e"/><stop offset="100%" stop-color="#0b0d11"/>
+          </linearGradient>
+          <radialGradient id="lamp" cx="82%" cy="60%" r="26%">
+            <stop offset="0%" stop-color="#e0a458" stop-opacity=".85"/><stop offset="100%" stop-color="#e0a458" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="1920" height="1080" fill="url(#sky1)"/>
+        <path d="M0 1080 L0 760 L320 720 L640 790 L980 700 L1320 780 L1660 720 L1920 770 L1920 1080 Z" fill="#0a0c10"/>
+        <ellipse cx="1580" cy="700" rx="330" ry="90" fill="url(#lamp)"/>
+        <g>
+          <path d="M700 800 C 820 720, 1240 690, 1380 760 L1400 860 C 1200 890, 820 900, 700 830 Z" fill="url(#body)"/>
+          <path d="M1010 780 C 1080 690, 1240 676, 1310 762 Z" fill="#151a21"/>
+          <circle cx="870" cy="856" r="72" fill="#0a0b0e" stroke="#2a2f38" stroke-width="8"/>
+          <circle cx="870" cy="856" r="30" fill="#333a44"/>
+          <circle cx="1300" cy="856" r="72" fill="#0a0b0e" stroke="#2a2f38" stroke-width="8"/>
+          <circle cx="1300" cy="856" r="30" fill="#333a44"/>
+          <rect x="1150" y="742" width="80" height="10" rx="5" fill="#e0a458"/>
+        </g>
+        <g opacity=".22" stroke="#e0a458" stroke-width="2">
+          <path d="M1560 640 L1830 640"/><path d="M1600 600 L1790 600"/>
+        </g>
+      </svg>
+    </div>
+    <div class="shot-inner">
+      <p class="shot-code">Vantage Automotive · Chapter 00</p>
+      <h1 id="h1">Meridian <span class="thin">GT</span></h1>
+      <p class="standfirst">A grand tourer built around one decision: put the driver in the middle of the noise, not on top of it. 612 horsepower, six speeds, one very long bonnet.</p>
+      <div class="shot-actions">
+        <a class="btn btn-key" href="#press">Request a drive</a>
+        <a class="btn" href="#s4">Full specification</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="intertitle"><p>Chapter one<b>Where the weight sits</b></p></div>
+
+  <!-- SHOT 2 — text left, media right -->
+  <section class="chapter" id="s2" data-scene="DESIGN" aria-labelledby="h2">
+    <div class="chapter-inner">
+      <div class="chapter-copy">
+        <span class="kicker">Design</span>
+        <h2 id="h2">Drawn from one line and interrupted twice</h2>
+        <p>The Meridian's profile is a single unbroken line from the front arch to the tail, interrupted only by the door shut line and the rear light blade. The windscreen sits 62 mm lower than the outgoing car, which is why the driver looks out rather than through.</p>
+        <p>Drag coefficient is 0.24. That number is the argument for everything else on this page.</p>
+      </div>
+      <figure class="frame-shot ratio-16-9">
+        <svg viewBox="0 0 800 450" role="img" aria-labelledby="fig1-t fig1-d">
+          <title id="fig1-t">Side profile drawing of the Meridian GT</title>
+          <desc id="fig1-d">A technical side elevation showing the roof line, wheelbase of 2 940 millimetres, and the rear light blade.</desc>
+          <rect width="800" height="450" fill="#0b0d11"/>
+          <g stroke="rgba(236,234,228,.1)" stroke-width="1">
+            <path d="M0 90H800M0 180H800M0 270H800M0 360H800M100 0V450M300 0V450M500 0V450M700 0V450"/>
+          </g>
+          <g fill="none" stroke="#d8d6cf" stroke-width="2.4" stroke-linejoin="round">
+            <path d="M110 300 C 160 250, 250 236, 330 232 C 380 176, 470 150, 560 168 C 620 180, 664 214, 682 262 L690 300 Z"/>
+          </g>
+          <g fill="none" stroke="#8e9aa6" stroke-width="1.4">
+            <circle cx="230" cy="300" r="52"/><circle cx="580" cy="300" r="52"/>
+            <circle cx="230" cy="300" r="20"/><circle cx="580" cy="300" r="20"/>
+            <path d="M110 300H690"/>
+          </g>
+          <g stroke="#e0a458" stroke-width="1.4" fill="none">
+            <path d="M230 258v-38M580 258v-38M230 216h350"/>
+            <path d="M226 224l4-8 4 8M576 224l4-8 4 8"/>
+          </g>
+          <g font-family="ui-monospace,monospace" font-size="12" fill="#e0a458">
+            <text x="352" y="208">2 940 mm</text>
+            <text x="118" y="346" fill="#8e9aa6">Cd 0.24</text>
+            <text x="600" y="176" fill="#8e9aa6">62 mm lower screen</text>
+          </g>
+        </svg>
+        <figcaption>FIG. 01 — Side elevation, 1:20 · Studio Turnhill</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- SHOT 3 — media left, text right -->
+  <section class="chapter flip" id="s3" data-scene="POWERTRAIN" aria-labelledby="h3">
+    <div class="chapter-inner">
+      <div class="chapter-copy">
+        <span class="kicker">Powertrain</span>
+        <h2 id="h3">The loudest thing in the car is the door</h2>
+        <p>There is a 4.0 litre twin-turbo V8 and a six-speed manual, and both are quieter than you expect. Acoustic glass, a laminated floor, and body seals tuned against a recording of a V8 at full song. The result is that when you do open the door, the car is suddenly, absurdly loud.</p>
+        <p>612 hp at 6 800 rpm. 590 lb ft from 2 200. Rear transaxle, 48% of the mass behind the driver.</p>
+      </div>
+      <figure class="frame-shot ratio-4-3">
+        <svg viewBox="0 0 800 600" role="img" aria-labelledby="fig2-t fig2-d">
+          <title id="fig2-t">Longitudinal cutaway of the V8 and transaxle</title>
+          <desc id="fig2-d">A simplified cutaway showing the engine ahead of the passenger bulkhead, the transmission tunnel, and the rear transaxle.</desc>
+          <rect width="800" height="600" fill="#0a0c10"/>
+          <g fill="none" stroke="#2a2f38" stroke-width="1"><path d="M0 150H800M0 300H800M0 450H800M200 0V600M400 0V600M600 0V600"/></g>
+          <g stroke="#e0a458" stroke-width="2" fill="none" stroke-linejoin="round">
+            <path d="M120 300h190l60 60v80h-250z"/>
+            <rect x="300" y="400" width="80" height="40"/>
+          </g>
+          <g stroke="#d8d6cf" stroke-width="2" fill="none">
+            <rect x="440" y="410" width="180" height="70" rx="6"/>
+            <circle cx="680" cy="445" r="56"/>
+            <circle cx="680" cy="445" r="24"/>
+            <path d="M380 430h60M620 445h-64"/>
+          </g>
+          <g font-family="ui-monospace,monospace" font-size="12" fill="#8e9aa6">
+            <text x="130" y="280" fill="#e0a458">V8 4.0 TT</text>
+            <text x="445" y="395">6-speed</text>
+            <text x="620" y="530" fill="#e0a458">transaxle 48% rear</text>
+            <text x="120" y="480">front axle 52%</text>
+          </g>
+        </svg>
+        <figcaption>FIG. 02 — Powertrain layout, longitudinal · 612 hp</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="intertitle"><p>Chapter two<b>Numbers, plainly stated</b></p></div>
+
+  <!-- specification ledger -->
+  <section class="ledger" id="s4" data-scene="SPECIFICATION" aria-labelledby="h4">
+    <div class="ledger-inner">
+      <h2 id="h4">Specification</h2>
+      <p class="lede">Three variants, one drivetrain. Figures are manufacturer test data at Zermatt altitude unless noted.</p>
+      <table>
+        <caption>Meridian GT — technical data</caption>
+        <thead>
+          <tr><th scope="col">Attribute</th><th scope="col">GT</th><th scope="col">GT S</th><th scope="col">GT R</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Engine</td><td class="num">4.0 T V8</td><td class="num">4.0 T V8</td><td class="num">4.0 T V8</td></tr>
+          <tr><td>Output</td><td class="num">612 hp</td><td class="num">612 hp</td><td class="num">650 hp</td></tr>
+          <tr><td>Torque</td><td class="num">590 lb ft</td><td class="num">590 lb ft</td><td class="num">615 lb ft</td></tr>
+          <tr><td>Transmission</td><td class="num">6-speed manual</td><td class="num">7-speed auto</td><td class="num">7-speed auto</td></tr>
+          <tr><td>0–62 mph</td><td class="num">3.6 s</td><td class="num">3.5 s</td><td class="num">3.1 s</td></tr>
+          <tr><td>Top speed</td><td class="num">202 mph</td><td class="num">201 mph</td><td class="num">205 mph</td></tr>
+          <tr><td>Mass</td><td class="num">1 786 kg</td><td class="num">1 802 kg</td><td class="num">1 771 kg</td></tr>
+          <tr><td>Distribution</td><td class="num">52 : 48</td><td class="num">52 : 48</td><td class="num">50 : 50</td></tr>
+          <tr><td>Body</td><td class="variant">Aluminium and steel</td><td class="variant">Carbon roof, aluminium</td><td class="variant">Carbon roof, magnesium rear</td></tr>
+          <tr><td>Price from</td><td class="num">£148 500</td><td class="num">£162 000</td><td class="num">£214 000</td></tr>
+        </tbody>
+      </table>
+      <p class="ledger-note">Fuel consumption is measured on the WLTP combined cycle and varies with wheels and roof specification. No performance figure on this page is a projection.</p>
+    </div>
+  </section>
+
+  <!-- press kit request -->
+  <section class="press" id="press" data-scene="PRESS" aria-labelledby="h5">
+    <div class="press-inner">
+      <div class="press-copy">
+        <h2 id="h5">Press and drive requests</h2>
+        <p>Journalists and dealers can request the full press kit, the high-resolution figure set, and a road car on the Zermatt route. Requests are answered within two working days by the press office in Coventry.</p>
+        <ul class="press-facts">
+          <li><span>Press office</span><span>press@vantage-automotive.co.uk</span></li>
+          <li><span>Assets</span><span>2.4 GB · TIFF and JPG</span></li>
+          <li><span>Route</span><span>Zermatt, 47 km loop</span></li>
+          <li><span>Availability</span><span>From 3 November</span></li>
+        </ul>
+      </div>
+
+      <form id="press-form" novalidate>
+        <div class="field-row">
+          <div class="f">
+            <label for="pf-name">Name</label>
+            <input id="pf-name" name="name" type="text" autocomplete="name" placeholder="Rowan Blackwood" aria-describedby="pf-name-msg">
+            <span class="field-msg" id="pf-name-msg" role="alert"></span>
+          </div>
+          <div class="f">
+            <label for="pf-outlet">Outlet</label>
+            <input id="pf-outlet" name="outlet" type="text" placeholder="Motor Sport Monthly" aria-describedby="pf-outlet-msg">
+            <span class="field-msg" id="pf-outlet-msg" role="alert"></span>
+          </div>
+        </div>
+        <div class="f">
+          <label for="pf-email">Email</label>
+          <input id="pf-email" name="email" type="email" autocomplete="email" placeholder="rowan@msm.co.uk" aria-describedby="pf-email-msg">
+          <span class="field-msg" id="pf-email-msg" role="alert"></span>
+        </div>
+        <div class="f">
+          <label for="pf-var">Variant required</label>
+          <select id="pf-var" name="variant" aria-describedby="pf-var-msg">
+            <option value="GT">GT — manual</option>
+            <option value="GT S" selected>GT S — automatic</option>
+            <option value="GT R">GT R — automatic</option>
+          </select>
+          <span class="field-msg" id="pf-var-msg"></span>
+        </div>
+        <div class="f">
+          <label for="pf-notes">Anything we should know</label>
+          <textarea id="pf-notes" name="notes" placeholder="Shoot dates, wheel sizes, previous Meridian coverage…" aria-describedby="pf-notes-msg"></textarea>
+          <span class="field-msg" id="pf-notes-msg" role="alert"></span>
+        </div>
+        <button class="btn btn-key" type="submit" id="pf-submit">Send request</button>
+        <p class="form-status" id="pf-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- end credits -->
+<footer class="credits" data-scene="CREDITS">
+  <div class="credits-inner">
+    <div>
+      <h2>Credits</h2>
+      <dl>
+        <dt>Design</dt><dd>Hallam Vowles, Director of Design</dd>
+        <dt>Engineering</dt><dd>Meridian GT programme team, Coventry</dd>
+        <dt>Test</dt><dd>Nardò proving ground, May–August</dd>
+        <dt>Assembly</dt><dd>Turnhill, England</dd>
+        <dt>Photos</dt><dd>Studio Turnhill, in-house</dd>
+        <dt>Publication</dt><dd>Vantage Automotive, edition of 1 200</dd>
+      </dl>
+    </div>
+    <nav aria-label="More from Vantage">
+      <h2>Elsewhere</h2>
+      <ul>
+        <li><a href="#s1">Meridian GT overview</a></li>
+        <li><a href="#s2">Design study</a></li>
+        <li><a href="#s3">Powertrain</a></li>
+        <li><a href="#s4">Specification ledger</a></li>
+        <li><a href="#press">Press office</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="credits-legal">Vantage Automotive is a fictional marque created for this example page. All figures shown are invented for demonstration and should not be used for any purchasing decision. © 2025 Vantage Automotive Ltd. Registered in England, company number 00000000.</p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- letterbox opens once on load: the cold open ---- */
+  requestAnimationFrame(function(){
+    setTimeout(function(){ document.body.classList.add('is-open'); }, 220);
+  });
+
+  /* ---- scrub: playhead position, scene name, timecode ---- */
+  var shots = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
+  var pct = document.getElementById('pct');
+  var tc = document.getElementById('tc');
+  var nameEl = document.getElementById('scene-name');
+  var ticking = false;
+
+  function mmss(px){
+    var total = Math.max(0, px);
+    var m = Math.floor(total / 60), s = Math.floor(total % 60);
+    return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var y = window.scrollY || window.pageYOffset;
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      pct.style.setProperty('--pct', (h > 0 ? (y / h) * 100 : 0).toFixed(1) + '%');
+      tc.textContent = mmss(y / 14);   // 14 px of scroll reads as one second of screen time
+      var mid = y + window.innerHeight * 0.45, current = shots[0];
+      for(var i = 0; i < shots.length; i++){ if(shots[i].offsetTop <= mid) current = shots[i]; }
+      if(nameEl.textContent !== current.dataset.scene) nameEl.textContent = current.dataset.scene;
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ---- slow, deliberate reveal of chapter copy only ---- */
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduced && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if(en.isIntersecting){
+          en.target.style.opacity = '1';
+          en.target.style.transform = 'none';
+          io.unobserve(en.target);
+        }
+      });
+    },{threshold:.25});
+    document.querySelectorAll('.chapter-copy, .ledger-inner, .press-inner, .credits-inner').forEach(function(el, i){
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(16px)';
+      el.style.transition = 'opacity 900ms cubic-bezier(.16,1,.3,1) ' + (i % 2 ? 120 : 0) + 'ms, transform 900ms cubic-bezier(.16,1,.3,1) ' + (i % 2 ? 120 : 0) + 'ms';
+      io.observe(el);
+    });
+  }
+
+  /* ---- press request validation ---- */
+  var form = document.getElementById('press-form');
+  var nameI = document.getElementById('pf-name'), emailI = document.getElementById('pf-email');
+  var notesI = document.getElementById('pf-notes');
+  var nameM = document.getElementById('pf-name-msg'), emailM = document.getElementById('pf-email-msg');
+  var notesM = document.getElementById('pf-notes-msg');
+  var status = document.getElementById('pf-status');
+  var submit = document.getElementById('pf-submit');
+  var variant = document.getElementById('pf-var');
+
+  function msg(el, text, ok){ el.textContent = text; el.classList.toggle('ok', !!ok); }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var bad = false;
+    if(nameI.value.trim().length < 2){ msg(nameM,'Required — at least 2 characters.',false); nameI.setAttribute('aria-invalid','true'); bad = true; }
+    else { msg(nameM,'Accepted.',true); nameI.removeAttribute('aria-invalid'); }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailI.value.trim())){ msg(emailM,'Check the address — the press office replies here.',false); emailI.setAttribute('aria-invalid','true'); bad = true; }
+    else { msg(emailM,'Accepted.',true); emailI.removeAttribute('aria-invalid'); }
+    if(notesI.value.length > 600){ msg(notesM,'Keep it under 600 characters.',false); notesI.setAttribute('aria-invalid','true'); bad = true; }
+    else if(notesI.value.length){ msg(notesM,'Ready to send.',true); notesI.removeAttribute('aria-invalid'); }
+    if(bad){ status.className = 'form-status error'; status.textContent = 'Two fields need attention before this can be sent.'; return; }
+    submit.disabled = true; submit.textContent = 'Sending…';
+    status.className = 'form-status';
+    status.textContent = 'Request received for the ' + variant.value + '. The press office replies within two working days.';
+    setTimeout(function(){ submit.disabled = false; submit.textContent = 'Send request'; }, 1800);
+  });
+})();
+</script>
+</body>
+</html>

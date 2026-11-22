@@ -1,0 +1,542 @@
+<!-- Style: Typography First | 64typographyfirst.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letterform — an independent type foundry</title>
+<style>
+  :root{
+    --paper:#F2F0EA;
+    --paper-2:#E7E4DB;
+    --ink:#15140F;
+    --ink-soft:#4B4941;
+    --ink-faint:#6A685E;
+    --red:#A02030;
+    --hair:rgba(21,20,15,.24);
+    --hair-strong:rgba(21,20,15,.6);
+
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+    --t-mast:clamp(2.8rem,11vw,9rem);
+    --t-h1:clamp(1.9rem,4.2vw,3.4rem);
+    --t-h2:clamp(1.4rem,2.4vw,2rem);
+    --t-lead:clamp(1.05rem,1.5vw,1.3rem);
+    --t-body:1.0625rem;
+    --t-small:.875rem;
+    --t-micro:.75rem;
+
+    --s-1:.35rem;--s-2:.7rem;--s-3:1.1rem;--s-4:1.6rem;--s-5:2.4rem;
+    --s-6:3.4rem;--s-7:4.6rem;--s-8:6.5rem;
+    --shell:min(1180px,100% - 3rem);
+    --measure:64ch;
+
+    --d-fast:120ms;--d-base:240ms;--ease:cubic-bezier(.2,.8,.2,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--t-body);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{margin:0;font-weight:400;letter-spacing:-.02em;line-height:1.08}
+  p{margin:0}
+  a{color:inherit}
+  ul{margin:0;padding:0;list-style:none}
+  :focus-visible{outline:2px solid var(--red);outline-offset:4px}
+  .shell{width:var(--shell);margin-inline:auto}
+  .hairline{border:0;border-top:1px solid var(--hair);margin:0}
+  .skip{position:absolute;left:1rem;top:-120px;z-index:90;background:var(--ink);color:var(--paper);padding:.9rem 1.3rem;font-weight:700;transition:top var(--d-fast)}
+  .skip:focus{top:1rem}
+  .meta{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+  .measure{max-width:var(--measure)}
+  .lede{font-family:var(--serif);font-size:var(--t-lead);line-height:1.4;max-width:52ch}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 1.4rem;
+    background:transparent;border:1px solid var(--ink);color:var(--ink);cursor:pointer;
+    font-family:var(--sans);font-size:var(--t-small);font-weight:600;letter-spacing:.02em;
+    text-decoration:none;transition:background var(--d-fast),color var(--d-fast)
+  }
+  .btn:hover{background:var(--ink);color:var(--paper)}
+  .btn-solid{background:var(--ink);color:var(--paper)}
+  .btn-solid:hover{background:var(--red);border-color:var(--red)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+  /* ---------- masthead ---------- */
+  .mast{position:sticky;top:0;z-index:60;background:rgba(242,240,234,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
+  .mast-in{display:flex;align-items:baseline;gap:var(--s-5);padding-block:1.1rem}
+  .wordmark{font-family:var(--serif);font-size:1.5rem;letter-spacing:.02em;text-decoration:none;white-space:nowrap}
+  .wordmark em{font-style:italic;color:var(--red)}
+  .nav{margin-left:auto}
+  .nav ul{display:flex;gap:var(--s-4)}
+  .nav a{font-size:var(--t-small);text-decoration:none;padding:.4rem 0;display:inline-block;border-bottom:1px solid transparent}
+  .nav a:hover{border-bottom-color:var(--ink)}
+  .nav-toggle{display:none;margin-left:auto;min-height:44px;padding:0 1rem;background:none;border:1px solid var(--ink);font-family:var(--sans);font-weight:600;cursor:pointer}
+
+  /* ---------- hero: the specimen ---------- */
+  .hero{padding-block:var(--s-6) var(--s-7)}
+  .hero-top{display:flex;justify-content:space-between;gap:var(--s-3);flex-wrap:wrap;border-bottom:1px solid var(--hair);padding-bottom:var(--s-2)}
+  .specimen{padding-block:var(--s-5)}
+  .specimen h1{font-size:var(--t-mast);line-height:.82;letter-spacing:-.045em;font-family:var(--serif)}
+  .specimen h1 .lower{display:block;font-style:italic;padding-left:.08em}
+  .specimen h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+  .specimen-foot{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-4);border-top:1px solid var(--hair);padding-top:var(--s-3)}
+  .specimen-foot div b{display:block;font-weight:600;font-size:var(--t-small)}
+  .specimen-foot div span{font-family:var(--mono);font-size:var(--t-micro);color:var(--ink-faint)}
+
+  /* ---------- waterfall ---------- */
+  .waterfall{padding-block:var(--s-6);border-top:1px solid var(--hair)}
+  .water-row{display:grid;grid-template-columns:88px 1fr;gap:var(--s-4);align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--hair)}
+  .water-row .px{font-family:var(--mono);font-size:var(--t-micro);color:var(--ink-faint)}
+  .water-row p{font-family:var(--serif);line-height:1.05;letter-spacing:-.02em;overflow:hidden}
+  .w1 p{font-size:clamp(2.6rem,6vw,4.6rem)}
+  .w2 p{font-size:clamp(2rem,4.4vw,3.4rem)}
+  .w3 p{font-size:clamp(1.6rem,3.2vw,2.5rem)}
+  .w4 p{font-size:clamp(1.25rem,2.2vw,1.8rem)}
+  .w5 p{font-size:1.0625rem;line-height:1.5;letter-spacing:0;max-width:var(--measure)}
+
+  /* ---------- type tester ---------- */
+  .tester{background:var(--ink);color:var(--paper);padding-block:var(--s-7)}
+  .tester .meta{color:#9C9A8E}
+  .tester h2{font-family:var(--serif);font-size:var(--t-h1);margin:var(--s-2) 0 var(--s-5)}
+  .tester-grid{display:grid;grid-template-columns:280px 1fr;gap:var(--s-5);align-items:start}
+  .ctrl{margin-bottom:var(--s-4)}
+  .ctrl label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem}
+  .ctrl output{color:#D8A0A8}
+  input[type=text],select{
+    font-family:var(--sans);font-size:1rem;width:100%;min-height:46px;padding:.7rem .8rem;
+    background:transparent;color:var(--paper);border:1px solid #5A584E;border-radius:0
+  }
+  input[type=range]{width:100%;accent-color:#D8A0A8}
+  select option{color:var(--ink)}
+  .tester output{display:block;overflow:hidden}
+  .tester-sample{font-family:var(--serif);font-size:clamp(2rem,6vw,5rem);line-height:1.05;letter-spacing:-.02em;border:1px solid #3A3830;padding:var(--s-4);min-height:200px}
+  .tester-actions{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3)}
+  .tester .btn{border-color:#7A776A;color:var(--paper)}
+  .tester .btn:hover{background:var(--paper);color:var(--ink)}
+
+  /* ---------- character set ---------- */
+  .charset{padding-block:var(--s-7)}
+  .charset h2{font-size:var(--t-h1);margin-bottom:var(--s-4)}
+  .glyphs{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+  .glyphs li{
+    border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);
+    aspect-ratio:1;display:grid;place-items:center;font-family:var(--serif);font-size:1.9rem;
+    transition:background var(--d-fast)
+  }
+  .glyphs li:hover{background:var(--ink);color:var(--paper)}
+  .glyph-note{margin-top:var(--s-3);font-size:var(--t-small);color:var(--ink-soft)}
+
+  /* ---------- families + licence ---------- */
+  .families{border-top:1px solid var(--hair);padding-block:var(--s-6)}
+  .family{display:grid;grid-template-columns:1.2fr .8fr 1fr auto;gap:var(--s-4);align-items:center;padding:var(--s-4) 0;border-bottom:1px solid var(--hair)}
+  .family h3{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.2rem)}
+  .family .style{font-family:var(--mono);font-size:var(--t-micro);color:var(--ink-faint);letter-spacing:.08em}
+  .family .sample{font-family:var(--serif);font-size:1.5rem;color:var(--ink-soft);line-height:1.1}
+  .family .price{font-size:var(--t-small);white-space:nowrap}
+  .family .price b{font-size:1.3rem;font-weight:500}
+
+  .licence{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);padding-block:var(--s-7);align-items:start}
+  .licence h2{font-size:var(--t-h1);margin-bottom:var(--s-3)}
+  .licence p{color:var(--ink-soft);max-width:46ch}
+  .licence-form{border-top:1px solid var(--ink);border-bottom:1px solid var(--hair);padding-block:var(--s-4)}
+  .licence-form .row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+  .field{display:grid;gap:.35rem;margin-bottom:var(--s-3)}
+  .field label{font-size:var(--t-small);font-weight:600}
+  .field .hint{font-size:var(--t-micro);color:var(--ink-faint)}
+  .licence-form input,.licence-form select{border-color:var(--hair-strong);color:var(--ink)}
+  [aria-invalid="true"]{border-color:var(--red);border-width:2px}
+  .form-msg{font-size:var(--t-small);min-height:1.6em;font-weight:600}
+  .form-msg[data-state="error"]{color:var(--red)}
+  .form-msg[data-state="ok"]{color:#2C6B4A}
+  .total{font-family:var(--serif);font-size:1.6rem;margin-block:var(--s-3)}
+
+  /* ---------- pull quote ---------- */
+  .quote{padding-block:var(--s-7);border-top:1px solid var(--hair)}
+  .quote blockquote{
+    margin:0;font-family:var(--serif);font-size:clamp(1.5rem,3.6vw,2.8rem);line-height:1.2;
+    font-style:italic;max-width:26ch;letter-spacing:-.02em
+  }
+  .quote figcaption{margin-top:var(--s-4);font-family:var(--mono);font-size:var(--t-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--ink);padding-block:var(--s-5)}
+  .foot-top{display:flex;flex-wrap:wrap;gap:var(--s-5);justify-content:space-between;align-items:baseline}
+  .foot-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-4);margin-top:var(--s-5)}
+  footer h4{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:400;margin-bottom:var(--s-2);color:var(--ink-faint)}
+  footer li{font-size:var(--t-small);margin-bottom:.4rem}
+  footer a{text-decoration:none;border-bottom:1px solid var(--hair)}
+  footer a:hover{border-bottom-color:var(--ink)}
+  .foot-bottom{margin-top:var(--s-5);padding-top:var(--s-2);border-top:1px solid var(--hair);display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:space-between;font-family:var(--mono);font-size:var(--t-micro);color:var(--ink-faint)}
+
+  @media (max-width:980px){
+    .tester-grid{grid-template-columns:1fr}
+    .family{grid-template-columns:1fr 1fr;gap:var(--s-2)}
+    .licence{grid-template-columns:1fr}
+    .foot-cols{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:720px){
+    .nav-toggle{display:block}
+    .nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--paper);border-bottom:1px solid var(--ink);padding:var(--s-3) 1.5rem}
+    .nav.open{display:block}
+    .nav ul{flex-direction:column;gap:.2rem}
+    .nav a{min-height:44px;display:flex;align-items:center}
+    .mast-in{padding-block:.9rem}
+    .specimen-foot{grid-template-columns:repeat(2,1fr)}
+    .water-row{grid-template-columns:1fr;gap:.2rem}
+    .family{grid-template-columns:1fr}
+    .licence-form .row{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="mast">
+  <div class="mast-in shell">
+    <a class="wordmark" href="#top">Letterform <em>&amp; Co.</em></a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">Index</button>
+    <nav class="nav" id="primaryNav" aria-label="Primary">
+      <ul>
+        <li><a href="#specimen">Specimen</a></li>
+        <li><a href="#tester">Tester</a></li>
+        <li><a href="#families">Families</a></li>
+        <li><a href="#licence">Licences</a></li>
+        <li><a href="#journal">Journal</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section id="top" aria-labelledby="hero-h">
+    <div class="shell">
+      <div class="hero-top">
+        <p class="meta">Specimen 04 — Halden Text &amp; Halden Display</p>
+        <p class="meta">Released 2026 · 14 styles · Latin Extended-A</p>
+      </div>
+      <div class="specimen">
+        <h1 id="hero-h">Halden<span class="lower outline">Halden</span></h1>
+      </div>
+      <div class="specimen-foot">
+        <div><b>1,142 glyphs</b><span>PER FAMILY</span></div>
+        <div><b>Cut by hand</b><span>KIER &amp; BÜLOW, 6 YEARS</span></div>
+        <div><b>Variable axes</b><span>wght 100–900, opsz 8–72</span></div>
+        <div><b>From €48</b><span>DESKTOP, PERPETUAL</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="waterfall shell" aria-labelledby="wf-h">
+    <h2 id="wf-h" class="meta" style="margin-bottom:var(--s-3)">Waterfall — Halden Display</h2>
+    <div class="water-row w1"><span class="px">120 pt</span><p>Handgloves</p></div>
+    <div class="water-row w2"><span class="px">72 pt</span><p>Quick brown foxes</p></div>
+    <div class="water-row w3"><span class="px">44 pt</span><p>Pack my box with five dozen liquor jugs</p></div>
+    <div class="water-row w4"><span class="px">26 pt</span><p>The typeface is the interface. Everything else is a decision about hierarchy, rhythm and how much space a sentence is worth.</p></div>
+    <div class="water-row w5"><span class="px">16 pt</span><p>Halden was drawn for long-form reading on screens that are also desks, calendars and kitchen windows. Its large optical sizes are not an afterthought: at display sizes the joints open up and the serifs blunt, because a display cut that behaves like a text cut at 120 point looks like a spreadsheet wearing a costume.</p></div>
+  </section>
+
+  <section class="tester" id="tester" aria-labelledby="tester-h">
+    <div class="shell">
+      <p class="meta">Interactive specimen</p>
+      <h2 id="tester-h">Set your own line</h2>
+      <div class="tester-grid">
+        <form id="testerForm" onsubmit="return false">
+          <div class="ctrl">
+            <label for="family">Family</label>
+            <select id="family">
+              <option value="var(--serif)">Halden Display</option>
+              <option value="var(--sans)">Halden Text (grotesque)</option>
+              <option value="var(--mono)">Ledger Mono</option>
+            </select>
+          </div>
+          <div class="ctrl">
+            <label for="size">Size <output for="size" id="sizeOut">96 px</output></label>
+            <input type="range" id="size" min="24" max="180" step="2" value="96">
+          </div>
+          <div class="ctrl">
+            <label for="leading">Leading <output for="leading" id="leadingOut">1.05</output></label>
+            <input type="range" id="leading" min="80" max="200" step="1" value="105">
+          </div>
+          <div class="ctrl">
+            <label for="tracking">Tracking <output for="tracking" id="trackingOut">−2 px</output></label>
+            <input type="range" id="tracking" min="-60" max="60" step="1" value="-20">
+          </div>
+          <div class="ctrl">
+            <label for="tSample">Your text</label>
+            <input type="text" id="tSample" value="Halden" maxlength="40">
+          </div>
+          <div class="tester-actions">
+            <button class="btn" type="button" id="presetBlack">Black on paper</button>
+            <button class="btn" type="button" id="presetRed">Red on ink</button>
+          </div>
+        </form>
+        <div>
+          <output id="sample" for="tSample size leading tracking family" class="tester-sample">Halden</output>
+          <p class="meta" id="readout" style="margin-top:.6rem">96 px / 1.05 / −2 px — 4 characters</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="charset shell" id="families" aria-labelledby="cs-h">
+    <h2 id="cs-h">Character set</h2>
+    <ul class="glyphs" id="glyphs" aria-label="Sample of glyphs in Halden Display">
+      <li>A</li><li>B</li><li>C</li><li>D</li><li>E</li><li>F</li><li>G</li><li>H</li>
+      <li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li>
+      <li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li>
+      <li>&amp;</li><li>æ</li><li>œ</li><li>ß</li><li>ø</li><li>đ</li><li>ł</li><li>¶</li>
+      <li>?</li><li>!</li><li>“</li><li>”</li><li>—</li><li>…</li><li>§</li><li>†</li>
+    </ul>
+    <p class="glyph-note">1,142 glyphs per family: 216 Latin Extended-A, 72 Cyrillic (Halden Text only), 38 currency and legal, 9 arrows, 24 maths, plus 14 bespoke currency marks for the 2019 currency reform. Drawn by Ilse Bühr and corrected by two rounds of proofing at 2,400 dpi.</p>
+  </section>
+
+  <section class="families shell" aria-labelledby="fam-h">
+    <h2 id="fam-h" class="meta" style="margin-bottom:var(--s-4)">Four families in the catalogue</h2>
+    <article class="family">
+      <div><h3>Halden Display</h3><p class="style">14 STYLES · 1 VARIABLE · 2019</p></div>
+      <p class="price"><b>€78</b> desktop</p>
+      <p class="sample">Fifteen steps, one voice</p>
+      <a class="btn" href="#licence">Licence</a>
+    </article>
+    <article class="family">
+      <div><h3>Halden Text</h3><p class="style">8 STYLES · VARIABLE · 2021</p></div>
+      <p class="price"><b>€58</b> desktop</p>
+      <p class="sample">Built for 4,000 words</p>
+      <a class="btn" href="#licence">Licence</a>
+    </article>
+    <article class="family">
+      <div><h3>Ledger Mono</h3><p class="style">4 STYLES · 2023</p></div>
+      <p class="price"><b>€48</b> desktop</p>
+      <p class="sample">Figures align by design</p>
+      <a class="btn" href="#licence">Licence</a>
+    </article>
+    <article class="family">
+      <div><h3>Corvid Stencil</h3><p class="style">3 STYLES · 2026 · NEW</p></div>
+      <p class="price"><b>€64</b> desktop</p>
+      <p class="sample">Cut, not drawn</p>
+      <a class="btn" href="#licence">Licence</a>
+    </article>
+  </section>
+
+  <section class="licence shell" id="licence" aria-labelledby="lic-h">
+    <div>
+      <p class="meta">Licensing</p>
+      <h2 id="lic-h" style="margin:var(--s-2) 0 var(--s-3)">Perpetual, not rental</h2>
+      <p class="lede" style="margin-bottom:var(--s-3)">You buy the font once. No subscription, no viewer cap enforced by a phone-home, no font disappearing from a site because a company changed its pricing tier.</p>
+      <p>Licences are per organisation and cover web, apps, social, video and print for as long as you like. If you outgrow one, you buy the next tier once and the old licence keeps working. Students and non-profits pay 50%, and we never ask for proof of budget.</p>
+    </div>
+
+    <form class="licence-form" id="licenceForm" novalidate>
+      <div class="field">
+        <label for="licFamily">Family</label>
+        <select id="licFamily" name="family">
+          <option>Halden Display — €78</option>
+          <option>Halden Text — €58</option>
+          <option>Ledger Mono — €48</option>
+          <option>Corvid Stencil — €64</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="licUse">Use</label>
+          <select id="licUse" name="use">
+            <option>Desktop only</option>
+            <option>Desktop + web</option>
+            <option selected>Desktop + web + app</option>
+            <option>Full, up to 50 staff</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="licSeats">Seats</label>
+          <input type="number" id="licSeats" name="seats" value="5" min="1" max="500" inputmode="numeric">
+        </div>
+      </div>
+      <div class="field">
+        <label for="licEmail">Email for the invoice</label>
+        <input type="email" id="licEmail" name="email" autocomplete="email" required aria-describedby="licHint" placeholder="studio@example.com">
+        <p class="hint" id="licHint">We send a licence PDF and the web kit. No newsletter, no upsell.</p>
+      </div>
+      <p class="total" id="licTotal">€78 base · desktop + web + app · 5 seats</p>
+      <button class="btn btn-solid" type="submit">Get the licence</button>
+      <p class="form-msg" id="licMsg" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="quote shell" id="journal" aria-labelledby="q-h">
+    <h2 id="q-h" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Press</h2>
+    <figure style="margin:0">
+      <blockquote>“Letterform is one of three foundries we own outright, and the only one we don’t argue about.”</blockquote>
+      <figcaption>Monocle — The stack issue, 2025</figcaption>
+    </figure>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="foot-top">
+      <span class="wordmark">Letterform <em>&amp; Co.</em></span>
+      <p class="meta">Rotterdam · Lisbon · Drawings in progress since 2016</p>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <h4>Families</h4>
+        <ul>
+          <li><a href="#families">Halden Display</a></li>
+          <li><a href="#families">Halden Text</a></li>
+          <li><a href="#families">Ledger Mono</a></li>
+          <li><a href="#families">Corvid Stencil</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Licensing</h4>
+        <ul>
+          <li><a href="#licence">Desktop</a></li>
+          <li><a href="#licence">Web &amp; app</a></li>
+          <li><a href="#licence">Students</a></li>
+          <li><a href="#licence">Non-profits</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#tester">Tester</a></li>
+          <li><a href="#specimen">Specimen PDF</a></li>
+          <li><a href="#journal">Journal</a></li>
+          <li><a href="#licence">Support</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <ul>
+          <li><a href="#top">About</a></li>
+          <li><a href="#top">Custom cuts</a></li>
+          <li><a href="#top">Commission</a></li>
+          <li><a href="#top">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Letterform &amp; Co. BV</span>
+      <span>No webfonts are loaded on this page. Everything is a system stack.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ---- mobile nav ---- */
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('primaryNav');
+  toggle.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Close' : 'Index';
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.textContent = 'Index';
+    }
+  });
+
+  /* ---- type tester ---- */
+  var family = document.getElementById('family');
+  var size = document.getElementById('size');
+  var leading = document.getElementById('leading');
+  var tracking = document.getElementById('tracking');
+  var text = document.getElementById('tSample');
+  var sample = document.getElementById('sample');
+  var readout = document.getElementById('readout');
+  var sizeOut = document.getElementById('sizeOut');
+  var leadingOut = document.getElementById('leadingOut');
+  var trackingOut = document.getElementById('trackingOut');
+
+  function renderTester() {
+    var px = Number(size.value);
+    var lh = (Number(leading.value) / 100).toFixed(2);
+    var tr = Number(tracking.value);
+    var content = text.value.trim() === '' ? 'Halden' : text.value;
+
+    sample.style.fontFamily = family.value;
+    sample.style.fontSize = px + 'px';
+    sample.style.lineHeight = lh;
+    sample.style.letterSpacing = tr + 'px';
+    sample.textContent = content;
+
+    sizeOut.textContent = px + ' px';
+    leadingOut.textContent = lh;
+    trackingOut.textContent = (tr > 0 ? '+' : '') + tr + ' px';
+    readout.textContent = px + ' px / ' + lh + ' / ' + (tr > 0 ? '+' : '') + tr + ' px — ' + content.length + ' characters';
+  }
+  [family, size, leading, tracking, text].forEach(function (el) {
+    el.addEventListener('input', renderTester);
+    el.addEventListener('change', renderTester);
+  });
+
+  document.getElementById('presetBlack').addEventListener('click', function () {
+    sample.style.color = '#15140F';
+    sample.style.background = 'transparent';
+    sample.style.borderColor = 'rgba(242,240,234,.3)';
+  });
+  document.getElementById('presetRed').addEventListener('click', function () {
+    sample.style.color = '#F2F0EA';
+    sample.style.background = '#A02030';
+    sample.style.borderColor = '#A02030';
+  });
+  renderTester();
+
+  /* ---- licence calculator ---- */
+  var licFamily = document.getElementById('licFamily');
+  var licUse = document.getElementById('licUse');
+  var licSeats = document.getElementById('licSeats');
+  var total = document.getElementById('licTotal');
+  var base = function () { return parseInt(licFamily.value.split('—')[1].replace('€', '').trim(), 10); };
+  var useMult = { 'Desktop only': 1, 'Desktop + web': 1.4, 'Desktop + web + app': 1.8, 'Full, up to 50 staff': 2.6 };
+
+  function renderTotal() {
+    var seats = Math.max(1, Math.min(500, parseInt(licSeats.value, 10) || 1));
+    var mult = useMult[licUse.value] || 1;
+    var seatMult = seats <= 5 ? 1 : 1 + (seats - 5) * 0.06;
+    var amount = Math.round(base() * mult * seatMult);
+    total.textContent = '€' + amount + ' total, one-off — ' + licUse.value.toLowerCase() + ', ' + seats + ' seat' + (seats === 1 ? '' : 's');
+  }
+  [licFamily, licUse, licSeats].forEach(function (el) {
+    el.addEventListener('change', renderTotal);
+    el.addEventListener('input', renderTotal);
+  });
+  renderTotal();
+
+  var form = document.getElementById('licenceForm');
+  var msg = document.getElementById('licMsg');
+  var email = document.getElementById('licEmail');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.dataset.state = '';
+    msg.textContent = '';
+    email.removeAttribute('aria-invalid');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+      email.setAttribute('aria-invalid', 'true');
+      email.focus();
+      msg.dataset.state = 'error';
+      msg.textContent = 'Please enter a valid email so the licence can reach you.';
+      return;
+    }
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Preparing…';
+    msg.dataset.state = 'ok';
+    msg.textContent = 'Your trial kit is on its way — 30 days, no card. The licence invoice follows when you are ready.';
+    setTimeout(function () { btn.disabled = false; btn.textContent = 'Get the licence'; }, 2400);
+  });
+})();
+</script>
+</body>
+</html>

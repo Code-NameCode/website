@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="assets/js/tracking-config.js"></script>
+  <script src="assets/js/consent-bootstrap.js?v=domain-2"></script>
+  <title>IT &amp; Network Support South Africa | Managed Services, Cybersecurity &amp; Monitoring - Goodstuff Designs</title>
+  <meta name="description" content="Network administration, IT support, cybersecurity, network monitoring, AI for IT operations, IT infrastructure and managed business IT services. Based in Heidelberg, Gauteng - serving South Africa and international clients.">
+  <link rel="canonical" href="https://goodstuffdesigns.co.za/it-and-networks">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="theme-color" content="#000000">
+  <link rel="alternate" type="text/plain" href="llms.txt" title="Goodstuff Designs information for AI agents">
+  <link rel="alternate" type="text/markdown" href="it-and-networks.md" title="Markdown version of this page">
+  <link rel="alternate" type="application/json" href="service-catalog.json" title="Goodstuff Designs service catalogue">
+  <meta property="og:type" content="website"><meta property="og:locale" content="en_ZA"><meta property="og:site_name" content="Goodstuff Designs">
+  <meta property="og:title" content="IT &amp; Network Support South Africa | Goodstuff Designs"><meta property="og:description" content="Network administration, IT support, cybersecurity, monitoring, AI for IT operations, infrastructure and managed IT services."><meta property="og:url" href="https://goodstuffdesigns.co.za/it-and-networks">
+  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="IT &amp; Network Support South Africa | Goodstuff Designs"><meta name="twitter:description" content="Network administration, IT support, cybersecurity, monitoring, infrastructure and managed IT services.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Service","name":"IT and network services","provider":{"@type":"Organization","name":"Goodstuff Designs","url":"https://goodstuffdesigns.co.za/"},"areaServed":[{"@type":"Country","name":"South Africa"},{"@type":"AdministrativeArea","name":"International - remote"}],"hasOfferCatalog":{"@type":"OfferCatalog","name":"IT and network services","itemListElement":[
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Network administration","description":"Routers, switches, WiFi, VLANs, firewalls and network troubleshooting."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"IT support","description":"Windows, hardware, software, drivers and remote support."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Cybersecurity","description":"Vulnerability assessments, security audits, endpoint protection and incident response."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Network monitoring","description":"Open source monitoring tools, uptime checks, traffic analysis and automated alerts."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"AI for IT operations","description":"AI agents for troubleshooting, network diagnostics, automated IT support and security monitoring."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"IT infrastructure","description":"Server deployment, backups, cloud infrastructure and disaster recovery."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Business IT services","description":"IT audits, managed services, maintenance plans and technical proposals."}}]}}
+  </script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=footer-4">
+  <style>
+    .social-links svg { width:15px; height:15px; display:block; }
+    .itn-main { position:relative; z-index:1; }
+
+    .itn-hero { width:min(100% - 48px,1120px); margin-inline:auto; padding:144px 0 64px; }
+    .itn-hero .pill-badge { margin-bottom:28px; }
+    .itn-hero h1 { max-width:800px; margin:0 0 20px; font-size:clamp(38px,5.6vw,68px); font-weight:800; line-height:1.05; letter-spacing:-.04em;
+      background:linear-gradient(180deg,#fff 0%,#a1a1aa 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .itn-hero .hero-sub { max-width:600px; margin:0; text-align:left; }
+    .itn-hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:34px; }
+
+    /* Ops terminal under hero */
+    .ops-terminal { max-width:760px; margin:56px 0 0; border:1px solid var(--border); border-radius:12px; overflow:hidden;
+      background:var(--surface); box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 40px 80px rgba(0,0,0,.6); }
+    .ops-bar { display:flex; align-items:center; gap:6px; padding:11px 16px; border-bottom:1px solid var(--border); background:rgba(255,255,255,.015); }
+    .ops-bar i { width:9px; height:9px; border-radius:50%; background:#3a3a3a; }
+    .ops-bar span { margin-inline:auto; font:11px var(--font-mono); color:#d4d4d8; }
+    .ops-live { display:inline-flex; align-items:center; gap:6px; margin-left:auto; font:500 9px var(--font-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--accent-emerald); }
+    .ops-live i { width:6px; height:6px; border-radius:50%; background:var(--accent-emerald); box-shadow:0 0 8px var(--accent-emerald); }
+    .ops-body { padding:18px 22px; font:12.5px/2 var(--font-mono); }
+    .ops-row { display:flex; gap:10px; align-items:baseline; white-space:nowrap; }
+    .ops-row .k { color:var(--accent-emerald); min-width:96px; }
+    .ops-row .ok { color:var(--accent-emerald); }
+    .ops-row .v { color:var(--text-tertiary); overflow:hidden; text-overflow:ellipsis; }
+    .ops-row .v b { color:#d4d4d8; font-weight:500; }
+    .cursor { display:inline-block; width:7px; height:13px; background:#a1a1aa; vertical-align:middle; }
+    .feed-row.enter { animation: feedIn .4s ease both; }
+    @keyframes feedIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+
+    /* Metrics band */
+    .itn-metrics { width:min(100% - 48px,1120px); margin-inline:auto; border:1px solid var(--border); border-radius:14px; overflow:hidden;
+      display:grid; grid-template-columns:repeat(4,1fr); background:#070707; }
+    .itn-metric { padding:26px 24px; border-right:1px solid var(--border); }
+    .itn-metric:last-child { border-right:0; }
+    .itn-metric .metric-num { font-size:32px; font-weight:800; letter-spacing:-.03em; color:var(--text-primary); }
+    .itn-metric .metric-num small { font-size:16px; color:var(--accent-emerald); }
+    .itn-metric p { margin-top:6px; color:var(--text-tertiary); font-size:12px; line-height:1.55; }
+
+    .itn-section { width:min(100% - 48px,1120px); margin-inline:auto; padding:84px 0; border-top:1px solid var(--border); }
+    .section-head { display:grid; grid-template-columns:minmax(0,.9fr) minmax(280px,1.1fr); gap:48px; align-items:end; margin-bottom:42px; }
+    .section-head h2 { font-size:clamp(30px,4vw,48px); line-height:1.06; letter-spacing:-.04em; }
+    .section-head p:last-child { color:var(--text-secondary); line-height:1.7; }
+
+    .service-split { display:grid; grid-template-columns:minmax(0,.85fr) minmax(300px,1.15fr); gap:56px; align-items:start; }
+    .service-split h2 { margin-bottom:14px; font-size:clamp(26px,3.4vw,40px); line-height:1.08; letter-spacing:-.035em; }
+    .service-split .service-copy { color:var(--text-secondary); line-height:1.75; margin-bottom:22px; }
+    .service-facts { display:grid; gap:10px; }
+    .service-facts li { list-style:none; display:flex; gap:10px; color:var(--text-secondary); font-size:13.5px; line-height:1.6; }
+    .service-facts li::before { content:'-'; color:var(--accent-emerald); }
+    .eyebrow { font-size:11px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:14px; display:block; }
+
+    /* Visual panels */
+    .vis-panel { border:1px solid var(--border); border-radius:14px; overflow:hidden; background:#070707; }
+    .vis-head { display:flex; align-items:center; gap:10px; padding:14px 20px; border-bottom:1px solid var(--border);
+      font:500 10px var(--font-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--text-tertiary); }
+    .vis-head .dot { width:6px; height:6px; border-radius:50%; background:var(--accent-emerald); box-shadow:0 0 8px var(--accent-emerald); flex-shrink:0; }
+    .vis-head .tag { margin-left:auto; color:var(--accent-emerald); }
+    .vis-body { padding:20px; }
+    .vis-foot { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-top:1px solid var(--border); }
+    .vis-foot small { color:var(--text-tertiary); font-size:12px; }
+
+    .cta-row { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:16px; }
+    .cta-row .price-chip { padding:7px 13px; border:1px solid var(--border); border-radius:99px; background:#080808; color:var(--text-secondary); font:11px var(--font-mono); }
+    .cta-row .btn-ghost { margin-left:auto; }
+
+    /* Topology */
+    .topo-svg { display:block; width:100%; height:auto; }
+    .topo-svg text { font:11px var(--font-mono); fill:#a1a1aa; }
+    .topo-node { fill:#0b0f0d; stroke:#242424; }
+    .topo-node--hub { stroke:rgba(16,185,129,.45); }
+    .topo-line { stroke:#242424; stroke-width:1.5; fill:none; }
+    .topo-flow { stroke:var(--accent-emerald); stroke-width:1.5; fill:none; stroke-dasharray:4 9; opacity:.75; }
+    .topo-ping { fill:var(--accent-emerald); }
+    .topo-label { font-size:9px; fill:#52525b; letter-spacing:.08em; }
+
+    /* Status rows (support, security, infra) */
+    .status-rows { display:grid; }
+    .status-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px; align-items:baseline; padding:13px 0; border-bottom:1px solid var(--border); font-size:13.5px; }
+    .status-row:last-child { border-bottom:0; }
+    .status-row .s-name { color:var(--text-secondary); }
+    .status-row .s-note { display:block; margin-top:2px; color:var(--text-tertiary); font-size:12px; }
+    .s-badge { flex-shrink:0; padding:4px 10px; border-radius:99px; font:600 10px var(--font-mono); letter-spacing:.08em; text-transform:uppercase; }
+    .s-badge.ok { color:var(--accent-emerald); border:1px solid rgba(16,185,129,.35); background:rgba(16,185,129,.06); }
+    .s-badge.warn { color:#f59e0b; border:1px solid rgba(245,158,11,.35); background:rgba(245,158,11,.06); }
+
+    /* Scan progress */
+    .scan-bar { height:4px; border-radius:99px; background:#161616; overflow:hidden; margin:4px 0 16px; }
+    .scan-bar i { display:block; height:100%; width:38%; border-radius:99px; background:linear-gradient(90deg, transparent, var(--accent-emerald), transparent); }
+
+    /* Monitoring dashboard */
+    .mon-grid { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:20px; }
+    .mon-block h4 { margin:0 0 10px; color:var(--text-tertiary); font:500 10px var(--font-mono); letter-spacing:.1em; text-transform:uppercase; }
+    .uptime-bars { display:flex; align-items:flex-end; gap:3px; height:56px; }
+    .uptime-bars i { flex:1; border-radius:2px 2px 0 0; background:rgba(16,185,129,.75); min-height:18%; }
+    .uptime-bars i.dim { background:rgba(16,185,129,.28); }
+    .uptime-bars i.alert { background:#f59e0b; }
+    .uptime-scale { display:flex; justify-content:space-between; margin-top:8px; color:var(--text-tertiary); font:10px var(--font-mono); }
+    .spark-svg { display:block; width:100%; height:auto; }
+    .spark-line { fill:none; stroke:var(--accent-emerald); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .spark-area { fill:rgba(16,185,129,.09); stroke:none; }
+    .spark-base { stroke:#242424; stroke-width:1; }
+    .mon-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
+    .mon-stat { padding:12px 14px; border:1px solid var(--border); border-radius:10px; background:#0a0a0a; }
+    .mon-stat b { display:block; color:var(--text-primary); font:600 15px var(--font-mono); }
+    .mon-stat span { color:var(--text-tertiary); font-size:11px; }
+    .mon-feed { margin-top:18px; border-top:1px solid var(--border); padding-top:14px; font:12px/1.9 var(--font-mono); min-height:150px; }
+    .mon-feed .feed-row { display:flex; gap:10px; white-space:nowrap; }
+    .mon-feed .t { color:#52525b; flex-shrink:0; }
+    .mon-feed .host { color:#d4d4d8; min-width:110px; }
+    .mon-feed .st-ok { color:var(--accent-emerald); }
+    .mon-feed .st-warn { color:#f59e0b; }
+    .mon-feed .st-info { color:#60a5fa; }
+
+    /* AI feed */
+    .ai-feed-row { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:baseline; padding:11px 0; border-bottom:1px solid var(--border); font:12.5px var(--font-mono); }
+    .ai-feed-row:last-child { border-bottom:0; }
+    .ai-feed-row .who { color:#60a5fa; }
+    .ai-feed-row .what { color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .ai-feed-row .what b { color:#e4e4e7; font-weight:500; }
+    .hp-badge { padding:3px 9px; border-radius:99px; border:1px solid rgba(96,165,250,.4); color:#60a5fa; font:600 9px var(--font-mono); letter-spacing:.08em; text-transform:uppercase; }
+    .hp-badge.auto { border-color:rgba(16,185,129,.4); color:var(--accent-emerald); }
+
+    /* FAQ */
+    .faq-list { border:1px solid var(--border); border-radius:14px; overflow:hidden; background:#070707; }
+    .faq-item { border-bottom:1px solid var(--border); }
+    .faq-item:last-child { border-bottom:0; }
+    .faq-item summary { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:20px 24px; cursor:pointer; font-size:15px; font-weight:600; letter-spacing:-.015em; list-style:none; }
+    .faq-item summary::-webkit-details-marker { display:none; }
+    .faq-item summary::after { content:'+'; color:var(--text-tertiary); font-size:20px; line-height:1; transition:transform .2s ease; }
+    .faq-item[open] summary::after { content:'−'; }
+    .faq-item p { padding:0 24px 20px; color:var(--text-secondary); font-size:13.5px; line-height:1.7; max-width:640px; }
+
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1); }
+    .reveal.is-visible { opacity:1; transform:none; }
+
+    /* Ambient animations (gated) */
+    @media (prefers-reduced-motion: no-preference) {
+      .cursor { animation: blink 1s step-end infinite; }
+      @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+      .scan-bar i { animation: scan 2.6s ease-in-out infinite; }
+      @keyframes scan { 0%{margin-left:-38%} 100%{margin-left:100%} }
+      .topo-flow { animation: topoFlow 1.1s linear infinite; }
+      @keyframes topoFlow { to { stroke-dashoffset:-26; } }
+      .topo-ping { transform-origin:center; animation: ping 2.4s ease-out infinite; transform-box:fill-box; }
+      @keyframes ping { 0%{opacity:.9; transform:scale(.6)} 70%{opacity:0; transform:scale(2.2)} 100%{opacity:0} }
+      .spark-line { stroke-dasharray:900; stroke-dashoffset:900; }
+      .reveal.is-visible .spark-line { animation: draw 1.4s ease forwards .2s; }
+      @keyframes draw { to { stroke-dashoffset:0; } }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal,.area-card { transition:none; }
+      .reveal { opacity:1; transform:none; }
+    }
+
+    .grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .area-card { padding:26px; border:1px solid var(--border); border-radius:14px; background:#080808; transition:border-color .2s ease, transform .22s ease; }
+    .area-card:hover { border-color:var(--border-hover); transform:translateY(-4px); }
+    .area-card h3 { margin-bottom:9px; font-size:19px; letter-spacing:-.025em; }
+    .area-card p { color:var(--text-secondary); font-size:13px; line-height:1.65; }
+
+    @media (max-width:900px) {
+      .section-head { grid-template-columns:1fr; gap:16px; }
+      .service-split { grid-template-columns:1fr; gap:26px; }
+      .itn-metrics { grid-template-columns:1fr 1fr; }
+      .itn-metric:nth-child(2) { border-right:0; }
+      .itn-metric:nth-child(-n+2) { border-bottom:1px solid var(--border); }
+      .mon-grid { grid-template-columns:1fr; }
+      .grid-3 { grid-template-columns:1fr; }
+      .ops-row .v { white-space:normal; }
+    }
+    @media (max-width:600px) {
+      .itn-metrics { grid-template-columns:1fr; }
+      .itn-metric { border-right:0; border-bottom:1px solid var(--border); }
+      .itn-metric:last-child { border-bottom:0; }
+    }
+    @media (max-width:760px) {
+      .itn-hero { width:min(100% - 32px,1120px); padding:112px 0 56px; }
+      .itn-section { width:min(100% - 32px,1120px); padding:60px 0; }
+      .ops-body { font-size:11px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a class="brand" href="index.html" aria-label="Goodstuff Designs home">
+        <svg width="28" height="28" viewBox="0 0 36 36" aria-hidden="true" fill="none"><path d="M8 11h14a6 6 0 0 1 0 12H14a4 4 0 0 0 0 8h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="11" r="2.5" fill="currentColor"/><circle cx="28" cy="31" r="2.5" fill="currentColor"/></svg>
+        Goodstuff Designs
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open navigation">Menu</button>
+      <div class="nav-links" id="nav-links"><a href="services.html">Services</a><a href="ai.html">AI</a><a href="websites-and-hosting.html">Web &amp; Hosting</a><a href="portfolio.html">Portfolio</a><a href="studio.html">Studio</a><a href="contact.html">Contact</a></div>
+    </div>
+  </nav>
+
+  <main id="main" class="itn-main" data-clarity-mask="true">
+    <section class="itn-hero">
+      <div class="pill-badge"><span class="live-dot" aria-hidden="true"></span> Managed IT &middot; Networks &middot; Heidelberg, South Africa &middot; working worldwide</div>
+      <h1>IT and networks<br>that stay up.</h1>
+      <p class="hero-sub">Network administration, IT support, cybersecurity, monitoring, infrastructure and managed services from one team. We keep small and medium businesses running in Heidelberg, across South Africa, and internationally - and we bring AI to the operations work, not just the pitch deck.</p>
+      <div class="itn-hero-actions">
+        <a class="btn-primary" href="contact.html?route=support">Get support</a>
+        <a class="btn-ghost" href="contact.html?route=network">Check your network</a>
+      </div>
+
+      <div class="ops-terminal" role="img" aria-label="Illustrative operations status summary">
+        <div class="ops-bar"><i></i><i></i><i></i><span>goodstuff-ops</span><span class="ops-live"><i aria-hidden="true"></i>live</span></div>
+        <div class="ops-body">
+          <div class="ops-row"><span class="k">network</span><span class="ok">[ok]</span><span class="v">4 sites &middot; <b>214 devices</b> monitored</span></div>
+          <div class="ops-row"><span class="k">support</span><span class="ok">[ok]</span><span class="v">critical response target <b>&lt; 4 hours</b></span></div>
+          <div class="ops-row"><span class="k">security</span><span class="ok">[ok]</span><span class="v">38 endpoints protected &middot; <b>0 critical alerts</b></span></div>
+          <div class="ops-row"><span class="k">backups</span><span class="ok">[ok]</span><span class="v">last restore test <b>passed</b> &middot; 6 days ago</span></div>
+          <div class="ops-row"><span class="k">uptime 30d</span><span class="ok">[ok]</span><span class="v"><b>99.97%</b> &middot; monitoring never sleeps</span></div>
+          <div class="ops-row"><span class="k">$</span><span class="v">watching your network</span>&nbsp;<span class="cursor" aria-hidden="true"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" aria-label="Service metrics" style="padding-bottom:20px;">
+      <div class="itn-metrics">
+        <div class="itn-metric"><div class="metric-num" data-count="99.9" data-decimals="1">99.9<small>%</small></div><p>Uptime target on every network and server we manage.</p></div>
+        <div class="itn-metric"><div class="metric-num" data-count="4">&lt;<span>4</span><small>h</small></div><p>Critical-issue response target during business hours.</p></div>
+        <div class="itn-metric"><div class="metric-num">24<small>/7</small></div><p>Monitoring and automated alerts, routed to a person.</p></div>
+        <div class="itn-metric"><div class="metric-num">1<small>&nbsp;team</small></div><p>Same team for network, support, security and hosting.</p></div>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" id="network-administration" aria-labelledby="na-title">
+      <div class="service-split">
+        <div>
+          <span class="eyebrow">01 - Network administration</span>
+          <h2 id="na-title">Routers, switches, WiFi, VLANs and firewalls - configured properly.</h2>
+          <p class="service-copy">A business network is plumbing: invisible when it works, expensive when it doesn't. We design and administer the whole stack - router and switch configuration, business WiFi that reaches every room that needs it, VLANs that keep guest traffic away from your POS, and firewalls with rules someone can actually explain.</p>
+          <ul class="service-facts">
+            <li>Router, switch and access point deployment and configuration</li>
+            <li>Business WiFi: coverage surveys, mesh design, roaming that works</li>
+            <li>VLAN segmentation for staff, guests, CCTV and card machines</li>
+            <li>Firewall rules, port forwarding done safely, VPN access for remote staff</li>
+            <li>Network troubleshooting: from a slow office to a down branch</li>
+          </ul>
+        </div>
+        <div>
+          <div class="vis-panel">
+            <div class="vis-head"><span class="dot" aria-hidden="true"></span> Site topology - reference build <span class="tag">all links healthy</span></div>
+            <div class="vis-body" style="padding:12px;">
+              <svg class="topo-svg" viewBox="0 0 560 300" aria-hidden="true">
+                <path class="topo-line" d="M108 150 H 168"/>
+                <path class="topo-line" d="M298 150 H 358"/>
+                <path class="topo-line" d="M448 150 C 480 150 480 52 500 52"/>
+                <path class="topo-line" d="M448 150 C 480 150 480 117 500 117"/>
+                <path class="topo-line" d="M448 150 C 480 150 480 183 500 183"/>
+                <path class="topo-line" d="M448 150 C 480 150 480 248 500 248"/>
+                <path class="topo-flow" d="M108 150 H 168"/>
+                <path class="topo-flow" d="M298 150 H 358"/>
+                <path class="topo-flow" d="M448 150 C 480 150 480 52 500 52"/>
+                <path class="topo-flow" d="M448 150 C 480 150 480 248 500 248"/>
+                <rect class="topo-node" x="20" y="132" width="88" height="36" rx="8"/>
+                <text x="64" y="154" text-anchor="middle">Internet</text>
+                <rect class="topo-node topo-node--hub" x="168" y="132" width="130" height="36" rx="8"/>
+                <text x="233" y="154" text-anchor="middle">Firewall / Router</text>
+                <circle class="topo-ping" cx="233" cy="150" r="4"/>
+                <rect class="topo-node topo-node--hub" x="298" y="132" width="150" height="36" rx="8"/>
+                <text x="373" y="154" text-anchor="middle">Core switch + VLANs</text>
+                <circle class="topo-ping" cx="373" cy="150" r="4" style="animation-delay:1.2s"/>
+                <rect class="topo-node" x="500" y="34" width="52" height="36" rx="8"/>
+                <text x="526" y="56" text-anchor="middle">WiFi</text>
+                <rect class="topo-node" x="500" y="99" width="52" height="36" rx="8"/>
+                <text x="526" y="121" text-anchor="middle">CCTV</text>
+                <rect class="topo-node" x="500" y="165" width="52" height="36" rx="8"/>
+                <text x="526" y="187" text-anchor="middle">POS</text>
+                <rect class="topo-node" x="500" y="230" width="52" height="36" rx="8"/>
+                <text x="526" y="252" text-anchor="middle">Servers</text>
+                <text class="topo-label" x="20" y="120">VLAN 10</text>
+                <text class="topo-label" x="500" y="284">staff &middot; guests &middot; cameras &middot; card machines</text>
+              </svg>
+            </div>
+            <div class="vis-foot">
+              <small>Guests, cameras and card machines segmented - one flat network is how breaches spread.</small>
+              <span class="cta-row" style="margin-top:0;"><span class="price-chip">Scoped per site</span><a class="btn-ghost" href="contact.html?route=network">Request a review</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" id="it-support" aria-labelledby="its-title">
+      <div class="service-split">
+        <div>
+          <span class="eyebrow">02 - IT support</span>
+          <h2 id="its-title">Windows, hardware, software and drivers - fixed by a person.</h2>
+          <p class="service-copy">Day-to-day help for the devices your team actually works on: Windows setup and repairs, hardware failures, software that stops cooperating, driver conflicts nobody can name, and remote support that solves most problems without anyone leaving their desk. Critical issues target a response within four hours during business hours.</p>
+          <ul class="service-facts">
+            <li>Windows 10 and 11 setup, migration, repair and hardening</li>
+            <li>Hardware diagnostics, upgrades and replacement coordination</li>
+            <li>Software installation, licensing and update management</li>
+            <li>Driver conflicts found and fixed properly, not reinstalled blindly</li>
+            <li>Remote support across South Africa; on-site across the Vaal and East Rand</li>
+          </ul>
+        </div>
+        <div>
+          <div class="vis-panel">
+            <div class="vis-head"><span class="dot" aria-hidden="true"></span> Ticket #482 - typical remote fix <span class="tag">resolved 21 min</span></div>
+            <div class="vis-body" style="padding-top:8px;">
+              <div class="status-rows">
+                <div class="status-row"><span class="s-name">Ticket logged<span class="s-note">"Laptop won't connect to the office WiFi"</span></span><span class="s-badge ok">09:12</span></div>
+                <div class="status-row"><span class="s-name">Remote session started<span class="s-note">No waiting, no site visit needed</span></span><span class="s-badge ok">09:12</span></div>
+                <div class="status-row"><span class="s-name">Driver conflict found<span class="s-note">Wrong adapter driver from a Windows update</span></span><span class="s-badge warn">09:26</span></div>
+                <div class="status-row"><span class="s-name">Fixed and verified<span class="s-note">Roaming test on both APs, user back to work</span></span><span class="s-badge ok">09:33</span></div>
+              </div>
+            </div>
+            <div class="vis-foot">
+              <small>Critical issues target a response within 4 hours, business hours.</small>
+              <span class="cta-row" style="margin-top:0;"><span class="price-chip">Managed or ad-hoc</span><a class="btn-ghost" href="contact.html?route=support">Request support</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" id="cybersecurity" aria-labelledby="sec-title">
+      <div class="service-split">
+        <div>
+          <span class="eyebrow">03 - Cybersecurity</span>
+          <h2 id="sec-title">Find the gaps before someone else does.</h2>
+          <p class="service-copy">Small businesses are attacked exactly where they are weakest: unpatched machines, reused passwords, antivirus that expired quietly. We run vulnerability assessments and security audits on your network and endpoints, supply and manage endpoint protection, and stand behind you when something goes wrong.</p>
+          <ul class="service-facts">
+            <li>Vulnerability assessments across network, servers and endpoints</li>
+            <li>Security audits with findings ranked by actual risk, not fear</li>
+            <li>Endpoint protection supplied and managed, including Kaspersky via Voxos</li>
+            <li>Incident response: containment, recovery and a plain-language post-mortem</li>
+          </ul>
+        </div>
+        <div>
+          <div class="vis-panel">
+            <div class="vis-head"><span class="dot" aria-hidden="true"></span> Vulnerability assessment - sample findings <span class="tag">5 of 5 checks shown</span></div>
+            <div class="vis-body" style="padding-top:12px;">
+              <div class="scan-bar" aria-hidden="true"><i></i></div>
+              <div class="status-rows">
+                <div class="status-row"><span class="s-name">Open ports &amp; exposed services<span class="s-note">External surface reviewed, RDP closed</span></span><span class="s-badge ok">pass</span></div>
+                <div class="status-row"><span class="s-name">Patch levels<span class="s-note">2 machines behind on security updates</span></span><span class="s-badge warn">2 flagged</span></div>
+                <div class="status-row"><span class="s-name">Password &amp; MFA policy<span class="s-note">Manager accounts on MFA, no shared logins</span></span><span class="s-badge ok">pass</span></div>
+                <div class="status-row"><span class="s-name">Endpoint protection<span class="s-note">38 of 38 devices reporting to console</span></span><span class="s-badge ok">38/38</span></div>
+                <div class="status-row"><span class="s-name">WiFi &amp; guest isolation<span class="s-note">Guest VLAN cannot reach POS or files</span></span><span class="s-badge ok">pass</span></div>
+              </div>
+            </div>
+            <div class="vis-foot">
+              <small>Every audit ends as a ranked, written list you can act on.</small>
+              <span class="cta-row" style="margin-top:0;"><span class="price-chip">Scoped per environment</span><a class="btn-ghost" href="contact.html?route=security">Book an audit</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" id="network-monitoring" aria-labelledby="mon-title">
+      <div class="section-head">
+        <div><span class="eyebrow">04 - Network monitoring</span><h2 id="mon-title">Know before your clients do.</h2></div>
+        <p>The outages that hurt most are the ones a customer reports first. We deploy proven open source monitoring tools - no per-device licence creep - to watch uptime, traffic and device health around the clock, with automated alerts that reach a person, not a dashboard nobody opens.</p>
+      </div>
+      <div class="vis-panel">
+        <div class="vis-head"><span class="dot" aria-hidden="true"></span> Monitoring dashboard - last 30 days <span class="tag">uptime 99.97%</span></div>
+        <div class="vis-body">
+          <div class="mon-grid">
+            <div class="mon-block">
+              <h4>Daily uptime</h4>
+              <div class="uptime-bars" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="alert"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+              <div class="uptime-scale"><span>30d ago</span><span>day 19: ISP fault, failed over</span><span>today</span></div>
+              <div class="mon-stats">
+                <div class="mon-stat"><b>99.97%</b><span>uptime, 30 days</span></div>
+                <div class="mon-stat"><b>14 ms</b><span>avg latency to uplink</span></div>
+                <div class="mon-stat"><b>4m 12s</b><span>longest blip, auto-failover</span></div>
+              </div>
+            </div>
+            <div class="mon-block">
+              <h4>Uplink latency - live view</h4>
+              <svg class="spark-svg" viewBox="0 0 460 120" aria-hidden="true">
+                <line class="spark-base" x1="0" y1="100" x2="460" y2="100"/>
+                <path class="spark-area" d="M0 78 L30 72 L60 80 L90 66 L120 70 L150 58 L180 64 L210 52 L240 60 L270 48 L300 56 L330 44 L360 52 L390 40 L420 48 L460 42 L460 100 L0 100 Z"/>
+                <path class="spark-line" d="M0 78 L30 72 L60 80 L90 66 L120 70 L150 58 L180 64 L210 52 L240 60 L270 48 L300 56 L330 44 L360 52 L390 40 L420 48 L460 42"/>
+              </svg>
+              <div class="mon-feed" id="monitor-feed" aria-live="off">
+                <div class="feed-row"><span class="t">12:58</span><span class="host">firewall</span><span>blocked 3 brute-force attempts</span><span class="st-warn">handled</span></div>
+                <div class="feed-row"><span class="t">12:52</span><span class="host">wifi-ap-3</span><span>channel re-optimised</span><span class="st-ok">ok</span></div>
+                <div class="feed-row"><span class="t">12:47</span><span class="host">backup-nas</span><span>nightly job verified &middot; 1.2TB</span><span class="st-ok">ok</span></div>
+                <div class="feed-row"><span class="t">12:43</span><span class="host">switch-core</span><span>new device joined VLAN 20</span><span class="st-info">noted</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="vis-foot">
+          <small>Open source stack, deployed on infrastructure you own. Alerts reach a person by email, WhatsApp or ticket.</small>
+          <span class="cta-row" style="margin-top:0;"><span class="price-chip">Scoped per device set</span><a class="btn-ghost" href="contact.html?route=network">Ask about monitoring</a></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" id="ai-operations" aria-labelledby="aiops-title">
+      <div class="service-split">
+        <div>
+          <span class="eyebrow">05 - AI for IT operations</span>
+          <h2 id="aiops-title">AI agents on the network team.</h2>
+          <p class="service-copy">We build AI into IT operations where it genuinely helps: agents that do first-line troubleshooting, run network diagnostics against known-good baselines, handle routine IT support requests end to end, and watch security telemetry for the patterns humans miss. Human-controlled by design - every agent has an owner, scoped access and an audit trail.</p>
+          <ul class="service-facts">
+            <li>AI agents for first-line troubleshooting and request triage</li>
+            <li>Network diagnostics: automated checks against your known-good baseline</li>
+            <li>Automated IT support for the questions that repeat every week</li>
+            <li>Security monitoring assistants that flag anomalies for a human decision</li>
+          </ul>
+        </div>
+        <div>
+          <div class="vis-panel">
+            <div class="vis-head"><span class="dot" aria-hidden="true"></span> Ops agent activity <span class="tag">human checkpoints on</span></div>
+            <div class="vis-body" style="padding-top:6px;">
+              <div id="ai-feed" aria-live="off">
+                <div class="ai-feed-row"><span class="who">agent</span><span class="what">ticket <b>#487</b> classified &rarr; password reset &middot; resolved</span><span class="hp-badge auto">auto</span></div>
+                <div class="ai-feed-row"><span class="who">agent</span><span class="what">log triage &middot; <b>214 lines</b> scanned &middot; 1 anomaly</span><span class="hp-badge">human</span></div>
+                <div class="ai-feed-row"><span class="who">agent</span><span class="what">baseline check &middot; switch-core <b>within norms</b></span><span class="hp-badge auto">auto</span></div>
+                <div class="ai-feed-row"><span class="who">agent</span><span class="what">unusual outbound traffic on POS VLAN</span><span class="hp-badge">human</span></div>
+              </div>
+            </div>
+            <div class="vis-foot">
+              <small>Agents prepare; people decide. Scoped access, owner and audit trail on every workflow.</small>
+              <span class="cta-row" style="margin-top:0;"><span class="price-chip">Quoted per workflow</span><a class="btn-ghost" href="ai.html">Explore the AI page</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" id="it-infrastructure" aria-labelledby="infra-title">
+      <div class="service-split">
+        <div>
+          <span class="eyebrow">06 - IT infrastructure</span>
+          <h2 id="infra-title">Servers, backups, cloud and disaster recovery.</h2>
+          <p class="service-copy">Infrastructure is what turns the lights back on after a bad day. We deploy and run the servers your business depends on - on-premises, in the cloud, or both - with backups that get tested rather than assumed, and disaster recovery plans written for the day you actually need them.</p>
+          <ul class="service-facts">
+            <li>Server deployment: on-premises, cloud, or a mix that fits the budget</li>
+            <li>Backup systems with scheduled restore tests, not silent failures</li>
+            <li>Cloud infrastructure on major platforms, configured and costed sensibly</li>
+            <li>Disaster recovery planning: RPO and RTO agreed in writing, then rehearsed</li>
+          </ul>
+        </div>
+        <div>
+          <div class="vis-panel">
+            <div class="vis-head"><span class="dot" aria-hidden="true"></span> Backup &amp; DR status - client example <span class="tag">all green</span></div>
+            <div class="vis-body" style="padding-top:8px;">
+              <div class="status-rows">
+                <div class="status-row"><span class="s-name">Nightly backup<span class="s-note">02:00 &middot; 1.2TB &middot; verified after every run</span></span><span class="s-badge ok">done</span></div>
+                <div class="status-row"><span class="s-name">Offsite copy<span class="s-note">Encrypted, synced to second location</span></span><span class="s-badge ok">99.98%</span></div>
+                <div class="status-row"><span class="s-name">Last restore test<span class="s-note">Full file + mail restore, timed end to end</span></span><span class="s-badge ok">passed</span></div>
+                <div class="status-row"><span class="s-name">Recovery targets<span class="s-note">RPO 24h &middot; RTO 4h - agreed in writing</span></span><span class="s-badge ok">on file</span></div>
+              </div>
+            </div>
+            <div class="vis-foot">
+              <small>An untested backup is a hope, not a plan. We test restores on a schedule.</small>
+              <span class="cta-row" style="margin-top:0;"><span class="price-chip">Scoped per environment</span><a class="btn-ghost" href="contact.html?route=support">Discuss infrastructure</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" id="business-it" aria-labelledby="bits-title">
+      <div class="section-head">
+        <div><span class="eyebrow">07 - Business IT services</span><h2 id="bits-title">Audits, managed services, maintenance plans and proposals.</h2></div>
+        <p>For businesses that want IT handled rather than hired: IT audits that establish the real state of your environment, managed service agreements that put a team behind your systems, maintenance plans that keep kit healthy instead of waiting for failure, and technical proposals you can hand to a board or a landlord.</p>
+      </div>
+      <div class="grid-3">
+        <article class="area-card"><span class="eyebrow" style="margin-bottom:20px;">IT audits</span><h3>Know what you actually run.</h3><p>Full inventory, risk findings ranked by impact, and a practical roadmap with costs - not a 40-page fear document.</p></article>
+        <article class="area-card"><span class="eyebrow" style="margin-bottom:20px;">Managed services</span><h3>A team behind your systems.</h3><p>A named team, agreed response targets, monthly reporting and proactive maintenance built into the agreement.</p></article>
+        <article class="area-card"><span class="eyebrow" style="margin-bottom:20px;">Proposals &amp; plans</span><h3>Documents that get approved.</h3><p>Technical proposals and maintenance plans written for decision-makers, ready for a board, a landlord or a bank.</p></article>
+      </div>
+      <div class="cta-row" style="margin-top:20px; justify-content:center;">
+        <span class="price-chip">Monthly, per agreement</span>
+        <span class="price-chip">Starts with an audit</span>
+        <a class="btn-ghost" style="margin-left:0;" href="contact.html?route=support">Request a proposal</a>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" id="faq" aria-labelledby="itn-faq-title">
+      <div class="section-head">
+        <div><h2 id="itn-faq-title">Before you ask.</h2></div>
+        <p>The questions that come up on nearly every IT and network conversation.</p>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item"><summary>Do you sell hardware too?</summary><p>We specify it, source it through local distributors, and stand behind the installation. You are never locked into kit you cannot buy elsewhere.</p></details>
+        <details class="faq-item"><summary>Can you take over a network someone else installed?</summary><p>Usually, yes. It starts with the coverage and configuration review - what is there, what is documented, what is risky - and a written plan to stabilise it.</p></details>
+        <details class="faq-item"><summary>What does "open source monitoring" actually mean for me?</summary><p>No per-device licence fees and no vendor lock-in on the tools that watch your network. You own the stack; we run it and interpret it.</p></details>
+        <details class="faq-item"><summary>Do you support businesses outside Gauteng?</summary><p>Yes. Remote support covers anywhere in South Africa, and remote project work covers international clients. On-site work focuses on the Vaal and East Rand.</p></details>
+      </div>
+    </section>
+
+    <section class="itn-section reveal" style="text-align:center;" aria-labelledby="itn-cta-title">
+      <h2 id="itn-cta-title" style="max-width:680px;margin:0 auto 14px;font-size:clamp(32px,5vw,56px);line-height:1.04;letter-spacing:-.045em;">Tell us what needs to stay up.</h2>
+      <p class="hero-sub" style="margin-bottom:30px;">One conversation about your network, your devices and your risks - we reply with a practical next step.</p>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <a class="btn-primary" href="contact.html?route=support">Get support</a>
+        <a class="btn-ghost" href="tel:+27799374801">Call now</a><a class="btn-ghost" href="https://wa.me/27799374801" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" style="vertical-align:-2px"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.6.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.2-.8l.4-.5c.1-.2 0-.4 0-.5L9.3 7.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-.7 2.1.1 3.4a12 12 0 0 0 4.7 4.3c1.8.8 2.5.8 3.4.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.9-.5Z"/></svg>WhatsApp us</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a class="brand" href="index.html"><svg width="24" height="24" viewBox="0 0 36 36" aria-hidden="true" fill="none"><path d="M8 11h14a6 6 0 0 1 0 12H14a4 4 0 0 0 0 8h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="11" r="2.5" fill="currentColor"/><circle cx="28" cy="31" r="2.5" fill="currentColor"/></svg>Goodstuff Designs</a>
+          <p class="footer-brand-text">Clear systems. Reliable support. Useful progress.</p>
+          <div class="social-links" aria-label="Social media links">
+            <a href="https://github.com/Code-NameCode" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.2-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a>
+            <a href="https://www.facebook.com/goodstuffdesigns" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4.2c-.5-.1-2.1-.2-4-.2-3.9 0-6.5 2.4-6.5 6.7V14H3v4.3h3.5V24h4.3v-5.7h3.6L15 14h-4.2v-2.9C10.8 9.9 11.1 8 14 8Z"/></svg></a>
+            <a href="https://www.instagram.com/goodstuff.designs/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+            <a href="https://www.linkedin.com/company/goodstuff-designs" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5.3 7.6H1V21h4.3V7.6ZM3.2 1A2.5 2.5 0 1 0 3.2 6a2.5 2.5 0 0 0 0-5ZM21 13.3c0-4-2.1-5.9-5-5.9a4.3 4.3 0 0 0-3.9 2.1V7.6H7.8V21h4.3v-6.6c0-1.8.3-3.5 2.6-3.5 2.2 0 2.3 2.1 2.3 3.6V21h4v-7.7Z"/></svg></a>
+            <a href="https://www.youtube.com/@Goodstuff-Designs" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+            <a href="https://x.com/GS_Designs_za" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22H17l-4.9-6.4L6.5 22H3.3l7.3-8.4L2.8 2h6.4l4.4 5.8L18.9 2Zm-1.1 17.8h1.7L8.3 4.1H6.5l11.3 15.7Z"/></svg></a>
+          </div>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col footer-col--explore"><h4>Explore</h4><a href="index.html">Home</a><a href="services.html">Services</a><a href="websites-and-hosting.html">Websites &amp; Hosting</a><a href="ai.html">AI</a><a href="it-and-networks.html">IT &amp; Networks</a><a href="digital-marketing.html">Digital Marketing</a><a href="design-styles.html">Design Styles</a><a href="portfolio.html">Portfolio</a><a href="studio.html">Studio</a><a href="contact.html">Contact</a></div>
+          <div class="footer-col"><h4>Contact</h4><a href="mailto:admin@goodstuffdesigns.co.za">Email us</a><a href="tel:+27799374801">Call now</a><a href="https://wa.me/27799374801" target="_blank" rel="noopener">WhatsApp us</a><a href="contact.html">Enquiry form</a><a href="https://github.com/Code-NameCode/Project-Vault" target="_blank" rel="noopener">Project Vault</a></div>
+          <div class="footer-col footer-col--cta"><h4>Start a conversation</h4><p>Tell us what needs to work. We reply with a practical next step.</p><a class="footer-cta-link" href="contact.html">Contact us <span aria-hidden="true">&rarr;</span></a>
+<p>We also share code and open-source work on <a href="https://github.com/Code-NameCode" target="_blank" rel="noopener">GitHub</a>.</p></div>
+        </div>
+      </div>
+      <div class="footer-bottom"><div class="footer-meta"><p>&copy; 2026 Goodstuff Designs</p><p>goodstuffdesigns.co.za</p><a href="https://github.com/Code-NameCode" target="_blank" rel="noopener">GitHub</a></div><div class="footer-privacy-links"><a href="/privacy">Privacy</a><a href="/cookie-policy">Cookies</a><a href="sitemap.xml">Sitemap</a><button type="button" data-cookie-settings>Cookie settings</button></div></div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Reveal on scroll
+      const reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window && !reduce) {
+        const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+          if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+        }), { threshold: .1 });
+        reveals.forEach((item) => observer.observe(item));
+      } else {
+        reveals.forEach((item) => item.classList.add('is-visible'));
+      }
+
+      // Live feed: rotate illustrative monitoring lines
+      const now = () => {
+        const d = new Date();
+        return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+      };
+      const monitorLines = [
+        { host: 'uplink-1', text: 'latency 13ms &middot; jitter 2ms', st: 'ok', cls: 'st-ok' },
+        { host: 'wifi-ap-1', text: 'roaming handshake verified', st: 'ok', cls: 'st-ok' },
+        { host: 'cctv-nvr', text: '14 cameras reporting &middot; 9 days retention', st: 'ok', cls: 'st-ok' },
+        { host: 'firewall', text: 'blocked 1 brute-force attempt', st: 'handled', cls: 'st-warn' },
+        { host: 'ups-office', text: 'on mains &middot; battery 100%', st: 'ok', cls: 'st-ok' },
+        { host: 'vpn-gateway', text: '3 remote users connected', st: 'ok', cls: 'st-info' }
+      ];
+      const aiLines = [
+        { who: 'agent', html: 'ticket <b>#490</b> classified &rarr; printer queue &middot; resolved', hp: 'auto' },
+        { who: 'agent', html: 'backup log review &middot; <b>0 warnings</b> &middot; filed', hp: 'auto' },
+        { who: 'agent', html: 'latency pattern on uplink-2 &middot; summary sent', hp: 'human' },
+        { who: 'agent', html: 'password reset &middot; <b>identity verified</b> by manager', hp: 'human' },
+        { who: 'agent', html: 'patch report drafted &middot; 38 endpoints &middot; <b>2 flagged</b>', hp: 'human' }
+      ];
+
+      let mi = 0, ai = 0;
+      if (!reduce) {
+        setInterval(() => {
+          const feed = document.getElementById('monitor-feed');
+          if (!feed) return;
+          const l = monitorLines[mi % monitorLines.length]; mi++;
+          const row = document.createElement('div');
+          row.className = 'feed-row enter';
+          row.innerHTML = '<span class="t">' + now() + '</span><span class="host">' + l.host + '</span><span>' + l.text + '</span><span class="' + l.cls + '">' + l.st + '</span>';
+          feed.prepend(row);
+          while (feed.children.length > 4) feed.lastElementChild.remove();
+        }, 2800);
+
+        setInterval(() => {
+          const feed = document.getElementById('ai-feed');
+          if (!feed) return;
+          const l = aiLines[ai % aiLines.length]; ai++;
+          const row = document.createElement('div');
+          row.className = 'ai-feed-row enter';
+          row.innerHTML = '<span class="who">' + l.who + '</span><span class="what">' + l.html + '</span><span class="hp-badge' + (l.hp === 'auto' ? ' auto' : '') + '">' + l.hp + '</span>';
+          feed.prepend(row);
+          while (feed.children.length > 4) feed.lastElementChild.remove();
+        }, 3400);
+      }
+
+      // Count-up for the uptime metric (only the numeric one)
+      if (!reduce && 'IntersectionObserver' in window) {
+        const counter = document.querySelector('.metric-num[data-count]');
+        if (counter) {
+          const io = new IntersectionObserver((entries) => entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            io.unobserve(entry.target);
+            const target = parseFloat(counter.dataset.count);
+            const decimals = parseInt(counter.dataset.decimals || '0', 10);
+            const suffix = counter.querySelector('small');
+            const suffixHtml = suffix ? suffix.outerHTML : '';
+            const start = performance.now();
+            const tick = (t) => {
+              const p = Math.min((t - start) / 900, 1);
+              const eased = 1 - Math.pow(1 - p, 3);
+              counter.innerHTML = (target * eased).toFixed(decimals) + suffixHtml;
+              if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          }), { threshold: .4 });
+          io.observe(counter);
+        }
+      }
+    })();
+  </script>
+  <script src="assets/js/consent.js?v=consent-7" defer></script>
+  <script src="assets/js/main.js?v=editorial-loader-5" defer></script>
+<script src="assets/js/motion.js?v=1" defer></script>
+</body>
+</html>

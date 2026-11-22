@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<!-- Style: Dark Luxury | 21darkluxury.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian Watches - Instruments of Consequence</title>
+<meta name="description" content="Meridian Watches: mechanical instruments assembled in Neuch-tel since 1911.">
+<style>
+:root{
+  /* palette */
+  --bg:#0a0a0b;
+  --bg-deep:#060607;
+  --surface:#131315;
+  --surface-2:#191919;
+  --hairline:#2b2825;
+  --hairline-soft:#211f1e;
+  --gold:#c8a265;
+  --gold-dim:#8d7043;
+  --ivory:#ece5d8;
+  --text:#b6afa4;
+  --text-dim:#8b847a;
+  /* type */
+  --serif:"Didot","Bodoni MT","Playfair Display",Georgia,"Times New Roman",serif;
+  --sans:"Helvetica Neue",Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-display:clamp(2.9rem,8.2vw,7.4rem);
+  --t-h1:clamp(2.2rem,5vw,4rem);
+  --t-h2:clamp(1.6rem,2.6vw,2.5rem);
+  --t-h3:clamp(1.1rem,1.4vw,1.35rem);
+  --t-body:clamp(0.98rem,1.02vw,1.06rem);
+  --t-small:0.8rem;
+  --t-micro:0.68rem;
+  /* space */
+  --s-1:4px; --s-2:8px; --s-3:14px; --s-4:22px; --s-5:36px; --s-6:56px; --s-7:88px; --s-8:140px;
+  /* edges */
+  --r:2px;
+  --glow:0 0 40px -12px rgba(200,162,101,.32);
+  /* motion */
+  --d-slow:900ms; --d-base:420ms;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --rail:88px;
+  --measure:62ch;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--sans);font-size:var(--t-body);line-height:1.65;
+  letter-spacing:.005em;
+  background-image:radial-gradient(120% 70% at 78% -10%,rgba(200,162,101,.10),transparent 60%);
+  background-attachment:fixed;
+}
+h1,h2,h3,h4{font-family:var(--serif);color:var(--ivory);font-weight:400;margin:0;line-height:1.06;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+img,svg{display:block;max-width:100%}
+::selection{background:var(--gold);color:var(--bg-deep)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* ---------- rail navigation ---------- */
+.rail{
+  position:fixed;inset:0 auto 0 0;width:var(--rail);z-index:40;
+  border-right:1px solid var(--hairline);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:var(--s-5) 0;background:linear-gradient(180deg,rgba(10,10,11,.94),rgba(6,6,7,.98));
+}
+.mark{display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none}
+.mark-glyph{width:26px;height:26px;color:var(--gold)}
+.mark-word{
+  writing-mode:vertical-rl;font-family:var(--serif);font-size:.95rem;
+  letter-spacing:.42em;text-transform:uppercase;color:var(--ivory);
+}
+.rail nav ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--s-4);align-items:center}
+.rail nav a{
+  writing-mode:vertical-rl;text-decoration:none;text-transform:uppercase;
+  font-size:var(--t-micro);letter-spacing:.3em;color:var(--text-dim);
+  padding:10px 4px;transition:color var(--d-base) var(--ease);
+}
+.rail nav a:hover,.rail nav a[aria-current="true"]{color:var(--gold)}
+.rail-foot{writing-mode:vertical-rl;font-size:var(--t-micro);letter-spacing:.28em;color:var(--text-dim);text-transform:uppercase}
+
+.mobile-bar{display:none}
+
+/* ---------- page shell ---------- */
+.shell{margin-left:var(--rail)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,72px)}
+.eyebrow{
+  font-size:var(--t-micro);letter-spacing:.34em;text-transform:uppercase;
+  color:var(--gold-dim);margin:0 0 var(--s-3);
+}
+.rule{height:1px;background:var(--hairline);border:0;margin:0}
+section{position:relative}
+.sec-pad{padding-block:clamp(72px,10vw,150px)}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:grid;align-items:center;padding-block:clamp(80px,12vw,140px);position:relative;overflow:hidden}
+.hero-inner{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,80px);align-items:center}
+.hero h1{font-size:var(--t-display);letter-spacing:-.025em}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-sub{margin-top:var(--s-4);max-width:44ch;font-size:clamp(1.02rem,1.2vw,1.16rem);color:var(--text)}
+.hero-meta{
+  margin-top:var(--s-5);display:flex;flex-wrap:wrap;gap:var(--s-2) var(--s-4);
+  font-size:var(--t-micro);letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);
+}
+.hero-meta span+span::before{content:"";display:inline-block;width:5px;height:5px;background:var(--gold-dim);margin-right:var(--s-4);vertical-align:middle}
+.cta-row{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-5)}
+.dial{
+  position:relative;display:grid;place-items:center;
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,.7));
+  animation:reveal var(--d-slow) var(--ease) both;
+}
+.dial svg{width:min(100%,460px);color:var(--gold)}
+.dial::after{
+  content:"";position:absolute;inset:8%;border-radius:50%;
+  background:radial-gradient(circle at 42% 34%,rgba(200,162,101,.20),transparent 58%);
+  filter:blur(18px);z-index:-1;
+}
+@keyframes reveal{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:0 30px;
+  font-size:var(--t-micro);letter-spacing:.26em;text-transform:uppercase;text-decoration:none;
+  border:1px solid var(--hairline);background:transparent;color:var(--ivory);
+  transition:border-color var(--d-base) var(--ease),background var(--d-base) var(--ease),color var(--d-base) var(--ease);
+}
+.btn svg{width:15px;height:15px}
+.btn-primary{border-color:var(--gold);color:var(--gold)}
+.btn-primary:hover{background:var(--gold);color:var(--bg-deep)}
+.btn-ghost:hover{border-color:var(--gold-dim);color:var(--gold)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------- collection rail ---------- */
+.rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s-4);flex-wrap:wrap;margin-bottom:var(--s-5)}
+.collection{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--hairline)}
+.model{padding:var(--s-5) var(--s-4) var(--s-5) 0;border-right:1px solid var(--hairline);border-bottom:1px solid var(--hairline);transition:background var(--d-base) var(--ease)}
+.model:last-child{border-right:0}
+.model:hover{background:var(--surface)}
+.model-fig{height:150px;display:grid;place-items:center;color:var(--gold-dim);margin-bottom:var(--s-4);transition:color var(--d-base) var(--ease)}
+.model:hover .model-fig{color:var(--gold)}
+.model-fig svg{width:100px;height:100px}
+.model h3{font-size:var(--t-h3);margin-bottom:6px}
+.model .ref{font-size:var(--t-micro);letter-spacing:.24em;color:var(--text-dim);text-transform:uppercase}
+.model p{margin-top:var(--s-2);font-size:.9rem;min-height:3.2em}
+.model .price{margin-top:var(--s-3);font-size:var(--t-small);letter-spacing:.14em;color:var(--gold)}
+
+/* ---------- craft (text led, numbered) ---------- */
+.craft{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(32px,6vw,90px)}
+.steps{list-style:none;margin:0;padding:0;counter-reset:step}
+.steps li{
+  counter-increment:step;display:grid;grid-template-columns:auto 1fr;gap:var(--s-4);
+  padding:var(--s-4) 0;border-top:1px solid var(--hairline-soft);
+}
+.steps li:last-child{border-bottom:1px solid var(--hairline-soft)}
+.steps li::before{
+  content:"0" counter(step);font-family:var(--serif);font-size:1.05rem;color:var(--gold);
+  letter-spacing:.08em;padding-top:4px;
+}
+.steps h3{font-size:1.15rem;margin-bottom:6px}
+.steps p{font-size:.95rem;color:var(--text-dim)}
+
+/* ---------- movement (media led) ---------- */
+.movement{background:var(--bg-deep);border-block:1px solid var(--hairline)}
+.movement-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(32px,5vw,80px);align-items:center}
+.movement svg{color:var(--gold-dim);width:100%;height:auto}
+.spec{list-style:none;margin:var(--s-4) 0 0;padding:0;border-top:1px solid var(--hairline)}
+.spec li{display:flex;justify-content:space-between;gap:var(--s-4);padding:14px 0;border-bottom:1px solid var(--hairline);font-size:.92rem}
+.spec dt,.spec .k{color:var(--text-dim);letter-spacing:.16em;text-transform:uppercase;font-size:var(--t-micro)}
+.spec .v{color:var(--ivory)}
+
+/* ---------- quote ---------- */
+.quote{max-width:20ch;margin:0 auto;text-align:center}
+.quote blockquote{margin:0;font-family:var(--serif);font-size:clamp(1.6rem,3.6vw,3rem);line-height:1.22;color:var(--ivory)}
+.quote figcaption{margin-top:var(--s-4);font-size:var(--t-micro);letter-spacing:.28em;text-transform:uppercase;color:var(--gold-dim)}
+.quote .mark-svg{width:34px;height:34px;color:var(--gold);margin:0 auto var(--s-4)}
+
+/* ---------- concierge form ---------- */
+.concierge{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(32px,6vw,90px);background:var(--surface);border:1px solid var(--hairline);padding:clamp(28px,4vw,64px)}
+.field{display:grid;gap:8px;margin-bottom:var(--s-4)}
+.field label{font-size:var(--t-micro);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dim)}
+.field input,.field select,.field textarea{
+  font:inherit;color:var(--ivory);background:transparent;border:0;border-bottom:1px solid var(--hairline);
+  padding:12px 2px;min-height:48px;border-radius:0;transition:border-color var(--d-base) var(--ease);
+}
+.field textarea{min-height:120px;resize:vertical}
+.field input:hover,.field select:hover,.field textarea:hover{border-bottom-color:var(--gold-dim)}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:none;border-bottom-color:var(--gold);box-shadow:0 1px 0 0 var(--gold)}
+.field select option{background:var(--surface-2);color:var(--ivory)}
+.field .hint{font-size:.78rem;color:var(--text-dim)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.form-note{font-size:.78rem;color:var(--text-dim);margin-top:var(--s-3)}
+.form-status{margin-top:var(--s-3);font-size:.86rem;min-height:1.4em;color:var(--gold)}
+.form-status[data-state="error"]{color:#e0a08a}
+
+/* ---------- footer ---------- */
+footer{background:var(--bg-deep);border-top:1px solid var(--hairline);padding-block:var(--s-6) var(--s-5)}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:var(--s-5)}
+footer h3{font-family:var(--sans);font-size:var(--t-micro);letter-spacing:.26em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:var(--s-3)}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+footer a{text-decoration:none;font-size:.9rem;color:var(--text);transition:color var(--d-base) var(--ease)}
+footer a:hover{color:var(--gold)}
+.foot-base{margin-top:var(--s-6);padding-top:var(--s-4);border-top:1px solid var(--hairline-soft);display:flex;flex-wrap:wrap;gap:var(--s-2) var(--s-4);justify-content:space-between;font-size:var(--t-micro);letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim)}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 900ms var(--ease),transform 900ms var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .hero-inner,.craft,.movement-grid,.concierge{grid-template-columns:1fr}
+  .collection{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .model:nth-child(2n){border-right:0}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  :root{--rail:0px}
+  .rail{display:none}
+  .shell{margin-left:0}
+  .mobile-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);
+    position:sticky;top:0;z-index:50;padding:14px 20px;
+    background:rgba(6,6,7,.94);border-bottom:1px solid var(--hairline);backdrop-filter:blur(8px);
+  }
+  .mobile-bar .word{font-family:var(--serif);letter-spacing:.3em;text-transform:uppercase;font-size:.85rem;color:var(--ivory)}
+  .nav-toggle{
+    min-height:44px;min-width:44px;display:grid;place-items:center;
+    background:transparent;border:1px solid var(--hairline);color:var(--gold);cursor:pointer;
+  }
+  .nav-toggle svg{width:18px;height:18px}
+  .mobile-nav[hidden]{display:none}
+  .mobile-nav{border-bottom:1px solid var(--hairline);background:var(--bg-deep)}
+  .mobile-nav ul{list-style:none;margin:0;padding:var(--s-3) 20px var(--s-4);display:grid;gap:2px}
+  .mobile-nav a{display:block;padding:16px 2px;min-height:48px;text-decoration:none;font-size:var(--t-micro);letter-spacing:.24em;text-transform:uppercase;color:var(--text);border-bottom:1px solid var(--hairline-soft)}
+  .collection{grid-template-columns:1fr}
+  .model{border-right:0}
+  .two,.foot-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<aside class="rail" aria-label="Section navigation">
+  <a class="mark" href="#top">
+    <svg class="mark-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.2"/><path d="M12 3v18M3 12h18"/><path d="M12 7.2v4.8l3.2 2"/>
+    </svg>
+    <span class="mark-word">Meridian</span>
+  </a>
+  <nav aria-label="Primary">
+    <ul>
+      <li><a href="#collection" aria-current="true">Collection</a></li>
+      <li><a href="#craft">Atelier</a></li>
+      <li><a href="#movement">Calibre</a></li>
+      <li><a href="#concierge">Concierge</a></li>
+    </ul>
+  </nav>
+  <p class="rail-foot">Neuch-tel - Est. 1911</p>
+</aside>
+
+<header class="mobile-bar">
+  <span class="word">Meridian</span>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+  </button>
+</header>
+<nav class="mobile-nav" id="mobile-nav" aria-label="Primary mobile" hidden>
+  <ul>
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#craft">Atelier</a></li>
+    <li><a href="#movement">Calibre</a></li>
+    <li><a href="#concierge">Concierge</a></li>
+  </ul>
+</nav>
+
+<div class="shell" id="top">
+<main>
+
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <p class="eyebrow">Reference No. 7 - Hand-finished in Neuch-tel</p>
+        <h1>Time, kept <em>quietly</em>.</h1>
+        <p class="hero-sub">Meridian builds 340 instruments a year. Each one is regulated for six weeks in our atelier before it is permitted to leave the building.</p>
+        <p class="hero-meta"><span>Automatic</span><span>38 hours reserve</span><span>18k gold case</span></p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#collection">View the collection
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#concierge">Request an appointment</a>
+        </div>
+      </div>
+      <div class="dial" role="img" aria-label="Line illustration of the Meridian dial with applied indices and a small seconds register">
+        <svg viewBox="0 0 400 400" fill="none" stroke="currentColor" stroke-width="1.1">
+          <circle cx="200" cy="200" r="168" stroke-opacity=".35"/>
+          <circle cx="200" cy="200" r="156"/>
+          <circle cx="200" cy="200" r="140" stroke-opacity=".5"/>
+          <circle cx="200" cy="200" r="6" fill="currentColor" stroke="none"/>
+          <g stroke-width="2.4" stroke-linecap="round">
+            <path d="M200 60v18M200 322v18M60 200h18M322 200h18"/>
+          </g>
+          <g stroke-opacity=".6">
+            <path d="M277 123l13 13M110 277l13 13M277 277l-13 13M110 123l-13 13"/>
+          </g>
+          <g stroke-width="3" stroke-linecap="round">
+            <path d="M200 200V96"/>
+            <path d="M200 200l72 40"/>
+          </g>
+          <circle cx="200" cy="266" r="34" stroke-opacity=".5"/>
+          <path d="M200 266v-22" stroke-width="2"/>
+          <path d="M200 262l13 8" stroke-width="2"/>
+          <path d="M156 380h88" stroke-opacity=".4"/>
+          <path d="M200 356v24" stroke-opacity=".4"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="collection" class="sec-pad" aria-labelledby="collection-h">
+    <div class="wrap">
+      <div class="rail-head reveal">
+        <div>
+          <p class="eyebrow">The collection</p>
+          <h2 id="collection-h" style="font-size:var(--t-h1)">Four references, one<br>calibre family.</h2>
+        </div>
+        <a class="btn btn-ghost" href="#concierge">Full catalogue</a>
+      </div>
+      <div class="collection reveal">
+        <article class="model">
+          <div class="model-fig" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.1">
+              <circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="27" stroke-opacity=".5"/>
+              <path d="M50 50V32M50 50l14 9"/><path d="M50 16v6M50 78v6M16 50h6M78 50h6"/>
+            </svg>
+          </div>
+          <p class="ref">Ref. 1911</p>
+          <h3>Meridian 38</h3>
+          <p>The original. Steel case, hand-wound, 39.5 millimetres across the case band.</p>
+          <p class="price">From CHF 8,400</p>
+        </article>
+        <article class="model">
+          <div class="model-fig" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.1">
+              <circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="27" stroke-opacity=".5"/>
+              <path d="M50 50V28M50 50l-11 18"/><path d="M50 16v6M50 78v6M16 50h6M78 50h6"/>
+            </svg>
+          </div>
+          <p class="ref">Ref. 1957</p>
+          <h3>Meridian 38 GMT</h3>
+          <p>Second time zone read from a peripheral 24-hour scale, engraved on the rehaut.</p>
+          <p class="price">From CHF 11,200</p>
+        </article>
+        <article class="model">
+          <div class="model-fig" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.1">
+              <circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="27" stroke-opacity=".5"/>
+              <path d="M50 50V33M50 50l9-16"/><circle cx="50" cy="50" r="3" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <p class="ref">Ref. 2004</p>
+          <h3>Meridian Chrono</h3>
+          <p>Column-wheel chronograph, 60-hour reserve, no pushers on the underside of the case.</p>
+          <p class="price">From CHF 14,900</p>
+        </article>
+        <article class="model">
+          <div class="model-fig" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.1">
+              <circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="27" stroke-opacity=".5"/>
+              <path d="M50 50V30M50 50l16 6"/><path d="M50 22l6 4-6 4-6-4z"/>
+            </svg>
+          </div>
+          <p class="ref">Ref. 2019</p>
+          <h3>Meridian Nocturne</h3>
+          <p>Blackened case, obsidian dial, and a movement finished for the dark hours only.</p>
+          <p class="price">From CHF 17,600</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="craft" class="sec-pad" aria-labelledby="craft-h">
+    <div class="wrap craft">
+      <div class="reveal">
+        <p class="eyebrow">The atelier</p>
+        <h2 id="craft-h" style="font-size:var(--t-h1)">Eleven hands,<br>six weeks.</h2>
+        <p style="margin-top:var(--s-4);max-width:var(--measure)">A Meridian leaves the bench only when one person can account for every surface. We do not run production lines. We run a room of eleven watchmakers, and we tell you which one signed your movement.</p>
+        <p style="margin-top:var(--s-3);max-width:var(--measure)">Your reference number is engraved beneath the balance cock, next to the date it was completed.</p>
+      </div>
+      <ol class="steps reveal">
+        <li>
+          <div>
+            <h3>Strip and inspect</h3>
+            <p>Every incoming movement is opened, photographed, and measured against our tolerance sheet. Roughly one in six is returned to the supplier.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Finishing by hand</h3>
+            <p>Anglage, straight-graining, and perlage are applied with abrasive that has no equivalent on a production line. This is where the time goes.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Six positions of regulation</h3>
+            <p>The watch is timed in six positions over forty-two days, twice a day. The final record travels with the piece.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Delivery</h3>
+            <p>Presented in a fitted case with the regulation record, the maker's signature, and a service interval already booked for year eight.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="movement" class="movement sec-pad" aria-labelledby="movement-h">
+    <div class="wrap movement-grid">
+      <div class="reveal">
+        <p class="eyebrow">Calibre M-7 - exploded</p>
+        <h2 id="movement-h" style="font-size:var(--t-h1);margin-bottom:var(--s-5)">Built to be opened.</h2>
+        <svg viewBox="0 0 620 420" role="img" aria-label="Exploded technical drawing of the M-7 movement showing mainplate, bridges, balance wheel and barrel">
+          <g stroke-opacity=".7">
+            <circle cx="240" cy="150" r="118" stroke-dasharray="3 5"/>
+            <circle cx="240" cy="150" r="96"/>
+            <circle cx="240" cy="150" r="34"/>
+            <path d="M240 54v-30M240 276v30M144 150h-40M376 150h40"/>
+            <path d="M170 82l-24-22M310 82l24-22M170 218l-24 22M310 218l24 22"/>
+            <circle cx="240" cy="150" r="60" stroke-opacity=".35"/>
+          </g>
+          <g stroke-opacity=".85">
+            <rect x="430" y="60" width="150" height="112"/>
+            <path d="M430 84h150M430 108h150M430 132h150"/>
+            <rect x="430" y="220" width="150" height="112"/>
+            <path d="M505 220v-40M475 220v-24M535 220v-24"/>
+          </g>
+          <g stroke-opacity=".55">
+            <circle cx="240" cy="330" r="62"/>
+            <circle cx="240" cy="330" r="14"/>
+            <path d="M178 330h-70M302 330h70M240 268v-40M240 392v-24"/>
+          </g>
+          <g fill="currentColor" stroke="none" opacity=".8">
+            <circle cx="600" cy="60" r="2.5"/><circle cx="600" cy="84" r="2.5"/><circle cx="600" cy="108" r="2.5"/>
+            <circle cx="600" cy="132" r="2.5"/><circle cx="600" cy="268" r="2.5"/><circle cx="600" cy="316" r="2.5"/>
+            <circle cx="372" cy="330" r="2.5"/><circle cx="240" cy="402" r="2.5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="reveal">
+        <p>Small text, generous space, and a case that opens with a fingernail. Nothing on this watch is sealed shut.</p>
+        <ul class="spec">
+          <li><span class="k">Diameter</span> <span class="v">27.4 mm</span></li>
+          <li><span class="k">Height</span> <span class="v">3.9 mm</span></li>
+          <li><span class="k">Jewels</span> <span class="v">27, all synthetic ruby</span></li>
+          <li><span class="k">Frequency</span> <span class="v">21,600 vph</span></li>
+          <li><span class="k">Reserve</span> <span class="v">38 hours</span></li>
+          <li><span class="k">Service interval</span> <span class="v">8 years</span></li>
+          <li><span class="k">Maker</span> <span class="v">A. Brunner</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-pad" aria-labelledby="quote-h">
+    <div class="wrap">
+      <h2 id="quote-h" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Client remarks</h2>
+      <figure class="quote reveal">
+        <svg class="mark-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 3v18M3 12h18"/><path d="M12 7.2v4.8l3.2 2"/></svg>
+        <blockquote>-I have owned eleven fine watches. This is the only one I have had serviced by the person who made it.-</blockquote>
+        <figcaption>H. Lindqvist - Stockholm - owner since 2016</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="concierge" class="sec-pad" aria-labelledby="concierge-h">
+    <div class="wrap concierge reveal">
+      <div>
+        <p class="eyebrow">Concierge</p>
+        <h2 id="concierge-h" style="font-size:var(--t-h1)">Sit with one<br>before you decide.</h2>
+        <p style="margin-top:var(--s-4);max-width:40ch">Appointments run ninety minutes in the Neuch-tel salon or by encrypted video. There is no obligation to purchase, and no one will follow up twice.</p>
+        <p style="margin-top:var(--s-4);font-size:var(--t-micro);letter-spacing:.24em;text-transform:uppercase;color:var(--text-dim)">Salon open Tuesday-Saturday<br>14, Rue du H-tel - Neuch-tel</p>
+      </div>
+      <form id="appt" novalidate>
+        <div class="two">
+          <div class="field">
+            <label for="f-name">Full name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+          </div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="f-ref">Reference of interest</label>
+            <select id="f-ref" name="reference">
+              <option>Meridian 38</option>
+              <option>Meridian 38 GMT</option>
+              <option>Meridian Chrono</option>
+              <option>Meridian Nocturne</option>
+              <option>Not yet decided</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-where">Where shall we meet</label>
+            <select id="f-where" name="location">
+              <option>Neuch-tel salon</option>
+              <option>Video appointment</option>
+              <option>My city - to be arranged</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-note">Anything we should prepare</label>
+          <textarea id="f-note" name="note" placeholder="A previous Meridian, a wrist measurement, a deadline-"></textarea>
+          <p class="hint">Wrist measurements can be sent as a photograph of a strip of paper around your wrist.</p>
+        </div>
+        <div class="cta-row">
+          <button class="btn btn-primary" type="submit">Request appointment</button>
+          <button class="btn btn-ghost" type="reset">Clear</button>
+        </div>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        <p class="form-note">We hold your details for the purpose of arranging this appointment and delete them on request.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h3>Meridian</h3>
+        <p style="max-width:34ch;font-size:.92rem">Manufacture of mechanical wristwatches. Rue du H-tel 14, 2000 Neuch-tel, Switzerland.</p>
+      </div>
+      <div>
+        <h3>Collection</h3>
+        <ul>
+          <li><a href="#collection">Meridian 38</a></li>
+          <li><a href="#collection">Meridian 38 GMT</a></li>
+          <li><a href="#collection">Meridian Chrono</a></li>
+          <li><a href="#collection">Meridian Nocturne</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Service</h3>
+        <ul>
+          <li><a href="#concierge">Book an appointment</a></li>
+          <li><a href="#movement">Calibre M-7</a></li>
+          <li><a href="#craft">The atelier</a></li>
+          <li><a href="#concierge">Trade-in</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Reach us</h3>
+        <ul>
+          <li><a href="tel:+41325550111">+41 32 555 01 11</a></li>
+          <li><a href="mailto:salon@meridian-watches.example">salon@meridian-watches.example</a></li>
+          <li><a href="#top">Press enquiries</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>- 2026 Meridian Horlogerie SA</span>
+      <span>Swiss made - 100% repairable</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var toggle=document.querySelector('.nav-toggle');
+  var nav=document.getElementById('mobile-nav');
+  if(toggle&&nav){
+    toggle.addEventListener('click',function(){
+      var open=toggle.getAttribute('aria-expanded')==='true';
+      toggle.setAttribute('aria-expanded',String(!open));
+      toggle.setAttribute('aria-label',open?'Open menu':'Close menu');
+      nav.hidden=open;
+    });
+  }
+  /* section-aware rail nav */
+  var links=Array.prototype.slice.call(document.querySelectorAll('.rail nav a'));
+  var sections=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  if('IntersectionObserver' in window && sections.every(Boolean)){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        links.forEach(function(a){a.removeAttribute('aria-current');});
+        var i=sections.indexOf(e.target);
+        if(i>-1) links[i].setAttribute('aria-current','true');
+      });
+    },{rootMargin:'-45% 0px -45% 0px'});
+    sections.forEach(function(s){io.observe(s);});
+  }
+  /* slow reveal */
+  var items=Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if(!('IntersectionObserver' in window)){
+    items.forEach(function(el){el.classList.add('in');});
+  }else{
+    var ro=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target);}
+      });
+    },{threshold:.12});
+    items.forEach(function(el){ro.observe(el);});
+  }
+  /* appointment form */
+  var form=document.getElementById('appt');
+  var status=document.getElementById('form-status');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('f-name');
+    var email=document.getElementById('f-email');
+    if(!name.value.trim()){
+      status.dataset.state='error';
+      status.textContent='Please tell us your name so the concierge knows who to expect.';
+      name.focus();return;
+    }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){
+      status.dataset.state='error';
+      status.textContent='That email address does not look complete. Example: name@example.com';
+      email.focus();return;
+    }
+    status.dataset.state='ok';
+    status.textContent='Thank you, '+name.value.trim().split(' ')[0]+'. The concierge will reply within one working day with two proposed times.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

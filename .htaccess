@@ -1,0 +1,32 @@
+RewriteEngine On
+
+# 0. Serve the ARD manifest directly as JSON; never rewrite or redirect it
+RewriteRule ^\.well-known/ard\.json$ - [L]
+
+# 1. Allow existing root level text files to load directly
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^[^/]+\.txt$ - [END,NC]
+
+# 2. Redirect index.html to the clean directory URL
+RewriteCond %{THE_REQUEST} \s/+(.*?/)?index\.html(?:[\s?]) [NC]
+RewriteRule ^(.*?/)?index\.html$ /%1 [R=301,L,NE]
+
+# 3. Redirect .html URLs to clean URLs
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.html(?:[\s?]) [NC]
+RewriteRule ^(.+)\.html$ /$1 [R=301,L,NE]
+
+# 4. Legacy routes
+RewriteRule ^web-development/?$ /websites-and-hosting [R=301,L,NE]
+RewriteRule ^hosting/?$ /websites-and-hosting [R=301,L,NE]
+
+# 5. Redirect /404.html to /404
+RewriteRule ^404\.html$ /404 [R=301,L,NE]
+
+# 6. Internally serve .html files for clean URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+?)/?$ $1.html [END]
+
+# 7. Custom 404 page
+ErrorDocument 404 /404.html

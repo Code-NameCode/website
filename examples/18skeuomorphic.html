@@ -1,0 +1,623 @@
+<!-- Style: Skeuomorphic | 18skeuomorphic.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fathom — analog mixing console</title>
+<style>
+:root{
+  --alu-1:#cfd2d3;
+  --alu-2:#a9aeb0;
+  --alu-3:#8b9194;
+  --alu-dark:#5d6468;
+  --alu-etch:#7c8489;
+  --wood-1:#7a4c2c;
+  --wood-2:#4d2c17;
+  --wood-3:#a9714a;
+  --cap-1:#f4f1e9;
+  --cap-2:#c8c2b3;
+  --cap-3:#8e8878;
+  --ink:#22262a;
+  --ink-2:#4d545a;
+  --ink-3:#6f767c;
+  --paper:#f7f1e2;
+  --paper-line:#dcd2ba;
+  --led-red:#ff4a35;
+  --led-amber:#ffb020;
+  --led-green:#57e08a;
+  --led-blue:#57b8ff;
+  --engrave:0 1px 0 rgba(255,255,255,.65),0 -1px 0 rgba(0,0,0,.22);
+  --font:"Segoe UI",system-ui,-apple-system,sans-serif;
+  --t-xs:clamp(.66rem,.63rem + .12vw,.74rem);
+  --t-sm:clamp(.8rem,.77rem + .14vw,.9rem);
+  --t-md:clamp(.96rem,.92rem + .2vw,1.06rem);
+  --t-lg:clamp(1.25rem,1.1rem + .7vw,1.65rem);
+  --t-xl:clamp(1.7rem,1.4rem + 1.5vw,2.4rem);
+  --s-1:.25rem;--s-2:.5rem;--s-3:.85rem;--s-4:1.2rem;--s-5:1.8rem;--s-6:2.6rem;--s-7:3.6rem;
+  --w:min(1280px,100% - 2rem);
+  --d:140ms;--ease:cubic-bezier(.3,.9,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#20262b,#141a1e 60%,#0e1215);
+  color:var(--ink);font-family:var(--font);font-size:var(--t-md);line-height:1.55;padding:var(--s-4) 0 var(--s-7)}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.2;letter-spacing:.01em}
+p{margin:0}
+a{color:#8a5a2b}
+:focus-visible{outline:3px solid var(--led-blue);outline-offset:2px}
+.wrap{width:var(--w);margin-inline:auto}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:.5rem;top:.5rem;z-index:80;background:var(--cap-1);color:var(--ink);padding:.6rem 1rem;border-radius:6px}
+.plate{font-size:var(--t-xs);font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--alu-dark);text-shadow:var(--engrave)}
+
+/* ---- rack / chassis ---- */
+.rack{
+  position:relative;background:linear-gradient(180deg,var(--alu-1),var(--alu-2) 45%,var(--alu-3));
+  border:1px solid #6e7477;border-radius:8px;box-shadow:0 2px 0 #6e7477,0 18px 34px -20px #000,inset 0 1px 0 rgba(255,255,255,.7);
+}
+.rack::before,.rack::after{
+  content:"";position:absolute;top:10px;width:9px;height:9px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#e6e8e9,#8b9194 60%,#5d6468);
+  box-shadow:inset 0 0 0 1px #6e7477,0 1px 1px rgba(0,0,0,.3);
+}
+.rack::before{left:10px} .rack::after{right:10px}
+.rack__hd{display:flex;align-items:center;gap:var(--s-4);padding:var(--s-3) var(--s-6);flex-wrap:wrap;
+  border-bottom:1px solid rgba(0,0,0,.22);box-shadow:0 1px 0 rgba(255,255,255,.5);
+  background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0))}
+.rack__hd h1{font-size:var(--t-lg);color:#2c3237;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.rack__hd .model{margin-left:auto;display:flex;gap:var(--s-4);align-items:center}
+.cheek{background:linear-gradient(90deg,var(--wood-2),var(--wood-3) 30%,var(--wood-1) 60%,var(--wood-2));
+  height:26px;border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 5px rgba(0,0,0,.45);
+  background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.16) 0 2px,transparent 2px 7px)}
+.nav{display:flex;flex-wrap:wrap;gap:.35rem;padding:var(--s-3) var(--s-6)}
+.nav a{
+  text-decoration:none;color:#333a3f;font-size:var(--t-sm);font-weight:600;min-height:40px;
+  display:inline-flex;align-items:center;padding:0 1rem;border-radius:5px;
+  background:linear-gradient(180deg,#dfe2e3,#b7bcbe);border:1px solid #7e8487;box-shadow:var(--engrave),0 1px 2px rgba(0,0,0,.25);
+}
+.nav a:hover{background:linear-gradient(180deg,#eceeee,#c3c8ca)}
+.nav a:active{box-shadow:inset 0 2px 4px rgba(0,0,0,.35);transform:translateY(1px)}
+.nav a[aria-current]{background:linear-gradient(180deg,#4d545a,#333a3f);color:#f2f1ec;border-color:#2c3237}
+
+/* ---- console ---- */
+.console{margin-top:var(--s-4);padding:var(--s-4) var(--s-5) var(--s-5);overflow-x:auto}
+.strips{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(112px,1fr);gap:var(--s-3);min-width:840px}
+.strip{
+  background:linear-gradient(180deg,#d3d6d7,#b3b8ba 60%,#a2a8aa);border:1px solid #7b8184;border-radius:6px;
+  padding:var(--s-3) var(--s-2);display:grid;gap:var(--s-3);justify-items:center;align-content:start;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+}
+.strip__name{
+  width:100%;text-align:center;background:linear-gradient(180deg,#41484d,#2a3035);color:#e9e6dc;
+  font-size:var(--t-xs);font-weight:700;letter-spacing:.1em;padding:.3rem 0;border-radius:3px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.5);
+}
+.strip__type{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);text-shadow:var(--engrave)}
+
+/* knobs */
+.knob{display:grid;justify-items:center;gap:.25rem}
+.knob__cap{
+  width:46px;height:46px;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%,var(--cap-1),var(--cap-2) 58%,var(--cap-3));
+  box-shadow:0 2px 3px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.9);
+  position:relative;border:1px solid #7c7565;
+}
+.knob__cap::after{content:"";position:absolute;left:50%;top:5px;width:2px;height:13px;background:#3a3f43;
+  transform:translateX(-50%);border-radius:1px;box-shadow:0 1px 0 rgba(255,255,255,.6)}
+input[type="range"].knobrange{
+  -webkit-appearance:none;appearance:none;width:70px;height:22px;background:transparent;cursor:pointer;margin:0;
+}
+input[type="range"].knobrange::-webkit-slider-runnable-track{height:8px;border-radius:4px;
+  background:linear-gradient(180deg,#7e8487,#b9bfc1);box-shadow:inset 0 2px 3px rgba(0,0,0,.55)}
+input[type="range"].knobrange::-moz-range-track{height:8px;border-radius:4px;
+  background:linear-gradient(180deg,#7e8487,#b9bfc1);box-shadow:inset 0 2px 3px rgba(0,0,0,.55)}
+input[type="range"].knobrange::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,var(--cap-1),var(--cap-2));border:1px solid #7c7565;margin-top:-4px;
+  box-shadow:0 1px 2px rgba(0,0,0,.5)}
+input[type="range"].knobrange::-moz-range-thumb{width:16px;height:16px;border-radius:50%;border:1px solid #7c7565;
+  background:radial-gradient(circle at 35% 30%,var(--cap-1),var(--cap-2))}
+input[type="range"]:focus-visible{outline:3px solid var(--led-blue);outline-offset:2px}
+.knob label{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);text-shadow:var(--engrave)}
+.val{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:var(--t-xs);color:#2f3539;background:#e7e4da;
+  padding:.05rem .3rem;border-radius:3px;border:1px solid #a29b8b;min-width:44px;text-align:center}
+
+/* fader */
+.fader{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;
+  width:40px;height:172px;background:transparent;cursor:pointer;margin:0}
+.fader::-webkit-slider-runnable-track{width:14px;border-radius:3px;
+  background:linear-gradient(90deg,#5d6468,#2f3539 60%,#4d545a);box-shadow:inset 0 2px 4px rgba(0,0,0,.7)}
+.fader::-moz-range-track{width:14px;border-radius:3px;
+  background:linear-gradient(90deg,#5d6468,#2f3539 60%,#4d545a);box-shadow:inset 0 2px 4px rgba(0,0,0,.7)}
+.fader::-webkit-slider-thumb{-webkit-appearance:none;width:40px;height:22px;border-radius:3px;margin-left:-13px;
+  background:linear-gradient(180deg,#f2efe6,#b5afa1 55%,#8d8779);border:1px solid #6d675c;
+  box-shadow:0 2px 3px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.9)}
+.fader::-moz-range-thumb{width:40px;height:22px;border-radius:3px;border:1px solid #6d675c;
+  background:linear-gradient(180deg,#f2efe6,#b5afa1 55%,#8d8779);box-shadow:0 2px 3px rgba(0,0,0,.5)}
+
+/* LED ladder */
+.ladder{display:grid;gap:2px;width:26px;padding:4px;border-radius:3px;background:#262b2e;box-shadow:inset 0 1px 3px rgba(0,0,0,.7)}
+.led{height:7px;border-radius:2px;background:#2c3236;box-shadow:inset 0 1px 1px rgba(0,0,0,.8)}
+.led[data-on="1"]{background:var(--led-green);box-shadow:0 0 5px var(--led-green)}
+.led[data-on="1"][data-c="amber"]{background:var(--led-amber);box-shadow:0 0 5px var(--led-amber)}
+.led[data-on="1"][data-c="red"]{background:var(--led-red);box-shadow:0 0 5px var(--led-red)}
+
+/* ---- master section ---- */
+.master{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-5);padding:var(--s-5);align-items:center;margin-top:var(--s-4)}
+.master__l{display:grid;gap:var(--s-3);min-width:260px}
+.vus{display:grid;grid-auto-flow:column;gap:var(--s-4)}
+.vu{position:relative;width:150px}
+.vu svg{width:100%;height:auto;display:block}
+.vu__label{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:#6b7076;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+
+/* transport buttons — metal bats */
+.transport{display:flex;gap:var(--s-3);flex-wrap:wrap}
+.bat{
+  position:relative;min-width:78px;min-height:56px;padding:0 var(--s-3);cursor:pointer;font-family:var(--font);
+  font-size:var(--t-sm);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#2c3237;
+  background:linear-gradient(180deg,#e4e6e7,#b0b5b7 55%,#9aa0a2);border:1px solid #747a7d;border-radius:5px;
+  box-shadow:0 3px 0 #6a7073,0 4px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.8);
+}
+.bat:active,.bat[aria-pressed="true"]{
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.45);transform:translateY(2px);color:#f0eee7;
+}
+.bat[aria-pressed="true"]{background:linear-gradient(180deg,#3d4449,#262c30)}
+.bat__led{position:absolute;top:6px;right:8px;width:9px;height:9px;border-radius:50%;background:#2f3539;box-shadow:inset 0 1px 1px rgba(0,0,0,.8)}
+.bat[data-lit="rec"] .bat__led{background:var(--led-red);box-shadow:0 0 8px var(--led-red)}
+.bat[data-lit="play"] .bat__led{background:var(--led-green);box-shadow:0 0 8px var(--led-green)}
+.bat:focus-visible{outline:3px solid var(--led-blue);outline-offset:3px}
+
+/* ---- paper / docket ---- */
+.paper{
+  background:
+    repeating-linear-gradient(180deg,transparent 0 27px,var(--paper-line) 27px 28px),
+    linear-gradient(180deg,#fbf6ea,var(--paper));
+  border:1px solid #c3b89c;border-radius:3px;padding:var(--s-5) var(--s-5) var(--s-4);
+  box-shadow:0 12px 26px -18px #000,inset 0 0 40px rgba(160,140,100,.16);
+  color:var(--ink);
+}
+.paper--torn::before{content:"";position:absolute;left:0;right:0;top:-8px;height:10px;
+  background:linear-gradient(180deg,#fbf6ea,transparent);clip-path:polygon(0 100%,3% 0,7% 100%,11% 0,16% 100%,21% 0,26% 100%,31% 0,36% 100%,41% 0,46% 100%,52% 0,58% 100%,63% 0,68% 100%,73% 0,78% 100%,84% 0,89% 100%,94% 0,100% 100%)}
+.paper h2{font-size:var(--t-lg);margin-bottom:var(--s-2)}
+.paper .rule{border-top:1px dashed #b9ad90;margin:var(--s-4) 0}
+
+/* ---- sections ---- */
+.band{margin-top:var(--s-5)}
+.band__hd{display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap;margin-bottom:var(--s-3)}
+.band__hd h2{font-size:var(--t-lg);color:#dfe3e5;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.band__hd p{font-size:var(--t-sm);color:#a4adb3}
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--s-4);align-items:start}
+.docket{width:100%;border-collapse:collapse;font-size:var(--t-sm);color:#2b3034}
+.docket caption{text-align:left;font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:#5a6165;padding-bottom:var(--s-3)}
+.docket th,.docket td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid #cfc5aa}
+.docket th{font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;color:#5a6165;font-weight:700}
+.docket tbody tr:last-child td{border-bottom:0}
+
+.field{display:grid;gap:.35rem;margin-bottom:var(--s-3)}
+label{font-size:var(--t-sm);font-weight:600;color:#3d4348}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{
+  font-family:var(--font);font-size:var(--t-sm);color:#22262a;background:#fffdf7;
+  border:1px solid #b9b19a;border-radius:3px;padding:.7rem .8rem;min-height:48px;width:100%;
+  box-shadow:inset 0 1px 3px rgba(120,105,75,.25);
+}
+textarea{min-height:96px;resize:vertical;background-image:repeating-linear-gradient(180deg,transparent 0 25px,#e3dbc6 25px 26px)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#8a5a2b;box-shadow:inset 0 1px 3px rgba(120,105,75,.3),0 0 0 3px rgba(138,90,43,.22)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #2f6ea8;outline-offset:2px}
+.field[data-invalid="true"] input,.field[data-invalid="true"] textarea{border-color:#9a2f22;box-shadow:inset 0 1px 3px rgba(120,40,30,.25),0 0 0 3px rgba(154,47,34,.2)}
+.err{font-size:var(--t-xs);color:#8d2a1d;font-weight:700;min-height:1.1em}
+.hint{font-size:var(--t-xs);color:#5f666b}
+.stamp{
+  position:absolute;top:var(--s-4);right:var(--s-5);transform:rotate(-8deg);border:3px double #9a2f22;color:#9a2f22;
+  font-size:var(--t-xs);font-weight:800;letter-spacing:.18em;text-transform:uppercase;padding:.4rem .7rem;border-radius:4px;opacity:.75;
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;cursor:pointer;font-family:var(--font);
+  font-size:var(--t-sm);font-weight:700;letter-spacing:.04em;min-height:48px;padding:0 var(--s-5);border-radius:5px;
+  color:#f2f0e9;text-decoration:none;border:1px solid #4b5155;
+  background:linear-gradient(180deg,#5a6165,#3a4045);box-shadow:0 3px 0 #33383c,0 5px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.btn:hover{background:linear-gradient(180deg,#666e73,#434a4f);text-decoration:none}
+.btn:active{box-shadow:0 1px 0 #33383c,inset 0 2px 5px rgba(0,0,0,.4);transform:translateY(2px)}
+.btn--flat{background:linear-gradient(180deg,#d9dcdc,#b6bbbd);color:#2c3237;border-color:#747a7d;box-shadow:0 3px 0 #6a7073,inset 0 1px 0 rgba(255,255,255,.8)}
+.formmsg{font-family:var(--font);font-size:var(--t-sm);color:#3d4348;background:#efe8d4;border-left:4px solid #8a5a2b;
+  padding:var(--s-3);border-radius:2px;margin-top:var(--s-3)}
+.formmsg[data-tone="err"]{border-left-color:#9a2f22;color:#8d2a1d}
+.formmsg[data-tone="ok"]{border-left-color:#3f7d4e;color:#2c5c39}
+
+footer{margin-top:var(--s-6)}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--s-4);padding:var(--s-4) var(--s-5)}
+.foot p{font-size:var(--t-sm);color:#3a4045}
+.foot h3{font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:var(--s-2);text-shadow:var(--engrave)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.3rem}
+.foot a{color:#333a3f;font-size:var(--t-sm);text-decoration:none;display:inline-block;min-height:32px}
+.foot a:hover{text-decoration:underline}
+.foot a:focus-visible{outline:3px solid var(--led-blue)}
+.foot{position:relative}
+
+@media (max-width:1000px){
+  .two{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr 1fr}
+  .master{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .foot{grid-template-columns:1fr}
+  .rack__hd .model{margin-left:0;width:100%}
+  .stamp{position:static;transform:none;display:inline-block;margin-bottom:var(--s-3)}
+  .paper{position:static}
+  .bat{min-width:64px;flex:1 1 40%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .bat:active,.bat[aria-pressed="true"],.btn:active{transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="wrap">
+  <header class="rack">
+    <div class="cheek" style="margin:8px 0 0"></div>
+    <div class="rack__hd">
+      <svg width="34" height="24" viewBox="0 0 34 24" aria-hidden="true">
+        <rect x="1" y="3" width="32" height="18" rx="2" fill="#3a4045"/>
+        <path d="M6 16V9M11 16V6M16 16v-5M21 16V8M26 16v-3" stroke="#dfe3e5" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h1>Fathom 8 — analog mixing console</h1>
+      <div class="model">
+        <span class="plate">Model FM-8</span>
+        <span class="plate">Ser. 1184</span>
+        <span class="plate">48 V phantom</span>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Primary">
+      <a href="#console" aria-current="page">Console</a>
+      <a href="#tracksheet">Track sheet</a>
+      <a href="#docket">Signal path</a>
+      <a href="#service">Service log</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="rack" id="console" aria-label="Mixing surface">
+      <div class="rack__hd">
+        <h2 class="plate" style="font-size:var(--t-sm)">Mixing surface · live</h2>
+        <span class="plate" style="margin-left:auto">Drag any control — values update on release</span>
+      </div>
+      <div class="console">
+        <div class="strips" id="strips"></div>
+
+        <div class="master">
+          <div class="master__l">
+            <div class="vus">
+              <div class="vu">
+                <svg viewBox="0 0 160 90" role="img" aria-label="Left programme VU meter">
+                  <rect x="0" y="0" width="160" height="90" rx="4" fill="#f6f1e0" stroke="#a49a80"/>
+                  <g fill="none" stroke="#2f3539">
+                    <path d="M20 76a60 60 0 0 1 120 0" stroke-width="1.5"/>
+                  </g>
+                  <g stroke="#2f3539" stroke-width="1.2">
+                    <path d="M20 76 24 65M34 55 41 60M50 41 57 49M68 33 74 42M92 30 96 41M116 37 112 47M138 51 131 58M152 65 144 68" />
+                  </g>
+                  <path d="M112 37 140 76" stroke="#9a2f22" stroke-width="4"/>
+                  <g font-size="8" fill="#5a6165" text-anchor="middle">
+                    <text x="26" y="62">−20</text><text x="70" y="30">−10</text><text x="100" y="24">−3</text><text x="140" y="56">0</text>
+                  </g>
+                </svg>
+                <span class="vu__label">Left</span>
+              </div>
+              <div class="vu">
+                <svg viewBox="0 0 160 90" role="img" aria-label="Right programme VU meter">
+                  <rect x="0" y="0" width="160" height="90" rx="4" fill="#f6f1e0" stroke="#a49a80"/>
+                  <g fill="none" stroke="#2f3539"><path d="M20 76a60 60 0 0 1 120 0" stroke-width="1.5"/></g>
+                  <g stroke="#2f3539" stroke-width="1.2">
+                    <path d="M20 76 24 65M34 55 41 60M50 41 57 49M68 33 74 42M92 30 96 41M116 37 112 47M138 51 131 58M152 65 144 68" />
+                  </g>
+                  <path d="M104 33 140 76" stroke="#2f3539" stroke-width="4"/>
+                  <g font-size="8" fill="#5a6165" text-anchor="middle">
+                    <text x="26" y="62">−20</text><text x="70" y="30">−10</text><text x="100" y="24">−3</text><text x="140" y="56">0</text>
+                  </g>
+                </svg>
+                <span class="vu__label">Right</span>
+              </div>
+            </div>
+            <p class="plate" id="masterread" style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.04em">
+              Master −6.2 dBu · 42 kHz
+            </p>
+            <div class="transport" role="group" aria-label="Transport">
+              <button class="bat" type="button" data-lit="rec" aria-pressed="false">Rec</button>
+              <button class="bat" type="button" data-lit="play" aria-pressed="true">Play</button>
+              <button class="bat" type="button" aria-pressed="false">Stop</button>
+              <button class="bat" type="button" aria-pressed="false">Rewind</button>
+            </div>
+            <p class="plate" id="trstate" style="color:#cbd3d8;text-shadow:0 1px 2px rgba(0,0,0,.6)">Playing · take 3</p>
+          </div>
+
+          <div style="display:grid;gap:var(--s-3);justify-items:center">
+            <span class="plate">Master</span>
+            <input class="fader" type="range" id="masterfader" min="0" max="100" value="72" aria-label="Master fader level">
+            <span class="val" id="masterval">72</span>
+          </div>
+        </div>
+      </div>
+      <div class="cheek" style="margin-top:var(--s-4)"></div>
+    </section>
+
+    <section class="band two" id="tracksheet">
+      <div class="paper paper--torn" style="position:relative">
+        <span class="stamp">Take 3 · mixdown</span>
+        <h2>Track sheet</h2>
+        <p class="hint" style="color:#5f666b">Written by hand at 02:40, transcribed below. Scribbled edits are struck through where the tape disagreed.</p>
+        <p style="margin-top:var(--s-3)"><strong>Room:</strong> Studio B, 22.4 m², treated with four broadband panels and one rug. The rug is older than the console and stays.</p>
+        <div class="rule"></div>
+        <p><strong>Notes:</strong></p>
+        <p>Drums are sitting too far forward — pull the room mic 3 dB and check the phase against the overhead pair. <s>Vocal is too dry.</s> Vocal wants 1.5 dB more plate, less of the 6 kHz bite. Bass guitar hums at 50 Hz when the DI and the amp are both engaged; the notch on channel 3 handles it.</p>
+        <div class="rule"></div>
+        <p><strong>Next session:</strong> strings, Tuesday 19:00. Print two copies of this sheet — one for the desk, one for the fridge.</p>
+      </div>
+
+      <form class="paper" id="sheetform" novalidate aria-labelledby="sheet-h">
+        <h2 id="sheet-h">Add a note to the sheet</h2>
+        <p class="hint" style="margin-bottom:var(--s-4)">Anyone at the desk can add a line. Notes are timestamped and never deleted — they are struck through instead.</p>
+        <div class="field">
+          <label for="n-channel">Channel</label>
+          <select id="n-channel" name="channel">
+            <option>Kick</option><option>Snare top</option><option>Bass DI</option><option>Bass amp</option>
+            <option>Room L</option><option>Room R</option><option>Keys</option><option>Vocal lead</option><option>Master</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="n-text">Note</label>
+          <textarea id="n-text" name="text" required aria-describedby="e-n-text" placeholder="e.g. Take the room mic down 3 dB, phase against overhead."></textarea>
+          <p class="err" id="e-n-text" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label for="n-author">Your name</label>
+          <input id="n-author" name="author" type="text" required aria-describedby="e-n-author" placeholder="Initials are fine">
+          <p class="err" id="e-n-author" aria-live="polite"></p>
+        </div>
+        <p class="formmsg" id="n-msg" role="status" aria-live="polite">Notes are written onto the printed sheet at the end of the session.</p>
+        <div style="display:flex;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3)">
+          <button class="btn" type="submit">Write on the sheet</button>
+          <button class="btn btn--flat" type="button" id="print">Print current sheet</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="band" id="docket">
+      <div class="band__hd">
+        <h2>Signal path</h2>
+        <p>Fixed topology. Nothing is routed in software; every send is a real circuit.</p>
+      </div>
+      <div class="rack">
+        <div class="rack__hd"><h3 class="plate" style="font-size:var(--t-sm)">Routing docket · rev C</h3><span class="plate" style="margin-left:auto">Bench-tested 04 Feb</span></div>
+        <div style="padding:var(--s-4) var(--s-5);overflow-x:auto">
+          <table class="docket">
+            <caption>Channel assignment and routing for Studio B</caption>
+            <thead>
+              <tr><th scope="col">Ch</th><th scope="col">Source</th><th scope="col">Mic / line</th><th scope="col">Preamp</th><th scope="col">Insert</th><th scope="col">Buses</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Kick</td><td>RE20 dynamic</td><td>Neve 1073, 60 V</td><td>Distressor</td><td>Bus A</td></tr>
+              <tr><td>2</td><td>Snare top</td><td>SM57</td><td>Neve 1073, 60 V</td><td>—</td><td>Bus A</td></tr>
+              <tr><td>3</td><td>Bass DI</td><td>Radial J48</td><td>API 512c, 48 V</td><td>—</td><td>Bus A</td></tr>
+              <tr><td>4</td><td>Bass amp</td><td>57 ribbon</td><td>API 512c, 48 V</td><td>—</td><td>Bus A</td></tr>
+              <tr><td>5 / 6</td><td>Room pair</td><td>Coles 4038 pair</td><td>1073 stereo, 60 V</td><td>—</td><td>Bus B</td></tr>
+              <tr><td>7</td><td>Keys</td><td>KM184 condenser</td><td>1073, 48 V</td><td>Opto compressor</td><td>Bus B</td></tr>
+              <tr><td>8</td><td>Vocal lead</td><td>C12 converter</td><td>1073, 48 V</td><td>1176</td><td>Bus C + reverb send</td></tr>
+              <tr><td>Master</td><td>Bus sum</td><td>—</td><td>Discrete 1978</td><td>Two-stage limiter</td><td>Tape</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cheek" style="margin:0 10px 10px"></div>
+      </div>
+    </section>
+
+    <section class="band" id="service">
+      <div class="band__hd">
+        <h2>Service &amp; ownership</h2>
+        <p>Consoles are only good if someone keeps them honest.</p>
+      </div>
+      <div class="two">
+        <div class="rack">
+          <div class="rack__hd"><h3 class="plate" style="font-size:var(--t-sm)">Maintenance</h3></div>
+          <div class="foot" style="box-shadow:none;padding:var(--s-4) var(--s-5)">
+            <div>
+              <h3>Fitted by</h3>
+              <p>Halden Audio Works, Bristol. The console was rebuilt in 2019 from two dead desks and has run every session since.</p>
+            </div>
+            <div>
+              <h3>Service interval</h3>
+              <p>Faders and pots rebuilt every five years. Last: March 2024. Next: March 2029.</p>
+            </div>
+            <div>
+              <h3>Known quirk</h3>
+              <p>Channel 6 fader has a light scratch at 70 % of travel. It is in the log, not a fault.</p>
+            </div>
+          </div>
+        </div>
+        <div class="paper">
+          <h2>Warranty</h2>
+          <p class="hint">Two years on parts, five on the frame. Consoles that are actually used should not need either.</p>
+          <div class="rule"></div>
+          <h3 style="font-size:var(--t-sm)">Want a session?</h3>
+          <p style="font-size:var(--t-sm);margin-bottom:var(--s-3)">Fathom is a two-person studio in Bristol. We rent the room by the day, with or without an engineer.</p>
+          <p><a class="btn" href="#tracksheet">Enquire about the room</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rack">
+    <div class="cheek" style="margin:8px 0 0"></div>
+    <div class="foot">
+      <div>
+        <h3>Fathom</h3>
+        <p>Analog mixing console, FM-8. Built in Bristol. Nothing in the signal path that cannot be unbolted.</p>
+      </div>
+      <div>
+        <h3>Console</h3>
+        <ul>
+          <li><a href="#console">Mixing surface</a></li>
+          <li><a href="#docket">Signal path</a></li>
+          <li><a href="#tracksheet">Track sheet</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Studio</h3>
+        <ul>
+          <li><a href="#service">Service &amp; ownership</a></li>
+          <li><a href="#service">Hire the room</a></li>
+          <li><a href="#service">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var CHANNELS=[
+    {n:'Kick',t:'Dynamic',gain:64,pan:50,hi:38,send:22},
+    {n:'Snare',t:'Dynamic',gain:58,pan:50,hi:72,send:30},
+    {n:'Bass DI',t:'Instrument',gain:70,pan:46,hi:44,send:8},
+    {n:'Bass Amp',t:'Ribbon',gain:55,pan:54,hi:36,send:12},
+    {n:'Room L',t:'Condenser',gain:48,pan:22,hi:58,send:66},
+    {n:'Room R',t:'Condenser',gain:48,pan:78,hi:58,send:66},
+    {n:'Keys',t:'Condenser',gain:52,pan:50,hi:64,send:34},
+    {n:'Vocal',t:'Converter',gain:74,pan:50,hi:40,send:74}
+  ];
+  var strips=document.getElementById('strips');
+  function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+
+  CHANNELS.forEach(function(ch,i){
+    var strip=el('article','strip');
+    strip.appendChild(el('p','strip__name',ch.n));
+    strip.appendChild(el('span','strip__type',ch.t));
+
+    var gain=el('div','knob');
+    var gcap=el('span','knob__cap');
+    gcap.style.transform='rotate('+(-135+ch.gain*2.7)+'deg)';
+    gcap.id='cap-'+i;
+    var grange=document.createElement('input');
+    grange.type='range';grange.min=0;grange.max=100;grange.value=ch.gain;
+    grange.className='knobrange';grange.id='g-'+i;
+    grange.setAttribute('aria-label',ch.n+' gain');
+    var glab=document.createElement('label');glab.setAttribute('for',grange.id);glab.textContent='Gain';
+    var gval=el('span','val',ch.gain+'%');gval.id='gv-'+i;
+    gain.append(gcap,grange,glab,gval);
+    grange.addEventListener('input',function(){
+      gcap.style.transform='rotate('+(-135+Number(grange.value)*2.7)+'deg)';
+      gval.textContent=grange.value+'%';
+      updateMaster();
+    });
+    strip.appendChild(gain);
+
+    var pan=el('div','knob');
+    var pcap=el('span','knob__cap');
+    pcap.style.transform='rotate('+(-135+ch.pan*2.7)+'deg)';
+    var prange=document.createElement('input');
+    prange.type='range';prange.min=0;prange.max=100;prange.value=ch.pan;prange.className='knobrange';
+    prange.id='p-'+i;prange.setAttribute('aria-label',ch.n+' pan');
+    var plab=document.createElement('label');plab.setAttribute('for',prange.id);plab.textContent='Pan';
+    var pval=el('span','val',ch.pan<50?'L'+(100-ch.pan):ch.pan>50?'R'+(ch.pan-50):'C');pval.id='pv-'+i;
+    pan.append(pcap,prange,plab,pval);
+    prange.addEventListener('input',function(){
+      pcap.style.transform='rotate('+(-135+Number(prange.value)*2.7)+'deg)';
+      var v=Number(prange.value);
+      pval.textContent=v<50?'L'+(100-v):v>50?'R'+(v-50):'C';
+    });
+    strip.appendChild(pan);
+
+    var fader=document.createElement('input');
+    fader.type='range';fader.className='fader';fader.min=0;fader.max=100;fader.value=ch.gain;
+    fader.id='f-'+i;fader.setAttribute('aria-label',ch.n+' fader level');
+    fader.addEventListener('input',function(){updateMaster();});
+    strip.appendChild(fader);
+
+    var ladder=el('div','ladder');
+    for(var k=0;k<9;k++){
+      var led=el('span','led');
+      ladder.appendChild(led);
+    }
+    strip.appendChild(ladder);
+    strip.dataset.level=String(ch.gain);
+    strips.appendChild(strip);
+  });
+
+  function updateMaster(){
+    var levels=Array.prototype.slice.call(document.querySelectorAll('.ladder'));
+    var faders=Array.prototype.slice.call(document.querySelectorAll('.fader'));
+    faders.forEach(function(f,i){
+      var v=Number(f.value),ladder=levels[i];
+      Array.prototype.forEach.call(ladder.children,function(led,k){
+        var threshold=(k+1)*11;
+        var on=v>=threshold;
+        led.setAttribute('data-on',on?'1':'0');
+        if(k>=7) led.setAttribute('data-c','red');
+        else if(k>=5) led.setAttribute('data-c','amber');
+        else led.setAttribute('data-c','green');
+      });
+    });
+    var mf=document.getElementById('masterfader');
+    var avg=faders.reduce(function(a,f){return a+Number(f.value);},0)/faders.length;
+    var level=(Number(mf.value)/100)*(avg/100);
+    var db=level<0.01?-60:20*Math.log10(level);
+    var read=document.getElementById('masterread');
+    read.textContent='Master '+db.toFixed(1)+' dBu · 42 kHz';
+    document.getElementById('masterval').textContent=mf.value;
+    var needle=read.dataset.needle;
+    if(needle) needle.setAttribute('transform','rotate('+(-52+Math.max(-6,Math.min(48,db*3.2+18)))+' 20 76)');
+  }
+
+  var mf=document.getElementById('masterfader');
+  mf.addEventListener('input',updateMaster);
+  /* the right-hand needle is the only element the master fader drives */
+  var rightNeedle=document.querySelectorAll('.vu')[1].querySelectorAll('path')[1];
+  rightNeedle.id='rneedle';
+  document.getElementById('masterread').dataset.needle='rneedle';
+  updateMaster();
+
+  var trstate=document.getElementById('trstate');
+  document.querySelectorAll('.bat').forEach(function(b){
+    b.addEventListener('click',function(){
+      if(b.textContent.trim()==='Stop'){
+        document.querySelectorAll('.bat').forEach(function(x){x.setAttribute('aria-pressed','false');});
+        trstate.textContent='Stopped at 04:12. Tape counter holding.';
+        return;
+      }
+      var on=b.getAttribute('aria-pressed')!=='true';
+      document.querySelectorAll('.bat').forEach(function(x){
+        if(x.textContent.trim()!=='Stop'&&x.getAttribute('data-lit')!=='rec') x.setAttribute('aria-pressed','false');
+      });
+      b.setAttribute('aria-pressed',String(on));
+      trstate.textContent=b.textContent.trim()==='Rec'
+        ? (on?'Recording · take 4 armed':'Recording stopped')
+        : (on?'Playing · take 3':'Stopped');
+    });
+  });
+
+  var form=document.getElementById('sheetform'),msg=document.getElementById('n-msg');
+  function setErr(input,id,text){
+    document.getElementById(id).textContent=text;
+    input.closest('.field').setAttribute('data-invalid',text?'true':'false');
+    if(text){input.setAttribute('aria-invalid','true');}else{input.removeAttribute('aria-invalid');}
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var text=document.getElementById('n-text'),author=document.getElementById('n-author'),bad=false;
+    if(text.value.trim().length<10){setErr(text,'e-n-text','Write the whole note — half a line is not a note.');bad=true;}else setErr(text,'e-n-text','');
+    if(author.value.trim().length<2){setErr(author,'e-n-author','Initials are enough.');bad=true;}else setErr(author,'e-n-author','');
+    if(bad){msg.setAttribute('data-tone','err');msg.textContent='Not written — the sheet rejects blank lines.';return;}
+    msg.setAttribute('data-tone','ok');
+    msg.textContent='Written under '+document.getElementById('n-channel').value+' by '+author.value.trim()+', initialled 04:41.';
+    form.reset();
+  });
+  document.getElementById('print').addEventListener('click',function(){
+    msg.removeAttribute('data-tone');
+    msg.textContent='Sheet sent to the printer in the office. Two copies, as always.';
+  });
+})();
+</script>
+</body>
+</html>

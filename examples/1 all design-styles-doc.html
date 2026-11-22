@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Styles Doc &mdash; a reference catalogue of 80 web design styles</title>
+  <meta name="description" content="A searchable reference catalogue of 80 web design styles: philosophy, best use cases, typography, color, layout, CSS patterns, and the mistakes to avoid in each." />
+  <meta name="color-scheme" content="dark" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; }
+
+    :root {
+      --bg: #0d0d0b;
+      --bg-raise: #121210;
+      --surface: #171613;
+      --text: #f1ede2;
+      --muted: #b0a99a;
+      --faint: #837c6e;
+      --accent: #d6a85f;
+      --accent-dim: #a37f3f;
+      --accent-soft: #241d10;
+      --rule: #2e2a22;
+      --rule-strong: #443e31;
+      --code-bg: #17150f;
+      --measure: 68ch;
+      --grid-max: 1180px;
+      --gutter: clamp(1.15rem, 4vw, 3.5rem);
+      --step--1: clamp(0.82rem, 0.79rem + 0.14vw, 0.9rem);
+      --step-0: clamp(1.02rem, 0.98rem + 0.2vw, 1.125rem);
+      --step-1: clamp(1.2rem, 1.13rem + 0.34vw, 1.45rem);
+      --step-2: clamp(1.5rem, 1.36rem + 0.68vw, 2rem);
+      --step-3: clamp(1.95rem, 1.68rem + 1.3vw, 3rem);
+      --step-4: clamp(2.5rem, 1.9rem + 2.9vw, 4.75rem);
+      --sans: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+      --mono: ui-monospace, "Cascadia Mono", "Consolas", "SF Mono", Menlo, monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: var(--step-0);
+      line-height: 1.72;
+      font-kerning: normal;
+      -webkit-font-smoothing: antialiased;
+      overflow-wrap: break-word;
+    }
+
+    ::selection { background: var(--accent); color: #14120d; }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: #f0c680; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 1px;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.86em;
+      background: var(--code-bg);
+      border: 1px solid var(--rule);
+      padding: 0.08em 0.36em;
+      overflow-wrap: anywhere;
+    }
+
+    .skip {
+      position: absolute; left: -9999px; top: 0; z-index: 50;
+      background: var(--accent); color: #14120d; padding: 0.7rem 1rem;
+      font-family: var(--mono); font-size: 0.85rem; text-decoration: none;
+    }
+    .skip:focus { left: 0.5rem; top: 0.5rem; }
+
+    .wrap { max-width: var(--grid-max); margin-inline: auto; padding-inline: var(--gutter); }
+
+    /* ---------- masthead ---------- */
+    .masthead { border-bottom: 1px solid var(--rule); padding-block: clamp(2.5rem, 7vw, 5.5rem) clamp(1.75rem, 4vw, 3rem); }
+    .eyebrow {
+      font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin: 0 0 1.1rem;
+    }
+    h1 {
+      font-size: var(--step-4); line-height: 1.02; font-weight: 400;
+      letter-spacing: -0.02em; margin: 0 0 1.1rem; max-width: 18ch;
+    }
+    .standfirst { max-width: 58ch; font-size: var(--step-1); line-height: 1.6; color: var(--muted); margin: 0 0 1.75rem; }
+    .colophon {
+      font-family: var(--mono); font-size: var(--step--1); color: var(--faint);
+      max-width: 62ch; margin: 0; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+    }
+    .colophon b { color: var(--muted); font-weight: 400; }
+
+    /* ---------- combining ---------- */
+    .combining { border-bottom: 1px solid var(--rule); padding-block: clamp(2rem, 5vw, 3.5rem); }
+    .combining h2 { font-size: var(--step-2); font-weight: 400; margin: 0 0 0.9rem; letter-spacing: -0.01em; }
+    .combining p { max-width: var(--measure); margin: 0 0 0.9rem; color: var(--muted); }
+    .combining p strong { color: var(--text); font-weight: 400; }
+    .combining .pairs {
+      list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem;
+      padding: 0; margin: 1.15rem 0 0; max-width: 70ch;
+    }
+    .combining .pairs li {
+      font-family: var(--mono); font-size: var(--step--1); color: var(--muted);
+      border: 1px solid var(--rule-strong); padding: 0.2rem 0.5rem; border-radius: 2px;
+    }
+
+    /* ---------- toolbar (sticky) ---------- */
+    .toolbar {
+      position: sticky; top: 0; z-index: 20; background: var(--bg);
+      border-bottom: 1px solid var(--rule);
+      padding-block: 0.85rem;
+    }
+    .toolbar-in {
+      display: grid; gap: 0.55rem 1.25rem;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+    }
+    .field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+    .field label {
+      font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--faint);
+    }
+    .search-row { display: flex; align-items: stretch; gap: 0.5rem; min-width: 0; }
+    .search-row input {
+      flex: 1 1 auto; min-width: 0; width: 100%;
+      font-family: var(--sans); font-size: var(--step-0); color: var(--text);
+      background: var(--surface); border: 1px solid var(--rule-strong);
+      padding: 0.55rem 0.7rem; border-radius: 2px;
+    }
+    .search-row input::placeholder { color: var(--faint); }
+    .search-row input:focus-visible { border-color: var(--accent); }
+    .clear {
+      flex: 0 0 auto; font-family: var(--mono); font-size: var(--step--1);
+      background: transparent; color: var(--muted); border: 1px solid var(--rule-strong);
+      padding: 0 0.75rem; border-radius: 2px; cursor: pointer;
+    }
+    .clear:hover { color: var(--text); border-color: var(--accent-dim); }
+    .clear[hidden] { display: none; }
+    .count {
+      font-family: var(--mono); font-size: var(--step--1); color: var(--muted);
+      white-space: nowrap; text-align: right;
+    }
+    .count b { color: var(--accent); font-weight: 400; }
+
+    .index { margin-top: 0.6rem; }
+    .index > summary {
+      cursor: pointer; list-style: none; font-family: var(--mono); font-size: var(--step--1);
+      color: var(--faint); letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0;
+      display: inline-flex; gap: 0.5rem; align-items: center;
+    }
+    .index > summary::-webkit-details-marker { display: none; }
+    .index > summary::before { content: "\25B8"; color: var(--accent-dim); }
+    .index[open] > summary::before { content: "\25BE"; }
+    .index > summary:hover { color: var(--muted); }
+    .index ul {
+      list-style: none; margin: 0.7rem 0 0.15rem; padding: 0;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+      gap: 0.1rem 0.9rem; border-top: 1px solid var(--rule); padding-top: 0.7rem;
+    }
+    .index a {
+      display: flex; gap: 0.5rem; align-items: baseline; text-decoration: none;
+      color: var(--muted); font-size: var(--step--1); padding: 0.14rem 0;
+    }
+    .index a:hover { color: var(--text); }
+    .chip-n { font-family: var(--mono); color: var(--faint); font-size: 0.78rem; min-width: 1.6em; }
+    .index a:hover .chip-n { color: var(--accent); }
+
+    /* ---------- entries ---------- */
+    main { padding-bottom: clamp(3rem, 8vw, 6rem); }
+    .entries-head { padding-block: clamp(2rem, 5vw, 3.25rem) 0.5rem; }
+    .entries-head h2 { font-size: var(--step-2); font-weight: 400; margin: 0 0 0.6rem; letter-spacing: -0.01em; }
+    .entries-head p { max-width: var(--measure); color: var(--muted); margin: 0; }
+
+    .entry {
+      display: grid;
+      grid-template-columns: 3.4rem minmax(0, 1fr);
+      gap: 0 1rem;
+      padding-block: 2.1rem;
+      border-top: 1px solid var(--rule);
+      scroll-margin-top: 12rem;
+    }
+    .entry:first-of-type { border-top: 0; }
+    .entry[hidden] { display: none; }
+    .entry-n {
+      font-family: var(--mono); font-size: var(--step--1); color: var(--faint);
+      letter-spacing: 0.06em; padding-top: 0.45rem;
+    }
+    .entry h3 {
+      font-size: var(--step-2); font-weight: 400; line-height: 1.12; letter-spacing: -0.012em;
+      margin: 0 0 0.15rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 0.9rem;
+    }
+    .entry h3 a { color: inherit; text-decoration: none; }
+    .entry h3 a:hover { color: var(--accent); }
+    .swatch { display: inline-flex; gap: 3px; vertical-align: middle; padding-bottom: 0.1rem; }
+    .swatch i {
+      display: block; width: 13px; height: 13px; border-radius: 1px;
+      border: 1px solid rgba(241, 237, 226, 0.22);
+    }
+    .entry-body { max-width: var(--measure); }
+    .entry-body > p { margin: 0.9rem 0 0; color: #ded8c9; }
+    .entry-body > p::first-letter { font-size: 1.05em; }
+
+    .facts { margin: 1.2rem 0 0; display: grid; gap: 0.85rem; }
+    .fact { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0 0.9rem; align-items: start; }
+    .fact dt {
+      font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--faint); padding-top: 0.28rem;
+    }
+    .fact dd { margin: 0; }
+    .tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0; padding: 0; }
+    .tags li {
+      font-family: var(--mono); font-size: var(--step--1); color: var(--muted);
+      border: 1px solid var(--rule); background: var(--bg-raise); padding: 0.1rem 0.42rem; border-radius: 2px;
+    }
+    .patterns { color: var(--muted); }
+    .patterns code { background: var(--accent-soft); border-color: #3a2f1b; color: #e6d3ab; }
+    .avoid {
+      border-left: 2px solid var(--rule-strong);
+      padding: 0.1rem 0 0.1rem 0.85rem; color: var(--muted);
+    }
+    .avoid strong {
+      display: block; font-family: var(--mono); font-weight: 400; font-size: var(--step--1);
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-bottom: 0.1rem;
+    }
+
+    .empty {
+      border: 1px solid var(--rule-strong); background: var(--surface);
+      padding: clamp(1.4rem, 4vw, 2.4rem); margin-top: 2rem; max-width: var(--measure);
+    }
+    .empty[hidden] { display: none; }
+    .empty h2 { font-size: var(--step-2); font-weight: 400; margin: 0 0 0.7rem; }
+    .empty p { margin: 0 0 0.8rem; color: var(--muted); }
+    .empty ul { margin: 0 0 1.1rem; padding-left: 1.1rem; color: var(--muted); }
+    .empty li { margin-bottom: 0.25rem; }
+    .empty button {
+      font-family: var(--mono); font-size: var(--step--1); cursor: pointer;
+      background: var(--accent); color: #14120d; border: 1px solid var(--accent);
+      padding: 0.5rem 0.9rem; border-radius: 2px;
+    }
+    .empty button:hover { background: #e8bd74; }
+
+    footer { border-top: 1px solid var(--rule); padding-block: 2.5rem 3.5rem; }
+    footer p { font-family: var(--mono); font-size: var(--step--1); color: var(--faint); max-width: 70ch; margin: 0 0 0.5rem; }
+
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+
+    @media (min-width: 60rem) {
+      .entry { grid-template-columns: 5rem minmax(0, 1fr); gap: 0 1.5rem; }
+    }
+
+    @media (max-width: 34rem) {
+      .toolbar-in { grid-template-columns: minmax(0, 1fr); }
+      .count { text-align: left; }
+      .entry { grid-template-columns: minmax(0, 1fr); }
+      .entry-n { padding-top: 0; margin-bottom: 0.35rem; }
+      .fact { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
+      .index ul { grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
+    @media print {
+      :root { --bg: #fff; --text: #000; --muted: #333; --faint: #555; --rule: #bbb; }
+      body { background: #fff; color: #000; }
+      .toolbar, .index, .empty, .skip { display: none !important; }
+      .entry { break-inside: avoid; }
+      .entry[hidden] { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#catalogue">Skip to the style catalogue</a>
+
+  <header class="masthead">
+    <div class="wrap">
+      <p class="eyebrow">Reference &mdash; Visual style library</p>
+      <h1>Design Styles Doc</h1>
+      <p class="standfirst">Eighty named web design styles, each reduced to what it is, what it is for, and what it should be built with. Every entry below is transcribed from the style library, not rewritten for effect.</p>
+      <p class="colophon"><b>Source:</b> <code>skills/web-design-styles/references/styles.md</code> &mdash; 80 numbered style cards. Companion notes from <code>combinations.md</code>. Nothing on this page is invented: where a field in the source is short, it stays short.</p>
+    </div>
+  </header>
+
+  <section class="combining" aria-labelledby="combining-h">
+    <div class="wrap">
+      <h2 id="combining-h">Combining styles</h2>
+      <p>Use a combination only when it serves the content or the brand. Name <strong>one dominant style</strong> and no more than two supporting ones. The primary style controls page structure, grid, spacing, typography rhythm, and component architecture; a secondary style influences content presentation, imagery, and tone; an accent style is confined to small details such as buttons, labels, dividers, or one signature section. Supporting styles must not override the primary style's core logic.</p>
+      <p>Tokens must not conflict when styles are mixed: at most two font families, one base palette with one accent system, one radius logic, one depth model, and one motion and easing language. The library's approved pairings are:</p>
+      <ul class="pairs">
+        <li>Swiss + Editorial</li>
+        <li>Luxury + Minimalist</li>
+        <li>Cyberpunk + Terminal</li>
+        <li>Industrial + Brutalist</li>
+        <li>SaaS + Bento</li>
+        <li>Editorial + Ecommerce</li>
+        <li>Organic + Luxury</li>
+        <li>Minimalist + Typography First</li>
+        <li>Developer Focused + Dashboard</li>
+        <li>Cinematic + Storytelling</li>
+        <li>Retro Futurism + Science Fiction Interface</li>
+        <li>Neo Brutalism + Playful</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="wrap">
+      <div class="toolbar-in">
+        <div class="field">
+          <label for="q">Search styles</label>
+          <div class="search-row">
+            <input id="q" type="search" autocomplete="off" spellcheck="false"
+                   placeholder="Search by name, description, use case or CSS pattern&hellip;"
+                   aria-describedby="count" />
+            <button type="button" class="clear" id="clear" hidden>Clear</button>
+          </div>
+        </div>
+        <p class="count" id="count" role="status" aria-live="polite">Showing <b>80</b> of 80 styles</p>
+      </div>
+      <details class="index" id="index">
+        <summary>Style index</summary>
+        <ul>
+          <li><a href="#style-1" data-jump="style-1"><span class="chip-n">1</span>Minimalist</a></li>
+          <li><a href="#style-2" data-jump="style-2"><span class="chip-n">2</span>Modern Corporate</a></li>
+          <li><a href="#style-3" data-jump="style-3"><span class="chip-n">3</span>Editorial</a></li>
+          <li><a href="#style-4" data-jump="style-4"><span class="chip-n">4</span>Swiss Style</a></li>
+          <li><a href="#style-5" data-jump="style-5"><span class="chip-n">5</span>Brutalism</a></li>
+          <li><a href="#style-6" data-jump="style-6"><span class="chip-n">6</span>Neo Brutalism</a></li>
+          <li><a href="#style-7" data-jump="style-7"><span class="chip-n">7</span>Bauhaus</a></li>
+          <li><a href="#style-8" data-jump="style-8"><span class="chip-n">8</span>Mid Century Modern</a></li>
+          <li><a href="#style-9" data-jump="style-9"><span class="chip-n">9</span>Retro Futurism</a></li>
+          <li><a href="#style-10" data-jump="style-10"><span class="chip-n">10</span>Y2K</a></li>
+          <li><a href="#style-11" data-jump="style-11"><span class="chip-n">11</span>Cyberpunk</a></li>
+          <li><a href="#style-12" data-jump="style-12"><span class="chip-n">12</span>Science Fiction Interface</a></li>
+          <li><a href="#style-13" data-jump="style-13"><span class="chip-n">13</span>Glassmorphism</a></li>
+          <li><a href="#style-14" data-jump="style-14"><span class="chip-n">14</span>Claymorphism</a></li>
+          <li><a href="#style-15" data-jump="style-15"><span class="chip-n">15</span>Neumorphism</a></li>
+          <li><a href="#style-16" data-jump="style-16"><span class="chip-n">16</span>Flat Design</a></li>
+          <li><a href="#style-17" data-jump="style-17"><span class="chip-n">17</span>Material Design</a></li>
+          <li><a href="#style-18" data-jump="style-18"><span class="chip-n">18</span>Skeuomorphic</a></li>
+          <li><a href="#style-19" data-jump="style-19"><span class="chip-n">19</span>Luxury</a></li>
+          <li><a href="#style-20" data-jump="style-20"><span class="chip-n">20</span>Luxury Editorial</a></li>
+          <li><a href="#style-21" data-jump="style-21"><span class="chip-n">21</span>Dark Luxury</a></li>
+          <li><a href="#style-22" data-jump="style-22"><span class="chip-n">22</span>Industrial</a></li>
+          <li><a href="#style-23" data-jump="style-23"><span class="chip-n">23</span>Tech Startup</a></li>
+          <li><a href="#style-24" data-jump="style-24"><span class="chip-n">24</span>SaaS</a></li>
+          <li><a href="#style-25" data-jump="style-25"><span class="chip-n">25</span>Developer Focused</a></li>
+          <li><a href="#style-26" data-jump="style-26"><span class="chip-n">26</span>Terminal Style</a></li>
+          <li><a href="#style-27" data-jump="style-27"><span class="chip-n">27</span>Dashboard</a></li>
+          <li><a href="#style-28" data-jump="style-28"><span class="chip-n">28</span>Bento Grid</a></li>
+          <li><a href="#style-29" data-jump="style-29"><span class="chip-n">29</span>Card Based</a></li>
+          <li><a href="#style-30" data-jump="style-30"><span class="chip-n">30</span>Modular Grid</a></li>
+          <li><a href="#style-31" data-jump="style-31"><span class="chip-n">31</span>Split Screen</a></li>
+          <li><a href="#style-32" data-jump="style-32"><span class="chip-n">32</span>Full Screen Immersive</a></li>
+          <li><a href="#style-33" data-jump="style-33"><span class="chip-n">33</span>Cinematic</a></li>
+          <li><a href="#style-34" data-jump="style-34"><span class="chip-n">34</span>Storytelling</a></li>
+          <li><a href="#style-35" data-jump="style-35"><span class="chip-n">35</span>Scrollytelling</a></li>
+          <li><a href="#style-36" data-jump="style-36"><span class="chip-n">36</span>Parallax</a></li>
+          <li><a href="#style-37" data-jump="style-37"><span class="chip-n">37</span>Motion First</a></li>
+          <li><a href="#style-38" data-jump="style-38"><span class="chip-n">38</span>Micro Interaction Focused</a></li>
+          <li><a href="#style-39" data-jump="style-39"><span class="chip-n">39</span>Three Dimensional Immersive</a></li>
+          <li><a href="#style-40" data-jump="style-40"><span class="chip-n">40</span>Spatial UI</a></li>
+          <li><a href="#style-41" data-jump="style-41"><span class="chip-n">41</span>Organic</a></li>
+          <li><a href="#style-42" data-jump="style-42"><span class="chip-n">42</span>Nature Inspired</a></li>
+          <li><a href="#style-43" data-jump="style-43"><span class="chip-n">43</span>Biophilic</a></li>
+          <li><a href="#style-44" data-jump="style-44"><span class="chip-n">44</span>Handcrafted</a></li>
+          <li><a href="#style-45" data-jump="style-45"><span class="chip-n">45</span>Illustrative</a></li>
+          <li><a href="#style-46" data-jump="style-46"><span class="chip-n">46</span>Collage</a></li>
+          <li><a href="#style-47" data-jump="style-47"><span class="chip-n">47</span>Scrapbook</a></li>
+          <li><a href="#style-48" data-jump="style-48"><span class="chip-n">48</span>Grunge</a></li>
+          <li><a href="#style-49" data-jump="style-49"><span class="chip-n">49</span>Streetwear</a></li>
+          <li><a href="#style-50" data-jump="style-50"><span class="chip-n">50</span>Memphis</a></li>
+          <li><a href="#style-51" data-jump="style-51"><span class="chip-n">51</span>Pop Art</a></li>
+          <li><a href="#style-52" data-jump="style-52"><span class="chip-n">52</span>Playful</a></li>
+          <li><a href="#style-53" data-jump="style-53"><span class="chip-n">53</span>Cartoon</a></li>
+          <li><a href="#style-54" data-jump="style-54"><span class="chip-n">54</span>Gamified</a></li>
+          <li><a href="#style-55" data-jump="style-55"><span class="chip-n">55</span>Pixel Art</a></li>
+          <li><a href="#style-56" data-jump="style-56"><span class="chip-n">56</span>Arcade</a></li>
+          <li><a href="#style-57" data-jump="style-57"><span class="chip-n">57</span>Vaporwave</a></li>
+          <li><a href="#style-58" data-jump="style-58"><span class="chip-n">58</span>Synthwave</a></li>
+          <li><a href="#style-59" data-jump="style-59"><span class="chip-n">59</span>Monochrome</a></li>
+          <li><a href="#style-60" data-jump="style-60"><span class="chip-n">60</span>Duotone</a></li>
+          <li><a href="#style-61" data-jump="style-61"><span class="chip-n">61</span>Gradient Heavy</a></li>
+          <li><a href="#style-62" data-jump="style-62"><span class="chip-n">62</span>Pastel</a></li>
+          <li><a href="#style-63" data-jump="style-63"><span class="chip-n">63</span>High Contrast</a></li>
+          <li><a href="#style-64" data-jump="style-64"><span class="chip-n">64</span>Typography First</a></li>
+          <li><a href="#style-65" data-jump="style-65"><span class="chip-n">65</span>Experimental Typography</a></li>
+          <li><a href="#style-66" data-jump="style-66"><span class="chip-n">66</span>Experimental</a></li>
+          <li><a href="#style-67" data-jump="style-67"><span class="chip-n">67</span>Anti Design</a></li>
+          <li><a href="#style-68" data-jump="style-68"><span class="chip-n">68</span>Maximalism</a></li>
+          <li><a href="#style-69" data-jump="style-69"><span class="chip-n">69</span>Minimal Maximalism</a></li>
+          <li><a href="#style-70" data-jump="style-70"><span class="chip-n">70</span>Soft UI</a></li>
+          <li><a href="#style-71" data-jump="style-71"><span class="chip-n">71</span>Friendly SaaS</a></li>
+          <li><a href="#style-72" data-jump="style-72"><span class="chip-n">72</span>Clean Ecommerce</a></li>
+          <li><a href="#style-73" data-jump="style-73"><span class="chip-n">73</span>Editorial Ecommerce</a></li>
+          <li><a href="#style-74" data-jump="style-74"><span class="chip-n">74</span>Luxury Ecommerce</a></li>
+          <li><a href="#style-75" data-jump="style-75"><span class="chip-n">75</span>Portfolio</a></li>
+          <li><a href="#style-76" data-jump="style-76"><span class="chip-n">76</span>Creative Agency</a></li>
+          <li><a href="#style-77" data-jump="style-77"><span class="chip-n">77</span>Architecture</a></li>
+          <li><a href="#style-78" data-jump="style-78"><span class="chip-n">78</span>Photography First</a></li>
+          <li><a href="#style-79" data-jump="style-79"><span class="chip-n">79</span>Landing Page</a></li>
+          <li><a href="#style-80" data-jump="style-80"><span class="chip-n">80</span>Documentation</a></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+
+  <main id="catalogue">
+    <div class="wrap">
+      <div class="entries-head">
+        <h2>The 80 styles</h2>
+        <p>Each entry is a written explanation drawn from the style's own philosophy, use cases, typography, color and layout &mdash; followed by the practical specifics: where it belongs, the CSS and component patterns behind it, and the mistakes that give it away.</p>
+      </div>
+
+      <article class="entry" id="style-1" data-entry data-hay="minimalist reduce interface to essential structure; hierarchy comes from typography, whitespace, and alignment. it earns its place on portfolios, premium services, focused landing pages, documentation and calm product sites. typography is part of the brief: clean sans or refined serif/sans pairing; strong scale contrast; moderate line-height; avoid too many weights. the palette is specific: 1 neutral family plus 1 restrained accent; high text contrast; backgrounds usually white, off-white, or deep neutral. structure carries the rest: simple grids; generous whitespace; narrow readable containers; deliberate section rhythm. edges stay quiet: subtle borders; small or no radius; minimal shadows. portfolios, premium services, focused landing pages, documentation, calm product sites. css variables, max-width containers, clamp typography, border-top sectioning, :focus-visible outlines.">
+        <p class="entry-n">01</p>
+        <div class="entry-body">
+          <h3><a href="#style-1">Minimalist</a> <span class="swatch" role="img" aria-label="Color cues: white"><i style="background:#f4f2ec"></i></span></h3>
+          <p>Reduce interface to essential structure; hierarchy comes from typography, whitespace, and alignment. It earns its place on portfolios, premium services, focused landing pages, documentation and calm product sites. Typography is part of the brief: clean sans or refined serif/sans pairing; strong scale contrast; moderate line-height; avoid too many weights. The palette is specific: 1 neutral family plus 1 restrained accent; high text contrast; backgrounds usually white, off-white, or deep neutral. Structure carries the rest: simple grids; generous whitespace; narrow readable containers; deliberate section rhythm. Edges stay quiet: subtle borders; small or no radius; minimal shadows.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>portfolios</li><li>premium services</li><li>focused landing pages</li><li>documentation</li><li>calm product sites</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS variables, max-width containers, clamp typography, border-top sectioning, :focus-visible outlines.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Empty-feeling pages, weak hierarchy, hidden affordances, unnecessary cards, excessive color, decorative gradients.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-2" data-entry data-hay="modern corporate trust, clarity, professionalism, readability, and predictable structure. it is built for b2b, services, finance, healthcare, manufacturing, legal and enterprise saas. the type treatment is deliberate — contemporary sans; authoritative headings; comfortable body text; clear section labels. color is part of the definition rather than an afterthought: brand colors used sparingly; neutral backgrounds; clear semantic colors; avoid loud palettes. layout decisions stay consistent with that: structured 12-column grids; conventional content sections; balanced density. interaction is restrained transitions; no gimmicks. b2b, services, finance, healthcare, manufacturing, legal, enterprise saas. tokenized brand palette, grid utilities, accessible dropdowns, container queries.">
+        <p class="entry-n">02</p>
+        <div class="entry-body">
+          <h3><a href="#style-2">Modern Corporate</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Trust, clarity, professionalism, readability, and predictable structure. It is built for B2B, services, finance, healthcare, manufacturing, legal and enterprise SaaS. The type treatment is deliberate — contemporary sans; authoritative headings; comfortable body text; clear section labels. Color is part of the definition rather than an afterthought: brand colors used sparingly; neutral backgrounds; clear semantic colors; avoid loud palettes. Layout decisions stay consistent with that: structured 12-column grids; conventional content sections; balanced density. Interaction is restrained transitions; no gimmicks.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>B2B</li><li>services</li><li>finance</li><li>healthcare</li><li>manufacturing</li><li>legal</li><li>enterprise SaaS</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">Tokenized brand palette, grid utilities, accessible dropdowns, container queries.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Experimental nav that harms usability, stock-photo cliché, generic SaaS template for non-SaaS company.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-3" data-entry data-hay="editorial digital publication; rhythm, storytelling, and typography drive the page. best suited to articles, magazines, brand stories, reports, campaigns and culture sites. type carries a lot of the weight here: strong serif/display headlines with readable body; captions, metadata, pull quotes. color follows the philosophy: often restrained to support imagery; accent colors for issue/section identity. layout, grid, and spacing follow the same logic: editorial columns, asymmetry, large visual moments, text columns with measured line lengths. edges stay quiet: borders for rules/dividers; minimal shadows; radius usually low. articles, magazines, brand stories, reports, campaigns, culture sites. css grid with named areas, drop caps, figcaption, sticky table of contents.">
+        <p class="entry-n">03</p>
+        <div class="entry-body">
+          <h3><a href="#style-3">Editorial</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Digital publication; rhythm, storytelling, and typography drive the page. Best suited to articles, magazines, brand stories, reports, campaigns and culture sites. Type carries a lot of the weight here: strong serif/display headlines with readable body; captions, metadata, pull quotes. Color follows the philosophy: often restrained to support imagery; accent colors for issue/section identity. Layout, grid, and spacing follow the same logic: editorial columns, asymmetry, large visual moments, text columns with measured line lengths. Edges stay quiet: borders for rules/dividers; minimal shadows; radius usually low.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>articles</li><li>magazines</li><li>brand stories</li><li>reports</li><li>campaigns</li><li>culture sites</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid with named areas, drop caps, figcaption, sticky table of contents.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Treating every page as a blog template, over-animating text, poor line length.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-4" data-entry data-hay="swiss style grid discipline, objective clarity, asymmetric balance, typography over decoration. it suits design portfolios, cultural institutions, architecture, technical brands and premium informational sites. typography does much of the work: strong sans serif; precise scale; weights and alignment provide hierarchy. on color, limited palette; black/white/neutrals with one or two strong accents. the grid is part of the idea, not a container dropped on afterwards: strict modular grid; mathematical spacing; strong alignment; asymmetry within grid. interaction is precise, linear or crisp easing; underline/rule movement. design portfolios, cultural institutions, architecture, technical brands, premium informational sites. css grid, baseline rhythm, clamp(), grid overlays during development.">
+        <p class="entry-n">04</p>
+        <div class="entry-body">
+          <h3><a href="#style-4">Swiss Style</a> <span class="swatch" role="img" aria-label="Color cues: black, white"><i style="background:#1c1c1c"></i><i style="background:#f4f2ec"></i></span></h3>
+          <p>Grid discipline, objective clarity, asymmetric balance, typography over decoration. It suits design portfolios, cultural institutions, architecture, technical brands and premium informational sites. Typography does much of the work: strong sans serif; precise scale; weights and alignment provide hierarchy. On color, limited palette; black/white/neutrals with one or two strong accents. The grid is part of the idea, not a container dropped on afterwards: strict modular grid; mathematical spacing; strong alignment; asymmetry within grid. Interaction is precise, linear or crisp easing; underline/rule movement.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>design portfolios</li><li>cultural institutions</li><li>architecture</li><li>technical brands</li><li>premium informational sites</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid, baseline rhythm, clamp(), grid overlays during development.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Random asymmetry, decorative clutter, centered generic layouts.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-5" data-entry data-hay="brutalism expose structure; raw, direct, high-contrast, intentionally unpolished but usable. it earns its place on art, culture, developer tools, campaigns, anti-brand statements and experimental portfolios. typography is part of the brief: bold sans/mono/display; large sizes; abrupt hierarchy. the palette is specific: high contrast; black/white plus harsh accents. structure carries the rest: can be unconventional; visible structure; abrupt spacing but intentional. art, culture, developer tools, campaigns, anti-brand statements, experimental portfolios. thick borders, system fonts, visible grid lines, high-contrast tokens.">
+        <p class="entry-n">05</p>
+        <div class="entry-body">
+          <h3><a href="#style-5">Brutalism</a> <span class="swatch" role="img" aria-label="Color cues: black, white"><i style="background:#1c1c1c"></i><i style="background:#f4f2ec"></i></span></h3>
+          <p>Expose structure; raw, direct, high-contrast, intentionally unpolished but usable. It earns its place on art, culture, developer tools, campaigns, anti-brand statements and experimental portfolios. Typography is part of the brief: bold sans/mono/display; large sizes; abrupt hierarchy. The palette is specific: high contrast; black/white plus harsh accents. Structure carries the rest: can be unconventional; visible structure; abrupt spacing but intentional.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>art</li><li>culture</li><li>developer tools</li><li>campaigns</li><li>anti-brand statements</li><li>experimental portfolios</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">Thick borders, system fonts, visible grid lines, high-contrast tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Confusing poor usability with brutalism, illegible text, broken hierarchy.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-6" data-entry data-hay="neo brutalism playful graphic physicality with thick outlines, solid colors, and offset shadows. it is built for creator products, education, playful saas, portfolios and indie apps. the type treatment is deliberate — bold friendly sans; chunky headings; clear body. color is part of the definition rather than an afterthought: strong color blocks; saturated but controlled palette; no subtle gradients. layout decisions stay consistent with that: structured, playful asymmetry; clear modular spacing. the components follow suit: blocky nav; hero with stacked graphic panels; cards with thick borders/offset shadows; buttons pop on press; forms large and outlined; icons bold line/filled. creator products, education, playful saas, portfolios, indie apps. box-shadow: 6px 6px 0, border tokens, active transform.">
+        <p class="entry-n">06</p>
+        <div class="entry-body">
+          <h3><a href="#style-6">Neo Brutalism</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Playful graphic physicality with thick outlines, solid colors, and offset shadows. It is built for creator products, education, playful SaaS, portfolios and indie apps. The type treatment is deliberate — bold friendly sans; chunky headings; clear body. Color is part of the definition rather than an afterthought: strong color blocks; saturated but controlled palette; no subtle gradients. Layout decisions stay consistent with that: structured, playful asymmetry; clear modular spacing. The components follow suit: blocky nav; hero with stacked graphic panels; cards with thick borders/offset shadows; buttons pop on press; forms large and outlined; icons bold line/filled.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>creator products</li><li>education</li><li>playful SaaS</li><li>portfolios</li><li>indie apps</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">box-shadow: 6px 6px 0, border tokens, active transform.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Too many colors, illegible novelty fonts, inaccessible contrast.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-7" data-entry data-hay="bauhaus functional geometry, balance, primary forms, structure as decoration. best suited to creative studios, education, cultural sites and design-forward products. type carries a lot of the weight here: functional geometric sans; bold headings; clear alignment. color follows the philosophy: primary colors, black, white, beige; controlled geometric palette. layout, grid, and spacing follow the same logic: balanced compositions using circles, rectangles, lines; strong negative space. motion is part of it: geometric transformations, rotation, scale, shape reveal. creative studios, education, cultural sites, design-forward products. css shapes, pseudo-elements, grid overlays, clip-path sparingly.">
+        <p class="entry-n">07</p>
+        <div class="entry-body">
+          <h3><a href="#style-7">Bauhaus</a> <span class="swatch" role="img" aria-label="Color cues: black, white, beige"><i style="background:#1c1c1c"></i><i style="background:#f4f2ec"></i><i style="background:#ded0b0"></i></span></h3>
+          <p>Functional geometry, balance, primary forms, structure as decoration. Best suited to creative studios, education, cultural sites and design-forward products. Type carries a lot of the weight here: functional geometric sans; bold headings; clear alignment. Color follows the philosophy: primary colors, black, white, beige; controlled geometric palette. Layout, grid, and spacing follow the same logic: balanced compositions using circles, rectangles, lines; strong negative space. Motion is part of it: geometric transformations, rotation, scale, shape reveal.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>creative studios</li><li>education</li><li>cultural sites</li><li>design-forward products</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS shapes, pseudo-elements, grid overlays, clip-path sparingly.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Random primary-color confetti, theme-park imitation.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-8" data-entry data-hay="mid century modern warm retro optimism with contemporary usability. it suits interiors, lifestyle, restaurants, boutiques and creative portfolios. typography does much of the work: humanist sans, careful vintage display accents, readable body. on color, warm muted oranges, olives, teals, creams, browns. the grid is part of the idea, not a container dropped on afterwards: contemporary grids with organic shapes and retro illustration accents. the components follow suit: calm nav; hero with warm illustration/photo; cards simple; buttons rounded-rect; forms warm neutral; icons/illustrations geometric-organic. interiors, lifestyle, restaurants, boutiques, creative portfolios. texture overlays, organic svgs, warm tokens.">
+        <p class="entry-n">08</p>
+        <div class="entry-body">
+          <h3><a href="#style-8">Mid Century Modern</a> <span class="swatch" role="img" aria-label="Color cues: cream, orange, olive"><i style="background:#efe3c8"></i><i style="background:#c9762a"></i><i style="background:#6f7a3c"></i></span></h3>
+          <p>Warm retro optimism with contemporary usability. It suits interiors, lifestyle, restaurants, boutiques and creative portfolios. Typography does much of the work: humanist sans, careful vintage display accents, readable body. On color, warm muted oranges, olives, teals, creams, browns. The grid is part of the idea, not a container dropped on afterwards: contemporary grids with organic shapes and retro illustration accents. The components follow suit: calm nav; hero with warm illustration/photo; cards simple; buttons rounded-rect; forms warm neutral; icons/illustrations geometric-organic.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>interiors</li><li>lifestyle</li><li>restaurants</li><li>boutiques</li><li>creative portfolios</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">Texture overlays, organic SVGs, warm tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Over-retro theme park, too many patterns, unreadable vintage fonts.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-9" data-entry data-hay="retro futurism historical visions of technology interpreted through modern ui. it earns its place on games, entertainment, tech campaigns, creative tools and event sites. typography is part of the brief: geometric sans plus display accents; labels may feel technical/vintage. the palette is specific: chrome, cream, orange, teal, space-age blues, controlled neon. structure carries the rest: technical diagrams, space-age motifs, modular panels. components are part of the brief: nav with instrument-panel cues; hero cinematic/space-age; cards as modules; buttons capsule or mechanical; forms panelized; imagery vintage science/space. games, entertainment, tech campaigns, creative tools, event sites. gradients for metal only with intent, svg diagrams, grid overlays.">
+        <p class="entry-n">09</p>
+        <div class="entry-body">
+          <h3><a href="#style-9">Retro Futurism</a> <span class="swatch" role="img" aria-label="Color cues: cream, orange, teal"><i style="background:#efe3c8"></i><i style="background:#c9762a"></i><i style="background:#2f7a78"></i></span></h3>
+          <p>Historical visions of technology interpreted through modern UI. It earns its place on games, entertainment, tech campaigns, creative tools and event sites. Typography is part of the brief: geometric sans plus display accents; labels may feel technical/vintage. The palette is specific: chrome, cream, orange, teal, space-age blues, controlled neon. Structure carries the rest: technical diagrams, space-age motifs, modular panels. Components are part of the brief: nav with instrument-panel cues; hero cinematic/space-age; cards as modules; buttons capsule or mechanical; forms panelized; imagery vintage science/space.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>games</li><li>entertainment</li><li>tech campaigns</li><li>creative tools</li><li>event sites</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">Gradients for metal only with intent, SVG diagrams, grid overlays.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Random sci-fi clutter, illegible display fonts.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-10" data-entry data-hay="y2k early digital optimism: chrome, gloss, bubbles, translucent futurism. it is built for fashion, music, events, youth brands and nostalgic campaigns. the type treatment is deliberate — futuristic rounded/display accents with readable sans body. color is part of the definition rather than an afterthought: bright gradients, silver, ice blue, hot pink, lime; use carefully. layout decisions stay consistent with that: layered glossy elements with modern underlying structure. fashion, music, events, youth brands, nostalgic campaigns. layered gradients, backdrop-filter, highlight pseudo-elements.">
+        <p class="entry-n">10</p>
+        <div class="entry-body">
+          <h3><a href="#style-10">Y2K</a> <span class="swatch" role="img" aria-label="Color cues: lime, blue, pink"><i style="background:#8fae3c"></i><i style="background:#3c5f8a"></i><i style="background:#cf7b95"></i></span></h3>
+          <p>Early digital optimism: chrome, gloss, bubbles, translucent futurism. It is built for fashion, music, events, youth brands and nostalgic campaigns. The type treatment is deliberate — futuristic rounded/display accents with readable sans body. Color is part of the definition rather than an afterthought: bright gradients, silver, ice blue, hot pink, lime; use carefully. Layout decisions stay consistent with that: layered glossy elements with modern underlying structure.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>fashion</li><li>music</li><li>events</li><li>youth brands</li><li>nostalgic campaigns</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">layered gradients, backdrop-filter, highlight pseudo-elements.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Inaccessible low contrast, nostalgia overriding UX.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-11" data-entry data-hay="cyberpunk dark urban tech, neon tension, high contrast, controlled chaos. best suited to games, security tools, developer products, events and entertainment. type carries a lot of the weight here: technical sans/mono; sharp headings; readable body. color follows the philosophy: dark backgrounds with neon cyan/magenta/yellow accents. layout, grid, and spacing follow the same logic: dense panels, angled cuts, grid overlays sparingly. components are part of the brief: nav like control bar; hero dramatic with neon focal points; cards dark panels; buttons sharp; forms terminal-like; images gritty/cinematic; icons technical. games, security tools, developer products, events, entertainment. dark tokens, text-shadow sparingly, clip paths, reduced-motion media.">
+        <p class="entry-n">11</p>
+        <div class="entry-body">
+          <h3><a href="#style-11">Cyberpunk</a> <span class="swatch" role="img" aria-label="Color cues: yellow, cyan, magenta"><i style="background:#cbb03c"></i><i style="background:#3d8fa0"></i><i style="background:#a4396b"></i></span></h3>
+          <p>Dark urban tech, neon tension, high contrast, controlled chaos. Best suited to games, security tools, developer products, events and entertainment. Type carries a lot of the weight here: technical sans/mono; sharp headings; readable body. Color follows the philosophy: dark backgrounds with neon cyan/magenta/yellow accents. Layout, grid, and spacing follow the same logic: dense panels, angled cuts, grid overlays sparingly. Components are part of the brief: nav like control bar; hero dramatic with neon focal points; cards dark panels; buttons sharp; forms terminal-like; images gritty/cinematic; icons technical.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>games</li><li>security tools</li><li>developer products</li><li>events</li><li>entertainment</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">dark tokens, text-shadow sparingly, clip paths, reduced-motion media.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Neon overload, illegible text, gamer style when not requested.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-12" data-entry data-hay="science fiction interface structured hud/interface language with purposeful data panels. it suits dashboards, technical demos, aerospace, simulations and data-heavy apps. typography does much of the work: compact sans/mono labels; clear numeric hierarchy. on color, dark or light technical palette; cyan/amber/green accents; restrained. the grid is part of the idea, not a container dropped on afterwards: technical grid, panels, indicators, dense but organized. it also has to survive real conditions: do not cover every surface with sci-fi decoration. dashboards, technical demos, aerospace, simulations, data-heavy apps. css grid, svg linework, panel components, data attributes.">
+        <p class="entry-n">12</p>
+        <div class="entry-body">
+          <h3><a href="#style-12">Science Fiction Interface</a> <span class="swatch" role="img" aria-label="Color cues: amber, green, cyan"><i style="background:#c9962f"></i><i style="background:#4b7a4a"></i><i style="background:#3d8fa0"></i></span></h3>
+          <p>Structured HUD/interface language with purposeful data panels. It suits dashboards, technical demos, aerospace, simulations and data-heavy apps. Typography does much of the work: compact sans/mono labels; clear numeric hierarchy. On color, dark or light technical palette; cyan/amber/green accents; restrained. The grid is part of the idea, not a container dropped on afterwards: technical grid, panels, indicators, dense but organized. It also has to survive real conditions: do not cover every surface with sci-fi decoration.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>dashboards</li><li>technical demos</li><li>aerospace</li><li>simulations</li><li>data-heavy apps</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid, SVG linework, panel components, data attributes.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Decorative fake data, unreadable tiny labels.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-13" data-entry data-hay="glassmorphism layered translucent surfaces over visually rich backgrounds. it earns its place on marketing pages, hero overlays, premium widgets and selected panels. typography is part of the brief: clean sans; strong contrast against glass surfaces. the palette is specific: soft tinted surfaces; blurred backgrounds; accent borders. structure carries the rest: layer glass selectively; avoid stacking too many panes. in practice, that means check contrast; avoid blur-heavy pages on low-end devices. marketing pages, hero overlays, premium widgets, selected panels. backdrop-filter, rgba/hsl alpha, fallback solid backgrounds.">
+        <p class="entry-n">13</p>
+        <div class="entry-body">
+          <h3><a href="#style-13">Glassmorphism</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Layered translucent surfaces over visually rich backgrounds. It earns its place on marketing pages, hero overlays, premium widgets and selected panels. Typography is part of the brief: clean sans; strong contrast against glass surfaces. The palette is specific: soft tinted surfaces; blurred backgrounds; accent borders. Structure carries the rest: layer glass selectively; avoid stacking too many panes. In practice, that means check contrast; avoid blur-heavy pages on low-end devices.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>marketing pages</li><li>hero overlays</li><li>premium widgets</li><li>selected panels</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">backdrop-filter, RGBA/HSL alpha, fallback solid backgrounds.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Transparent text backgrounds, too many glass layers.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-14" data-entry data-hay="claymorphism soft inflated dimensional surfaces that feel friendly and tactile. it is built for playful apps, education, wellness and consumer products. the type treatment is deliberate — rounded friendly sans; medium weight. color is part of the definition rather than an afterthought: soft saturated pastels or warm neutrals. layout decisions stay consistent with that: comfortable spacing, large touch surfaces. depth and edges are handled the same way: large radius, inner highlights, soft shadows. playful apps, education, wellness, consumer products. layered box shadows, gradients for highlights, css variables.">
+        <p class="entry-n">14</p>
+        <div class="entry-body">
+          <h3><a href="#style-14">Claymorphism</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Soft inflated dimensional surfaces that feel friendly and tactile. It is built for playful apps, education, wellness and consumer products. The type treatment is deliberate — rounded friendly sans; medium weight. Color is part of the definition rather than an afterthought: soft saturated pastels or warm neutrals. Layout decisions stay consistent with that: comfortable spacing, large touch surfaces. Depth and edges are handled the same way: large radius, inner highlights, soft shadows.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>playful apps</li><li>education</li><li>wellness</li><li>consumer products</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">layered box shadows, gradients for highlights, CSS variables.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Everything pill-shaped, low contrast.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-15" data-entry data-hay="neumorphism embossed surfaces using subtle highlights and shadows; use sparingly. best suited to decorative widgets, low-risk controls and showcase ui. type carries a lot of the weight here: simple sans; hierarchy must not rely on shadow alone. color follows the philosophy: monochrome/low saturation backgrounds with surface variants. layout, grid, and spacing follow the same logic: spacious; avoid dense neumorphic controls. decorative widgets, low-risk controls, showcase ui. dual shadows, inset shadows, explicit borders for accessibility.">
+        <p class="entry-n">15</p>
+        <div class="entry-body">
+          <h3><a href="#style-15">Neumorphism</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Embossed surfaces using subtle highlights and shadows; use sparingly. Best suited to decorative widgets, low-risk controls and showcase UI. Type carries a lot of the weight here: simple sans; hierarchy must not rely on shadow alone. Color follows the philosophy: monochrome/low saturation backgrounds with surface variants. Layout, grid, and spacing follow the same logic: spacious; avoid dense neumorphic controls.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>decorative widgets</li><li>low-risk controls</li><li>showcase UI</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">dual shadows, inset shadows, explicit borders for accessibility.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Critical interfaces with indistinguishable controls.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-16" data-entry data-hay="flat design solid colors, simple shapes, clarity, speed, no unnecessary depth. it suits apps, admin ui, documentation and lightweight landing pages. typography does much of the work: clear sans, color/weight for hierarchy. on color, solid palette; consistent semantic colors. the grid is part of the idea, not a container dropped on afterwards: efficient grids, simple sectioning. depth and edges are handled the same way: borders over shadows; modest radius. apps, admin ui, documentation, lightweight landing pages. utility classes, tokens, state classes.">
+        <p class="entry-n">16</p>
+        <div class="entry-body">
+          <h3><a href="#style-16">Flat Design</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Solid colors, simple shapes, clarity, speed, no unnecessary depth. It suits apps, admin UI, documentation and lightweight landing pages. Typography does much of the work: clear sans, color/weight for hierarchy. On color, solid palette; consistent semantic colors. The grid is part of the idea, not a container dropped on afterwards: efficient grids, simple sectioning. Depth and edges are handled the same way: borders over shadows; modest radius.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>apps</li><li>admin UI</li><li>documentation</li><li>lightweight landing pages</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">Utility classes, tokens, state classes.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Too little affordance, bland sameness.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-17" data-entry data-hay="material design deliberate surfaces, elevation, motion, and component states. it earns its place on web apps, dashboards and mobile-like web interfaces. typography is part of the brief: clean sans; clear labels and density options. the palette is specific: material-like tonal palettes; accessible semantic colors. structure carries the rest: 4/8px grid, responsive surfaces. edges stay quiet: elevation tokens, moderate radius. web apps, dashboards, mobile-like web interfaces. elevation classes, component variants, state layers.">
+        <p class="entry-n">17</p>
+        <div class="entry-body">
+          <h3><a href="#style-17">Material Design</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Deliberate surfaces, elevation, motion, and component states. It earns its place on web apps, dashboards and mobile-like web interfaces. Typography is part of the brief: clean sans; clear labels and density options. The palette is specific: material-like tonal palettes; accessible semantic colors. Structure carries the rest: 4/8px grid, responsive surfaces. Edges stay quiet: elevation tokens, moderate radius.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>web apps</li><li>dashboards</li><li>mobile-like web interfaces</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">elevation classes, component variants, state layers.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Mechanically imitating Google products unless asked.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-18" data-entry data-hay="skeuomorphic interface references physical objects using texture, depth, highlights. it is built for music tools, games, specialty controls and luxury craft products. the type treatment is deliberate — support the object metaphor; keep labels readable. color is part of the definition rather than an afterthought: real-material palettes: leather, metal, paper, wood, glass. layout decisions stay consistent with that: object panels and controls with physical affordances. interaction is press, knob, slider, page turn when justified. music tools, games, specialty controls, luxury craft products. layered gradients, pseudo-elements, svg textures.">
+        <p class="entry-n">18</p>
+        <div class="entry-body">
+          <h3><a href="#style-18">Skeuomorphic</a> <span class="swatch" role="img" aria-label="Color cues: metal"><i style="background:#8e949b"></i></span></h3>
+          <p>Interface references physical objects using texture, depth, highlights. It is built for music tools, games, specialty controls and luxury craft products. The type treatment is deliberate — support the object metaphor; keep labels readable. Color is part of the definition rather than an afterthought: real-material palettes: leather, metal, paper, wood, glass. Layout decisions stay consistent with that: object panels and controls with physical affordances. Interaction is press, knob, slider, page turn when justified.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>music tools</li><li>games</li><li>specialty controls</li><li>luxury craft products</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">layered gradients, pseudo-elements, SVG textures.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Decorative realism that hides controls.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-19" data-entry data-hay="luxury restraint, premium materials, elegant typography, space, and confidence. best suited to fashion, hospitality, jewelry, high-end services and premium brands. type carries a lot of the weight here: sophisticated serif/sans pairing; large elegant headings; generous leading. color follows the philosophy: limited palette; black, ivory, warm neutrals, metallic accents. layout, grid, and spacing follow the same logic: spacious compositions, slow rhythm, precise alignment. edges stay quiet: hairline borders, small radius or square; no cheap shadows. fashion, hospitality, jewelry, high-end services, premium brands. serif font loading, image aspect ratios, hairline borders.">
+        <p class="entry-n">19</p>
+        <div class="entry-body">
+          <h3><a href="#style-19">Luxury</a> <span class="swatch" role="img" aria-label="Color cues: black, ivory"><i style="background:#1c1c1c"></i><i style="background:#f2ecdc"></i></span></h3>
+          <p>Restraint, premium materials, elegant typography, space, and confidence. Best suited to fashion, hospitality, jewelry, high-end services and premium brands. Type carries a lot of the weight here: sophisticated serif/sans pairing; large elegant headings; generous leading. Color follows the philosophy: limited palette; black, ivory, warm neutrals, metallic accents. Layout, grid, and spacing follow the same logic: spacious compositions, slow rhythm, precise alignment. Edges stay quiet: hairline borders, small radius or square; no cheap shadows.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>fashion</li><li>hospitality</li><li>jewelry</li><li>high-end services</li><li>premium brands</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">serif font loading, image aspect ratios, hairline borders.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Cheap gradients, clutter, over-decoration, aggressive CTAs.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-20" data-entry data-hay="luxury editorial magazine composition plus premium restraint. it suits fashion ecommerce, hospitality stories and high-end campaigns. typography does much of the work: oversized editorial serif/display; refined captions and metadata. on color, restrained neutrals; accent only where premium. the grid is part of the idea, not a container dropped on afterwards: asymmetric editorial grids, dramatic photography, whitespace. fashion ecommerce, hospitality stories, high-end campaigns. css grid editorial areas, aspect-ratio, scroll reveal.">
+        <p class="entry-n">20</p>
+        <div class="entry-body">
+          <h3><a href="#style-20">Luxury Editorial</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Magazine composition plus premium restraint. It suits fashion ecommerce, hospitality stories and high-end campaigns. Typography does much of the work: oversized editorial serif/display; refined captions and metadata. On color, restrained neutrals; accent only where premium. The grid is part of the idea, not a container dropped on afterwards: asymmetric editorial grids, dramatic photography, whitespace.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>fashion ecommerce</li><li>hospitality stories</li><li>high-end campaigns</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid editorial areas, aspect-ratio, scroll reveal.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Hiding ecommerce controls, magazine chaos without conversion.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-21" data-entry data-hay="dark luxury deep neutral atmosphere, cinematic imagery, restrained metallic warmth. it earns its place on premium nightlife, watches, automotive, hospitality and high-end tech. typography is part of the brief: elegant serif/sans; careful letter spacing; readable low-light body. the palette is specific: charcoal/black/brown backgrounds; gold/bronze/warm gray accents. structure carries the rest: spacious, dramatic contrast, image-led. motion is part of it: slow fades, parallax subtle, cinematic sequencing. premium nightlife, watches, automotive, hospitality, high-end tech. dark tokens, image overlays, contrast testing.">
+        <p class="entry-n">21</p>
+        <div class="entry-body">
+          <h3><a href="#style-21">Dark Luxury</a> <span class="swatch" role="img" aria-label="Color cues: black, charcoal, gold"><i style="background:#1c1c1c"></i><i style="background:#2b2b2e"></i><i style="background:#c3a254"></i></span></h3>
+          <p>Deep neutral atmosphere, cinematic imagery, restrained metallic warmth. It earns its place on premium nightlife, watches, automotive, hospitality and high-end tech. Typography is part of the brief: elegant serif/sans; careful letter spacing; readable low-light body. The palette is specific: charcoal/black/brown backgrounds; gold/bronze/warm gray accents. Structure carries the rest: spacious, dramatic contrast, image-led. Motion is part of it: slow fades, parallax subtle, cinematic sequencing.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>premium nightlife</li><li>watches</li><li>automotive</li><li>hospitality</li><li>high-end tech</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">dark tokens, image overlays, contrast testing.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Neon gamer cyberpunk, excessive glow.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-22" data-entry data-hay="industrial utilitarian, mechanical, technical, durable. it is built for manufacturing, construction, logistics, hardware and agriculture equipment. the type treatment is deliberate — utilitarian sans/mono accents; labels and specs matter. color is part of the definition rather than an afterthought: metal neutrals, graphite, safety orange/yellow, muted blue. layout decisions stay consistent with that: exposed grids, technical diagrams, clear specs. the components follow suit: straightforward nav; hero with real machinery/product; cards as spec panels; buttons solid/mechanical; forms robust; icons technical line. manufacturing, construction, logistics, hardware, agriculture equipment. grid lines, spec tables, technical callouts.">
+        <p class="entry-n">22</p>
+        <div class="entry-body">
+          <h3><a href="#style-22">Industrial</a> <span class="swatch" role="img" aria-label="Color cues: orange, yellow, blue"><i style="background:#c9762a"></i><i style="background:#cbb03c"></i><i style="background:#3c5f8a"></i></span></h3>
+          <p>Utilitarian, mechanical, technical, durable. It is built for manufacturing, construction, logistics, hardware and agriculture equipment. The type treatment is deliberate — utilitarian sans/mono accents; labels and specs matter. Color is part of the definition rather than an afterthought: metal neutrals, graphite, safety orange/yellow, muted blue. Layout decisions stay consistent with that: exposed grids, technical diagrams, clear specs. The components follow suit: straightforward nav; hero with real machinery/product; cards as spec panels; buttons solid/mechanical; forms robust; icons technical line.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>manufacturing</li><li>construction</li><li>logistics</li><li>hardware</li><li>agriculture equipment</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">grid lines, spec tables, technical callouts.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Fake rust/grunge unless brand supports it.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-23" data-entry data-hay="tech startup clear product value, modern confidence, conversion without template sameness. best suited to startups, apps, product launches and ai/software tools. type carries a lot of the weight here: modern sans; sharp value proposition; skimmable sections. color follows the philosophy: brand-led palette; restrained gradients only if branded. layout, grid, and spacing follow the same logic: clean sections; product-focused hierarchy; balanced density. motion is part of it: product demos, subtle reveals, microinteractions. startups, apps, product launches, ai/software tools. responsive screenshot frames, feature modules, conversion sections.">
+        <p class="entry-n">23</p>
+        <div class="entry-body">
+          <h3><a href="#style-23">Tech Startup</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Clear product value, modern confidence, conversion without template sameness. Best suited to startups, apps, product launches and AI/software tools. Type carries a lot of the weight here: modern sans; sharp value proposition; skimmable sections. Color follows the philosophy: brand-led palette; restrained gradients only if branded. Layout, grid, and spacing follow the same logic: clean sections; product-focused hierarchy; balanced density. Motion is part of it: product demos, subtle reveals, microinteractions.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>startups</li><li>apps</li><li>product launches</li><li>AI/software tools</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">responsive screenshot frames, feature modules, conversion sections.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Identical SaaS template, fake dashboard, random gradient blobs.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-24" data-entry data-hay="saas explain product, build trust, convert users. it suits subscription software and web products. typography does much of the work: clean sans; benefit-led headings; clear labels. on color, product/brand tokens; semantic states. the grid is part of the idea, not a container dropped on afterwards: sections may include hero, demo, features, use cases, integrations, proof, pricing, faq, cta only when content requires. the components follow suit: product nav; hero with value/proof; screenshot/demo; pricing cards; comparison tables; forms concise. subscription software and web products. component variants, pricing grids, faq accordion.">
+        <p class="entry-n">24</p>
+        <div class="entry-body">
+          <h3><a href="#style-24">SaaS</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Explain product, build trust, convert users. It suits subscription software and web products. Typography does much of the work: clean sans; benefit-led headings; clear labels. On color, product/brand tokens; semantic states. The grid is part of the idea, not a container dropped on afterwards: sections may include hero, demo, features, use cases, integrations, proof, pricing, FAQ, CTA only when content requires. The components follow suit: product nav; hero with value/proof; screenshot/demo; pricing cards; comparison tables; forms concise.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>subscription software</li><li>web products</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">component variants, pricing grids, FAQ accordion.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Using SaaS layout for unrelated industries, fake UI screenshots.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-25" data-entry data-hay="developer focused technical clarity, credibility, information density. it earns its place on apis, devtools, open source, infrastructure and docs-adjacent products. typography is part of the brief: sans plus monospace accents; code readability. the palette is specific: often dark or high-contrast neutral; syntax colors purposeful. structure carries the rest: dense but organized; docs-like patterns. apis, devtools, open source, infrastructure, docs-adjacent products. syntax highlighting, tabs, copy buttons, sticky sidebar.">
+        <p class="entry-n">25</p>
+        <div class="entry-body">
+          <h3><a href="#style-25">Developer Focused</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Technical clarity, credibility, information density. It earns its place on APIs, devtools, open source, infrastructure and docs-adjacent products. Typography is part of the brief: sans plus monospace accents; code readability. The palette is specific: often dark or high-contrast neutral; syntax colors purposeful. Structure carries the rest: dense but organized; docs-like patterns.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>APIs</li><li>devtools</li><li>open source</li><li>infrastructure</li><li>docs-adjacent products</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">syntax highlighting, tabs, copy buttons, sticky sidebar.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Fake code, unreadable tiny monospace.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-26" data-entry data-hay="terminal style command-line metaphor with limited color and direct interaction. it is built for developer tools, hacker aesthetics, lightweight portfolios and security. the type treatment is deliberate — monospace primary; clear line-height; prompts/outputs. color is part of the definition rather than an afterthought: black/dark background with green/amber/white or limited light variant. layout decisions stay consistent with that: console blocks, command rows, output panels. it also has to survive real conditions: terminal metaphor must not block normal buttons/links. developer tools, hacker aesthetics, lightweight portfolios, security. pre, code, monospace tokens, caret animation with reduced motion.">
+        <p class="entry-n">26</p>
+        <div class="entry-body">
+          <h3><a href="#style-26">Terminal Style</a> <span class="swatch" role="img" aria-label="Color cues: black, white, amber"><i style="background:#1c1c1c"></i><i style="background:#f4f2ec"></i><i style="background:#c9962f"></i></span></h3>
+          <p>Command-line metaphor with limited color and direct interaction. It is built for developer tools, hacker aesthetics, lightweight portfolios and security. The type treatment is deliberate — monospace primary; clear line-height; prompts/outputs. Color is part of the definition rather than an afterthought: black/dark background with green/amber/white or limited light variant. Layout decisions stay consistent with that: console blocks, command rows, output panels. It also has to survive real conditions: terminal metaphor must not block normal buttons/links.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>developer tools</li><li>hacker aesthetics</li><li>lightweight portfolios</li><li>security</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">pre, code, monospace tokens, caret animation with reduced motion.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Endless typing animations, inaccessible green-on-black contrast.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-27" data-entry data-hay="dashboard information architecture first; clarity under density. best suited to admin apps, analytics, operations, finance and monitoring. type carries a lot of the weight here: legible sans; numeric hierarchy; compact labels. color follows the philosophy: neutral ui with semantic states; color reserved for data/status. layout, grid, and spacing follow the same logic: side nav/top bar, responsive panels, tables/charts, filters. components are part of the brief: side nav where appropriate; cards only for meaningful metric groups; dense forms; tables with controls; icons consistent. admin apps, analytics, operations, finance, monitoring. css grid app shell, sticky headers, virtualized lists when needed.">
+        <p class="entry-n">27</p>
+        <div class="entry-body">
+          <h3><a href="#style-27">Dashboard</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Information architecture first; clarity under density. Best suited to admin apps, analytics, operations, finance and monitoring. Type carries a lot of the weight here: legible sans; numeric hierarchy; compact labels. Color follows the philosophy: neutral UI with semantic states; color reserved for data/status. Layout, grid, and spacing follow the same logic: side nav/top bar, responsive panels, tables/charts, filters. Components are part of the brief: side nav where appropriate; cards only for meaningful metric groups; dense forms; tables with controls; icons consistent.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>admin apps</li><li>analytics</li><li>operations</li><li>finance</li><li>monitoring</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid app shell, sticky headers, virtualized lists when needed.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Decorative cards everywhere, fake charts, poor data hierarchy.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-28" data-entry data-hay="bento grid differently sized modules create hierarchy and variety. it suits feature overviews, product pages, portfolios and dashboards. typography does much of the work: simple hierarchy inside modules; headings concise. on color, module surfaces may vary subtly; palette controlled. the grid is part of the idea, not a container dropped on afterwards: rectangular modules with consistent gap; not every section should be bento. it also has to survive real conditions: collapse logically by importance; avoid masonry chaos. feature overviews, product pages, portfolios, dashboards. css grid spans, grid-template-areas, container queries.">
+        <p class="entry-n">28</p>
+        <div class="entry-body">
+          <h3><a href="#style-28">Bento Grid</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Differently sized modules create hierarchy and variety. It suits feature overviews, product pages, portfolios and dashboards. Typography does much of the work: simple hierarchy inside modules; headings concise. On color, module surfaces may vary subtly; palette controlled. The grid is part of the idea, not a container dropped on afterwards: rectangular modules with consistent gap; not every section should be bento. It also has to survive real conditions: collapse logically by importance; avoid masonry chaos.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>feature overviews</li><li>product pages</li><li>portfolios</li><li>dashboards</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid spans, grid-template-areas, container queries.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Equal importance despite unequal sizes, overusing bento everywhere.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-29" data-entry data-hay="card based independent pieces of information grouped into reusable surfaces. it earns its place on listings, blogs, ecommerce, dashboards and resources. typography is part of the brief: card anatomy: eyebrow/title/body/meta/action. the palette is specific: surface tokens separate cards from background. structure carries the rest: consistent card grid/list; avoid wrapping every content piece. in practice, that means whole-card links need semantic labels. listings, blogs, ecommerce, dashboards, resources. reusable card component variants, grid/list switching.">
+        <p class="entry-n">29</p>
+        <div class="entry-body">
+          <h3><a href="#style-29">Card Based</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Independent pieces of information grouped into reusable surfaces. It earns its place on listings, blogs, ecommerce, dashboards and resources. Typography is part of the brief: card anatomy: eyebrow/title/body/meta/action. The palette is specific: surface tokens separate cards from background. Structure carries the rest: consistent card grid/list; avoid wrapping every content piece. In practice, that means whole-card links need semantic labels.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>listings</li><li>blogs</li><li>ecommerce</li><li>dashboards</li><li>resources</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">reusable card component variants, grid/list switching.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Cards without reason, nested cards, identical repeated sections.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-30" data-entry data-hay="modular grid reusable dimensions and strict modules create consistency. it is built for product systems, portfolios, editorial indexes and dashboards. the type treatment is deliberate — aligned to modular rhythm. color is part of the definition rather than an afterthought: tokenized; modules differentiated by content not random colors. layout decisions stay consistent with that: fixed module sizes/spans; strict spacing; responsive rearrangement. product systems, portfolios, editorial indexes, dashboards. css grid, subgrid, design tokens.">
+        <p class="entry-n">30</p>
+        <div class="entry-body">
+          <h3><a href="#style-30">Modular Grid</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Reusable dimensions and strict modules create consistency. It is built for product systems, portfolios, editorial indexes and dashboards. The type treatment is deliberate — aligned to modular rhythm. Color is part of the definition rather than an afterthought: tokenized; modules differentiated by content not random colors. Layout decisions stay consistent with that: fixed module sizes/spans; strict spacing; responsive rearrangement.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>product systems</li><li>portfolios</li><li>editorial indexes</li><li>dashboards</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid, subgrid, design tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Breaking module rhythm without purpose.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-31" data-entry data-hay="split screen divide viewport into two meaningful zones. best suited to product explainers, auth pages, comparisons, portfolios and configurators. type carries a lot of the weight here: clear hierarchy between sides. color follows the philosophy: each pane may contrast but share tokens. layout, grid, and spacing follow the same logic: 50/50, 40/60, sticky side, or before/after split. in practice, that means stack with primary content first; avoid tiny panes. product explainers, auth pages, comparisons, portfolios, configurators. css grid/flex, sticky panels, minmax().">
+        <p class="entry-n">31</p>
+        <div class="entry-body">
+          <h3><a href="#style-31">Split Screen</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Divide viewport into two meaningful zones. Best suited to product explainers, auth pages, comparisons, portfolios and configurators. Type carries a lot of the weight here: clear hierarchy between sides. Color follows the philosophy: each pane may contrast but share tokens. Layout, grid, and spacing follow the same logic: 50/50, 40/60, sticky side, or before/after split. In practice, that means stack with primary content first; avoid tiny panes.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>product explainers</li><li>auth pages</li><li>comparisons</li><li>portfolios</li><li>configurators</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid/flex, sticky panels, minmax().</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Equal visual weight when one side should lead.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-32" data-entry data-hay="full screen immersive viewport becomes the experience using large media or interactive environments. it suits campaigns, portfolios, entertainment and product launches. typography does much of the work: large concise typography; overlays must be readable. on color, derived from media/art direction. the grid is part of the idea, not a container dropped on afterwards: full viewport sections; minimal chrome; discoverable nav. depth and edges are handled the same way: media-led; overlays and panels only as needed. campaigns, portfolios, entertainment, product launches. min-height: 100svh, responsive media, lazy loading.">
+        <p class="entry-n">32</p>
+        <div class="entry-body">
+          <h3><a href="#style-32">Full Screen Immersive</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Viewport becomes the experience using large media or interactive environments. It suits campaigns, portfolios, entertainment and product launches. Typography does much of the work: large concise typography; overlays must be readable. On color, derived from media/art direction. The grid is part of the idea, not a container dropped on afterwards: full viewport sections; minimal chrome; discoverable nav. Depth and edges are handled the same way: media-led; overlays and panels only as needed.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>campaigns</li><li>portfolios</li><li>entertainment</li><li>product launches</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">min-height: 100svh, responsive media, lazy loading.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Hidden navigation, slow loads, scroll hijacking.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-33" data-entry data-hay="cinematic dramatic sequencing, imagery, pacing, and visual storytelling. it earns its place on film, luxury, automotive, travel and campaigns. typography is part of the brief: strong titles, credits-like metadata, measured body text. the palette is specific: cinematic grade; dark/light contrast with image overlays. structure carries the rest: large media, layered transitions, sequential sections. edges stay quiet: minimal ui chrome; overlays and masks. film, luxury, automotive, travel, campaigns. aspect-ratio, video posters, intersectionobserver.">
+        <p class="entry-n">33</p>
+        <div class="entry-body">
+          <h3><a href="#style-33">Cinematic</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Dramatic sequencing, imagery, pacing, and visual storytelling. It earns its place on film, luxury, automotive, travel and campaigns. Typography is part of the brief: strong titles, credits-like metadata, measured body text. The palette is specific: cinematic grade; dark/light contrast with image overlays. Structure carries the rest: large media, layered transitions, sequential sections. Edges stay quiet: minimal UI chrome; overlays and masks.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>film</li><li>luxury</li><li>automotive</li><li>travel</li><li>campaigns</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">aspect-ratio, video posters, IntersectionObserver.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Overlong animations delaying users.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-34" data-entry data-hay="storytelling each section advances a clear narrative from beginning to conclusion. it is built for brand stories, nonprofits, product education and reports. the type treatment is deliberate — narrative hierarchy; chapter headings; quotes/captions. color is part of the definition rather than an afterthought: palette evolves only if narrative supports it. layout decisions stay consistent with that: stage-like sections, progressive disclosure. interaction is reveals connect stages; avoid distraction. brand stories, nonprofits, product education, reports. anchors, progress indicators, section state classes.">
+        <p class="entry-n">34</p>
+        <div class="entry-body">
+          <h3><a href="#style-34">Storytelling</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Each section advances a clear narrative from beginning to conclusion. It is built for brand stories, nonprofits, product education and reports. The type treatment is deliberate — narrative hierarchy; chapter headings; quotes/captions. Color is part of the definition rather than an afterthought: palette evolves only if narrative supports it. Layout decisions stay consistent with that: stage-like sections, progressive disclosure. Interaction is reveals connect stages; avoid distraction.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>brand stories</li><li>nonprofits</li><li>product education</li><li>reports</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">anchors, progress indicators, section state classes.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Pretty sections with no story progression.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-35" data-entry data-hay="scrollytelling scrolling drives reveals, pinning, transformation, or data narration. best suited to data stories, launches and educational explainers. type carries a lot of the weight here: short readable text chunks; sticky captions. color follows the philosophy: supports stages; avoid contrast shifts that hurt reading. layout, grid, and spacing follow the same logic: sticky panels, scroll steps, transformed visuals. data stories, launches, educational explainers. position: sticky, intersectionobserver, css scroll timelines where safe.">
+        <p class="entry-n">35</p>
+        <div class="entry-body">
+          <h3><a href="#style-35">Scrollytelling</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Scrolling drives reveals, pinning, transformation, or data narration. Best suited to data stories, launches and educational explainers. Type carries a lot of the weight here: short readable text chunks; sticky captions. Color follows the philosophy: supports stages; avoid contrast shifts that hurt reading. Layout, grid, and spacing follow the same logic: sticky panels, scroll steps, transformed visuals.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>data stories</li><li>launches</li><li>educational explainers</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">position: sticky, IntersectionObserver, CSS scroll timelines where safe.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Scroll jacking, inaccessible pinned content.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-36" data-entry data-hay="parallax depth from layers moving at different speeds. it suits campaigns, storytelling, travel and product visuals. typography does much of the work: keep text on stable layers. on color, derived from layered scene. the grid is part of the idea, not a container dropped on afterwards: foreground/midground/background separation. interaction is subtle movement differences; disable/simplify when needed. campaigns, storytelling, travel, product visuals. transform layers, will-change sparingly, media queries.">
+        <p class="entry-n">36</p>
+        <div class="entry-body">
+          <h3><a href="#style-36">Parallax</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Depth from layers moving at different speeds. It suits campaigns, storytelling, travel and product visuals. Typography does much of the work: keep text on stable layers. On color, derived from layered scene. The grid is part of the idea, not a container dropped on afterwards: foreground/midground/background separation. Interaction is subtle movement differences; disable/simplify when needed.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>campaigns</li><li>storytelling</li><li>travel</li><li>product visuals</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">transform layers, will-change sparingly, media queries.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Aggressive motion causing sickness/performance issues.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-37" data-entry data-hay="motion first animation is planned as part of the design system. it earns its place on product demos, interactive portfolios and premium landing pages. typography is part of the brief: text reveal rules defined by hierarchy. the palette is specific: motion should not compensate for weak color system. structure carries the rest: stable layout; animation reinforces hierarchy. motion is part of it: timing, easing, stagger, states documented; avoid random movement. product demos, interactive portfolios, premium landing pages. css transitions/keyframes, framer motion/gsap only when justified.">
+        <p class="entry-n">37</p>
+        <div class="entry-body">
+          <h3><a href="#style-37">Motion First</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Animation is planned as part of the design system. It earns its place on product demos, interactive portfolios and premium landing pages. Typography is part of the brief: text reveal rules defined by hierarchy. The palette is specific: motion should not compensate for weak color system. Structure carries the rest: stable layout; animation reinforces hierarchy. Motion is part of it: timing, easing, stagger, states documented; avoid random movement.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>product demos</li><li>interactive portfolios</li><li>premium landing pages</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS transitions/keyframes, Framer Motion/GSAP only when justified.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Animation that delays task completion.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-38" data-entry data-hay="micro interaction focused small feedback moments acknowledge user actions and improve perceived quality. it is built for apps, saas, forms, ecommerce and dashboards. the type treatment is deliberate — labels/status text support feedback. color is part of the definition rather than an afterthought: state colors meaningful and consistent. layout decisions stay consistent with that: components must have room for states/errors/loading. the components follow suit: buttons, cards, menus, inputs, toggles, loaders, nav states get meaningful feedback. apps, saas, forms, ecommerce, dashboards. state classes, aria-live, :focus-visible, transition tokens.">
+        <p class="entry-n">38</p>
+        <div class="entry-body">
+          <h3><a href="#style-38">Micro Interaction Focused</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Small feedback moments acknowledge user actions and improve perceived quality. It is built for apps, saaS, forms, ecommerce and dashboards. The type treatment is deliberate — labels/status text support feedback. Color is part of the definition rather than an afterthought: state colors meaningful and consistent. Layout decisions stay consistent with that: components must have room for states/errors/loading. The components follow suit: buttons, cards, menus, inputs, toggles, loaders, nav states get meaningful feedback.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>apps</li><li>saaS</li><li>forms</li><li>ecommerce</li><li>dashboards</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">state classes, aria-live, :focus-visible, transition tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Cute animations for every hover.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-39" data-entry data-hay="three dimensional immersive 3d/webgl/css 3d used only when it materially improves experience. best suited to product visualization, games, spatial portfolios and configurators. type carries a lot of the weight here: ui text overlays must remain readable. color follows the philosophy: lighting/material palette intentional. layout, grid, and spacing follow the same logic: 3d canvas plus conventional ui controls. motion is part of it: camera/object motion, pointer interaction, loading states. product visualization, games, spatial portfolios, configurators. three.js/webgl when justified, css 3d for simple cards.">
+        <p class="entry-n">39</p>
+        <div class="entry-body">
+          <h3><a href="#style-39">Three Dimensional Immersive</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>3D/WebGL/CSS 3D used only when it materially improves experience. Best suited to product visualization, games, spatial portfolios and configurators. Type carries a lot of the weight here: UI text overlays must remain readable. Color follows the philosophy: lighting/material palette intentional. Layout, grid, and spacing follow the same logic: 3D canvas plus conventional UI controls. Motion is part of it: camera/object motion, pointer interaction, loading states.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>product visualization</li><li>games</li><li>spatial portfolios</li><li>configurators</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">Three.js/WebGL when justified, CSS 3D for simple cards.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Using 3D because available, no loading fallback.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-40" data-entry data-hay="spatial ui layered surfaces and depth create spatial hierarchy. it suits dashboards, productivity apps and immersive product sites. typography does much of the work: clear labels on floating panels. on color, depth via surfaces, opacity, blur, scale. the grid is part of the idea, not a container dropped on afterwards: floating panels, layered zones, depth hierarchy. dashboards, productivity apps, immersive product sites. z-index scale, shadow tokens, transform origins.">
+        <p class="entry-n">40</p>
+        <div class="entry-body">
+          <h3><a href="#style-40">Spatial UI</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Layered surfaces and depth create spatial hierarchy. It suits dashboards, productivity apps and immersive product sites. Typography does much of the work: clear labels on floating panels. On color, depth via surfaces, opacity, blur, scale. The grid is part of the idea, not a container dropped on afterwards: floating panels, layered zones, depth hierarchy.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>dashboards</li><li>productivity apps</li><li>immersive product sites</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">z-index scale, shadow tokens, transform origins.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Lost navigation due to too many layers.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-41" data-entry data-hay="organic curved forms, natural rhythms, less rigid but still aligned. it earns its place on wellness, food, nature, lifestyle and creative brands. typography is part of the brief: humanist/friendly fonts; relaxed line-height. the palette is specific: warm/earthy or naturally derived palette. structure carries the rest: curves and irregular shapes; hidden grid still exists. components are part of the brief: soft nav; hero with organic shapes; cards may be irregular/rounded; buttons friendly; images natural crops; icons hand/line. wellness, food, nature, lifestyle, creative brands. border-radius blobs, svg masks, organic dividers.">
+        <p class="entry-n">41</p>
+        <div class="entry-body">
+          <h3><a href="#style-41">Organic</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Curved forms, natural rhythms, less rigid but still aligned. It earns its place on wellness, food, nature, lifestyle and creative brands. Typography is part of the brief: humanist/friendly fonts; relaxed line-height. The palette is specific: warm/earthy or naturally derived palette. Structure carries the rest: curves and irregular shapes; hidden grid still exists. Components are part of the brief: soft nav; hero with organic shapes; cards may be irregular/rounded; buttons friendly; images natural crops; icons hand/line.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>wellness</li><li>food</li><li>nature</li><li>lifestyle</li><li>creative brands</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">border-radius blobs, SVG masks, organic dividers.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Random blobs unrelated to content.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-42" data-entry data-hay="nature inspired authentic environmental palette, imagery, and calm motion. it is built for outdoor, agriculture, sustainability, wellness and tourism. the type treatment is deliberate — natural humanist fonts; readable and calm. color is part of the definition rather than an afterthought: greens, earth, water, sky, stone; brand-authentic. layout decisions stay consistent with that: open, breathable, image-led when appropriate. it also has to survive real conditions: avoid low contrast earth tones. outdoor, agriculture, sustainability, wellness, tourism. image overlays, natural texture sparingly, color tokens.">
+        <p class="entry-n">42</p>
+        <div class="entry-body">
+          <h3><a href="#style-42">Nature Inspired</a> <span class="swatch" role="img" aria-label="Color cues: green, sky"><i style="background:#4b7a4a"></i><i style="background:#7ba3b8"></i></span></h3>
+          <p>Authentic environmental palette, imagery, and calm motion. It is built for outdoor, agriculture, sustainability, wellness and tourism. The type treatment is deliberate — natural humanist fonts; readable and calm. Color is part of the definition rather than an afterthought: greens, earth, water, sky, stone; brand-authentic. Layout decisions stay consistent with that: open, breathable, image-led when appropriate. It also has to survive real conditions: avoid low contrast earth tones.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>outdoor</li><li>agriculture</li><li>sustainability</li><li>wellness</li><li>tourism</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">image overlays, natural texture sparingly, color tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Superficial leaf decoration.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-43" data-entry data-hay="biophilic patterns/proportions inspired by natural systems; wellbeing and connection to nature. best suited to architecture, wellness, sustainable products, workplace and hospitality. type carries a lot of the weight here: calm serif/sans; generous line-height. color follows the philosophy: greens, earth tones, water tones, natural neutrals. layout, grid, and spacing follow the same logic: curves, natural ratios, sunlight/air metaphors. components are part of the brief: organic nav cues; hero natural materials; cards as calm surfaces; images of natural systems/materials. architecture, wellness, sustainable products, workplace, hospitality. svg curves, radial gradients, aspect ratios inspired by natural proportions.">
+        <p class="entry-n">43</p>
+        <div class="entry-body">
+          <h3><a href="#style-43">Biophilic</a> <span class="swatch" role="img" aria-label="Color cues: green"><i style="background:#4b7a4a"></i></span></h3>
+          <p>Patterns/proportions inspired by natural systems; wellbeing and connection to nature. Best suited to architecture, wellness, sustainable products, workplace and hospitality. Type carries a lot of the weight here: calm serif/sans; generous line-height. Color follows the philosophy: greens, earth tones, water tones, natural neutrals. Layout, grid, and spacing follow the same logic: curves, natural ratios, sunlight/air metaphors. Components are part of the brief: organic nav cues; hero natural materials; cards as calm surfaces; images of natural systems/materials.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>architecture</li><li>wellness</li><li>sustainable products</li><li>workplace</li><li>hospitality</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">SVG curves, radial gradients, aspect ratios inspired by natural proportions.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Random plant stickers without design logic.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-44" data-entry data-hay="handcrafted intentional imperfection, craft, custom illustration, human touch. it suits artisans, food, makers, local brands and creative portfolios. typography does much of the work: handwritten/display accents plus readable body. on color, warm palettes, textured surfaces. the grid is part of the idea, not a container dropped on afterwards: slight irregularity; controls remain predictable. it also has to survive real conditions: do not use handwritten fonts for essential body text. artisans, food, makers, local brands, creative portfolios. svg doodles, texture backgrounds, variable fonts.">
+        <p class="entry-n">44</p>
+        <div class="entry-body">
+          <h3><a href="#style-44">Handcrafted</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Intentional imperfection, craft, custom illustration, human touch. It suits artisans, food, makers, local brands and creative portfolios. Typography does much of the work: handwritten/display accents plus readable body. On color, warm palettes, textured surfaces. The grid is part of the idea, not a container dropped on afterwards: slight irregularity; controls remain predictable. It also has to survive real conditions: do not use handwritten fonts for essential body text.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>artisans</li><li>food</li><li>makers</li><li>local brands</li><li>creative portfolios</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">SVG doodles, texture backgrounds, variable fonts.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Messiness that harms usability.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-45" data-entry data-hay="illustrative illustration is a core communication system, not decoration. it earns its place on saas, education, consumer products, nonprofits and onboarding. typography is part of the brief: supports illustration tone; friendly or precise. the palette is specific: illustration palette aligns with ui tokens. structure carries the rest: illustrations anchor sections and explain concepts. saas, education, consumer products, nonprofits, onboarding. svg components, css variables in svg, lottie only when justified.">
+        <p class="entry-n">45</p>
+        <div class="entry-body">
+          <h3><a href="#style-45">Illustrative</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Illustration is a core communication system, not decoration. It earns its place on saaS, education, consumer products, nonprofits and onboarding. Typography is part of the brief: supports illustration tone; friendly or precise. The palette is specific: illustration palette aligns with UI tokens. Structure carries the rest: illustrations anchor sections and explain concepts.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>saaS</li><li>education</li><li>consumer products</li><li>nonprofits</li><li>onboarding</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">SVG components, CSS variables in SVG, Lottie only when justified.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Mixing unrelated illustration styles.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-46" data-entry data-hay="collage controlled layering of photography, typography, cutouts, and shapes. it is built for fashion, culture, music, campaigns and creative agencies. the type treatment is deliberate — bold typography with layered composition. color is part of the definition rather than an afterthought: palette unifies mixed media. layout decisions stay consistent with that: overlap controlled; hierarchy remains clear. depth and edges are handled the same way: layer shadows, torn/cut edges when appropriate. fashion, culture, music, campaigns, creative agencies. absolute layers, mix-blend-mode, masks, z-index tokens.">
+        <p class="entry-n">46</p>
+        <div class="entry-body">
+          <h3><a href="#style-46">Collage</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Controlled layering of photography, typography, cutouts, and shapes. It is built for fashion, culture, music, campaigns and creative agencies. The type treatment is deliberate — bold typography with layered composition. Color is part of the definition rather than an afterthought: palette unifies mixed media. Layout decisions stay consistent with that: overlap controlled; hierarchy remains clear. Depth and edges are handled the same way: layer shadows, torn/cut edges when appropriate.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>fashion</li><li>culture</li><li>music</li><li>campaigns</li><li>creative agencies</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">absolute layers, mix-blend-mode, masks, z-index tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Visual chaos, hidden CTAs.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-47" data-entry data-hay="scrapbook paper layers, annotations, stickers, tape, handwritten elements. best suited to personal brands, events, education and playful portfolios. type carries a lot of the weight here: handwritten accents plus readable body. color follows the philosophy: paper neutrals with playful accents. layout, grid, and spacing follow the same logic: layered paper pieces but structured content. in practice, that means avoid making text look scanned/low contrast. personal brands, events, education, playful portfolios. paper textures, rotated cards, pseudo-element tape.">
+        <p class="entry-n">47</p>
+        <div class="entry-body">
+          <h3><a href="#style-47">Scrapbook</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Paper layers, annotations, stickers, tape, handwritten elements. Best suited to personal brands, events, education and playful portfolios. Type carries a lot of the weight here: handwritten accents plus readable body. Color follows the philosophy: paper neutrals with playful accents. Layout, grid, and spacing follow the same logic: layered paper pieces but structured content. In practice, that means avoid making text look scanned/low contrast.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>personal brands</li><li>events</li><li>education</li><li>playful portfolios</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">paper textures, rotated cards, pseudo-element tape.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Overdecorated scrapbook that obscures content.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-48" data-entry data-hay="grunge distressed texture, roughness, rebellion, controlled disorder. it suits music, street culture and edgy campaigns. typography does much of the work: rough display fonts selectively; readable body. on color, dark neutrals, dirty whites, reds/yellows; distressed overlays. the grid is part of the idea, not a container dropped on afterwards: torn/irregular elements; hierarchy remains readable. depth and edges are handled the same way: torn borders, texture, low polish. music, street culture, edgy campaigns. texture overlays, masks, blend modes.">
+        <p class="entry-n">48</p>
+        <div class="entry-body">
+          <h3><a href="#style-48">Grunge</a> <span class="swatch" role="img" aria-label="Color cues: white, red, yellow"><i style="background:#f4f2ec"></i><i style="background:#b8452f"></i><i style="background:#cbb03c"></i></span></h3>
+          <p>Distressed texture, roughness, rebellion, controlled disorder. It suits music, street culture and edgy campaigns. Typography does much of the work: rough display fonts selectively; readable body. On color, dark neutrals, dirty whites, reds/yellows; distressed overlays. The grid is part of the idea, not a container dropped on afterwards: torn/irregular elements; hierarchy remains readable. Depth and edges are handled the same way: torn borders, texture, low polish.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>music</li><li>street culture</li><li>edgy campaigns</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">texture overlays, masks, blend modes.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Sacrificing accessibility for texture.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-49" data-entry data-hay="streetwear bold culture-led graphics, oversized labels, expressive layout. it earns its place on fashion, music, youth brands and drops. typography is part of the brief: bold condensed/display sans; oversized labels. the palette is specific: strong black/white plus brand colors; photo-led. structure carries the rest: unconventional composition with retail clarity. edges stay quiet: graphic borders, labels, collage edges. fashion, music, youth brands, drops. marquee, oversized type, image masks.">
+        <p class="entry-n">49</p>
+        <div class="entry-body">
+          <h3><a href="#style-49">Streetwear</a> <span class="swatch" role="img" aria-label="Color cues: black, white"><i style="background:#1c1c1c"></i><i style="background:#f4f2ec"></i></span></h3>
+          <p>Bold culture-led graphics, oversized labels, expressive layout. It earns its place on fashion, music, youth brands and drops. Typography is part of the brief: bold condensed/display sans; oversized labels. The palette is specific: strong black/white plus brand colors; photo-led. Structure carries the rest: unconventional composition with retail clarity. Edges stay quiet: graphic borders, labels, collage edges.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>fashion</li><li>music</li><li>youth brands</li><li>drops</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">marquee, oversized type, image masks.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Inauthentic cultural references, illegible hype design.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-50" data-entry data-hay="memphis playful postmodern shapes, patterns, bright color, asymmetry. it is built for playful brands, events, creative portfolios and education. the type treatment is deliberate — bold geometric sans; playful but readable. color is part of the definition rather than an afterthought: bright contrasting colors; black/white anchors. layout decisions stay consistent with that: asymmetry with clear hierarchy. playful brands, events, creative portfolios, education. css shapes, background patterns, pseudo-elements.">
+        <p class="entry-n">50</p>
+        <div class="entry-body">
+          <h3><a href="#style-50">Memphis</a> <span class="swatch" role="img" aria-label="Color cues: black, white"><i style="background:#1c1c1c"></i><i style="background:#f4f2ec"></i></span></h3>
+          <p>Playful postmodern shapes, patterns, bright color, asymmetry. It is built for playful brands, events, creative portfolios and education. The type treatment is deliberate — bold geometric sans; playful but readable. Color is part of the definition rather than an afterthought: bright contrasting colors; black/white anchors. Layout decisions stay consistent with that: asymmetry with clear hierarchy.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>playful brands</li><li>events</li><li>creative portfolios</li><li>education</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS shapes, background patterns, pseudo-elements.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Pattern overload obscuring content.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-51" data-entry data-hay="pop art bold color, comic/print references, repetition, graphic impact. best suited to campaigns, entertainment, products and events. type carries a lot of the weight here: strong display type; comic-inspired accents; readable body. color follows the philosophy: bright primaries, black outlines, halftones. layout, grid, and spacing follow the same logic: poster-like sections, repeated motifs. edges stay quiet: thick outlines, halftone textures. campaigns, entertainment, products, events. halftone backgrounds, outline type, css filters.">
+        <p class="entry-n">51</p>
+        <div class="entry-body">
+          <h3><a href="#style-51">Pop Art</a> <span class="swatch" role="img" aria-label="Color cues: black"><i style="background:#1c1c1c"></i></span></h3>
+          <p>Bold color, comic/print references, repetition, graphic impact. Best suited to campaigns, entertainment, products and events. Type carries a lot of the weight here: strong display type; comic-inspired accents; readable body. Color follows the philosophy: bright primaries, black outlines, halftones. Layout, grid, and spacing follow the same logic: poster-like sections, repeated motifs. Edges stay quiet: thick outlines, halftone textures.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>campaigns</li><li>entertainment</li><li>products</li><li>events</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">halftone backgrounds, outline type, CSS filters.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Comic gimmick drowning message.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-52" data-entry data-hay="playful friendly, expressive, approachable, delightful. it suits consumer apps, education, family brands and creator tools. typography does much of the work: friendly rounded/humanist sans; clear body. on color, expressive but controlled palette. the grid is part of the idea, not a container dropped on afterwards: comfortable spacing, soft shapes. interaction is quick delightful feedback. consumer apps, education, family brands, creator tools. rounded tokens, illustration components, state animations.">
+        <p class="entry-n">52</p>
+        <div class="entry-body">
+          <h3><a href="#style-52">Playful</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Friendly, expressive, approachable, delightful. It suits consumer apps, education, family brands and creator tools. Typography does much of the work: friendly rounded/humanist sans; clear body. On color, expressive but controlled palette. The grid is part of the idea, not a container dropped on afterwards: comfortable spacing, soft shapes. Interaction is quick delightful feedback.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>consumer apps</li><li>education</li><li>family brands</li><li>creator tools</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">rounded tokens, illustration components, state animations.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Childish tone for serious brand.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-53" data-entry data-hay="cartoon character-driven illustrated ui with bold outlines and expressive states. it earns its place on kids, games, playful brands and entertainment. typography is part of the brief: cartoon display for headings; readable body. the palette is specific: bright palette; strong outlines. structure carries the rest: exaggerated but clear; character/story moments. motion is part of it: character reactions, squash/stretch. kids, games, playful brands, entertainment. svg characters, css keyframes, sprite/lottie when justified.">
+        <p class="entry-n">53</p>
+        <div class="entry-body">
+          <h3><a href="#style-53">Cartoon</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Character-driven illustrated UI with bold outlines and expressive states. It earns its place on kids, games, playful brands and entertainment. Typography is part of the brief: cartoon display for headings; readable body. The palette is specific: bright palette; strong outlines. Structure carries the rest: exaggerated but clear; character/story moments. Motion is part of it: character reactions, squash/stretch.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>kids</li><li>games</li><li>playful brands</li><li>entertainment</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">SVG characters, CSS keyframes, sprite/Lottie when justified.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Mixed character styles, unreadable display text.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-54" data-entry data-hay="gamified progress, achievement, rewards, and feedback support product goals. it is built for learning, fitness, productivity, onboarding and communities. the type treatment is deliberate — clear progress labels and status hierarchy. color is part of the definition rather than an afterthought: status/reward palette; avoid random colors. layout decisions stay consistent with that: progress systems, levels, missions, rewards. the components follow suit: dashboard/quest nav; cards for missions; buttons show reward/action; forms reward completion. learning, fitness, productivity, onboarding, communities. progress components, achievement modals, state machines.">
+        <p class="entry-n">54</p>
+        <div class="entry-body">
+          <h3><a href="#style-54">Gamified</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Progress, achievement, rewards, and feedback support product goals. It is built for learning, fitness, productivity, onboarding and communities. The type treatment is deliberate — clear progress labels and status hierarchy. Color is part of the definition rather than an afterthought: status/reward palette; avoid random colors. Layout decisions stay consistent with that: progress systems, levels, missions, rewards. The components follow suit: dashboard/quest nav; cards for missions; buttons show reward/action; forms reward completion.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>learning</li><li>fitness</li><li>productivity</li><li>onboarding</li><li>communities</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">progress components, achievement modals, state machines.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Points/badges with no user value.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-55" data-entry data-hay="pixel art crisp bitmap aesthetic and retro ui patterns. best suited to games, retro portfolios and niche creative sites. type carries a lot of the weight here: pixel/bitmap headings; readable body alternative if needed. color follows the philosophy: limited palettes; high contrast. layout, grid, and spacing follow the same logic: grid-aligned, tile-based, crisp edges. games, retro portfolios, niche creative sites. image-rendering: pixelated, stepped keyframes.">
+        <p class="entry-n">55</p>
+        <div class="entry-body">
+          <h3><a href="#style-55">Pixel Art</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Crisp bitmap aesthetic and retro UI patterns. Best suited to games, retro portfolios and niche creative sites. Type carries a lot of the weight here: pixel/bitmap headings; readable body alternative if needed. Color follows the philosophy: limited palettes; high contrast. Layout, grid, and spacing follow the same logic: grid-aligned, tile-based, crisp edges.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>games</li><li>retro portfolios</li><li>niche creative sites</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">image-rendering: pixelated, stepped keyframes.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Smoothed pixel assets, illegible text.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-56" data-entry data-hay="arcade energetic game interface with scoreboards, indicators, high contrast. it suits games, events, promotions and playful apps. typography does much of the work: arcade/display headings; clear ui text. on color, neon/primary high contrast; dark often. the grid is part of the idea, not a container dropped on afterwards: scoreboard panels, indicators, game-like flow. the components follow suit: start/select nav; hero like arcade attract screen; buttons big; cards as levels. games, events, promotions, playful apps. css counters, keyframes, neon tokens.">
+        <p class="entry-n">56</p>
+        <div class="entry-body">
+          <h3><a href="#style-56">Arcade</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Energetic game interface with scoreboards, indicators, high contrast. It suits games, events, promotions and playful apps. Typography does much of the work: arcade/display headings; clear UI text. On color, neon/primary high contrast; dark often. The grid is part of the idea, not a container dropped on afterwards: scoreboard panels, indicators, game-like flow. The components follow suit: start/select nav; hero like arcade attract screen; buttons big; cards as levels.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>games</li><li>events</li><li>promotions</li><li>playful apps</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS counters, keyframes, neon tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Motion overload, inaccessible flashes.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-57" data-entry data-hay="vaporwave surreal nostalgia, pastel neon, retro computer graphics, grids. it earns its place on music, art, culture and experimental landing pages. typography is part of the brief: retro digital/display accents; readable body. the palette is specific: pastel neon pinks, purples, cyans; gradients controlled. structure carries the rest: surreal compositions, grids, statues/computer motifs. components are part of the brief: hero atmospheric; cards translucent/retro; buttons graphic. music, art, culture, experimental landing pages. gradient backgrounds, grid planes, blend modes.">
+        <p class="entry-n">57</p>
+        <div class="entry-body">
+          <h3><a href="#style-57">Vaporwave</a> <span class="swatch" role="img" aria-label="Color cues: cyan, purple, pink"><i style="background:#3d8fa0"></i><i style="background:#6a4a86"></i><i style="background:#cf7b95"></i></span></h3>
+          <p>Surreal nostalgia, pastel neon, retro computer graphics, grids. It earns its place on music, art, culture and experimental landing pages. Typography is part of the brief: retro digital/display accents; readable body. The palette is specific: pastel neon pinks, purples, cyans; gradients controlled. Structure carries the rest: surreal compositions, grids, statues/computer motifs. Components are part of the brief: hero atmospheric; cards translucent/retro; buttons graphic.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>music</li><li>art</li><li>culture</li><li>experimental landing pages</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">gradient backgrounds, grid planes, blend modes.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Meme aesthetics without hierarchy.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-58" data-entry data-hay="synthwave dark retro-future with neon grids and sunset gradients. it is built for music, gaming, creative tech and events. the type treatment is deliberate — retro futuristic headings; readable sans body. color is part of the definition rather than an afterthought: dark navy/purple, neon cyan/magenta/orange. layout decisions stay consistent with that: horizon/grid motifs; strong hero. it also has to survive real conditions: do not glow every component. music, gaming, creative tech, events. radial/linear gradients, grid backgrounds, text-shadow sparingly.">
+        <p class="entry-n">58</p>
+        <div class="entry-body">
+          <h3><a href="#style-58">Synthwave</a> <span class="swatch" role="img" aria-label="Color cues: orange, cyan, navy"><i style="background:#c9762a"></i><i style="background:#3d8fa0"></i><i style="background:#26344f"></i></span></h3>
+          <p>Dark retro-future with neon grids and sunset gradients. It is built for music, gaming, creative tech and events. The type treatment is deliberate — retro futuristic headings; readable sans body. Color is part of the definition rather than an afterthought: dark navy/purple, neon cyan/magenta/orange. Layout decisions stay consistent with that: horizon/grid motifs; strong hero. It also has to survive real conditions: do not glow every component.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>music</li><li>gaming</li><li>creative tech</li><li>events</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">radial/linear gradients, grid backgrounds, text-shadow sparingly.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Overloaded glow and low contrast.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-59" data-entry data-hay="monochrome one dominant color family with hierarchy from shade, scale, contrast. best suited to portfolios, luxury, editorial, corporate and minimal apps. type carries a lot of the weight here: typography carries hierarchy. color follows the philosophy: one hue/neutral family; accent only if intentionally introduced. layout, grid, and spacing follow the same logic: clean layout; contrast defines surfaces. components are part of the brief: simple nav; hero typography/image-led; cards use tonal surfaces; buttons rely on contrast. portfolios, luxury, editorial, corporate, minimal apps. hsl tokens, color-mix, contrast testing.">
+        <p class="entry-n">59</p>
+        <div class="entry-body">
+          <h3><a href="#style-59">Monochrome</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>One dominant color family with hierarchy from shade, scale, contrast. Best suited to portfolios, luxury, editorial, corporate and minimal apps. Type carries a lot of the weight here: typography carries hierarchy. Color follows the philosophy: one hue/neutral family; accent only if intentionally introduced. Layout, grid, and spacing follow the same logic: clean layout; contrast defines surfaces. Components are part of the brief: simple nav; hero typography/image-led; cards use tonal surfaces; buttons rely on contrast.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>portfolios</li><li>luxury</li><li>editorial</li><li>corporate</li><li>minimal apps</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">HSL tokens, color-mix, contrast testing.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Low-contrast sameness.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-60" data-entry data-hay="duotone two dominant colors used consistently across ui and imagery. it suits campaigns, portfolios, editorial and brand systems. typography does much of the work: clear hierarchy; color should not replace readability. on color, two colors plus neutrals if needed; image treatment duotone. the grid is part of the idea, not a container dropped on afterwards: any grid; color pairing drives identity. campaigns, portfolios, editorial, brand systems. css filters, blend modes, duotone overlays.">
+        <p class="entry-n">60</p>
+        <div class="entry-body">
+          <h3><a href="#style-60">Duotone</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Two dominant colors used consistently across UI and imagery. It suits campaigns, portfolios, editorial and brand systems. Typography does much of the work: clear hierarchy; color should not replace readability. On color, two colors plus neutrals if needed; image treatment duotone. The grid is part of the idea, not a container dropped on afterwards: any grid; color pairing drives identity.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>campaigns</li><li>portfolios</li><li>editorial</li><li>brand systems</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS filters, blend modes, duotone overlays.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Adding many extra accent colors.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-61" data-entry data-hay="gradient heavy gradients are a controlled core visual language, not decoration. it earns its place on creative tech, events, energetic brands and digital products. typography is part of the brief: text contrast must be protected; use solid text surfaces if needed. the palette is specific: defined gradient palette; related hues; semantic gradients sparingly. structure carries the rest: gradients anchor sections/backgrounds/surfaces. in practice, that means avoid heavy animated gradients on low-power devices. creative tech, events, energetic brands, digital products. css custom gradient tokens, background-size, masks for gradient borders.">
+        <p class="entry-n">61</p>
+        <div class="entry-body">
+          <h3><a href="#style-61">Gradient Heavy</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Gradients are a controlled core visual language, not decoration. It earns its place on creative tech, events, energetic brands and digital products. Typography is part of the brief: text contrast must be protected; use solid text surfaces if needed. The palette is specific: defined gradient palette; related hues; semantic gradients sparingly. Structure carries the rest: gradients anchor sections/backgrounds/surfaces. In practice, that means avoid heavy animated gradients on low-power devices.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>creative tech</li><li>events</li><li>energetic brands</li><li>digital products</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS custom gradient tokens, background-size, masks for gradient borders.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Random unrelated gradients, purple-blue default slop.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-62" data-entry data-hay="pastel soft, friendly, low-intensity color with comfortable spacing. it is built for wellness, education, beauty and consumer apps. the type treatment is deliberate — friendly sans; enough weight for contrast. color is part of the definition rather than an afterthought: soft palette; darker text/accent for readability. layout decisions stay consistent with that: airy, calm; gentle surfaces. depth and edges are handled the same way: soft radius/shadows/borders. wellness, education, beauty, consumer apps. hsl tokens, darker semantic text, tinted surfaces.">
+        <p class="entry-n">62</p>
+        <div class="entry-body">
+          <h3><a href="#style-62">Pastel</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Soft, friendly, low-intensity color with comfortable spacing. It is built for wellness, education, beauty and consumer apps. The type treatment is deliberate — friendly sans; enough weight for contrast. Color is part of the definition rather than an afterthought: soft palette; darker text/accent for readability. Layout decisions stay consistent with that: airy, calm; gentle surfaces. Depth and edges are handled the same way: soft radius/shadows/borders.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>wellness</li><li>education</li><li>beauty</li><li>consumer apps</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">HSL tokens, darker semantic text, tinted surfaces.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Low contrast and overly childish feel.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-63" data-entry data-hay="high contrast strong separation, legibility, and bold impact. best suited to accessibility-first sites, editorial, portfolios and brutalist/modern brands. type carries a lot of the weight here: bold hierarchy; readable sizes. color follows the philosophy: black/white or highly separated palette; accents purposeful. layout, grid, and spacing follow the same logic: clear boundaries and hierarchy. in practice, that means contrast should improve accessibility, not create glare only. accessibility-first sites, editorial, portfolios, brutalist/modern brands. forced-colors consideration, visible focus, border tokens.">
+        <p class="entry-n">63</p>
+        <div class="entry-body">
+          <h3><a href="#style-63">High Contrast</a> <span class="swatch" role="img" aria-label="Color cues: black, white"><i style="background:#1c1c1c"></i><i style="background:#f4f2ec"></i></span></h3>
+          <p>Strong separation, legibility, and bold impact. Best suited to accessibility-first sites, editorial, portfolios and brutalist/modern brands. Type carries a lot of the weight here: bold hierarchy; readable sizes. Color follows the philosophy: black/white or highly separated palette; accents purposeful. Layout, grid, and spacing follow the same logic: clear boundaries and hierarchy. In practice, that means contrast should improve accessibility, not create glare only.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>accessibility-first sites</li><li>editorial</li><li>portfolios</li><li>brutalist/modern brands</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">forced-colors consideration, visible focus, border tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Contrast used as aggression with poor spacing.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-64" data-entry data-hay="typography first type is the primary visual element; images secondary. it suits portfolios, agencies, editorial and minimalist/luxury sites. typography does much of the work: use scale, weight, width, tracking, alignment, spacing; responsive type essential. on color, often restrained so type dominates. the grid is part of the idea, not a container dropped on afterwards: text compositions, baseline rhythm, strong alignment. depth and edges are handled the same way: minimal; rules/spacing replace surfaces. portfolios, agencies, editorial, minimalist/luxury sites. clamp(), variable fonts, balanced text, container queries.">
+        <p class="entry-n">64</p>
+        <div class="entry-body">
+          <h3><a href="#style-64">Typography First</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Type is the primary visual element; images secondary. It suits portfolios, agencies, editorial and minimalist/luxury sites. Typography does much of the work: use scale, weight, width, tracking, alignment, spacing; responsive type essential. On color, often restrained so type dominates. The grid is part of the idea, not a container dropped on afterwards: text compositions, baseline rhythm, strong alignment. Depth and edges are handled the same way: minimal; rules/spacing replace surfaces.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>portfolios</li><li>agencies</li><li>editorial</li><li>minimalist/luxury sites</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">clamp(), variable fonts, balanced text, container queries.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Beautiful but unreadable type, too many fonts.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-65" data-entry data-hay="experimental typography push type composition, variable fonts, kinetic or transformed text while preserving essential readability. it earns its place on creative agencies, art, campaigns and portfolios. typography is part of the brief: variable fonts, unusual alignment, kinetic type; body remains readable. the palette is specific: supports type experiments; high contrast. structure carries the rest: type may define layout; unconventional compositions. creative agencies, art, campaigns, portfolios. variable font axes, svg text, css transforms, reduced motion.">
+        <p class="entry-n">65</p>
+        <div class="entry-body">
+          <h3><a href="#style-65">Experimental Typography</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Push type composition, variable fonts, kinetic or transformed text while preserving essential readability. It earns its place on creative agencies, art, campaigns and portfolios. Typography is part of the brief: variable fonts, unusual alignment, kinetic type; body remains readable. The palette is specific: supports type experiments; high contrast. Structure carries the rest: type may define layout; unconventional compositions.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>creative agencies</li><li>art</li><li>campaigns</li><li>portfolios</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">variable font axes, SVG text, CSS transforms, reduced motion.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Warped body copy, inaccessible text-as-image.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-66" data-entry data-hay="experimental break conventions intentionally while preserving usable logic. it is built for art, agencies, portfolios, campaigns and advanced interactions. the type treatment is deliberate — can be unconventional; critical content readable. color is part of the definition rather than an afterthought: may be surprising but systemized. layout decisions stay consistent with that: novel layout/navigation/motion with clear rationale. interaction is prototype and test; avoid hidden traps. art, agencies, portfolios, campaigns, advanced interactions. progressive enhancement, feature queries, fallback states.">
+        <p class="entry-n">66</p>
+        <div class="entry-body">
+          <h3><a href="#style-66">Experimental</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Break conventions intentionally while preserving usable logic. It is built for art, agencies, portfolios, campaigns and advanced interactions. The type treatment is deliberate — can be unconventional; critical content readable. Color is part of the definition rather than an afterthought: may be surprising but systemized. Layout decisions stay consistent with that: novel layout/navigation/motion with clear rationale. Interaction is prototype and test; avoid hidden traps.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>art</li><li>agencies</li><li>portfolios</li><li>campaigns</li><li>advanced interactions</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">progressive enhancement, feature queries, fallback states.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Confusion for its own sake.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-67" data-entry data-hay="anti design intentional visual conflict and apparent disorder that is still designed. best suited to art, fashion, culture and provocative campaigns. type carries a lot of the weight here: irregular type choices; essential text readable. color follows the philosophy: clashing/unconventional colors with controlled hierarchy. layout, grid, and spacing follow the same logic: disruptive composition; hidden organizing logic. edges stay quiet: raw, mismatched, intentionally conflicting. art, fashion, culture, provocative campaigns. controlled irregular classes, intentionally inconsistent tokens.">
+        <p class="entry-n">67</p>
+        <div class="entry-body">
+          <h3><a href="#style-67">Anti Design</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Intentional visual conflict and apparent disorder that is still designed. Best suited to art, fashion, culture and provocative campaigns. Type carries a lot of the weight here: irregular type choices; essential text readable. Color follows the philosophy: clashing/unconventional colors with controlled hierarchy. Layout, grid, and spacing follow the same logic: disruptive composition; hidden organizing logic. Edges stay quiet: raw, mismatched, intentionally conflicting.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>art</li><li>fashion</li><li>culture</li><li>provocative campaigns</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">controlled irregular classes, intentionally inconsistent tokens.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Random bad design, broken UX.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-68" data-entry data-hay="maximalism dense, layered, expressive abundance with maintained hierarchy. it suits fashion, culture, entertainment and expressive brands. typography does much of the work: multiple expressive type treatments, but assigned roles. on color, rich palettes/patterns; tokens prevent chaos. the grid is part of the idea, not a container dropped on afterwards: layered compositions, patterns, imagery, type. interaction is use carefully; too much motion overwhelms. fashion, culture, entertainment, expressive brands. z-index system, pattern tokens, responsive layer hiding.">
+        <p class="entry-n">68</p>
+        <div class="entry-body">
+          <h3><a href="#style-68">Maximalism</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Dense, layered, expressive abundance with maintained hierarchy. It suits fashion, culture, entertainment and expressive brands. Typography does much of the work: multiple expressive type treatments, but assigned roles. On color, rich palettes/patterns; tokens prevent chaos. The grid is part of the idea, not a container dropped on afterwards: layered compositions, patterns, imagery, type. Interaction is use carefully; too much motion overwhelms.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>fashion</li><li>culture</li><li>entertainment</li><li>expressive brands</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">z-index system, pattern tokens, responsive layer hiding.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>No hierarchy, every element shouting.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-69" data-entry data-hay="minimal maximalism restrained base with one or a few dramatic elements. it earns its place on premium portfolios, campaigns and modern brands. typography is part of the brief: one enormous headline or dramatic font moment; rest controlled. the palette is specific: one dominant color/image/animation; restrained elsewhere. structure carries the rest: clean layout around a focal visual event. motion is part of it: one signature animation, not many. premium portfolios, campaigns, modern brands. clamp huge type, isolated animation component.">
+        <p class="entry-n">69</p>
+        <div class="entry-body">
+          <h3><a href="#style-69">Minimal Maximalism</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Restrained base with one or a few dramatic elements. It earns its place on premium portfolios, campaigns and modern brands. Typography is part of the brief: one enormous headline or dramatic font moment; rest controlled. The palette is specific: one dominant color/image/animation; restrained elsewhere. Structure carries the rest: clean layout around a focal visual event. Motion is part of it: one signature animation, not many.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>premium portfolios</li><li>campaigns</li><li>modern brands</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">clamp huge type, isolated animation component.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Adding multiple competing dramatic effects.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-70" data-entry data-hay="soft ui comfortable muted surfaces, rounded shapes, gentle depth. it is built for consumer apps, wellness, productivity and dashboards. the type treatment is deliberate — friendly modern sans; medium weights. color is part of the definition rather than an afterthought: muted palette, soft neutrals, sufficient contrast. layout decisions stay consistent with that: comfortable spacing, rounded panels. consumer apps, wellness, productivity, dashboards. radius/shadow tokens, muted hsl palette.">
+        <p class="entry-n">70</p>
+        <div class="entry-body">
+          <h3><a href="#style-70">Soft UI</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Comfortable muted surfaces, rounded shapes, gentle depth. It is built for consumer apps, wellness, productivity and dashboards. The type treatment is deliberate — friendly modern sans; medium weights. Color is part of the definition rather than an afterthought: muted palette, soft neutrals, sufficient contrast. Layout decisions stay consistent with that: comfortable spacing, rounded panels.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>consumer apps</li><li>wellness</li><li>productivity</li><li>dashboards</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">radius/shadow tokens, muted HSL palette.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Over-soft low-contrast neumorphism.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-71" data-entry data-hay="friendly saas saas structure plus approachable illustration, colors, and shapes. best suited to smb saas, education tools and hr/productivity software. type carries a lot of the weight here: friendly sans; approachable headings. color follows the philosophy: warm/friendly palette; semantic product colors. layout, grid, and spacing follow the same logic: saas conversion sections with comfort and clarity. motion is part of it: delightful microinteractions, not childish. smb saas, education tools, hr/productivity software. component variants, illustration slots, pricing tables.">
+        <p class="entry-n">71</p>
+        <div class="entry-body">
+          <h3><a href="#style-71">Friendly SaaS</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>SaaS structure plus approachable illustration, colors, and shapes. Best suited to SMB SaaS, education tools and HR/productivity software. Type carries a lot of the weight here: friendly sans; approachable headings. Color follows the philosophy: warm/friendly palette; semantic product colors. Layout, grid, and spacing follow the same logic: saaS conversion sections with comfort and clarity. Motion is part of it: delightful microinteractions, not childish.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>SMB SaaS</li><li>education tools</li><li>HR/productivity software</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">component variants, illustration slots, pricing tables.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Childish visuals for serious product, generic SaaS layout.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-72" data-entry data-hay="clean ecommerce products first; reduce friction and distraction. it suits retail, dtc, catalogs and marketplaces. typography does much of the work: clear product names/prices; hierarchy for filters and actions. on color, neutral ui; brand accent for purchase actions. the grid is part of the idea, not a container dropped on afterwards: efficient product grids, filtering, product detail hierarchy. the components follow suit: simple category nav; hero only if it supports shopping; product cards clean; buttons obvious; forms checkout-friendly. retail, dtc, catalogs, marketplaces. responsive product grids, image aspect ratios, skeleton loading.">
+        <p class="entry-n">72</p>
+        <div class="entry-body">
+          <h3><a href="#style-72">Clean Ecommerce</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Products first; reduce friction and distraction. It suits retail, DTC, catalogs and marketplaces. Typography does much of the work: clear product names/prices; hierarchy for filters and actions. On color, neutral UI; brand accent for purchase actions. The grid is part of the idea, not a container dropped on afterwards: efficient product grids, filtering, product detail hierarchy. The components follow suit: simple category nav; hero only if it supports shopping; product cards clean; buttons obvious; forms checkout-friendly.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>retail</li><li>DTC</li><li>catalogs</li><li>marketplaces</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">responsive product grids, image aspect ratios, skeleton loading.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Promotional clutter, styling that competes with products.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-73" data-entry data-hay="editorial ecommerce shopping blended with magazine storytelling and contextual recommendations. it earns its place on fashion, home, lifestyle and premium products. typography is part of the brief: editorial headings/captions plus clear product info. the palette is specific: supports brand/editorial mood. structure carries the rest: magazine spreads, product narratives, contextual modules. components are part of the brief: hero story; shoppable editorial sections; product cards integrated; ctas understated but clear. fashion, home, lifestyle, premium products. grid areas, product chips, quick view panels.">
+        <p class="entry-n">73</p>
+        <div class="entry-body">
+          <h3><a href="#style-73">Editorial Ecommerce</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Shopping blended with magazine storytelling and contextual recommendations. It earns its place on fashion, home, lifestyle and premium products. Typography is part of the brief: editorial headings/captions plus clear product info. The palette is specific: supports brand/editorial mood. Structure carries the rest: magazine spreads, product narratives, contextual modules. Components are part of the brief: hero story; shoppable editorial sections; product cards integrated; CTAs understated but clear.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>fashion</li><li>home</li><li>lifestyle</li><li>premium products</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">grid areas, product chips, quick view panels.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Beautiful story with unclear purchasing path.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-74" data-entry data-hay="luxury ecommerce premium product presentation with refined, minimal purchasing controls. it is built for jewelry, fashion, watches, beauty and high-end home. the type treatment is deliberate — elegant product names, refined pricing, sophisticated scale. color is part of the definition rather than an afterthought: restrained neutrals/metallic accents. layout decisions stay consistent with that: large imagery, sparse interface, careful pdp hierarchy. it also has to survive real conditions: large images optimized; purchase path accessible. jewelry, fashion, watches, beauty, high-end home. image galleries, sticky product info, aspect-ratio.">
+        <p class="entry-n">74</p>
+        <div class="entry-body">
+          <h3><a href="#style-74">Luxury Ecommerce</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Premium product presentation with refined, minimal purchasing controls. It is built for jewelry, fashion, watches, beauty and high-end home. The type treatment is deliberate — elegant product names, refined pricing, sophisticated scale. Color is part of the definition rather than an afterthought: restrained neutrals/metallic accents. Layout decisions stay consistent with that: large imagery, sparse interface, careful PDP hierarchy. It also has to survive real conditions: large images optimized; purchase path accessible.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>jewelry</li><li>fashion</li><li>watches</li><li>beauty</li><li>high-end home</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">image galleries, sticky product info, aspect-ratio.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Hiding price/add-to-cart for aesthetics, promo clutter.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-75" data-entry data-hay="portfolio work samples first; creator identity supports but does not obscure work. best suited to designers, developers, artists, agencies and photographers. type carries a lot of the weight here: strong project titles; case study readability. color follows the philosophy: can be personal brand; avoid overpowering project images. layout, grid, and spacing follow the same logic: large project imagery, case study flow, easy exploration. designers, developers, artists, agencies, photographers. project grid, case-study template, media components.">
+        <p class="entry-n">75</p>
+        <div class="entry-body">
+          <h3><a href="#style-75">Portfolio</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Work samples first; creator identity supports but does not obscure work. Best suited to designers, developers, artists, agencies and photographers. Type carries a lot of the weight here: strong project titles; case study readability. Color follows the philosophy: can be personal brand; avoid overpowering project images. Layout, grid, and spacing follow the same logic: large project imagery, case study flow, easy exploration.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>designers</li><li>developers</li><li>artists</li><li>agencies</li><li>photographers</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">project grid, case-study template, media components.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Fancy shell that hides work.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-76" data-entry data-hay="creative agency expressive identity, portfolio focus, confident experimentation. it suits agencies, studios and creative consultancies. typography does much of the work: expressive typography; clear case-study body. on color, brand-forward; can be bold but systemized. the grid is part of the idea, not a container dropped on afterwards: unusual grids, motion, portfolio modules. it also has to survive real conditions: experimental interactions need fallbacks. agencies, studios, creative consultancies. grid experiments, hover previews, page transitions.">
+        <p class="entry-n">76</p>
+        <div class="entry-body">
+          <h3><a href="#style-76">Creative Agency</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Expressive identity, portfolio focus, confident experimentation. It suits agencies, studios and creative consultancies. Typography does much of the work: expressive typography; clear case-study body. On color, brand-forward; can be bold but systemized. The grid is part of the idea, not a container dropped on afterwards: unusual grids, motion, portfolio modules. It also has to survive real conditions: experimental interactions need fallbacks.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>agencies</li><li>studios</li><li>creative consultancies</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">grid experiments, hover previews, page transitions.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Copying common agency templates, style over case studies.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-77" data-entry data-hay="architecture strict layouts, whitespace, restrained type, photography and plans dominate. it earns its place on architecture firms, interiors, real estate and design practices. typography is part of the brief: restrained sans/serif; precise captions/specs. the palette is specific: neutral palette; image-led. structure carries the rest: strict grids, generous whitespace, project information elegantly organized. in practice, that means preserve image aspect ratios and captions. architecture firms, interiors, real estate, design practices. css grid, aspect-ratio, caption systems.">
+        <p class="entry-n">77</p>
+        <div class="entry-body">
+          <h3><a href="#style-77">Architecture</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Strict layouts, whitespace, restrained type, photography and plans dominate. It earns its place on architecture firms, interiors, real estate and design practices. Typography is part of the brief: restrained sans/serif; precise captions/specs. The palette is specific: neutral palette; image-led. Structure carries the rest: strict grids, generous whitespace, project information elegantly organized. In practice, that means preserve image aspect ratios and captions.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>architecture firms</li><li>interiors</li><li>real estate</li><li>design practices</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CSS grid, aspect-ratio, caption systems.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Decorative UI competing with architecture.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-78" data-entry data-hay="photography first images are primary; ui stays minimal and preserves media quality. it is built for photographers, travel, fashion, architecture and galleries. the type treatment is deliberate — complementary typography, never competing. color is part of the definition rather than an afterthought: neutral/dark/light based on photo treatment. layout decisions stay consistent with that: image grids, full-bleed media, careful crops. depth and edges are handled the same way: minimal overlays; no excessive effects. photographers, travel, fashion, architecture, galleries. picture/srcset, aspect-ratio, object-fit, lazy loading.">
+        <p class="entry-n">78</p>
+        <div class="entry-body">
+          <h3><a href="#style-78">Photography First</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Images are primary; UI stays minimal and preserves media quality. It is built for photographers, travel, fashion, architecture and galleries. The type treatment is deliberate — complementary typography, never competing. Color is part of the definition rather than an afterthought: neutral/dark/light based on photo treatment. Layout decisions stay consistent with that: image grids, full-bleed media, careful crops. Depth and edges are handled the same way: minimal overlays; no excessive effects.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>photographers</li><li>travel</li><li>fashion</li><li>architecture</li><li>galleries</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">picture/srcset, aspect-ratio, object-fit, lazy loading.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Heavy overlays and UI clutter.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-79" data-entry data-hay="landing page optimize around one primary objective with clear value and proof. best suited to campaigns, product launches, lead generation and waitlists. type carries a lot of the weight here: clear headline, skimmable benefits, strong cta copy. color follows the philosophy: brand palette supports conversion hierarchy. layout, grid, and spacing follow the same logic: hero, value, evidence, objections, cta; remove distractions where appropriate. in practice, that means fast loading and cta visibility on mobile. campaigns, product launches, lead generation, waitlists. cta sections, faq accordion, sticky mobile cta if useful.">
+        <p class="entry-n">79</p>
+        <div class="entry-body">
+          <h3><a href="#style-79">Landing Page</a> <span class="swatch" role="img" aria-label="Color cues: derived"><i style="background:#4a4f5a"></i></span></h3>
+          <p>Optimize around one primary objective with clear value and proof. Best suited to campaigns, product launches, lead generation and waitlists. Type carries a lot of the weight here: clear headline, skimmable benefits, strong CTA copy. Color follows the philosophy: brand palette supports conversion hierarchy. Layout, grid, and spacing follow the same logic: hero, value, evidence, objections, CTA; remove distractions where appropriate. In practice, that means fast loading and CTA visibility on mobile.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>campaigns</li><li>product launches</li><li>lead generation</li><li>waitlists</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">CTA sections, FAQ accordion, sticky mobile CTA if useful.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Too many goals, generic hero, fake proof.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+      <article class="entry" id="style-80" data-entry data-hay="documentation information retrieval, scanning, readability, code clarity. it suits docs, knowledge bases, api references and internal guides. typography does much of the work: readable body, clear headings, monospace code. on color, neutral light/dark; accessible code syntax. the grid is part of the idea, not a container dropped on afterwards: persistent nav, search, toc, anchors, content width. docs, knowledge bases, api references, internal guides. semantic headings, anchor links, sticky toc, syntax highlight.">
+        <p class="entry-n">80</p>
+        <div class="entry-body">
+          <h3><a href="#style-80">Documentation</a> <span class="swatch" role="img" aria-label="Color cues: tonal"><i style="background:#5a5f6b"></i></span></h3>
+          <p>Information retrieval, scanning, readability, code clarity. It suits docs, knowledge bases, API references and internal guides. Typography does much of the work: readable body, clear headings, monospace code. On color, neutral light/dark; accessible code syntax. The grid is part of the idea, not a container dropped on afterwards: persistent nav, search, TOC, anchors, content width.</p>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Best for</dt>
+              <dd><ul class="tags"><li>docs</li><li>knowledge bases</li><li>API references</li><li>internal guides</li></ul></dd>
+            </div>
+            <div class="fact">
+              <dt>CSS / patterns</dt>
+              <dd class="patterns">semantic headings, anchor links, sticky TOC, syntax highlight.</dd>
+            </div>
+            <div class="fact">
+              <dt>Avoid</dt>
+              <dd class="avoid"><strong>Mistakes to avoid</strong>Marketing fluff in docs, hidden navigation.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+
+      <div class="empty" id="empty" hidden>
+        <h2>No styles match &ldquo;<span id="empty-term"></span>&rdquo;</h2>
+        <p>The catalogue is filtered as you type, across style names, descriptions, best-for tags and CSS patterns. Nothing matched that combination.</p>
+        <p>To get results, try one of these:</p>
+        <ul>
+          <li>Use fewer words &mdash; a single term such as <code>grid</code>, <code>dark</code> or <code>portfolio</code> matches far more than a full phrase.</li>
+          <li>Search for a use case (<code>developer</code>, <code>ecommerce</code>, <code>wellness</code>) or a technique (<code>backdrop-filter</code>, <code>box-shadow</code>, <code>subgrid</code>).</li>
+          <li>Check the spelling &mdash; matching is case-insensitive but not fuzzy, so partial words match but typos do not.</li>
+        </ul>
+        <button type="button" id="empty-reset">Show all 80 styles</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>80 of 80 style cards transcribed from <code>skills/web-design-styles/references/styles.md</code>. Combination notes condensed from <code>combinations.md</code>.</p>
+      <p>Single file, no dependencies, no network requests. Dark palette, one accent, system serif throughout.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var input = document.getElementById('q');
+      var clearBtn = document.getElementById('clear');
+      var countEl = document.getElementById('count');
+      var emptyEl = document.getElementById('empty');
+      var emptyTerm = document.getElementById('empty-term');
+      var resetBtn = document.getElementById('empty-reset');
+      var indexEl = document.getElementById('index');
+      var entries = Array.prototype.slice.call(document.querySelectorAll('[data-entry]'));
+      var total = entries.length;
+      var timer = null;
+
+      function apply(raw) {
+        var q = raw.trim().toLowerCase();
+        var terms = q.length ? q.split(/\s+/) : [];
+        var shown = 0;
+
+        for (var i = 0; i < entries.length; i++) {
+          var hay = entries[i].getAttribute('data-hay') || '';
+          var match = true;
+          for (var t = 0; t < terms.length; t++) {
+            if (hay.indexOf(terms[t]) === -1) { match = false; break; }
+          }
+          entries[i].hidden = !match;
+          if (match) shown++;
+        }
+
+        countEl.innerHTML = 'Showing <b>' + shown + '</b> of ' + total + ' styles' +
+          (terms.length ? ' for \u201c' + raw.trim() + '\u201d' : '');
+        clearBtn.hidden = !raw.length;
+        emptyEl.hidden = shown !== 0;
+        emptyTerm.textContent = raw.trim();
+        if (indexEl.open && terms.length) indexEl.open = false;
+      }
+
+      input.addEventListener('input', function () {
+        var value = input.value;
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () { apply(value); }, 120);
+      });
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && input.value) {
+          input.value = '';
+          if (timer) clearTimeout(timer);
+          apply('');
+        }
+      });
+
+      function reset() {
+        input.value = '';
+        if (timer) clearTimeout(timer);
+        apply('');
+        input.focus();
+      }
+      clearBtn.addEventListener('click', reset);
+      resetBtn.addEventListener('click', reset);
+
+      // filtering changes the layout: reset the sticky-header offset assumption
+      window.addEventListener('hashchange', function () { setTimeout(function () { window.scrollBy(0, 1); }, 0); });
+    })();
+  </script>
+</body>
+</html>

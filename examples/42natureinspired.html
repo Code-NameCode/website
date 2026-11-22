@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<!-- Style: Nature Inspired | 42natureinspired.html — Greenrow Farm, sustainable agriculture -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Greenrow Farm — regenerative farming, Kent</title>
+<style>
+:root{
+  /* authentic environmental palette */
+  --sky:#dfe9ee;
+  --sky-deep:#c3d7e0;
+  --field:#e9ecdc;
+  --leaf:#3f5d33;
+  --leaf-mid:#6d8a4e;
+  --soil:#6b4b32;
+  --soil-deep:#4a3322;
+  --water:#2f5a6b;
+  --straw:#c8a94a;
+  --paper:#f7f6ef;
+  --ink:#23291f;
+  --ink-soft:#4c5445;
+  --rule:#c6cbb8;
+
+  /* type — natural humanist, calm and readable */
+  --font-body:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --font-title:"Trebuchet MS","Gill Sans",var(--font-body);
+  --font-note:Georgia,"Iowan Old Style",serif;
+  --t-hero:clamp(2.3rem,5.6vw,4.2rem);
+  --t-h2:clamp(1.75rem,3.4vw,2.6rem);
+  --t-h3:clamp(1.1rem,1.6vw,1.3rem);
+  --t-body:clamp(1rem,.97rem + .16vw,1.08rem);
+  --t-small:.92rem;
+  --t-eyebrow:.76rem;
+  --lh:1.75;
+  --s-2:.5rem;
+  --s-3:.75rem;
+  --s-4:1rem;
+  --s-5:1.5rem;
+  --s-6:2rem;
+  --s-7:2.75rem;
+  --s-8:4rem;
+  --s-9:5.5rem;
+  --wrap:1160px;
+  --radius:6px;
+  --radius-lg:10px;
+  --shadow-soft:0 6px 22px -18px rgba(35,41,31,.5);
+  --dur:600ms;
+  --ease:cubic-bezier(.3,.7,.3,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--font-body);font-size:var(--t-body);line-height:var(--lh);
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--font-title);font-weight:600;line-height:1.2;margin:0}
+p{margin:0}
+a{color:inherit}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:clamp(1.1rem,4vw,2.4rem)}
+.eyebrow{
+  font-size:var(--t-eyebrow);letter-spacing:.22em;text-transform:uppercase;
+  font-weight:700;color:var(--leaf);display:flex;align-items:center;gap:.6rem;
+}
+.eyebrow::before{content:"";width:26px;height:2px;background:var(--leaf-mid)}
+.lead{max-width:64ch;color:var(--ink-soft)}
+:focus-visible{outline:3px solid var(--water);outline-offset:3px;border-radius:4px}
+
+/* ---------- header ---------- */
+.head{position:sticky;top:0;z-index:30;background:rgba(247,246,239,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule)}
+.head-in{display:flex;align-items:center;gap:var(--s-5);padding-block:.7rem}
+.brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;font-family:var(--font-title);font-size:1.35rem;font-weight:700;color:var(--leaf)}
+.nav{margin-left:auto}
+.nav ul{display:flex;gap:clamp(.8rem,2vw,1.9rem);list-style:none;margin:0;padding:0}
+.nav a{text-decoration:none;font-size:.95rem;padding:.7rem 0;display:block;border-bottom:2px solid transparent;min-height:44px;line-height:2.2}
+.nav a:hover{border-bottom-color:var(--leaf);color:var(--leaf)}
+.nav .cta{
+  background:var(--leaf);color:var(--paper);border:2px solid var(--leaf);border-radius:var(--radius);
+  padding:.55rem 1.1rem;min-height:44px;line-height:1.6;transition:background var(--dur) var(--ease)}
+.nav .cta:hover{background:var(--soil-deep);border-color:var(--soil-deep);color:#fff}
+.nav-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--rule);border-radius:var(--radius);padding:.6rem .9rem;min-height:44px;font:inherit;cursor:pointer}
+
+/* ---------- hero: full-bleed horizon ---------- */
+.hero{position:relative;background:linear-gradient(180deg,var(--sky) 0%,var(--sky-deep) 46%,var(--field) 47%,var(--field) 100%);padding-top:clamp(3rem,8vw,6rem);overflow:hidden}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(1.6rem,4vw,3.5rem);align-items:end;padding-bottom:clamp(2rem,5vw,3.5rem)}
+.hero h1{font-size:var(--t-hero);letter-spacing:-.015em;margin-block:.7rem 1rem}
+.hero h1 em{font-style:normal;color:var(--leaf)}
+.hero .lead{font-size:1.1em;max-width:52ch}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-5)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.85rem 1.6rem;border-radius:var(--radius);font:inherit;text-decoration:none;cursor:pointer;border:2px solid var(--ink);background:transparent;transition:transform var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.btn-primary{background:var(--ink);color:var(--paper)}
+.btn-primary:hover{background:var(--leaf);border-color:var(--leaf);transform:translateY(-2px)}
+.btn-quiet{border-color:var(--leaf);color:var(--leaf)}
+.btn-quiet:hover{background:var(--leaf);color:var(--paper)}
+.horizon{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto;z-index:1}
+.hero-totals{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border-top:1px solid var(--rule)}
+.hero-totals div{background:var(--paper);padding:var(--s-4) var(--s-3);text-align:center}
+.hero-totals b{display:block;font-family:var(--font-title);font-size:clamp(1.5rem,3vw,2.2rem);color:var(--leaf);line-height:1.1}
+.hero-totals span{font-size:var(--t-eyebrow);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+
+/* ---------- section shell ---------- */
+section{padding-block:var(--s-8)}
+.sec-head{max-width:62ch;margin-bottom:var(--s-7)}
+.sec-head h2{font-size:var(--t-h2);margin-block:.6rem .8rem;letter-spacing:-.01em}
+.sec-head .lead{margin-top:0}
+
+/* ---------- ledger: real table, not cards ---------- */
+.ledger{background:var(--field)}
+.ledger table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-soft)}
+caption{text-align:left;font-size:var(--t-small);color:var(--ink-soft);padding-bottom:var(--s-3)}
+th,td{padding:.9rem 1.1rem;text-align:left;border-bottom:1px solid var(--rule);font-size:.95rem}
+thead th{background:var(--leaf);color:var(--paper);font-size:var(--t-eyebrow);letter-spacing:.1em;text-transform:uppercase}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#f0f2e4}
+td.num{font-variant-numeric:tabular-nums;text-align:right}
+.crop{display:flex;align-items:center;gap:.7rem;font-weight:600}
+.swatch{width:20px;height:20px;border-radius:4px;flex:none;border:1px solid rgba(0,0,0,.15)}
+.ledger-foot{margin-top:var(--s-3);font-size:var(--t-small);color:var(--ink-soft)}
+
+/* ---------- alternating media rows ---------- */
+.practice-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,5vw,4rem);align-items:center;padding-block:var(--s-6)}
+.practice-row+.practice-row{border-top:1px solid var(--rule);padding-top:var(--s-7)}
+.practice-row.flip .media{order:2}
+.media{background:var(--sky);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-soft)}
+.practice-row h3{font-size:var(--t-h3);margin-bottom:.4rem}
+.practice-row h3+p{margin-bottom:var(--s-3)}
+.checks{list-style:none;margin:0 0 var(--s-4);padding:0;display:grid;gap:.5rem;font-size:var(--t-small)}
+.checks li{display:flex;gap:.7rem;align-items:flex-start}
+.checks svg{flex:none;margin-top:.25rem}
+.link{color:var(--water);font-weight:600;text-underline-offset:3px}
+.link:hover{text-decoration:underline}
+
+/* ---------- soil strip ---------- */
+.soil{background:var(--soil-deep);color:#efe7d8;position:relative;overflow:hidden}
+.soil::after{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(74deg,rgba(255,255,255,.028) 0 3px,transparent 3px 9px);pointer-events:none}
+.soil-grid{position:relative;z-index:1;display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:center}
+.soil h2{font-size:var(--t-h2);color:#f6efe0;margin-block:.6rem .9rem}
+.soil .lead{color:#cfc2ab}
+.soil-numbers{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#5d4430;border:1px solid #5d4430;border-radius:var(--radius-lg);overflow:hidden}
+.soil-numbers div{background:var(--soil-deep);padding:var(--s-5) var(--s-4)}
+.soil-numbers b{display:block;font-family:var(--font-title);font-size:2.2rem;color:var(--straw);line-height:1}
+.soil-numbers span{font-size:var(--t-small);color:#cbbda6}
+
+/* ---------- quote ---------- */
+.testimonial{padding-block:var(--s-8);background:var(--sky)}
+.testimonial figure{margin:0;max-width:56ch}
+.testimonial blockquote{margin:0;font-family:var(--font-note);font-size:clamp(1.3rem,2.6vw,1.9rem);line-height:1.5;color:var(--ink)}
+.testimonial figcaption{margin-top:var(--s-4);font-size:var(--t-small);color:var(--ink-soft)}
+.testimonial figcaption b{display:block;color:var(--ink);font-size:1rem}
+
+/* ---------- enquiry form ---------- */
+.enquire{background:var(--paper)}
+.enquire-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(1.8rem,5vw,4rem);align-items:start}
+.enquire h2{font-size:var(--t-h2);margin-block:.6rem .8rem}
+.enquire .lead{margin-bottom:var(--s-5)}
+.contact-list{list-style:none;margin:0;padding:0;font-size:var(--t-small);display:grid;gap:.6rem;color:var(--ink-soft)}
+.contact-list b{color:var(--ink)}
+form.panel{background:#fff;border:1px solid var(--rule);border-radius:var(--radius-lg);padding:clamp(1.2rem,3vw,2rem);box-shadow:var(--shadow-soft)}
+.field{display:grid;gap:.35rem;margin-bottom:var(--s-4)}
+.field label{font-size:var(--t-small);font-weight:700;letter-spacing:.02em}
+.field input,.field select,.field textarea{
+  font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--rule);
+  border-radius:var(--radius);padding:.8rem .9rem;min-height:48px;width:100%}
+.field textarea{min-height:120px;resize:vertical}
+.field .hint{font-size:.82rem;color:var(--ink-soft)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--leaf);background:#fff}
+.field input[aria-invalid="true"],.field textarea[aria-invalid="true"]{border-color:#a3261f;background:#fdf0ef}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+form.panel .btn{width:100%}
+.form-msg{margin-top:var(--s-3);min-height:1.5em;font-size:var(--t-small);font-weight:600}
+.form-msg[data-tone="error"]{color:#8f1d17}
+.form-msg[data-tone="ok"]{color:#2c5a2a}
+
+/* ---------- footer ---------- */
+.foot{background:var(--leaf);color:#e6ecdd;padding-block:var(--s-7) var(--s-5)}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:var(--s-6)}
+.foot h2{font-size:.95rem;letter-spacing:.14em;text-transform:uppercase;color:var(--straw);margin-bottom:var(--s-3);font-family:var(--font-body);font-weight:700}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.4rem;font-size:var(--t-small)}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--straw);text-decoration:underline}
+.foot-note{margin-top:var(--s-6);padding-top:var(--s-4);border-top:1px solid rgba(255,255,255,.22);font-size:.85rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem 1.5rem}
+
+@media (max-width:920px){
+  .hero-grid,.soil-grid,.enquire-grid{grid-template-columns:1fr}
+  .practice-row{grid-template-columns:1fr}
+  .practice-row.flip .media{order:0}
+  .hero-totals{grid-template-columns:1fr 1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:820px){
+  .nav-toggle{display:inline-flex;align-items:center}
+  .nav{order:3;width:100%;display:none;margin-left:0}
+  .nav[data-open="true"]{display:block;padding-bottom:var(--s-3)}
+  .nav ul{flex-direction:column;gap:.1rem}
+  .nav a{border-bottom:1px solid var(--rule);padding:.85rem 0}
+  .head-in{flex-wrap:wrap}
+}
+@media (max-width:520px){
+  .two{grid-template-columns:1fr}
+  .soil-numbers{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .hero-totals{grid-template-columns:1fr 1fr}
+  .th-scroll{overflow-x:auto}
+  th,td{padding:.7rem .8rem}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="wrap head-in">
+    <a class="brand" href="#top">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="6" fill="#3f5d33"/>
+        <path d="M8 22h16" stroke="#f7f6ef" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16 22V12" stroke="#f7f6ef" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16 14c-4-1-6-4-6-7 4 0 7 2 7 6M16 17c4-1 6-3 6-6-4 0-6 2-6 5" fill="#c8a94a"/>
+      </svg>
+      Greenrow Farm
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    <nav class="nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="#ledger">The year</a></li>
+        <li><a href="#practice">How we farm</a></li>
+        <li><a href="#soil">Carbon</a></li>
+        <li><a href="#enquire">Visit &amp; buy</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Regenerative since 2009</p>
+        <h1>A farm that puts more back into the soil than it takes out.</h1>
+        <p class="lead">Ninety-one acres of pasture, ley and veg in the Weald of Kent, farmed without ploughing, without synthetic inputs, and without pretending the weather isn't part of the plan. We sell what the land can honestly give us.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#enquire">Order this season's produce</a>
+          <a class="btn btn-quiet" href="#ledger">See the year in numbers</a>
+        </div>
+      </div>
+      <div>
+        <svg viewBox="0 0 420 300" role="img" aria-label="Illustration of a field with contour furrows, hedgerow trees and a barn under a wide sky">
+          <rect width="420" height="300" fill="#dfe9ee"/>
+          <circle cx="330" cy="70" r="34" fill="#e8e2c4"/>
+          <path d="M0 150c70-14 140-14 210 4s140 20 210 6v140H0Z" fill="#9db57d"/>
+          <path d="M0 176c80-12 150-8 220 8s130 16 200 4v112H0Z" fill="#6d8a4e"/>
+          <path d="M0 216c90-10 160-4 230 10s120 12 190 2v72H0Z" fill="#3f5d33"/>
+          <g stroke="#e9ecdc" stroke-width="3" fill="none" opacity=".5">
+            <path d="M-10 196q70-14 140 0t140 4 160-6"/>
+            <path d="M-10 240q80-14 160-2t150 2 130-8"/>
+          </g>
+          <g fill="#4a3322">
+            <rect x="300" y="120" width="66" height="44"/>
+            <path d="M290 120h86l-12-20h-62Z"/>
+            <rect x="326" y="140" width="18" height="24" fill="#dfe9ee"/>
+          </g>
+          <g fill="#3f5d33"><circle cx="60" cy="140" r="20"/><circle cx="96" cy="146" r="15"/><circle cx="200" cy="134" r="17"/></g>
+        </svg>
+      </div>
+    </div>
+    <svg class="horizon" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path d="M0 44c120-10 200-24 320-18s200 26 320 20 200-28 320-22 240 24 400 12v80H0Z" fill="#3f5d33"/>
+    </svg>
+    <div class="hero-totals">
+      <div><b>91</b><span>acres farmed</span></div>
+      <div><b>0</b><span>synthetic pesticides</span></div>
+      <div><b>+2.4t</b><span>soil carbon / ha / yr</span></div>
+      <div><b>1,200+</b><span>local households fed</span></div>
+    </div>
+  </section>
+
+  <section class="ledger" id="ledger" aria-labelledby="ledger-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">The year in numbers</p>
+        <h2 id="ledger-h">What the land produced, honestly accounted.</h2>
+        <p class="lead">We publish every figure, including the disappointing ones. Last year was a wet year for brassicas; the number says so.</p>
+      </div>
+      <div class="th-scroll">
+        <table>
+          <caption>2025 harvest and stewardship ledger, audited by Kent Soil Trust (March 2026).</caption>
+          <thead>
+            <tr>
+              <th scope="col">Enterprise</th>
+              <th scope="col">Area</th>
+              <th scope="col">Harvest 2025</th>
+              <th scope="col">vs 2024</th>
+              <th scope="col">Sold to</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><span class="crop"><span class="swatch" style="background:#6d8a4e"></span>Pasture &amp; beef</span></th>
+              <td>54 acres</td><td class="num">41 cattle</td><td class="num">+6%</td><td>33 butchers, Kent</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="crop"><span class="swatch" style="background:#3f5d33"></span>Brassicas</span></th>
+              <td>9 acres</td><td class="num">31.2 t</td><td class="num" style="color:#8f1d17">−18%</td><td>Ashford veg box</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="crop"><span class="swatch" style="background:#c8a94a"></span>Wheat &amp; oats</span></th>
+              <td>18 acres</td><td class="num">22.8 t</td><td class="num">+11%</td><td>Stoneground mills</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="crop"><span class="swatch" style="background:#2f5a6b"></span>Apples &amp; fruit</span></th>
+              <td>6 acres</td><td class="num">9.4 t</td><td class="num">+3%</td><td>Cider hall, Rolvenden</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="crop"><span class="swatch" style="background:#6b4b32"></span>Hay &amp; straw</span></th>
+              <td>4 acres</td><td class="num">88 bales</td><td class="num">flat</td><td>Local stables</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ledger-foot">The brassicas fell because we drilled late into a wet March. We have not written it off as weather alone — over-grazing in 2022 cost us that ground.</p>
+    </div>
+  </section>
+
+  <div class="wrap" id="practice">
+    <section aria-labelledby="practice-h" style="padding-block:var(--s-8) 0">
+      <div class="sec-head">
+        <p class="eyebrow">How we farm</p>
+        <h2 id="practice-h">Three practices, held for a decade.</h2>
+        <p class="lead">Regenerative farming is mostly the discipline of not doing things. These are the three we keep.</p>
+      </div>
+    </section>
+
+    <section class="practice-row" aria-label="Permanent pasture">
+      <div class="media">
+        <svg viewBox="0 0 480 300" role="img" aria-label="Illustration of permanent pasture with clover, grazing cattle and hedgerow">
+          <rect width="480" height="300" fill="#e9ecdc"/>
+          <path d="M0 170c90-18 180-16 260 4s150 16 220 2v124H0Z" fill="#6d8a4e"/>
+          <g fill="#3f5d33"><circle cx="70" cy="150" r="26"/><circle cx="400" cy="140" r="30"/><circle cx="440" cy="156" r="20"/></g>
+          <g fill="#4a3322">
+            <ellipse cx="200" cy="216" rx="46" ry="30"/><circle cx="252" cy="198" r="18"/>
+            <path d="M252 182c6-14 22-16 26-6-4 12-16 16-26 12Z"/>
+            <rect x="188" y="242" width="7" height="24"/><rect x="222" y="244" width="7" height="22"/><rect x="252" y="238" width="6" height="26"/>
+          </g>
+          <g fill="#9db57d"><circle cx="130" cy="250" r="8"/><circle cx="160" cy="258" r="6"/><circle cx="300" cy="256" r="7"/></g>
+        </svg>
+      </div>
+      <div>
+        <h3>Permanent pasture, grazed in rotation</h3>
+        <p>Grass stays in the ground for up to eight years, is grazed in short bursts, and is rested until it has flowered again. Roots that survive winter are roots that hold carbon and stop the soil washing into the Medway.</p>
+        <ul class="checks">
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Soil tested to 30cm every three years, results public</li>
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>No artificial fertiliser since 2011, including nitrogen</li>
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Hedge cut on a two-year cycle, never in nesting season</li>
+        </ul>
+        <a class="link" href="#soil">Read the carbon figures →</a>
+      </div>
+    </section>
+
+    <section class="practice-row flip" aria-label="Direct drilled crops">
+      <div class="media">
+        <svg viewBox="0 0 480 300" role="img" aria-label="Illustration of a direct drilled field with a seed drill and emerging crop rows">
+          <rect width="480" height="300" fill="#e8ecdf"/>
+          <path d="M0 160h480v140H0Z" fill="#8a6a45"/>
+          <g stroke="#c8a94a" stroke-width="6" stroke-linecap="round">
+            <path d="M20 210h440M20 250h440M20 290h440"/>
+          </g>
+          <g fill="#3f5d33">
+            <path d="M120 250v-30m0 0-8 10m8-10 8 10M120 220v-14" stroke="#3f5d33" stroke-width="4" fill="none"/>
+            <path d="M200 290v-30m0 0-8 10m8-10 8 10" stroke="#3f5d33" stroke-width="4" fill="none"/>
+            <path d="M300 250v-30m0 0-8 10m8-10 8 10" stroke="#3f5d33" stroke-width="4" fill="none"/>
+            <path d="M380 290v-30m0 0-8 10m8-10 8 10" stroke="#3f5d33" stroke-width="4" fill="none"/>
+          </g>
+          <g fill="#2f5a6b"><rect x="40" y="120" width="120" height="30" rx="6"/><rect x="90" y="150" width="20" height="26" fill="#24303a"/></g>
+          <circle cx="220" cy="80" r="30" fill="#e8e2c4"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Direct drilling, no plough at all</h3>
+        <p>The seed goes into last year's residue with a drill, and the field is left alone. The seedbank under the surface builds up for years; the worm population has more than recovered since we stopped inverting the topsoil every autumn.</p>
+        <ul class="checks">
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Wheat drilled into clover ley, undersown with vetch</li>
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Mechanical weed control only — no herbicide since 2016</li>
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Straw baled and returned to the following crop</li>
+        </ul>
+        <a class="link" href="#ledger">See what each field returned →</a>
+      </div>
+    </section>
+
+    <section class="practice-row" aria-label="Water and hedgerows">
+      <div class="media">
+        <svg viewBox="0 0 480 300" role="img" aria-label="Illustration of a farm pond edged with reeds and a stone-lined channel">
+          <rect width="480" height="300" fill="#dfe9ee"/>
+          <path d="M0 150c80-16 160-14 240 4s160 14 240 2v144H0Z" fill="#9db57d"/>
+          <path d="M40 260c30-70 90-96 160-84s120 70 200 46c20-6 40-4 60 6v72H40Z" fill="#2f5a6b"/>
+          <g stroke="#3f5d33" stroke-width="5" stroke-linecap="round">
+            <path d="M80 250V190M92 254V200M104 250V186M116 252V196"/>
+          </g>
+          <g fill="#3f5d33"><ellipse cx="150" cy="196" rx="34" ry="18"/><ellipse cx="250" cy="188" rx="26" ry="14"/><ellipse cx="330" cy="200" rx="30" ry="16"/></g>
+          <g fill="#c8a94a"><path d="M356 214l20-8v14Z"/><path d="M400 206l20-8v14Z"/></g>
+        </svg>
+      </div>
+      <div>
+        <h3>Water held on the farm</h3>
+        <p>Ponds, ditches and a deliberately leaky corner of ground mean we hold the winter rain where it falls. Less of it races to the Medway as silt, and the flock gets clean water in a dry August without a single tanker.</p>
+        <ul class="checks">
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>3.2km of new hedgerow planted since 2016</li>
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Pond margins left unmown from April for newts</li>
+          <li><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="#3f5d33"/><path d="M6 10.5l2.6 2.5L14 7.5" stroke="#f7f6ef" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Rainwater harvested for washing, no mains on the yard</li>
+        </ul>
+        <a class="link" href="#enquire">Come and see the ponds →</a>
+      </div>
+    </section>
+  </div>
+
+  <section class="soil" id="soil" aria-labelledby="soil-h">
+    <div class="wrap soil-grid">
+      <div>
+        <p class="eyebrow" style="color:#c8a94a">Carbon, measured</p>
+        <h2 id="soil-h">The only number that matters long-term.</h2>
+        <p class="lead">Soil carbon is measured against a 2014 baseline by an independent lab. It is the clearest honest scorecard a farm has, and it moves slowly enough that you cannot cheat it.</p>
+      </div>
+      <div class="soil-numbers">
+        <div><b>+2.4t</b><span>Organic carbon gained per hectare, per year</span></div>
+        <div><b>18cm</b><span>Topsoil depth, up from 11cm in 2009</span></div>
+        <div><b>31</b><span>Earthworms per square metre in pasture</span></div>
+        <div><b>−71%</b><span>Runoff sediment reaching the Medway since 2016</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonial" aria-label="What a buyer says">
+    <div class="wrap">
+      <figure>
+        <blockquote>“We have bought Greenrow's beef for six years. What convinced me was the soil report, not the flavour — the flavour followed.”</blockquote>
+        <figcaption><b>Priya Raman</b>Head chef, The Elm in Tenterden</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="enquire" id="enquire" aria-labelledby="enquire-h">
+    <div class="wrap enquire-grid">
+      <div>
+        <p class="eyebrow">Visit &amp; buy</p>
+        <h2 id="enquire-h">Produce, visits, or a walk with the soil scientist.</h2>
+        <p class="lead">Tours run on the first Saturday of each month, weather permitting — Kent weather is a personality, not a promise. Box orders close on Thursday for Friday delivery within Kent.</p>
+        <ul class="contact-list">
+          <li><b>Farm gate:</b> Greenrow Lane, Rolvenden, Kent TN17</li>
+          <li><b>Email:</b> hello@greenrow.example</li>
+          <li><b>Telephone:</b> 01580 555 0142</li>
+          <li><b>Office:</b> Tuesday and Friday, 9am–1pm</li>
+        </ul>
+      </div>
+      <form class="panel" id="enquiry-form" novalidate>
+        <div class="two">
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-hint" required>
+            <span class="hint" id="email-hint">We reply within two working days.</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="interest">I'm interested in</label>
+          <select id="interest" name="interest">
+            <option value="">Choose one</option>
+            <option>Weekly produce box</option>
+            <option>Beef, lamb and pork by the side</option>
+            <option>School or canteen supply</option>
+            <option>A farm tour</option>
+            <option>Soil testing for my own land</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">Anything we should know?</label>
+          <textarea id="message" name="message" aria-describedby="message-hint"></textarea>
+          <span class="hint" id="message-hint">Allergies, delivery constraints, or just hello.</span>
+        </div>
+        <button class="btn btn-primary" type="submit">Send enquiry</button>
+        <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h2>Greenrow Farm</h2>
+        <p style="font-size:.95rem;max-width:40ch">Regenerative farm in the Weald of Kent, trading since 2009. Soil first, produce second, everything else third.</p>
+      </div>
+      <div><h2>The farm</h2><ul><li><a href="#ledger">Year in numbers</a></li><li><a href="#practice">How we farm</a></li><li><a href="#soil">Carbon report</a></li><li><a href="#enquire">Farm tours</a></li></ul></div>
+      <div><h2>Buy</h2><ul><li><a href="#enquire">Produce boxes</a></li><li><a href="#enquire">Meat</a></li><li><a href="#enquire">Schools &amp; canteens</a></li><li><a href="#enquire">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-note">
+      <span>© 2026 Greenrow Farm Ltd. Registered in England 07712345.</span>
+      <span>Certified organic · Soil Association GB-ORG-0412</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var toggle=document.querySelector('.nav-toggle');
+  var nav=document.getElementById('main-nav');
+  toggle.addEventListener('click',function(){
+    var open=nav.getAttribute('data-open')==='true';
+    nav.setAttribute('data-open',String(!open));
+    toggle.setAttribute('aria-expanded',String(!open));
+  });
+
+  var form=document.getElementById('enquiry-form');
+  var msg=document.getElementById('form-msg');
+  var name=document.getElementById('name');
+  var email=document.getElementById('email');
+  var interest=document.getElementById('interest');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var problems=[];
+    if(!name.value.trim()) problems.push('your name');
+    if(!email.value.trim()) problems.push('an email address');
+    else if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) problems.push('a valid email address');
+    if(!interest.value) problems.push('what you are interested in');
+    if(problems.length){
+      [name,email,interest].forEach(function(f){f.removeAttribute('aria-invalid')});
+      if(!name.value.trim()) name.setAttribute('aria-invalid','true');
+      if(problems.some(function(p){return p.indexOf('email')>-1})) email.setAttribute('aria-invalid','true');
+      if(problems.some(function(p){return p.indexOf('interested')>-1})) interest.setAttribute('aria-invalid','true');
+      msg.dataset.tone='error';
+      msg.textContent='Before we can help, we need '+problems.join(', ')+'.';
+      (name.value.trim()?email:name).focus();
+      return;
+    }
+    [name,email,interest].forEach(function(f){f.removeAttribute('aria-invalid')});
+    msg.dataset.tone='ok';
+    msg.textContent='Thank you. Your enquiry is with the farm office — expect a reply within two working days.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

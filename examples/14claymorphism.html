@@ -1,0 +1,496 @@
+<!-- Style: Claymorphism | 14claymorphism.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mochi — learn a language in five minutes a day</title>
+<style>
+:root{
+  --clay-bg:#efe6da;
+  --clay:#fbf5ee;
+  --clay-deep:#e3d6c6;
+  --ink:#3f2f27;
+  --ink-2:#6b564a;
+  --ink-3:#8d7768;
+  --peach:#e2683c;
+  --peach-deep:#c9542a;
+  --matcha:#4f9a86;
+  --matcha-deep:#3d7d6c;
+  --butter:#e8b93c;
+  --berry:#b0506b;
+  --sh-out:10px 10px 24px rgba(150,124,100,.42),-10px -10px 24px rgba(255,255,255,.92);
+  --sh-out-sm:5px 5px 12px rgba(150,124,100,.38),-5px -5px 12px rgba(255,255,255,.88);
+  --sh-in:inset 5px 5px 12px rgba(150,124,100,.40),inset -5px -5px 12px rgba(255,255,255,.92);
+  --sh-press:inset 3px 3px 8px rgba(150,124,100,.44),inset -3px -3px 8px rgba(255,255,255,.8);
+  --font:"Segoe UI",Nunito,system-ui,-apple-system,"Trebuchet MS",sans-serif;
+  --t-xs:clamp(.75rem,.72rem + .14vw,.84rem);
+  --t-sm:clamp(.88rem,.85rem + .18vw,1rem);
+  --t-md:clamp(1.02rem,.98rem + .24vw,1.16rem);
+  --t-lg:clamp(1.3rem,1.1rem + .9vw,1.75rem);
+  --t-xl:clamp(1.8rem,1.35rem + 2.2vw,2.9rem);
+  --t-2xl:clamp(2.2rem,1.5rem + 3.6vw,4.1rem);
+  --s-1:.25rem;--s-2:.5rem;--s-3:.85rem;--s-4:1.15rem;--s-5:1.75rem;--s-6:2.5rem;--s-7:3.5rem;--s-8:5rem;
+  --r-card:30px;--r-soft:20px;--r-pill:999px;
+  --d:180ms;--ease:cubic-bezier(.3,1.4,.5,1);
+  --w:min(1120px,100% - 2.5rem);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--clay-bg);color:var(--ink);font-family:var(--font);font-size:var(--t-md);line-height:1.6}
+h1,h2,h3{margin:0 0 var(--s-3);line-height:1.1;font-weight:800;letter-spacing:-.02em}
+p{margin:0 0 var(--s-3)}
+a{color:var(--peach-deep)}
+:focus-visible{outline:3px solid var(--peach);outline-offset:3px}
+.wrap{width:var(--w);margin-inline:auto}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--s-4);top:var(--s-4);z-index:60;background:var(--peach);color:#fff;padding:.7rem 1.2rem;border-radius:var(--r-pill)}
+
+/* soft 3D surfaces */
+.lift{background:var(--clay);border-radius:var(--r-card);box-shadow:var(--sh-out);border:1px solid rgba(255,255,255,.5)}
+.press{box-shadow:var(--sh-in);border-radius:var(--r-card);background:var(--clay-deep)}
+.chunky{box-shadow:var(--sh-out-sm);border-radius:var(--r-soft);background:var(--clay);border:1px solid rgba(255,255,255,.55)}
+.eyebrow{font-size:var(--t-xs);font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--peach-deep);margin:0 0 var(--s-2)}
+.lead{font-size:var(--t-lg);line-height:1.4;max-width:44ch;color:var(--ink-2)}
+
+/* nav */
+.top{padding:var(--s-4) 0 0}
+.dock{
+  display:flex;align-items:center;gap:var(--s-3);padding:.6rem .7rem .6rem 1.3rem;
+  border-radius:var(--r-pill);box-shadow:var(--sh-out-sm);background:var(--clay);
+}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-weight:800;font-size:var(--t-lg);color:var(--ink);letter-spacing:-.02em}
+.dock__links{display:flex;gap:.2rem;margin-left:auto}
+.dock__links a{
+  text-decoration:none;color:var(--ink-2);font-weight:700;font-size:var(--t-sm);
+  padding:.6rem 1rem;border-radius:var(--r-pill);min-height:44px;display:inline-flex;align-items:center;
+  transition:background var(--d) var(--ease),color var(--d) var(--ease);
+}
+.dock__links a:hover{background:var(--clay-deep);color:var(--ink)}
+.dock__links a[aria-current]{background:var(--peach);color:#fff;box-shadow:var(--sh-press)}
+.streak{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:var(--t-sm);color:var(--matcha-deep);
+  padding:.5rem 1rem;border-radius:var(--r-pill);box-shadow:var(--sh-in)}
+.menu{display:none;background:none;border:0;box-shadow:var(--sh-out-sm);border-radius:var(--r-pill);
+  width:46px;height:46px;color:var(--ink);cursor:pointer;margin-left:auto}
+
+/* hero */
+.hero{padding:var(--s-6) 0 var(--s-7);display:grid;grid-template-columns:1.05fr .95fr;gap:var(--s-5);align-items:center}
+.hero h1{font-size:var(--t-2xl)}
+.hero h1 em{font-style:normal;color:var(--peach)}
+.hero__art{position:relative;padding:var(--s-5);display:grid;gap:var(--s-3);justify-items:center}
+.mochi-face{width:min(260px,70%);height:auto;filter:drop-shadow(10px 14px 16px rgba(150,124,100,.35))}
+.hero__badge{
+  position:absolute;top:var(--s-4);right:var(--s-4);padding:.5rem .9rem;border-radius:var(--r-pill);
+  background:var(--butter);color:#4a3606;font-weight:800;font-size:var(--t-xs);letter-spacing:.06em;
+  box-shadow:var(--sh-out-sm);transform:rotate(4deg);
+}
+.hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-4)}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;cursor:pointer;text-decoration:none;
+  font-family:var(--font);font-weight:800;font-size:var(--t-sm);
+  min-height:52px;padding:0 var(--s-5);border-radius:var(--r-pill);border:0;
+  box-shadow:var(--sh-out-sm);background:var(--clay);color:var(--ink);
+  transition:transform var(--d) var(--ease),box-shadow var(--d) var(--ease),background var(--d) var(--ease);
+}
+.btn:hover{transform:translateY(-3px)}
+.btn:active,.btn.is-down{transform:translateY(1px);box-shadow:var(--sh-press)}
+.btn--primary{background:var(--peach);color:#fff}
+.btn--primary:hover{background:var(--peach-deep)}
+.btn--go{background:var(--matcha);color:#fff}
+.btn--go:hover{background:var(--matcha-deep)}
+.btn[disabled]{background:var(--clay-deep);color:var(--ink-3);box-shadow:var(--sh-in);cursor:not-allowed;transform:none}
+
+/* progress chunky bar */
+.quest{display:flex;flex-direction:column;gap:var(--s-3);padding:var(--s-5);margin-top:var(--s-5)}
+.quest__row{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap}
+.quest__bar{flex:1 1 180px;height:20px;border-radius:var(--r-pill);box-shadow:var(--sh-in);overflow:hidden;min-width:140px}
+.quest__bar span{display:block;height:100%;width:62%;border-radius:var(--r-pill);
+  background:linear-gradient(180deg,#63b39c,#4f9a86);box-shadow:inset 0 -3px 0 rgba(0,0,0,.14)}
+.pip{display:flex;gap:.4rem;list-style:none;margin:0;padding:0}
+.pip li{width:18px;height:18px;border-radius:var(--r-pill);background:var(--clay);box-shadow:var(--sh-in)}
+.pip li[data-done="true"]{background:var(--matcha);box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)}
+
+/* sections */
+section{padding:var(--s-7) 0}
+.sec-head{max-width:60ch;margin-bottom:var(--s-5)}
+.sec-head h2{font-size:var(--t-xl)}
+
+.chunks{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-4)}
+.chunk{padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-2);text-align:center;align-items:center;
+  transition:transform var(--d) var(--ease),box-shadow var(--d) var(--ease)}
+.chunk:hover{transform:translateY(-5px);box-shadow:var(--sh-out)}
+.chunk__icon{width:64px;height:64px;border-radius:24px;box-shadow:var(--sh-in);display:grid;place-items:center;font-size:1.7rem}
+.chunk h3{font-size:var(--t-md);margin:0}
+.chunk p{font-size:var(--t-xs);color:var(--ink-3);margin:0}
+.chunk__level{font-size:var(--t-xs);font-weight:800;color:var(--peach-deep);letter-spacing:.1em;text-transform:uppercase}
+
+/* exercise */
+.ex-wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:var(--s-5);align-items:start}
+.ex{padding:var(--s-5)}
+.ex__prompt{font-size:var(--t-xl);font-weight:800;letter-spacing:-.02em;margin-bottom:var(--s-2)}
+.ex__sub{color:var(--ink-2);font-size:var(--t-sm)}
+.opts{display:grid;gap:var(--s-3);margin:var(--s-4) 0}
+.opt{
+  font-family:var(--font);font-size:var(--t-md);font-weight:700;text-align:left;cursor:pointer;
+  padding:var(--s-3) var(--s-4);min-height:56px;border-radius:var(--r-soft);background:var(--clay);
+  border:1px solid rgba(255,255,255,.6);box-shadow:var(--sh-out-sm);color:var(--ink);
+  transition:transform var(--d) var(--ease),box-shadow var(--d) var(--ease),background var(--d) var(--ease);
+}
+.opt:hover{transform:translateY(-2px)}
+.opt:active{box-shadow:var(--sh-press)}
+.opt[aria-pressed="true"]{background:var(--clay-deep);box-shadow:var(--sh-in);color:var(--peach-deep)}
+.opt[data-verdict="right"]{background:var(--matcha);color:#fff;box-shadow:var(--sh-out-sm)}
+.opt[data-verdict="wrong"]{background:var(--berry);color:#fff;box-shadow:var(--sh-out-sm)}
+.verdict{min-height:2.6em;font-weight:700;font-size:var(--t-sm);color:var(--ink-2);margin:0}
+.verdict[data-tone="ok"]{color:var(--matcha-deep)}
+.verdict[data-tone="no"]{color:var(--berry)}
+.ghostline{border:0;border-top:2px dashed var(--clay-deep);margin:var(--s-4) 0}
+
+/* streak wall */
+.streakwall{display:grid;grid-template-columns:1.2fr .8fr;gap:var(--s-4);align-items:stretch}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--s-2);padding:var(--s-5)}
+.day{aspect-ratio:1;border-radius:18px;box-shadow:var(--sh-in);display:grid;place-items:center;
+  font-weight:800;font-size:var(--t-xs);color:var(--ink-3)}
+.day[data-done="true"]{background:var(--clay);box-shadow:var(--sh-out-sm);color:var(--ink)}
+.day[data-today="true"]{background:var(--butter);color:#4a3606;box-shadow:var(--sh-out-sm)}
+.note{padding:var(--s-5);display:flex;flex-direction:column;gap:var(--s-2);justify-content:center}
+.note h3{margin:0}
+.note p{color:var(--ink-2);font-size:var(--t-sm);margin:0}
+
+/* form */
+.form{padding:var(--s-5);display:grid;gap:var(--s-4)}
+.form__row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.field{display:grid;gap:.45rem}
+label{font-weight:800;font-size:var(--t-sm);color:var(--ink-2)}
+input,select,textarea{
+  font-family:var(--font);font-size:var(--t-sm);color:var(--ink);
+  background:var(--clay);border:0;border-radius:var(--r-soft);box-shadow:var(--sh-in);
+  padding:.85rem 1rem;min-height:52px;width:100%;
+}
+textarea{min-height:110px;resize:vertical}
+input::placeholder,textarea::placeholder{color:var(--ink-3)}
+input:focus,select:focus,textarea:focus{outline:none;box-shadow:var(--sh-press),0 0 0 3px rgba(226,104,60,.35)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--peach);outline-offset:3px}
+.field[data-invalid="true"] input,.field[data-invalid="true"] textarea{box-shadow:inset 5px 5px 12px rgba(160,70,60,.35),0 0 0 3px rgba(176,80,107,.35)}
+.err{font-size:var(--t-xs);font-weight:700;color:var(--berry);min-height:1.2em}
+.hint{font-size:var(--t-xs);color:var(--ink-3)}
+.formmsg{font-size:var(--t-sm);font-weight:700;padding:var(--s-3) var(--s-4);border-radius:var(--r-soft);
+  background:var(--clay);box-shadow:var(--sh-in);color:var(--ink-2)}
+.formmsg[data-tone="ok"]{color:var(--matcha-deep)}
+.formmsg[data-tone="bad"]{color:var(--berry)}
+.form__actions{grid-column:1/-1;display:flex;gap:var(--s-3);flex-wrap:wrap}
+
+footer{padding:var(--s-6) 0 var(--s-7)}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--s-4);padding:var(--s-5)}
+.foot h3{font-size:var(--t-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:var(--s-2)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.3rem}
+.foot a{color:var(--ink-2);text-decoration:none;font-size:var(--t-sm);font-weight:600;display:inline-block;min-height:32px}
+.foot a:hover{color:var(--peach-deep)}
+.foot p{color:var(--ink-2);font-size:var(--t-sm);max-width:32ch}
+
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr;gap:var(--s-6)}
+  .chunks{grid-template-columns:repeat(2,1fr)}
+  .ex-wrap,.streakwall{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .dock{flex-wrap:wrap;border-radius:32px;padding:.8rem}
+  .dock__links{display:none;flex-direction:column;width:100%;padding-top:.4rem;gap:.2rem}
+  .dock__links[data-open="true"]{display:flex}
+  .dock__links a{width:100%;min-height:48px}
+  .menu{display:grid;place-items:center}
+  .streak{padding:.4rem .8rem}
+}
+@media (max-width:560px){
+  .chunks,.form__row,.foot{grid-template-columns:1fr}
+  .hero__actions .btn,.form__actions .btn{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .btn:hover,.chunk:hover,.opt:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <nav class="dock" aria-label="Primary">
+      <a class="brand" href="#top">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+          <ellipse cx="15" cy="17" rx="12" ry="10" fill="#f3b7a0"/>
+          <ellipse cx="15" cy="14" rx="12" ry="9" fill="#fbc9b2"/>
+          <circle cx="11" cy="14" r="1.7" fill="#3f2f27"/><circle cx="19" cy="14" r="1.7" fill="#3f2f27"/>
+          <path d="M12 19c1.8 1.6 4.2 1.6 6 0" fill="none" stroke="#3f2f27" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Mochi
+      </a>
+      <button class="menu" id="menu" aria-expanded="false" aria-controls="links" aria-label="Open navigation">
+        <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true"><path d="M1 2h20M1 9h20M1 16h20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </button>
+      <div class="dock__links" id="links">
+        <a href="#top" aria-current="page">Today</a>
+        <a href="#chunks">Courses</a>
+        <a href="#practice">Practice</a>
+        <a href="#start">Start free</a>
+      </div>
+      <p class="streak"><span aria-hidden="true">🔥</span> 12-day streak</p>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="wrap hero" id="top">
+    <div>
+      <p class="eyebrow">Five minutes a day</p>
+      <h1>Learn a language<br>one <em>soft bite</em> at a time.</h1>
+      <p class="lead">Mochi is built around twenty small lessons you can finish before your coffee cools. Real sentences from day one, spaced review that actually remembers what you struggled with, and no streak-shaming when life happens.</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#start">Start your first lesson</a>
+        <a class="btn" href="#practice">Try a practice round</a>
+      </div>
+      <div class="lift quest">
+        <p class="eyebrow" style="margin:0">Today's quest</p>
+        <div class="quest__row">
+          <div class="quest__bar" role="img" aria-label="62 percent of today's goal complete"><span></span></div>
+          <strong>7 / 11 min</strong>
+        </div>
+        <ul class="pip" aria-label="Lessons completed today: two of three">
+          <li data-done="true"></li><li data-done="true"></li><li data-done="false"></li>
+        </ul>
+        <p style="margin:0;font-size:var(--t-sm);color:var(--ink-2)">Two more short rounds unlocks the <strong>Warm Words</strong> deck.</p>
+      </div>
+    </div>
+
+    <div class="lift hero__art">
+      <span class="hero__badge">New · Italian</span>
+      <svg class="mochi-face" viewBox="0 0 200 200" role="img" aria-label="Mochi the mascot, a soft round character holding a striped cup">
+        <ellipse cx="100" cy="150" rx="72" ry="34" fill="rgba(150,124,100,.18)"/>
+        <circle cx="100" cy="100" r="74" fill="#e6a68b"/>
+        <path d="M26 100a74 74 0 0 1 148 0 74 74 0 0 1-148 0" fill="#f6c0a4"/>
+        <path d="M100 26c30 0 52 16 60 40-20 10-104 10-120 0 8-24 30-40 60-40z" fill="#3f2f27" opacity=".9"/>
+        <circle cx="76" cy="96" r="8" fill="#3f2f27"/><circle cx="124" cy="96" r="8" fill="#3f2f27"/>
+        <circle cx="78.5" cy="93" r="2.6" fill="#fff"/><circle cx="126.5" cy="93" r="2.6" fill="#fff"/>
+        <ellipse cx="64" cy="118" rx="10" ry="6" fill="#e2683c" opacity=".55"/>
+        <ellipse cx="136" cy="118" rx="10" ry="6" fill="#e2683c" opacity=".55"/>
+        <path d="M84 122c8 9 24 9 32 0" fill="none" stroke="#3f2f27" stroke-width="5" stroke-linecap="round"/>
+        <g>
+          <rect x="118" y="128" width="34" height="46" rx="10" fill="#fbf5ee" stroke="#3f2f27" stroke-width="3"/>
+          <path d="M118 142h34" stroke="#3f2f27" stroke-width="3"/>
+          <path d="M134 128c-5-8 5-14 0-22" fill="none" stroke="#8d7768" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <ellipse cx="100" cy="26" rx="12" ry="5" fill="#3f2f27" opacity=".9"/>
+      </svg>
+      <p style="margin:0;text-align:center;color:var(--ink-2);font-size:var(--t-sm)"><strong>Mochi</strong> keeps the review schedule. You just keep showing up.</p>
+    </div>
+  </section>
+
+  <section class="wrap" id="chunks">
+    <div class="sec-head">
+      <p class="eyebrow">Pick a track</p>
+      <h2>Four courses, one shared review engine</h2>
+      <p class="lead">Switch tracks whenever you like. Everything you have learned stays in the same review queue, so nothing is lost between them.</p>
+    </div>
+    <div class="chunks">
+      <article class="chunk lift">
+        <div class="chunk__icon" style="background:#f7ddd0" aria-hidden="true">🇯🇵</div>
+        <span class="chunk__level">A2 · 1,240 words</span>
+        <h3>Japanese</h3>
+        <p>Three writing systems, taught in the order real people meet them.</p>
+      </article>
+      <article class="chunk lift">
+        <div class="chunk__icon" style="background:#d9ece4" aria-hidden="true">🇮🇹</div>
+        <span class="chunk__level">A1 · 860 words</span>
+        <h3>Italian</h3>
+        <p>Start with ordering coffee properly, end with actually holding a conversation.</p>
+      </article>
+      <article class="chunk lift">
+        <div class="chunk__icon" style="background:#f6e6c4" aria-hidden="true">🇪🇸</div>
+        <span class="chunk__level">B1 · 1,910 words</span>
+        <h3>Spanish</h3>
+        <p>Immersion weeks built around your own schedule and region.</p>
+      </article>
+      <article class="chunk lift">
+        <div class="chunk__icon" style="background:#eadbe6" aria-hidden="true">🇩🇪</div>
+        <span class="chunk__level">A2 · 1,480 words</span>
+        <h3>German</h3>
+        <p>Grammar drills disguised as a very patient conversation partner.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap" id="practice">
+    <div class="sec-head">
+      <p class="eyebrow">Try it now</p>
+      <h2>A practice round, right here</h2>
+    </div>
+    <div class="ex-wrap">
+      <div class="lift note">
+        <h3>How Mochi reviews</h3>
+        <p>Every word you meet lands in a queue. When you almost forget it, it comes back tomorrow. When you know it cold, it sleeps for weeks. Nothing is ever lost and nothing is asked twice.</p>
+        <p style="margin:0"><a href="#start">See the full method</a></p>
+      </div>
+      <div class="lift ex">
+        <p class="ex__prompt" lang="it">Dov'è la stazione?</p>
+        <p class="ex__sub">Where is the station? Choose the answer that sounds natural.</p>
+        <div class="opts" id="opts">
+          <button class="opt" type="button" data-answer="right">Dov'è la stazione ferroviaria?</button>
+          <button class="opt" type="button" data-answer="no">Dove la stazione è andata?</button>
+          <button class="opt" type="button" data-answer="no">Statione dov'è essere?</button>
+        </div>
+        <hr class="ghostline">
+        <p class="verdict" id="verdict" role="status" aria-live="polite">Pick an answer — no timer, no penalty.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Consistency</p>
+      <h2>Twelve days, and counting</h2>
+    </div>
+    <div class="streakwall">
+      <div class="lift week" aria-label="Practice days this week: Monday through Thursday complete, Friday is today">
+        <div class="day" data-done="true">M</div>
+        <div class="day" data-done="true">T</div>
+        <div class="day" data-done="true">W</div>
+        <div class="day" data-done="true">T</div>
+        <div class="day" data-today="true">F</div>
+        <div class="day">S</div>
+        <div class="day">S</div>
+      </div>
+      <div class="lift note">
+        <h3>Missed a day?</h3>
+        <p>Your streak pauses instead of dying. Mochi holds your place and waits — the whole point is coming back, not performing for a badge.</p>
+        <p style="margin:0;font-size:var(--t-xs);color:var(--ink-3)">Longest streak: 41 days · 3,120 words retained</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="start">
+    <div class="sec-head">
+      <p class="eyebrow">Free for the first track</p>
+      <h2>Tell us where to start</h2>
+    </div>
+    <form class="lift form" id="startform" novalidate>
+      <div class="form__row">
+        <div class="field">
+          <label for="s-name">Name</label>
+          <input id="s-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+          <p class="err" id="e-name" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label for="s-email">Email</label>
+          <input id="s-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+          <p class="err" id="e-email" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="form__row">
+        <div class="field">
+          <label for="s-lang">Track</label>
+          <select id="s-lang" name="lang">
+            <option>Japanese</option><option>Italian</option><option>Spanish</option><option>German</option>
+          </select>
+          <p class="hint">You can switch tracks later without losing progress.</p>
+        </div>
+        <div class="field">
+          <label for="s-min">Minutes per day</label>
+          <select id="s-min" name="minutes">
+            <option>3 minutes</option><option selected>5 minutes</option><option>10 minutes</option><option>20 minutes</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="s-goal">What do you actually need it for?</label>
+        <textarea id="s-goal" name="goal" required aria-describedby="e-goal" placeholder="A trip in October, a family member, a job interview…"></textarea>
+        <p class="err" id="e-goal" aria-live="polite"></p>
+      </div>
+      <p class="formmsg" id="s-msg" role="status" aria-live="polite">No card required. Cancel from inside the app in two taps.</p>
+      <div class="form__actions">
+        <button class="btn btn--go" type="submit">Create my account</button>
+        <a class="btn" href="#practice">Take the tour first</a>
+      </div>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="lift foot">
+      <div>
+        <p class="eyebrow">Mochi</p>
+        <p>Five minutes, every day, for a year, is roughly 30 hours. That is usually enough.</p>
+      </div>
+      <div>
+        <h3>Learn</h3>
+        <ul>
+          <li><a href="#chunks">Courses</a></li>
+          <li><a href="#practice">Practice rounds</a></li>
+          <li><a href="#start">Start free</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#start">For schools</a></li>
+          <li><a href="#start">Pricing</a></li>
+          <li><a href="#start">Accessibility</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var menu=document.getElementById('menu'),links=document.getElementById('links');
+  menu.addEventListener('click',function(){
+    var open=menu.getAttribute('aria-expanded')==='true';
+    menu.setAttribute('aria-expanded',String(!open));
+    links.setAttribute('data-open',String(!open));
+  });
+  links.addEventListener('click',function(e){if(e.target.tagName==='A'){menu.setAttribute('aria-expanded','false');links.setAttribute('data-open','false');}});
+
+  var opts=document.getElementById('opts'),verdict=document.getElementById('verdict');
+  opts.addEventListener('click',function(e){
+    var b=e.target.closest('.opt'); if(!b) return;
+    opts.querySelectorAll('.opt').forEach(function(o){
+      o.setAttribute('aria-pressed','false');
+      o.removeAttribute('data-verdict');
+    });
+    b.setAttribute('aria-pressed','true');
+    if(b.getAttribute('data-answer')==='right'){
+      b.setAttribute('data-verdict','right');
+      verdict.setAttribute('data-tone','ok');
+      verdict.textContent='Correct — “la stazione ferroviaria” is the one people actually use. Adding it to tonight’s review queue.';
+    }else{
+      b.setAttribute('data-verdict','wrong');
+      verdict.setAttribute('data-tone','no');
+      verdict.textContent='Close, but word order gives it away. In Italian the question word stays where the verb is. Try again — no penalty.';
+    }
+  });
+
+  var form=document.getElementById('startform'),msg=document.getElementById('s-msg');
+  function setErr(input,id,text){
+    document.getElementById(id).textContent=text;
+    input.closest('.field').setAttribute('data-invalid',text?'true':'false');
+    if(text){input.setAttribute('aria-invalid','true');}else{input.removeAttribute('aria-invalid');}
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('s-name'),email=document.getElementById('s-email'),goal=document.getElementById('s-goal'),bad=false;
+    if(name.value.trim().length<2){setErr(name,'e-name','We need a name to say hello properly.');bad=true;}else setErr(name,'e-name','');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())){setErr(email,'e-email','That address does not look right.');bad=true;}else setErr(email,'e-email','');
+    if(goal.value.trim().length<10){setErr(goal,'e-goal','A few more words so we can order the lessons.');bad=true;}else setErr(goal,'e-goal','');
+    if(bad){msg.setAttribute('data-tone','bad');msg.textContent='Almost — check the highlighted fields.';return;}
+    msg.setAttribute('data-tone','ok');
+    msg.textContent='Welcome aboard. Your first '+document.getElementById('s-min').value+' round for '+document.getElementById('s-lang').value+' is ready.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

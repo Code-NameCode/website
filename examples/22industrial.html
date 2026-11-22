@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<!-- Style: Industrial | 22industrial.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge Line — Hydraulic Power Units &amp; Cylinders</title>
+<meta name="description" content="Forge Line builds hydraulic power units, cylinders and manifolds for heavy equipment. 40 years on the same production line.">
+<style>
+:root{
+  /* metal neutrals */
+  --graphite:#15181a;
+  --steel:#1d2226;
+  --steel-2:#242a2f;
+  --plate:#2b3238;
+  --concrete:#c8ccc9;
+  --white:#eef0ee;
+  --muted:#9aa3a8;
+  --faint:#6f787e;
+  /* safety accents */
+  --orange:#ff6a13;
+  --amber:#f2b705;
+  --blued:#4d86ad;
+  /* type */
+  --sans:"Helvetica Neue",Arial,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Consolas,"Roboto Mono",Menlo,monospace;
+  --t-mega:clamp(2.4rem,6.4vw,5.4rem);
+  --t-h1:clamp(1.9rem,3.6vw,3.1rem);
+  --t-h2:clamp(1.35rem,2vw,1.9rem);
+  --t-body:clamp(0.97rem,1vw,1.05rem);
+  --t-label:.7rem;
+  /* spacing */
+  --u:8px;
+  --s-1:calc(var(--u)*1);--s-2:calc(var(--u)*2);--s-3:calc(var(--u)*3);
+  --s-4:calc(var(--u)*5);--s-5:calc(var(--u)*8);--s-6:calc(var(--u)*12);--s-7:calc(var(--u)*18);
+  /* edges */
+  --r:0px;
+  --line:#39424a;
+  --line-soft:#2a3138;
+  --shadow:0 2px 0 rgba(0,0,0,.5);
+  /* motion */
+  --d-fast:140ms;--d-base:260ms;
+  --ease:cubic-bezier(.3,.7,.3,1);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--graphite);color:var(--concrete);
+  font-family:var(--sans);font-size:var(--t-body);line-height:1.6;
+  background-image:
+    linear-gradient(var(--line-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:64px 64px;
+  background-position:-1px -1px;
+}
+h1,h2,h3,h4{margin:0;font-weight:700;color:var(--white);line-height:1.02;letter-spacing:-.015em;text-transform:uppercase}
+p{margin:0}
+a{color:inherit}
+svg{display:block;max-width:100%}
+::selection{background:var(--orange);color:var(--graphite)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 clamp(16px,3.5vw,48px)}
+.label{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- utility strip ---------- */
+.util{background:#0e1113;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase}
+.util .wrap{display:flex;gap:var(--s-4);justify-content:space-between;align-items:center;min-height:38px;color:var(--faint);flex-wrap:wrap}
+.util b{color:var(--amber);font-weight:700}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(21,24,26,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+.nav .wrap{display:flex;align-items:stretch;gap:var(--s-5);min-height:70px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;padding-right:var(--s-4);border-right:1px solid var(--line)}
+.logo svg{width:30px;height:30px;color:var(--orange)}
+.logo span{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:1.05rem;color:var(--white)}
+.logo em{font-style:normal;color:var(--faint);font-size:.66rem;font-family:var(--mono);letter-spacing:.2em;display:block;margin-top:2px}
+.nav-links{display:flex;list-style:none;margin:0;padding:0;flex:1}
+.nav-links a{
+  display:flex;align-items:center;min-height:44px;padding:0 18px;text-decoration:none;
+  font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);border-bottom:3px solid transparent;transition:color var(--d-fast) var(--ease),background var(--d-fast) var(--ease);
+}
+.nav-links a:hover{color:var(--white);background:var(--steel)}
+.nav-links a[aria-current]{color:var(--white);border-bottom-color:var(--orange);background:var(--steel)}
+.nav-cta{display:flex;align-items:center;margin-left:auto}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 24px;
+  font-family:var(--mono);font-size:var(--t-label);letter-spacing:.18em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;border:2px solid var(--plate);background:var(--steel);color:var(--white);
+  transition:background var(--d-fast) var(--ease),border-color var(--d-fast) var(--ease),color var(--d-fast) var(--ease);
+}
+.btn:hover{background:var(--plate)}
+.btn-primary{background:var(--orange);border-color:var(--orange);color:#150d05}
+.btn-primary:hover{background:#ff833e;border-color:#ff833e}
+.btn-outline{background:transparent}
+.btn-outline:hover{border-color:var(--white)}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:15px;height:15px}
+
+/* ---------- hero ---------- */
+.hero{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#181c1f,#111416)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:var(--s-5);align-items:center;padding-block:clamp(40px,6vw,84px)}
+.hero h1{font-size:var(--t-mega)}
+.hero h1 span{color:var(--orange)}
+.hero-lead{margin-top:var(--s-3);max-width:46ch;font-size:clamp(1rem,1.15vw,1.15rem);color:var(--muted)}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:var(--s-4);list-style:none;padding:0}
+.hero-tags li{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:6px 10px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-4)}
+/* technical drawing */
+.blueprint{position:relative;border:1px solid var(--line);background:#101416;padding:var(--s-3)}
+.blueprint::before,.blueprint::after{
+  content:attr(data-c);position:absolute;font-family:var(--mono);font-size:var(--t-label);
+  letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
+}
+.blueprint::before{top:-20px;left:0}
+.blueprint::after{bottom:-20px;right:0;color:var(--orange)}
+.blueprint svg{color:var(--blued);width:100%;height:auto}
+.dims{position:absolute;left:0;right:0;bottom:0;display:flex;gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.dims div{flex:1;background:var(--steel);padding:8px 10px;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.1em;color:var(--muted)}
+.dims div b{display:block;color:var(--white);font-size:.92rem;margin-top:2px}
+
+/* ---------- section shell ---------- */
+.sec{padding-block:clamp(56px,7vw,110px);border-bottom:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:var(--s-4);align-items:start;padding-bottom:var(--s-4);border-bottom:1px solid var(--line);margin-bottom:var(--s-5)}
+.sec-head h2{font-size:var(--t-h1)}
+.sec-head p{margin-top:var(--s-2);color:var(--muted);max-width:62ch}
+
+/* ---------- product spec panels ---------- */
+.panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.panel{background:var(--steel);padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);transition:background var(--d-base) var(--ease)}
+.panel:hover{background:var(--steel-2)}
+.panel-top{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--s-2)}
+.panel svg{width:34px;height:34px;color:var(--orange)}
+.panel .code{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;color:var(--faint)}
+.panel h3{font-size:var(--t-h2)}
+.panel dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px var(--s-3);font-family:var(--mono);font-size:.82rem}
+.panel dt{color:var(--faint);letter-spacing:.1em}
+.panel dd{margin:0;color:var(--white);text-align:right}
+.panel .btn{margin-top:auto;align-self:flex-start}
+
+/* ---------- capability accordion ---------- */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s-5)}
+.acc{border:1px solid var(--line);background:var(--steel)}
+.acc details{border-bottom:1px solid var(--line-soft)}
+.acc details:last-child{border-bottom:0}
+.acc summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);
+  min-height:60px;padding:0 var(--s-3);font-family:var(--mono);font-size:.86rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--white);
+}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"+";color:var(--orange);font-size:1.2rem;line-height:1}
+.acc details[open] summary::after{content:"–"}
+.acc summary:hover{background:var(--steel-2)}
+.acc .acc-body{padding:0 var(--s-3) var(--s-3);color:var(--muted);font-size:.95rem}
+.callout{border:1px solid var(--line);background:var(--steel);padding:var(--s-4);position:relative}
+.callout::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:4px;background:var(--orange)}
+.callout h3{font-size:1.1rem;margin-bottom:var(--s-2)}
+.callout ol{margin:0;padding-left:1.2em;display:grid;gap:8px;color:var(--muted);font-size:.94rem}
+.callout li::marker{color:var(--amber);font-family:var(--mono)}
+
+/* ---------- numbers strip ---------- */
+.numbers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.num{background:var(--graphite);padding:var(--s-4)}
+.num b{display:block;font-family:var(--mono);font-size:clamp(1.7rem,3vw,2.6rem);color:var(--amber);line-height:1}
+.num span{display:block;margin-top:8px;color:var(--muted);font-size:.9rem}
+
+/* ---------- testimonial ---------- */
+.stamp{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-4);align-items:center;
+  border:2px solid var(--line);background:var(--steel);padding:var(--s-4);
+}
+.stamp svg{width:78px;height:78px;color:var(--orange)}
+.stamp blockquote{margin:0;font-size:clamp(1.05rem,1.6vw,1.35rem);color:var(--white);line-height:1.45}
+.stamp figcaption{margin-top:var(--s-2);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+
+/* ---------- form ---------- */
+.rfq{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:var(--s-5)}
+.field{display:grid;gap:6px;margin-bottom:var(--s-3)}
+.field label{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.field .req{color:var(--orange)}
+.field input,.field select,.field textarea{
+  font:inherit;font-size:.98rem;color:var(--white);background:#101416;
+  border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-height:50px;
+  transition:border-color var(--d-fast) var(--ease),box-shadow var(--d-fast) var(--ease);
+}
+.field textarea{min-height:110px;resize:vertical}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--plate)}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:none;border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+.field input[aria-invalid="true"],.field select[aria-invalid="true"]{border-color:#e0503a;box-shadow:inset 0 0 0 1px #e0503a}
+.field .help{font-size:.8rem;color:var(--faint)}
+.field select option{background:#101416}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+.checks{display:grid;gap:2px;margin-bottom:var(--s-3)}
+.checks label{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 12px;border:1px solid var(--line);background:#101416;cursor:pointer;font-family:var(--mono);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.checks label:hover{border-color:var(--plate);color:var(--white)}
+.checks input{width:20px;height:20px;accent-color:var(--orange)}
+.formbar{display:flex;flex-wrap:wrap;gap:var(--s-3);align-items:center;margin-top:var(--s-3)}
+.status{font-family:var(--mono);font-size:.84rem;letter-spacing:.06em;color:var(--amber);min-height:1.5em}
+.status[data-state="error"]{color:#ff8a72}
+
+/* ---------- footer ---------- */
+footer{background:#0e1113;padding-block:var(--s-5)}
+.foot{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,1fr));gap:var(--s-4)}
+footer h3{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:var(--s-2)}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+footer a{text-decoration:none;color:var(--muted);font-size:.92rem}
+footer a:hover{color:var(--white);text-decoration:underline;text-underline-offset:3px}
+.foot-base{margin-top:var(--s-4);padding-top:var(--s-3);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:var(--s-2) var(--s-4);justify-content:space-between;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+.mobile-toggle{display:none}
+
+@media (max-width:1080px){
+  .hero .wrap,.split,.rfq{grid-template-columns:1fr}
+  .panels{grid-template-columns:1fr 1fr}
+  .numbers{grid-template-columns:1fr 1fr}
+  .foot{grid-template-columns:1fr 1fr}
+}
+@media (max-width:820px){
+  .nav-links{display:none}
+  .nav-links.open{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--steel);border-bottom:1px solid var(--line)}
+  .nav-links.open a{border-bottom:1px solid var(--line-soft);min-height:52px}
+  .mobile-toggle{
+    display:inline-flex;margin-left:auto;min-height:44px;min-width:44px;align-items:center;justify-content:center;
+    background:transparent;border:2px solid var(--plate);color:var(--white);cursor:pointer;
+  }
+  .nav-cta{display:none}
+  .panels{grid-template-columns:1fr}
+  .sec-head{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .stamp{grid-template-columns:1fr;justify-items:start}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<div class="util">
+  <div class="wrap">
+    <span>Plant 1 — Sheboygan, WI · Mon–Fri 06:00–18:00 CT</span>
+    <span>Orders: <b>+1 920 555 0142</b></span>
+  </div>
+</div>
+
+<header>
+  <div class="nav">
+    <div class="wrap">
+      <a class="logo" href="#top">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <rect x="3" y="20" width="26" height="9" rx="1"/><path d="M10 20V8h12v12"/><path d="M6 12h4M22 12h4"/>
+        </svg>
+        <span>Forge Line<em>Hydraulics since 1984</em></span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#units" aria-current="page">Power units</a></li>
+          <li><a href="#cylinders">Cylinders</a></li>
+          <li><a href="#numbers">Track record</a></li>
+          <li><a href="#rfq">Request quote</a></li>
+        </ul>
+      </nav>
+      <button class="mobile-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div class="nav-cta"><a class="btn btn-primary" href="#rfq">Request a quote</a></div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="label">Series 400 · 40–250 bar · 4–160 L/min</p>
+        <h1>Hydraulics that<br>survive the <span>second shift.</span></h1>
+        <p class="hero-lead">Every Forge Line power unit is load-benched for 500 hours before it ships, then re-tested at your site. If a seal fails inside the first two years, we replace the assembly — you pay the freight.</p>
+        <ul class="hero-tags">
+          <li>ISO 1219-1 ports</li>
+          <li>−30 °C cold start</li>
+          <li>2-year assembly warranty</li>
+          <li>Ships in 5 working days</li>
+        </ul>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#rfq">Request a quote
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5"/></svg>
+          </a>
+          <a class="btn btn-outline" href="#units">See the range</a>
+        </div>
+      </div>
+      <figure class="blueprint" data-c="DWG 400-PU-02 · REV F">
+        <svg viewBox="0 0 640 400" role="img" aria-label="Technical drawing of a Forge Series 400 hydraulic power unit with reservoir, motor, pump and pressure relief valve, dimensioned in millimetres">
+          <g stroke-opacity=".9" stroke-width="1.2">
+            <rect x="60" y="250" width="330" height="110"/>
+            <path d="M60 292h330" stroke-opacity=".45"/>
+            <path d="M180 250v110M300 250v110" stroke-opacity=".35"/>
+            <rect x="110" y="80" width="180" height="90"/>
+            <path d="M150 125h100M200 80v90" stroke-opacity=".45"/>
+            <circle cx="200" cy="125" r="26"/>
+            <rect x="330" y="100" width="90" height="60"/>
+            <path d="M355 100v-30h40v30"/>
+            <path d="M420 130h60"/>
+            <rect x="480" y="112" width="70" height="36"/>
+            <path d="M375 170v80"/>
+            <rect x="330" y="200" width="90" height="46"/>
+            <path d="M345 200v-14h60v14"/>
+          </g>
+          <g stroke-opacity=".55" stroke-dasharray="6 5">
+            <path d="M60 60h400M60 50v20M460 50v20"/>
+            <path d="M510 250v-120M500 250h20M500 130h20"/>
+            <path d="M40 250v110M30 250h20M30 360h20"/>
+          </g>
+          <g fill="currentColor" stroke="none" opacity=".85">
+            <rect x="252" y="56" width="56" height="16"/>
+            <rect x="482" y="244" width="56" height="16"/>
+            <rect x="6" y="298" width="56" height="16"/>
+          </g>
+          <g fill="currentColor" stroke="none" font-family="monospace" font-size="11" opacity=".9">
+            <text x="60" y="42">640 mm</text>
+            <text x="486" y="236">320</text>
+            <text x="2" y="312">190</text>
+          </g>
+        </svg>
+        <figcaption class="dims">
+          <div>Reservoir<b>40–160 L</b></div>
+          <div>Prime<b>Gear 400</b></div>
+          <div>Relief<b>40–250 bar</b></div>
+          <div>Dry weight<b>88 kg</b></div>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" id="units" aria-labelledby="units-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">01 / Product line</p>
+          <h2 id="units-h">Three power units,<br>one mounting standard</h2>
+        </div>
+        <p>All three share the same manifold footprint, the same 4-bolt pattern and the same port positions, so a Series 400 can be swapped into a Series 600 install in under an hour without moving the pipework. Specs below are at continuous duty unless noted.</p>
+      </div>
+      <div class="panels">
+        <article class="panel">
+          <div class="panel-top">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="17" width="24" height="11"/><path d="M9 17V7h12v10"/><path d="M28 22h3"/></svg>
+            <span class="code">FL-40</span>
+          </div>
+          <h3>Compact 40</h3>
+          <dl>
+            <dt>Flow</dt><dd>4–22 L/min</dd>
+            <dt>Pressure</dt><dd>250 bar</dd>
+            <dt>Motor</dt><dd>2.2 kW</dd>
+            <dt>Tank</dt><dd>40 L</dd>
+            <dt>Mass</dt><dd>46 kg</dd>
+            <dt>Ingress</dt><dd>IP54</dd>
+          </dl>
+          <a class="btn btn-outline" href="#rfq">Quote FL-40</a>
+        </article>
+        <article class="panel">
+          <div class="panel-top">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="19" width="26" height="9"/><path d="M8 19V8h14v11"/><path d="M12 12h6"/></svg>
+            <span class="code">FL-90</span>
+          </div>
+          <h3>Workshop 90</h3>
+          <dl>
+            <dt>Flow</dt><dd>20–58 L/min</dd>
+            <dt>Pressure</dt><dd>250 bar</dd>
+            <dt>Motor</dt><dd>5.5 kW</dd>
+            <dt>Tank</dt><dd>90 L</dd>
+            <dt>Mass</dt><dd>88 kg</dd>
+            <dt>Ingress</dt><dd>IP65</dd>
+          </dl>
+          <a class="btn btn-outline" href="#rfq">Quote FL-90</a>
+        </article>
+        <article class="panel">
+          <div class="panel-top">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="20" width="28" height="10"/><path d="M7 20V6h16v14"/><path d="M11 10h4M17 14h6"/><path d="M11 14h4"/></svg>
+            <span class="code">FL-160</span>
+          </div>
+          <h3>Duty 160</h3>
+          <dl>
+            <dt>Flow</dt><dd>58–160 L/min</dd>
+            <dt>Pressure</dt><dd>250 bar</dd>
+            <dt>Motor</dt><dd>15 kW</dd>
+            <dt>Tank</dt><dd>160 L</dd>
+            <dt>Mass</dt><dd>164 kg</dd>
+            <dt>Ingress</dt><dd>IP65</dd>
+          </dl>
+          <a class="btn btn-outline" href="#rfq">Quote FL-160</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="cylinders" aria-labelledby="cyl-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">02 / Cylinders &amp; manifolds</p>
+          <h2 id="cyl-h">Bodies built from<br>forged bar stock</h2>
+        </div>
+        <p>Cylinder barrels are forged, honed and pressure-tested to 1.5× working pressure before the first component is assembled. Standard bore sizes are stocked; anything else is built to your drawing with a three-week lead time.</p>
+      </div>
+      <div class="split">
+        <div class="callout">
+          <h3>Ordering path</h3>
+          <ol>
+            <li>Send a bore, stroke and rod-Ø, or a drawing — a photo on a phone is enough to start.</li>
+            <li>Our applications engineer returns a cut sheet with side-load limits and a projected life figure.</li>
+            <li>You confirm the mounting style; we machine the end caps to suit.</li>
+            <li>Bench test, then crate. Tracking and test certificates travel with the pallet.</li>
+          </ol>
+        </div>
+        <div class="acc">
+          <details open>
+            <summary>What does “1.5× working pressure” mean in practice?</summary>
+            <div class="acc-body">Every barrel is filled with a fluid and held at one-and-a-half times its rated working pressure for ten minutes. The test is destructive on a sample from each heat lot, and on a non-destructive check on your unit. The certificate records the lot number, the medium and the ambient temperature.</div>
+          </details>
+          <details>
+            <summary>Do you repair cylinders you did not build?</summary>
+            <div class="acc-body">Yes — we re-bore, hone and re-chrome rods up to 200 mm bore. Send dimensions and a photo of the mounting flange; we will confirm in writing before you ship anything.</div>
+          </details>
+          <details>
+            <summary>Which fluids are supported?</summary>
+            <div class="acc-body">Standard mineral oil, HFC and fire-resistant phosphate ester. Bio-based fluids need a seal-material change, which we quote as a separate line item rather than burying it in the price.</div>
+          </details>
+          <details>
+            <summary>Lead times when a part is out of stock</summary>
+            <div class="acc-body">Stocked bores ship in five working days. Non-standard bores run three weeks; forged barrel stock is bought in against a rolling four-week forecast, which is why we ask for a forecast rather than a one-off.</div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="numbers" aria-labelledby="numbers-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">03 / Track record</p>
+          <h2 id="numbers-h">Figures we can<br>produce paperwork for</h2>
+        </div>
+        <p>We publish these because buyers ask for them, and because a number you cannot trace is only a marketing line. Each figure below reconciles to our audited service records.</p>
+      </div>
+      <div class="numbers">
+        <div class="num"><b>41</b><span>Years on the same production line</span></div>
+        <div class="num"><b>19,400</b><span>Power units delivered since 1984</span></div>
+        <div class="num"><b>96.1%</b><span>Warranty claims resolved first visit</span></div>
+        <div class="num"><b>72 hr</b><span>Median lead time for re-bore service</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="cust-h">
+    <div class="wrap">
+      <h2 id="cust-h" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Customer report</h2>
+      <figure class="stamp">
+        <svg viewBox="0 0 80 80" role="img" aria-label="Customer mark: 92 percent uptime reported by Kestrel Aggregates over 24 months">
+          <circle cx="40" cy="40" r="36" stroke-dasharray="3 4"/><circle cx="40" cy="40" r="27"/>
+          <path d="M40 13v10M40 57v10M13 40h10M57 40h10" stroke-opacity=".6"/>
+          <text x="40" y="38" text-anchor="middle" font-size="16" fill="currentColor" stroke="none" font-family="monospace">92%</text>
+          <text x="40" y="52" text-anchor="middle" font-size="7" fill="currentColor" stroke="none" font-family="monospace" letter-spacing="1">UPTIME</text>
+        </svg>
+        <div>
+          <blockquote>“We run three FL-90s on a screening line in a Wisconsin quarry. The first unit is at 4,100 hours with the original manifold. The unit before it lasted 1,900. That is the whole review.”</blockquote>
+          <figcaption>Dana Whitcomb · Maintenance lead, Kestrel Aggregates</figcaption>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" id="rfq" aria-labelledby="rfq-h" style="border-bottom:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">04 / Request for quote</p>
+          <h2 id="rfq-h">Send us the drawing,<br>or just the problem</h2>
+        </div>
+        <p>A named applications engineer answers every enquiry within one working day. If we cannot help, we will say so and, where we can, point you to someone who can.</p>
+      </div>
+      <div class="rfq">
+        <div>
+          <p style="color:var(--muted);max-width:40ch">Fields marked <span class="req">*</span> are required. Attach drawings by replying to the confirmation email with a PDF or a photograph.</p>
+          <p class="label" style="margin-top:var(--s-3)">Direct line</p>
+          <p><a href="tel:+19205550142" style="color:var(--white)">+1 920 555 0142</a> — ask for the applications desk.</p>
+          <p class="label" style="margin-top:var(--s-3)">Works drawings</p>
+          <p>PDF · STEP · DXF. We do not need a full assembly to start a conversation.</p>
+        </div>
+        <form id="quote-form" novalidate>
+          <div class="grid-2">
+            <div class="field">
+              <label for="q-name">Contact name <span class="req">*</span></label>
+              <input id="q-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="q-company">Company <span class="req">*</span></label>
+              <input id="q-company" name="company" type="text" autocomplete="organization" required>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="q-email">Email <span class="req">*</span></label>
+              <input id="q-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="q-phone">Phone</label>
+              <input id="q-phone" name="phone" type="tel" autocomplete="tel">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="q-product">Product family</label>
+              <select id="q-product" name="product">
+                <option>FL-40 Compact 40</option>
+                <option>FL-90 Workshop 90</option>
+                <option>FL-160 Duty 160</option>
+                <option>Cylinder assembly</option>
+                <option>Manifold block</option>
+                <option>Repair / re-bore</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="q-pressure">Working pressure</label>
+              <select id="q-pressure" name="pressure">
+                <option>Up to 160 bar</option>
+                <option>160–210 bar</option>
+                <option>210–250 bar</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="q-msg">Describe the application</label>
+            <textarea id="q-msg" name="message" placeholder="Machine, duty cycle, fluid, ambient temperature, and what failed last time."></textarea>
+            <p class="help">Two or three sentences is plenty. Duty cycle tells us more than horsepower does.</p>
+          </div>
+          <fieldset class="checks" style="border:0;padding:0;margin-inline:0">
+            <legend class="label" style="padding:0;margin-bottom:8px">Send me</legend>
+            <label><input type="checkbox" name="opt" value="cad"> CAD files of the current unit</label>
+            <label><input type="checkbox" name="opt" value="site"> A site visit before quotation</label>
+          </fieldset>
+          <div class="formbar">
+            <button class="btn btn-primary" type="submit">Send request</button>
+            <button class="btn" type="reset">Clear form</button>
+          </div>
+          <p class="status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h3>Forge Line Hydraulics</h3>
+        <p style="color:var(--muted);font-size:.92rem;max-width:34ch">Series 400 power units, forged cylinders and manifold blocks. 2200 Industrial Parkway, Sheboygan, WI 53083.</p>
+      </div>
+      <div>
+        <h3>Products</h3>
+        <ul>
+          <li><a href="#units">FL-40 Compact</a></li>
+          <li><a href="#units">FL-90 Workshop</a></li>
+          <li><a href="#units">FL-160 Duty</a></li>
+          <li><a href="#cylinders">Cylinders</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Service</h3>
+        <ul>
+          <li><a href="#rfq">Re-bore &amp; repair</a></li>
+          <li><a href="#numbers">Test certificates</a></li>
+          <li><a href="#cylinders">Site commissioning</a></li>
+          <li><a href="#rfq">Warranty claims</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#top">About Forge Line</a></li>
+          <li><a href="#rfq">Careers</a></li>
+          <li><a href="#rfq">Distributors</a></li>
+          <li><a href="tel:+19205550142">+1 920 555 0142</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 Forge Line Hydraulics Inc.</span>
+      <span>ISO 9001:2015 · ISO 4406 cleanliness charts on request</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var toggle=document.querySelector('.mobile-toggle');
+  var links=document.getElementById('nav-links');
+  if(toggle&&links){
+    toggle.addEventListener('click',function(){
+      var open=toggle.getAttribute('aria-expanded')==='true';
+      toggle.setAttribute('aria-expanded',String(!open));
+      toggle.setAttribute('aria-label',open?'Open menu':'Close menu');
+      links.classList.toggle('open',!open);
+    });
+  }
+  /* current-section highlight */
+  var navLinks=Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+  var targets=navLinks.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        navLinks.forEach(function(a){a.removeAttribute('aria-current');});
+        var i=targets.indexOf(e.target);
+        if(i>-1) navLinks[i].setAttribute('aria-current','page');
+      });
+    },{rootMargin:'-40% 0px -50% 0px'});
+    targets.forEach(function(t){if(t) io.observe(t);});
+  }
+  /* accordion: single open at a time */
+  var acc=document.querySelectorAll('.acc details');
+  Array.prototype.forEach.call(acc,function(d){
+    d.addEventListener('toggle',function(){
+      if(!d.open) return;
+      Array.prototype.forEach.call(acc,function(o){if(o!==d) o.open=false;});
+    });
+  });
+  /* quote form validation */
+  var form=document.getElementById('quote-form');
+  var status=document.getElementById('form-status');
+  function setErr(el,bad){ if(bad){el.setAttribute('aria-invalid','true');} else {el.removeAttribute('aria-invalid');} }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('q-name');
+    var company=document.getElementById('q-company');
+    var email=document.getElementById('q-email');
+    var bad=false;
+    if(!name.value.trim()){ setErr(name,true); bad=true; } else { setErr(name,false); }
+    if(!company.value.trim()){ setErr(company,true); bad=true; } else { setErr(company,false); }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){ setErr(email,true); bad=true; } else { setErr(email,false); }
+    if(bad){
+      status.dataset.state='error';
+      status.textContent='Three fields need attention — they are outlined in red above.';
+      var first=form.querySelector('[aria-invalid="true"]');
+      if(first) first.focus();
+      return;
+    }
+    status.dataset.state='ok';
+    status.textContent='RFQ logged as Q-2026-0' + (4400 + 137) + '. An applications engineer will reply within one working day.';
+    form.reset();
+  });
+  form.addEventListener('input',function(e){
+    if(e.target.hasAttribute('aria-invalid')) e.target.removeAttribute('aria-invalid');
+  });
+})();
+</script>
+</body>
+</html>
