@@ -145,7 +145,7 @@
       link.dataset.analyticsEvent = "generate_lead";
       link.dataset.leadType = "phone";
     });
-    document.querySelectorAll('a[href*="contact.html?route="]').forEach(function (link) {
+    document.querySelectorAll('a[href*="/contact?route="]').forEach(function (link) {
       var route = new URL(link.href, location.href).searchParams.get("route");
       if (!/^(support|project|hosting)$/.test(route || "")) return;
       link.dataset.analyticsEvent = "generate_lead";
