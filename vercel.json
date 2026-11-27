@@ -53,7 +53,24 @@
         },
         {
           "key": "Vary",
-          "value": "Accept"
+          "value": "Accept, Accept-Encoding"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
         }
       ]
     },
@@ -151,6 +168,10 @@
     {
       "source": "/cookie-policy",
       "destination": "/cookie-policy.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/about.html"
     }
   ]
 }

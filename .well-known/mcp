@@ -1,0 +1,38 @@
+{
+  "$schema": "https://goodstuffdesigns.co.za/.well-known/mcp",
+  "name": "goodstuff-designs",
+  "title": "Goodstuff Designs",
+  "description": "Managed IT, business networks and fibre, cybersecurity, websites and managed Linux hosting, AI workflows and integrations, and digital marketing, delivered from Heidelberg, Gauteng, South Africa and remotely worldwide.",
+  "version": "1.0.0",
+  "endpoint": {
+    "url": "https://goodstuffdesigns.co.za/api/mcp",
+    "transport": "streamable-http",
+    "protocolVersion": "2025-06-18",
+    "status": "planned"
+  },
+  "clientSideTools": {
+    "mechanism": "WebMCP via document.modelContext",
+    "registeredOn": ["all pages"],
+    "tools": [
+      "search_services",
+      "list_site_pages",
+      "get_service_pricing",
+      "list_integrations",
+      "start_contact_enquiry",
+      "submit_contact_enquiry (declarative, visible form on /contact)"
+    ]
+  },
+  "humanInterface": {
+    "contact": "https://goodstuffdesigns.co.za/contact",
+    "email": "admin@goodstuffdesigns.co.za",
+    "phone": "+27 79 937 4801",
+    "hours": "Mon-Fri 08:00-17:00, Sat 08:00-13:00 (SAST/GMT+2)"
+  },
+  "machineReadable": {
+    "llmsTxt": "https://goodstuffdesigns.co.za/llms.txt",
+    "serviceCatalog": "https://goodstuffdesigns.co.za/service-catalog.json",
+    "aiCatalog": "https://goodstuffdesigns.co.za/ai-catalog.json",
+    "sitemap": "https://goodstuffdesigns.co.za/sitemap.xml",
+    "markdownMirrors": "Append .md to any page URL"
+  }
+}
